@@ -12,8 +12,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 8269,
-      "sha256": "37955b3b67364bc0965f57b36923b21627db332097946b2bf79db93b59948f14"
+      "bytes": 8706,
+      "sha256": "9719aa946f7c3bf9d08a2888f3c23142d68dc7f717c84318bc5d4643a14d2043"
     },
     {
       "path": "ARCHITECTURE.md",
@@ -43,7 +43,7 @@
     {
       "path": "PACK_SUMMARY.md",
       "bytes": 1202,
-      "sha256": "e7ecf467469b3c3058894d955b21fdd1e138a3ee96766cd489b042f91f15982e"
+      "sha256": "6b353e8d7cd3ecde3b92dd0ab6235ae76f987d6774abc1575e587cd2588cdf09"
     },
     {
       "path": "PROJECT.md",
@@ -227,8 +227,8 @@
     },
     {
       "path": "docs/governance/DOCUMENTATION_POLICY.md",
-      "bytes": 3820,
-      "sha256": "7e520f9caab9f3b158a12d6caf0f1c4abab572de8b228831270bd07648d282ef"
+      "bytes": 5114,
+      "sha256": "838b5304c3f95fce763aee6d15dc52f84a80275cf7293c1bac492283fa54d4ba"
     },
     {
       "path": "docs/governance/ML_GOVERNANCE.md",

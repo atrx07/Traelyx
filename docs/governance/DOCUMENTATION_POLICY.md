@@ -69,7 +69,7 @@ Completed, validated work must not accumulate only in the working tree. A commit
 
 ## 10. Roadmap synchronization
 
-After a roadmap step passes its required gates, update its active execution plan, `STATUS.md`/`NEXTSTEPS.md` where applicable, and the corresponding README roadmap row in the same completion commit. Mark the next eligible step active and update materially changed estimates. Push the commit and verify synchronization.
+After a roadmap step passes its required gates, update its active execution plan, `STATUS.md`/`NEXTSTEPS.md` where applicable, and the corresponding README roadmap row in the same completion commit. Push the commit and verify synchronization. Do not mark the next step active until the user authorizes it.
 
 Use only this status vocabulary:
 
@@ -82,4 +82,19 @@ Use only this status vocabulary:
 
 `Complete` means the step's acceptance criteria and validation gates passed. ETAs are planning ranges, not promises; prefer ranges such as `~2–4 hours` or `~1–2 weeks`. Completed work shows `Done`, and historical estimates are not rewritten to appear more accurate.
 
-A milestone or stage becomes complete only when every required step and stage-level gate passes. Then update project state, close/archive its execution plan, activate the next eligible stage, and persist that transition in an atomic pushed commit.
+A milestone or stage becomes complete only when every required step and stage-level gate passes. Then update project state, close/archive its execution plan, and persist that closure in an atomic pushed commit. Activation of the next stage waits for user authorization.
+
+## 11. User approval gate between roadmap steps
+
+Traelyx development is user-paced. After every numbered roadmap step:
+
+1. Run its acceptance criteria and required validation gates.
+2. Update the authoritative execution plan, `STATUS.md`, `NEXTSTEPS.md`, and README roadmap as applicable.
+3. Create and push the atomic completion commit to `origin/main`.
+4. Verify local `HEAD` equals `origin/main`.
+5. Report the completed step, commit hash, validation and CI results, next planned step, and any warnings or blockers.
+6. Stop and wait for explicit user authorization before implementing the next numbered step.
+
+Validation success, a successful commit or push, and milestone activation are not authorization. While waiting, do not edit, pre-build, pre-validate, or create speculative work for the next step, and do not consume significant context preparing it. Lightweight reporting about the next step is allowed. The gate also applies between steps in one milestone and at stage or milestone transitions unless the user explicitly authorizes continuous execution for that stage.
+
+If the gate is introduced while a roadmap step is already in progress, finish only that step. Preserve and report any pre-created future-step work without mixing it into the current completion commit.
