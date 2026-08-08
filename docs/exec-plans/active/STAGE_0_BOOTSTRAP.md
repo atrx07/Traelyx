@@ -80,13 +80,13 @@ Each step should be independently verifiable when practical.
 
 ## Tests / validation
 
-- [ ] format/static analysis
-- [ ] unit and widget tests
+- [x] format/static analysis
+- [x] unit and widget tests
 - [ ] database migration test
-- [ ] Android debug build
-- [ ] JSON/YAML validation
+- [x] Android debug build
+- [x] JSON/YAML validation
 - [ ] secret scan configuration review
-- [ ] real-device launch smoke test
+- [x] real-device launch smoke test
 
 Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation are not applicable until recording is implemented.
 
@@ -117,6 +117,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Locally validated M0 implementation is being separated into bounded roadmap commits.
 - 2026-08-08: Roadmap step 0.2 scaffold validated with canonical Gradle identity and an Android debug build.
 - 2026-08-08: Roadmap step 0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
+- 2026-08-08: Roadmap step 0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
 
 ## Completion summary
 

@@ -4,9 +4,8 @@
 
 ## P0 — Bootstrap
 
-1. Persist and push quality commands/tests as roadmap step 0.4.
-2. Persist and verify CI/validation/build-size automation as roadmap step 0.5.
-3. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
+1. Persist and verify CI/validation/build-size automation as roadmap step 0.5.
+2. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
 
 ## P1 — Recorder milestone
 

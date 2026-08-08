@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Stage 0 bootstrap is active. The Flutter/Android scaffold and toolchain baseline are validated; quality commands and tests are the current step.
+Stage 0 bootstrap is active. Baseline Flutter/Kotlin tests and repository validation are established; CI automation is the current step.
 
 ## Roadmap
 
@@ -16,8 +16,8 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | 0.1 | Stage 0 | Confirm identity | ✅ Complete | Done | 2026-08-08 |
 | 0.2 | Stage 0 | Initialize repository | ✅ Complete | Done | 2026-08-08 |
 | 0.3 | Stage 0 | Toolchain pinning | ✅ Complete | Done | 2026-08-08 |
-| 0.4 | Stage 0 | Quality commands | 🔵 Active | ~1–2 hours | — |
-| 0.5 | Stage 0 | CI foundation | ⚪ Pending | ~1–2 hours | — |
+| 0.4 | Stage 0 | Quality commands | ✅ Complete | Done | 2026-08-08 |
+| 0.5 | Stage 0 | CI foundation | 🔵 Active | ~1–2 hours | — |
 | 0.6 | Stage 0 | Core architecture skeleton | ⚪ Pending | ~2–4 hours | — |
 | Stage 1 | Application Foundation | Theme, navigation, settings, schema, migrations, diagnostics | ⚪ Pending | ~4–6 days | — |
 | M1 / Stage 2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |
@@ -39,6 +39,7 @@ dart format --output=none --set-exit-if-changed lib test tool
 flutter analyze
 flutter test
 flutter build apk --debug
+cd android && ./gradlew testDebugUnitTest
 dart run tool/validate_repository.dart
 dart run tool/report_apk_size.dart
 ```

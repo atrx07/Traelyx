@@ -15,10 +15,11 @@
 - Stage 0 execution plan activated.
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
+- Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
 
 ## Partial
 
-- Quality/CI and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
+- CI and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
 
 ## Not implemented
 
@@ -36,6 +37,7 @@
 
 ## Known risks
 
+- Generated Flutter Gradle compatibility flags emit AGP 9 built-in-Kotlin deprecation warnings; current builds and Kotlin tests pass.
 - Android background/foreground-service behavior across OS versions/OEMs.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
 - Map tile/provider policy and offline/cache strategy.
