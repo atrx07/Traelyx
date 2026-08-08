@@ -37,13 +37,13 @@
     },
     {
       "path": "NEXTSTEPS.md",
-      "bytes": 1293,
-      "sha256": "8c6670ca562fb922f3adc6b5651342837b92f404705eb77836e854c8e2cf451a"
+      "bytes": 1230,
+      "sha256": "122b163208853ecfaa2deabdc219d1157c7c9e5c98a19be60e31de07d69ad0cf"
     },
     {
       "path": "PACK_SUMMARY.md",
       "bytes": 1202,
-      "sha256": "52e7e849be5b82060eb60c5337d772ce3d62f941acdf8d1818e06f7c4c66682c"
+      "sha256": "d0648f4bd8176f2803d0b4040a6554afd4ab40ac9cd9ef00a5493787da14af09"
     },
     {
       "path": "PROJECT.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 1631,
-      "sha256": "0abf3ab95df2fe57c28fc9a480c69476bc7f039002d0ba1ed913b6585d6ff627"
+      "bytes": 1795,
+      "sha256": "64453b2e9a9d93f17586ff4691c5a0260c5cc54b31d7403718fba8f1866089b1"
     },
     {
       "path": "android/AGENTS.md",
@@ -467,8 +467,8 @@
     },
     {
       "path": "docs/technical/TECH_STACK.md",
-      "bytes": 2721,
-      "sha256": "4a795d723926b30595199c1689ce75b80df8e34e070240dfae9d5c47888d6c0a"
+      "bytes": 3631,
+      "sha256": "df7f7ea9f05de001a3e0bbcde6f2e1335e2373157e6e55d9aebf8ece1679c764"
     },
     {
       "path": "docs/technical/TELEMETRY_SPEC.md",

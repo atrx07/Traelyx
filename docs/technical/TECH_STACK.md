@@ -4,6 +4,18 @@
 
 Read during project bootstrap, dependency selection, major refactors, or when deciding where a new behavior belongs. Do not read for ordinary feature work once the relevant subsystem is clear.
 
+## Validated bootstrap baseline
+
+Validated on 2026-08-08:
+
+- Flutter stable 3.44.9 with Dart 3.12.2; the package declares Dart `^3.12.2`.
+- Android SDK 36.1 with accepted licenses; compile, target, minimum SDK, and NDK versions remain delegated to the compatible Flutter stable toolchain instead of being duplicated as stale constants.
+- Android Gradle Plugin 9.0.1, Gradle 9.1.0, and Kotlin 2.3.20 from the generated Flutter Android project.
+- Android Studio JDK 21 runs the build while Java/Kotlin source and bytecode targets remain JVM 17.
+- Python remains the ML/training environment; an isolated, reproducible environment will be established when ML work begins rather than during application bootstrap.
+
+This is a reproducible known-good baseline, not a permanent prohibition on upgrades. Toolchain changes require the relevant analysis, tests, and Android build to pass before the baseline is updated.
+
 ## App/UI
 
 - **Flutter + Dart** — primary application/UI framework.

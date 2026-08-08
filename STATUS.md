@@ -14,10 +14,11 @@
 - Main-first atomic commit/push discipline and public README roadmap tracking established.
 - Stage 0 execution plan activated.
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
+- Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
 
 ## Partial
 
-- Toolchain and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
+- Quality/CI and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
 
 ## Not implemented
 

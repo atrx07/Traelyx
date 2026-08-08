@@ -116,6 +116,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Identity checkpoint committed and synchronized with `origin/main` before scaffold persistence.
 - 2026-08-08: Locally validated M0 implementation is being separated into bounded roadmap commits.
 - 2026-08-08: Roadmap step 0.2 scaffold validated with canonical Gradle identity and an Android debug build.
+- 2026-08-08: Roadmap step 0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
 
 ## Completion summary
 
