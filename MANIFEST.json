@@ -12,8 +12,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 7035,
-      "sha256": "927ac71275ede1664a13160a4c883300d2fc4ed13ce9f2d70c8705f20a5387c2"
+      "bytes": 8269,
+      "sha256": "37955b3b67364bc0965f57b36923b21627db332097946b2bf79db93b59948f14"
     },
     {
       "path": "ARCHITECTURE.md",
@@ -37,13 +37,13 @@
     },
     {
       "path": "NEXTSTEPS.md",
-      "bytes": 1472,
-      "sha256": "4276c3ac1e3d319a9352580e13052698d7321e7c553f8fae2479594428953341"
+      "bytes": 1373,
+      "sha256": "ca483a9c3910a611ad7547fb9228102288825d921b8849e348fa450cf0c4e0a0"
     },
     {
       "path": "PACK_SUMMARY.md",
       "bytes": 1202,
-      "sha256": "9d5e2b47e61eba1aef1fb9973516e2f28370c18da519622cce0e7cf87cd69b66"
+      "sha256": "ef917f657c4896ef6c820f05a6eee19d661385982c70ca8ecd5510edd9b723ad"
     },
     {
       "path": "PROJECT.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 1393,
-      "sha256": "0ccd9f33950906ec5a6c56462d2a5205a6d7b41e66defc4811b45ec68309cee6"
+      "bytes": 1546,
+      "sha256": "e91ed0d6e426fc432816a24d9f8cb0f7d469fe639920cc41464824453a2ba6e5"
     },
     {
       "path": "android/AGENTS.md",
@@ -227,8 +227,8 @@
     },
     {
       "path": "docs/governance/DOCUMENTATION_POLICY.md",
-      "bytes": 1541,
-      "sha256": "904a9c95c5eff4383a19610a77694dace804c68ba512548a503936a1d8a2a5c3"
+      "bytes": 3820,
+      "sha256": "7e520f9caab9f3b158a12d6caf0f1c4abab572de8b228831270bd07648d282ef"
     },
     {
       "path": "docs/governance/ML_GOVERNANCE.md",

@@ -4,12 +4,11 @@
 
 ## P0 — Bootstrap
 
-1. Use the resolved identity for future scaffolding: repository/Flutter project `traelyx` and Android namespace/application ID `io.github.atrx07.traelyx`.
-2. Initialize Git repository and Flutter Android project.
-3. Install root/nested `AGENTS.md` files from this pack.
-4. Establish formatting, linting, test commands, and CI.
-5. Add Drift/SQLite foundation and migration test harness.
-6. Add Kotlin native bridge skeleton and foreground-service proof of concept.
+1. Persist and push the validated Flutter Android scaffold as roadmap step 0.2.
+2. Persist and push toolchain constraints as roadmap step 0.3.
+3. Persist and push quality commands/tests as roadmap step 0.4.
+4. Persist and verify CI/validation/build-size automation as roadmap step 0.5.
+5. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
 
 ## P1 — Recorder milestone
 

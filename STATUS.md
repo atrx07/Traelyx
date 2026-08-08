@@ -11,10 +11,12 @@
 - Product direction defined.
 - Product/repository/Flutter identity and Android namespace/application ID resolved: `Traelyx`, `traelyx`, and `io.github.atrx07.traelyx`.
 - Initial governance/reference pack created.
+- Main-first atomic commit/push discipline and public README roadmap tracking established.
+- Stage 0 execution plan activated.
 
 ## Partial
 
-- Technology selections are architectural decisions, not yet validated in a real app repository.
+- Flutter scaffold and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
 
 ## Not implemented
 

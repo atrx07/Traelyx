@@ -111,14 +111,26 @@ Then:
 - update the active execution plan;
 - update `STATUS.md` when project state materially changed;
 - update `NEXTSTEPS.md` if priorities/blockers changed;
+- update the README roadmap when a tracked step changes state;
 - update specs/reference schemas when behavior/contracts changed;
 - record an ADR if a durable architectural choice was made.
 
-## 7. Definition of complete
+## 7. Git / Progress Persistence
+
+- Default development is directly on `main`, committed and pushed to `origin/main`. Use a branch/PR only when the user, active plan, repository protection, or an explicitly isolated risky experiment requires it; document the exception first.
+- Never force-push or rewrite published `main` history without explicit authorization.
+- Preserve unrelated user changes and inspect the exact diff before every completion commit.
+- After a bounded logical unit passes its required gates, create one understandable atomic commit, push it, and verify local `HEAD` matches `origin/main` before unrelated work begins.
+- Do not let completed validated work accumulate uncommitted across roadmap steps. Never mark a step, milestone, or stage complete before its required validation passes.
+- Include corresponding execution-plan, `STATUS.md`, `NEXTSTEPS.md`, and README roadmap updates in the completion commit.
+
+Detailed status ownership, roadmap vocabulary, ETA rules, and synchronization procedure live in `docs/governance/DOCUMENTATION_POLICY.md`; authoritative scope and step IDs live in `docs/exec-plans/ROADMAP.md` and active execution plans.
+
+## 8. Definition of complete
 
 A task is not complete because code compiles. Follow `docs/governance/DEFINITION_OF_DONE.md`.
 
-## 8. Agent communication
+## 9. Agent communication
 
 When reporting work:
 
