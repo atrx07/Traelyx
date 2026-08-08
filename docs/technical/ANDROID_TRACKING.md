@@ -100,4 +100,4 @@ Before building rich UI/ML, prove:
 6. export/replay raw timeline;
 7. no unexplained large gaps.
 
-This is M1's main acceptance criterion.
+This is M2's main acceptance criterion.

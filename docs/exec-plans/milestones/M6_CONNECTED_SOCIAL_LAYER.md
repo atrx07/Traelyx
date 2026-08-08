@@ -1,4 +1,4 @@
-# Stage 6 Playbook — Auth, Social & Guardian
+# M6 Playbook — Connected / Social Layer
 
 ## Goal
 

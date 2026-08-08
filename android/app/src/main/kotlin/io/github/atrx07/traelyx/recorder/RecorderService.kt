@@ -8,7 +8,7 @@ import android.os.IBinder
  * Disabled bootstrap shell for the future foreground recorder.
  *
  * It intentionally acquires no sensors, location, wake locks, or foreground
- * service state. Stage M1 will replace this behavior only after lifecycle,
+ * service state. M2 will replace this behavior only after lifecycle,
  * permission, buffering, and physical-device tests are in place.
  */
 class RecorderService : Service() {

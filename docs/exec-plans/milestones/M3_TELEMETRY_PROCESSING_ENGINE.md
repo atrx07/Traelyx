@@ -1,4 +1,4 @@
-# Stage 3 Playbook — Telemetry Processing
+# M3 Playbook — Telemetry Processing Engine
 
 ## Goal
 

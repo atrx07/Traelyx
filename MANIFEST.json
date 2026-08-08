@@ -7,13 +7,13 @@
   "files": [
     {
       "path": "00_READ_ME_FIRST.md",
-      "bytes": 4413,
-      "sha256": "297e372df63d926e78e41a086cd8f3fd5379f805dd7735ebc88ae9bcff001f59"
+      "bytes": 4417,
+      "sha256": "99857232980765f71c6afd2dc4f62fa16fa5b6d3a68143db58dd9e460fec3fbf"
     },
     {
       "path": "AGENTS.md",
-      "bytes": 8706,
-      "sha256": "9719aa946f7c3bf9d08a2888f3c23142d68dc7f717c84318bc5d4643a14d2043"
+      "bytes": 8874,
+      "sha256": "f8b15bc4c372909843e1e75a92c99077de3c93deac3c431b8a757197aca39e47"
     },
     {
       "path": "ARCHITECTURE.md",
@@ -27,8 +27,8 @@
     },
     {
       "path": "FILE_MAP.md",
-      "bytes": 10713,
-      "sha256": "5efee243e9ce2f2a7ce3fe9e2c5686952d3e6ee9ecb831f3f99b8f1b83f29819"
+      "bytes": 10797,
+      "sha256": "f12dd5e2e5b7ebee0f8a1658a1e4573e726a77cf0a65093608ddb45159c7bc8b"
     },
     {
       "path": "GITIGNORE_SECURITY_SNIPPET.txt",
@@ -37,13 +37,13 @@
     },
     {
       "path": "NEXTSTEPS.md",
-      "bytes": 1421,
-      "sha256": "2ea22dc2fafefd99e7fed9e41305191339cf334dc00e8220509a684791d6c8a6"
+      "bytes": 1428,
+      "sha256": "1bd8f951d2c6192f889e09b470d47538f0a1bb04a805a30e5a5fe5535bf18c5e"
     },
     {
       "path": "PACK_SUMMARY.md",
-      "bytes": 1202,
-      "sha256": "266ed6fe2181ece7c934d5dd32e846ecd1155680da4ad490c9ebd248d9079f32"
+      "bytes": 1210,
+      "sha256": "52d621d110de280ab48e11f4ab3ce9d14cde3e26af2e35609f4f37dd37e3f02d"
     },
     {
       "path": "PROJECT.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 2964,
-      "sha256": "7f5a96f373a91d110cb8dd8eadcbb1309c1cad9606da42160f31472de7dd9013"
+      "bytes": 2952,
+      "sha256": "d7f35d40f911a875d692fe407c32343e3f94af04a09e694d7322df0376476a9d"
     },
     {
       "path": "android/AGENTS.md",
@@ -127,8 +127,8 @@
     },
     {
       "path": "docs/exec-plans/ROADMAP.md",
-      "bytes": 9440,
-      "sha256": "379d1ebd4c64d61d18db00c275aa4262bb9a09a29e169fcbb4a75e4a98a03e76"
+      "bytes": 9195,
+      "sha256": "526b78af1c307e9544e1fb2998d809ae02d26f2c9abcb57d6708ec744dc4a994"
     },
     {
       "path": "docs/exec-plans/active/README.md",
@@ -142,58 +142,58 @@
     },
     {
       "path": "docs/exec-plans/index.md",
-      "bytes": 239,
-      "sha256": "9e368c132bbb020fcf27fb48f81e9012d5ecec82bf34e7f2ec4931b39fc99819"
+      "bytes": 264,
+      "sha256": "3f1ef0bdfec5760cf6f282df527ace1bf445ea63c7ac9bbc2305477a3e882204"
     },
     {
-      "path": "docs/exec-plans/stages/README.md",
-      "bytes": 189,
-      "sha256": "0b6c866b1abd22e57cdb604ab73544542cc44ed937ae48e82a139ba0bb98a3c3"
+      "path": "docs/exec-plans/milestones/README.md",
+      "bytes": 197,
+      "sha256": "aec2dd7583adeafac5819d4908f71b7aa4d5d24e3c6d04d871dc1b3d791e799c"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_0_BOOTSTRAP.md",
-      "bytes": 2044,
-      "sha256": "f25881233f3305910edda11e7fc4eddba1ae489ef7b78c436f4cade0e929c2d4"
+      "path": "docs/exec-plans/milestones/M0_PROJECT_BOOTSTRAP.md",
+      "bytes": 2073,
+      "sha256": "80e57cbda42972ee76c15059deb8f605b819ded2e3748f5c3ba020e541ffabe9"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_1_APP_FOUNDATION.md",
-      "bytes": 1295,
-      "sha256": "8d3c95d2368d4a8dad70f0d9a5806b9c9cfa36b42c9a9d8b8bd147f66c127ce3"
+      "path": "docs/exec-plans/milestones/M1_APPLICATION_FOUNDATION.md",
+      "bytes": 1290,
+      "sha256": "07bdb3bbf0d30daae6be00e1136f7ef1f8235e13afa400155226364cbc1eaff0"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_2_RECORDER.md",
-      "bytes": 1636,
-      "sha256": "5fba9ecf400d7931f60af0a70afb250b291667c3f9c4ad9b13bf40e77bbc17eb"
+      "path": "docs/exec-plans/milestones/M2_NATIVE_RECORDING_ENGINE.md",
+      "bytes": 1631,
+      "sha256": "ae64b5fcdcae72e732b7305a824e9f200730260eaae0484ae74c37d3697979ff"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_3_TELEMETRY.md",
-      "bytes": 1231,
-      "sha256": "b2ed0f264be0f10044d72a49be5916486c1d00f471c55d560a620056295c9621"
+      "path": "docs/exec-plans/milestones/M3_TELEMETRY_PROCESSING_ENGINE.md",
+      "bytes": 1233,
+      "sha256": "10f217b31842965592076889125894d8c004277a16f1f59c881a1e9250779bec"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_4_INTELLIGENCE_V1.md",
-      "bytes": 1191,
-      "sha256": "00078ef0b1407f909fd32e531e1acee7ca8db5fd6d1e665deb5829d57281b73a"
+      "path": "docs/exec-plans/milestones/M4_DETERMINISTIC_INTELLIGENCE_V1.md",
+      "bytes": 1186,
+      "sha256": "38c2269e9f8ca8a1c8886be378cb9a8e3ea04b409ed2abb6975e24c1e4387812"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_5_EXPERIENCE.md",
-      "bytes": 1294,
-      "sha256": "b1ad44704d4e2754df03db89dbc4930090089e022a5a737dfd6f98a834e8ff82"
+      "path": "docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md",
+      "bytes": 1284,
+      "sha256": "a571171567b7136224c637430d50eccf9026d648e58a5fea28c372383f956615"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_6_CONNECTED.md",
-      "bytes": 1241,
-      "sha256": "3f1057ce8d3d4972885f68e3c9cea86cc9f68acf2569745551100daa257fe7c6"
+      "path": "docs/exec-plans/milestones/M6_CONNECTED_SOCIAL_LAYER.md",
+      "bytes": 1237,
+      "sha256": "14c9a99cdd1045f274f1a33b16cfaba02b255ed73d6e2b13dbe7e5017bb06066"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_7_ML_COMMENTARY.md",
-      "bytes": 1912,
-      "sha256": "10df7b66ffd67aaad91e24b45827751e2120f14381ef6704246247c4ab0a6e55"
+      "path": "docs/exec-plans/milestones/M7_ML_ADVANCED_COMMENTARY.md",
+      "bytes": 1907,
+      "sha256": "6d5e3410b15c9538e8ee90ac860b742c81a9c74f2c626191098e29d0fd79135d"
     },
     {
-      "path": "docs/exec-plans/stages/STAGE_8_RELEASE.md",
-      "bytes": 1482,
-      "sha256": "ae5ab45f789f96dcbda9367f54b52e482f6792b50ec13183bc3163063d9c9e6f"
+      "path": "docs/exec-plans/milestones/M8_HARDENING_PUBLIC_RELEASE.md",
+      "bytes": 1477,
+      "sha256": "7671cecf276241e425b6210880161bef25db56d00fc62c7c310a2eb33cf4108f"
     },
     {
       "path": "docs/exec-plans/templates/CODEX_TASK_TEMPLATE.md",
@@ -202,8 +202,8 @@
     },
     {
       "path": "docs/exec-plans/templates/EXEC_PLAN_TEMPLATE.md",
-      "bytes": 1388,
-      "sha256": "1e7a9b6980cb606de0eafa05f9de270b907913ac74cc8ba3fa29abf561123d57"
+      "bytes": 1425,
+      "sha256": "53f72ef06c93669f566a547e3396d79c429ea31cde97ce97f1266788384536ad"
     },
     {
       "path": "docs/exec-plans/templates/REAL_DRIVE_TEST_TEMPLATE.md",
@@ -227,8 +227,8 @@
     },
     {
       "path": "docs/governance/DOCUMENTATION_POLICY.md",
-      "bytes": 5114,
-      "sha256": "838b5304c3f95fce763aee6d15dc52f84a80275cf7293c1bac492283fa54d4ba"
+      "bytes": 5153,
+      "sha256": "8c0b6e60156676ebc44cb926a159cd6c66471b0e662f934ef786942c8a4578e9"
     },
     {
       "path": "docs/governance/ML_GOVERNANCE.md",
@@ -242,8 +242,8 @@
     },
     {
       "path": "docs/governance/PERFORMANCE_BUDGETS.md",
-      "bytes": 2020,
-      "sha256": "a4ed09f0ed143889303fabf8e18d58d5550335e321946ba17e3c779dbb80cab0"
+      "bytes": 2019,
+      "sha256": "bb39ad5ad2cc2dec1823830f9677a3bf41b3fc6b95864e73b63bd2dc3888a2c1"
     },
     {
       "path": "docs/governance/PRIVACY_POLICY_ENGINEERING.md",
@@ -272,8 +272,8 @@
     },
     {
       "path": "docs/index.md",
-      "bytes": 2772,
-      "sha256": "5e791a6fac397e782460c9f044be2b3503b4103be621de5f007a5efce64f41c3"
+      "bytes": 2779,
+      "sha256": "82a1de65c27719873c4a061bdb9bf9e68ab234938d7d46c223ecc1f0f20b6795"
     },
     {
       "path": "docs/product/COMMENTARY_SPEC.md",
@@ -403,7 +403,7 @@
     {
       "path": "docs/technical/ANDROID_TRACKING.md",
       "bytes": 2604,
-      "sha256": "e93d491297f15a21fd3889691270a84c6cbc7a4bcb1ffdd4a786a89d9eee5139"
+      "sha256": "74d59ca9771b58c8094c802e9ea94e8a3f7a6ba0de87c4c14d61aedebc8b1831"
     },
     {
       "path": "docs/technical/AUTH_SPEC.md",

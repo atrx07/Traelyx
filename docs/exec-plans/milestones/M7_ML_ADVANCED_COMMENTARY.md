@@ -1,4 +1,4 @@
-# Stage 7 Playbook — ML & Advanced Commentary
+# M7 Playbook — ML & Advanced Commentary
 
 ## Goal
 

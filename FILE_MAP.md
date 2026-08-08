@@ -26,20 +26,20 @@ Use this map to understand what every supplied file is for. It is not required c
 | `docs/decisions/ADR-0009-release-key-local-custody.md` | Architecture Decision Record preserving the rationale for ADR 0009 release key local custody. |
 | `docs/decisions/ADR-0010-progressive-agent-context.md` | Architecture Decision Record preserving the rationale for ADR 0010 progressive agent context. |
 | `docs/decisions/index.md` | ADR index. |
-| `docs/exec-plans/ROADMAP.md` | Nine-stage, roughly fifty-step MVP roadmap and milestone gates. |
+| `docs/exec-plans/ROADMAP.md` | Nine-milestone, roughly fifty-substep MVP roadmap and milestone gates. |
 | `docs/exec-plans/active/README.md` | Directory-specific usage/index note. |
 | `docs/exec-plans/completed/README.md` | Directory-specific usage/index note. |
 | `docs/exec-plans/index.md` | Execution plan and roadmap index. |
-| `docs/exec-plans/stages/README.md` | Directory-specific usage/index note. |
-| `docs/exec-plans/stages/STAGE_0_BOOTSTRAP.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_1_APP_FOUNDATION.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_2_RECORDER.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_3_TELEMETRY.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_4_INTELLIGENCE_V1.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_5_EXPERIENCE.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_6_CONNECTED.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_7_ML_COMMENTARY.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
-| `docs/exec-plans/stages/STAGE_8_RELEASE.md` | Detailed stage playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/README.md` | Directory-specific usage/index note. |
+| `docs/exec-plans/milestones/M0_PROJECT_BOOTSTRAP.md` | Detailed M0 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M1_APPLICATION_FOUNDATION.md` | Detailed M1 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M2_NATIVE_RECORDING_ENGINE.md` | Detailed M2 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M3_TELEMETRY_PROCESSING_ENGINE.md` | Detailed M3 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M4_DETERMINISTIC_INTELLIGENCE_V1.md` | Detailed M4 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md` | Detailed M5 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M6_CONNECTED_SOCIAL_LAYER.md` | Detailed M6 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M7_ML_ADVANCED_COMMENTARY.md` | Detailed M7 playbook with context, work units, acceptance and stop/exit gates. |
+| `docs/exec-plans/milestones/M8_HARDENING_PUBLIC_RELEASE.md` | Detailed M8 playbook with context, work units, acceptance and stop/exit gates. |
 | `docs/exec-plans/templates/CODEX_TASK_TEMPLATE.md` | Low-context task prompt format for Codex runs. |
 | `docs/exec-plans/templates/EXEC_PLAN_TEMPLATE.md` | Template for multi-step bounded implementation work. |
 | `docs/exec-plans/templates/REAL_DRIVE_TEST_TEMPLATE.md` | Safe physical-device test record and fixture provenance. |

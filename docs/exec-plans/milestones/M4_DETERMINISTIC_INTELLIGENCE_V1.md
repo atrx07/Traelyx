@@ -1,4 +1,4 @@
-# Stage 4 Playbook — Deterministic Intelligence v1
+# M4 Playbook — Deterministic Intelligence v1
 
 ## Goal
 

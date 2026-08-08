@@ -41,7 +41,7 @@ class BootstrapScreen extends ConsumerWidget {
                 FilledButton.icon(
                   onPressed: null,
                   icon: const Icon(Icons.route_outlined),
-                  label: const Text('Start drive — available after M1'),
+                  label: const Text('Start drive — available after M2'),
                 ),
                 const SizedBox(height: 12),
                 Text(

@@ -1,4 +1,4 @@
-# Stage 2 Playbook — Native Recording Engine
+# M2 Playbook — Native Recording Engine
 
 ## Goal
 

@@ -31,7 +31,7 @@ Measure frame times rather than eyeballing.
 
 ## 5. Recorder
 
-Establish measured targets after Stage 2 prototype for:
+Establish measured targets after the M2 prototype for:
 
 - battery drain %/hour;
 - CPU %;

@@ -51,7 +51,7 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 - `exec-plans/templates/EXEC_PLAN_TEMPLATE.md` — use for non-trivial work.
 - `exec-plans/active/` — current detailed work.
 - `exec-plans/completed/` — historical; not normal task context.
-- `exec-plans/ROADMAP.md` — 9-stage implementation plan.
+- `exec-plans/ROADMAP.md` — nine-milestone implementation plan.
 
 ## Machine-readable references
 

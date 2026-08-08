@@ -1,4 +1,4 @@
-# Stage 1 Playbook — Application Foundation
+# M1 Playbook — Application Foundation
 
 ## Goal
 

@@ -61,7 +61,7 @@ The proposed feature-rich MVP is expected to require roughly:
 - **~10 weeks:** usable alpha;
 - **~12–14 weeks:** serious feature-packed MVP / public beta under focused development;
 - **~14–20 calendar weeks:** realistic part-time college schedule;
-- **~45–55 executable implementation steps** across 9 major stages.
+- **~45–55 executable implementation substeps** across nine milestones.
 
 The largest uncertainty is not writing Flutter code. It is real-world telemetry validation, Android background reliability, data collection, and ML evaluation across drivers/devices/vehicles.
 

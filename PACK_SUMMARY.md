@@ -5,14 +5,14 @@
 - Pack version: 1.0 bootstrap
 - Generated: 2026-08-08
 - Files before manifest: 99
-- Approximate words: 29,563
+- Approximate words: 29,631
 - JSON parse validation: PASS
 - YAML parse validation: PASS
 - JSON Schema meta-validation: PASS
 
 ## Coverage
 
-This pack contains root/scoped agent governance, product/UX/privacy specifications, telemetry/scoring/integrity/ML/auth/storage/release technical contracts, machine-readable schemas, accepted architecture decisions, a nine-stage roadmap, stage playbooks, Codex/exec-plan templates, and fixture/data governance.
+This pack contains root/scoped agent governance, product/UX/privacy specifications, telemetry/scoring/integrity/ML/auth/storage/release technical contracts, machine-readable schemas, accepted architecture decisions, a nine-milestone roadmap, milestone playbooks, Codex/exec-plan templates, and fixture/data governance.
 
 ## Important intentional incompleteness
 

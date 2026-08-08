@@ -1,7 +1,7 @@
 # Execution Plans
 
-- `ROADMAP.md` — stage/step roadmap.
+- `ROADMAP.md` — canonical milestone/substep roadmap.
 - `templates/EXEC_PLAN_TEMPLATE.md` — new substantial tasks.
 - `active/` — current work.
 - `completed/` — historical.
-- `stages/` — detailed stage playbooks and exit gates.
+- `milestones/` — detailed milestone playbooks and exit gates.

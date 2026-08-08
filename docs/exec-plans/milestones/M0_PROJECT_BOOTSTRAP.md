@@ -1,4 +1,4 @@
-# Stage 0 Playbook — Governance & Bootstrap
+# M0 Playbook — Project Bootstrap
 
 ## Goal
 
@@ -11,7 +11,7 @@ Root `AGENTS.md`, `PROJECT.md`, `ARCHITECTURE.md`, `TECH_STACK.md`, `TESTING_POL
 ## Work units
 
 1. Use the canonical identity: product `Traelyx`, repository/Flutter project `traelyx`, and Android namespace/application ID `io.github.atrx07.traelyx`.
-2. When an active Stage 0 execution plan authorizes scaffolding, initialize the Flutter Android project and Git using the equivalent of:
+2. When an active M0 execution plan authorizes scaffolding, initialize the Flutter Android project and Git using the equivalent of:
 
    ```text
    flutter create --org io.github.atrx07 --project-name traelyx --platforms=android .
@@ -36,7 +36,7 @@ Root `AGENTS.md`, `PROJECT.md`, `ARCHITECTURE.md`, `TECH_STACK.md`, `TESTING_POL
 9. Add GitHub Actions for checks and secret scanning.
 10. Add build-size reporting and JSON/YAML validation.
 11. Merge `GITIGNORE_SECURITY_SNIPPET.txt` into actual `.gitignore`.
-12. Create first active exec plan for Stage 1 or 2.
+12. Create the first active execution plan for M1 or M2 only after explicit user authorization.
 
 ## Acceptance
 

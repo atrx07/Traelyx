@@ -1,8 +1,8 @@
-# Execution Plan — Stage 0 Bootstrap
+# Execution Plan — M0 Project Bootstrap
 
 **Status:** Complete
 **Owner:** Codex/maintainer
-**Stage:** 0 — Governance and bootstrap
+**Milestone:** M0 — Project Bootstrap
 **Started:** 2026-08-08
 **Last updated:** 2026-08-08
 
@@ -11,7 +11,7 @@
 Read only:
 
 - root, `app/`, and `android/` `AGENTS.md` files;
-- `ARCHITECTURE.md` and the Stage 0 playbook;
+- `ARCHITECTURE.md` and the M0 playbook;
 - relevant foundation sections of `docs/product/UX_SPEC.md`;
 - testing, dependency, and definition-of-done governance documents;
 - generated Flutter/Android code and directly affected tests.
@@ -34,7 +34,7 @@ Developers can clone the repository, install dependencies, analyze and test the 
 - Versioned Flutter-to-Kotlin bridge contract and foreground-service skeleton.
 - Formatting, static analysis, unit/widget tests, Android debug build, and CI.
 - JSON/YAML validation, secret scanning, ignore rules, and build-size reporting foundation.
-- Bootstrap documentation and next-stage handoff.
+- Bootstrap documentation and next-milestone handoff.
 
 ## Out of scope
 
@@ -64,7 +64,7 @@ Developers can clone the repository, install dependencies, analyze and test the 
 
 ## Compatibility/migration implications
 
-- This creates database schema version 1; its initialization test establishes the baseline for the Stage 1 migration harness.
+- This creates database schema version 1; its initialization test establishes the baseline for the M1 migration harness.
 - Android namespace/application ID is fixed at `io.github.atrx07.traelyx` before public releases exist.
 
 ## Implementation steps
@@ -102,7 +102,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 ## Risks
 
 - Generated Flutter files may overlap repository governance or ignore files and must be merged carefully.
-- Android foreground-service APIs are version-sensitive; this stage provides structure only, not reliability claims.
+- Android foreground-service APIs are version-sensitive; this milestone provides structure only, not reliability claims.
 - New dependencies must remain zero-cost, maintained, and replaceable where applicable.
 
 ## Decisions made during execution
@@ -121,14 +121,14 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Plan activated before scaffolding.
 - 2026-08-08: Identity checkpoint committed and synchronized with `origin/main` before scaffold persistence.
 - 2026-08-08: Locally validated M0 implementation is being separated into bounded roadmap commits.
-- 2026-08-08: Roadmap step 0.2 scaffold validated with canonical Gradle identity and an Android debug build.
-- 2026-08-08: Roadmap step 0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
-- 2026-08-08: Roadmap step 0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
-- 2026-08-08: Roadmap step 0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
-- 2026-08-08: Roadmap step 0.5 completed after GitHub Actions run `31267469320` passed every gate and uploaded debug/release-validation artifacts without action-runtime warnings.
-- 2026-08-08: Roadmap step 0.6 architecture batch assembled for final local and remote validation.
-- 2026-08-08: Roadmap step 0.6 and M0 completed after local gates, an Android 14 launch smoke test, and GitHub Actions run `31268715363` passed. Stage 1 remains pending explicit user authorization.
+- 2026-08-08: Roadmap substep M0.2 scaffold validated with canonical Gradle identity and an Android debug build.
+- 2026-08-08: Roadmap substep M0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
+- 2026-08-08: Roadmap substep M0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
+- 2026-08-08: Roadmap substep M0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
+- 2026-08-08: Roadmap substep M0.5 completed after GitHub Actions run `31267469320` passed every gate and uploaded debug/release-validation artifacts without action-runtime warnings.
+- 2026-08-08: Roadmap substep M0.6 architecture batch assembled for final local and remote validation.
+- 2026-08-08: Roadmap substep M0.6 and milestone M0 completed after local gates, an Android 14 launch smoke test, and GitHub Actions run `31268715363` passed. M1 remains pending explicit user authorization.
 
 ## Completion summary
 
-Stage 0 produced a reproducible Android Flutter foundation with canonical identity, strict local and CI gates, schema version 1 initialization, replaceable application/map boundaries, and a versioned but disabled recorder bridge/service. The app remains accountless, acquires no telemetry, requires no paid infrastructure, and makes no recorder-reliability claim. Stage 1 was not activated because the user approval gate applies at this transition.
+M0 produced a reproducible Android Flutter foundation with canonical identity, strict local and CI gates, schema version 1 initialization, replaceable application/map boundaries, and a versioned but disabled recorder bridge/service. The app remains accountless, acquires no telemetry, requires no paid infrastructure, and makes no recorder-reliability claim. M1 was not activated because the user approval gate applies at this transition.

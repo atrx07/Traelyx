@@ -1,4 +1,4 @@
-# Stage 5 Playbook — UX, Replay & Personality
+# M5 Playbook — Experience & Replay
 
 ## Goal
 

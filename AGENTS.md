@@ -121,12 +121,13 @@ Then:
 - Never force-push or rewrite published `main` history without explicit authorization.
 - Preserve unrelated user changes and inspect the exact diff before every completion commit.
 - After a bounded logical unit passes its required gates, create one understandable atomic commit, push it, and verify local `HEAD` matches `origin/main` before unrelated work begins.
-- Do not let completed validated work accumulate uncommitted across roadmap steps. Never mark a step, milestone, or stage complete before its required validation passes.
+- Do not let completed validated work accumulate uncommitted across roadmap substeps. Never mark a substep or milestone complete before its required validation passes.
 - Include corresponding execution-plan, `STATUS.md`, `NEXTSTEPS.md`, and README roadmap updates in the completion commit.
-- After completing and reporting any numbered roadmap step, stop and wait for explicit user authorization before beginning the next step. Successful validation, push, or milestone activation is not authorization.
-- While awaiting approval, do not implement, edit for, pre-build, or substantially prepare the next step. Stage and milestone transitions require the same approval unless the user explicitly authorizes continuous execution.
+- Roadmap identifiers use the canonical M-system only (`M0`–`M8`, with substeps such as `M0.6` and `M2.3`). Do not introduce parallel Stage-N identifiers or aliases.
+- After completing and reporting any numbered roadmap substep, stop and wait for explicit user authorization before beginning the next substep. Successful validation, push, or milestone activation is not authorization.
+- While awaiting approval, do not implement, edit for, pre-build, or substantially prepare the next substep. Milestone transitions require the same approval unless the user explicitly authorizes continuous execution.
 
-Detailed status ownership, roadmap vocabulary, ETA rules, and synchronization procedure live in `docs/governance/DOCUMENTATION_POLICY.md`; authoritative scope and step IDs live in `docs/exec-plans/ROADMAP.md` and active execution plans.
+Detailed status ownership, roadmap vocabulary, ETA rules, and synchronization procedure live in `docs/governance/DOCUMENTATION_POLICY.md`; authoritative scope and substep IDs live in `docs/exec-plans/ROADMAP.md` and active execution plans.
 
 ## 8. Definition of complete
 

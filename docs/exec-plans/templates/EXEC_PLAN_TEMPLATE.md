@@ -2,7 +2,7 @@
 
 **Status:** Proposed | Active | Blocked | Complete
 **Owner:** agent/maintainer
-**Stage:** <roadmap stage>
+**Milestone:** <canonical roadmap milestone or governance task>
 **Started:** <date>
 **Last updated:** <date>
 

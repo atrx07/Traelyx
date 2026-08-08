@@ -1,4 +1,4 @@
-# Stage 8 Playbook — Hardening & GitHub Release
+# M8 Playbook — Hardening & Public Release
 
 ## Goal
 

@@ -4,13 +4,13 @@
 
 ## Approval gate
 
-Roadmap step 0.6 and milestone M0 are complete. Do not activate or implement Stage 1 until the user explicitly authorizes the next step.
+Roadmap substep M0.6 and milestone M0 are complete. Do not activate or implement M1 until the user explicitly authorizes the next substep.
 
-## P0 — Application foundation (after authorization)
+## P0 — M1 Application Foundation (after authorization)
 
-1. Activate the Stage 1 execution plan.
-2. Begin roadmap step 1.1, design tokens/theme.
-3. Continue through navigation, settings, schema, migrations, and diagnostics only with the required approval between numbered steps.
+1. Activate the M1 execution plan.
+2. Begin roadmap substep M1.1, design tokens/theme.
+3. Continue through navigation, settings, schema, migrations, and diagnostics only with the required approval between numbered substeps.
 
 ## P1 — Recorder milestone
 
