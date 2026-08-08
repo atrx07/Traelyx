@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**Phase 0 — Governance / repository bootstrap**
+**Stage 0 complete — awaiting explicit authorization for Stage 1**
 
 ## Working
 
@@ -17,15 +17,21 @@
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
 - GitHub Actions passes generated-source, format, analysis, Flutter/Kotlin tests, repository validation, debug/release builds, size reporting, and artifact upload on `main`.
+- The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
+- Drift schema version 1 initializes and persists local settings under test.
+- The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
+- A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 
 ## Partial
 
-- Foundation implementation exists locally but is not yet persisted as roadmap step 0.6.
+- The recorder bridge and service are structural only; trip recording remains unavailable.
+- Drift contains only the bootstrap `app_settings` table; the application schema and migration harness belong to Stage 1.
+- Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
 ## Not implemented
 
 - Android foreground recorder.
-- Local database.
+- Application database schema beyond bootstrap settings.
 - Telemetry pipeline.
 - Event engine.
 - Drive DNA/scoring.
@@ -48,4 +54,4 @@
 
 ## Next milestone
 
-**M0 — Skeleton:** repository, Flutter shell, native Android integration skeleton, local DB skeleton, automated formatting/analysis/tests, and initial CI.
+**Stage 1 — Application Foundation:** awaiting explicit user authorization before plan activation or implementation.

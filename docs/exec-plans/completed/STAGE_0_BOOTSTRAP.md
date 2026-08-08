@@ -1,6 +1,6 @@
 # Execution Plan — Stage 0 Bootstrap
 
-**Status:** Active
+**Status:** Complete
 **Owner:** Codex/maintainer
 **Stage:** 0 — Governance and bootstrap
 **Started:** 2026-08-08
@@ -30,7 +30,7 @@ Developers can clone the repository, install dependencies, analyze and test the 
 
 - Flutter Android scaffolding for `traelyx` and `io.github.atrx07.traelyx`.
 - Initial application structure and restrained dark-first shell.
-- Drift/SQLite database foundation with an initial migration test.
+- Drift/SQLite database foundation with a schema-initialization baseline test.
 - Versioned Flutter-to-Kotlin bridge contract and foreground-service skeleton.
 - Formatting, static analysis, unit/widget tests, Android debug build, and CI.
 - JSON/YAML validation, secret scanning, ignore rules, and build-size reporting foundation.
@@ -64,17 +64,17 @@ Developers can clone the repository, install dependencies, analyze and test the 
 
 ## Compatibility/migration implications
 
-- This creates database schema version 1; migration tests establish the baseline for future upgrades.
+- This creates database schema version 1; its initialization test establishes the baseline for the Stage 1 migration harness.
 - Android namespace/application ID is fixed at `io.github.atrx07.traelyx` before public releases exist.
 
 ## Implementation steps
 
 - [x] 1. Scaffold the Flutter Android project with the canonical identity and preserve repository governance files.
-- [ ] 2. Establish source boundaries, design tokens, and an honest local-first bootstrap screen.
-- [ ] 3. Add the Drift/SQLite schema version 1 foundation and migration test harness.
-- [ ] 4. Add a versioned Kotlin bridge and non-recording foreground-service skeleton.
+- [x] 2. Establish source boundaries, design tokens, and an honest local-first bootstrap screen.
+- [x] 3. Add the Drift/SQLite schema version 1 foundation and initialization baseline test.
+- [x] 4. Add a versioned Kotlin bridge and non-recording foreground-service skeleton.
 - [x] 5. Add formatting, analysis, tests, CI, schema validation, secret scanning, and build-size reporting.
-- [ ] 6. Document repeatable commands and update project state and priority queue.
+- [x] 6. Document repeatable commands and update project state and priority queue.
 
 Each step should be independently verifiable when practical.
 
@@ -82,7 +82,7 @@ Each step should be independently verifiable when practical.
 
 - [x] format/static analysis
 - [x] unit and widget tests
-- [ ] database migration test
+- [x] database schema initialization/migration baseline test
 - [x] Android debug build
 - [x] JSON/YAML validation
 - [x] secret scan configuration review
@@ -127,7 +127,8 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Roadmap step 0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
 - 2026-08-08: Roadmap step 0.5 completed after GitHub Actions run `31267469320` passed every gate and uploaded debug/release-validation artifacts without action-runtime warnings.
 - 2026-08-08: Roadmap step 0.6 architecture batch assembled for final local and remote validation.
+- 2026-08-08: Roadmap step 0.6 and M0 completed after local gates, an Android 14 launch smoke test, and GitHub Actions run `31268715363` passed. Stage 1 remains pending explicit user authorization.
 
 ## Completion summary
 
-Pending.
+Stage 0 produced a reproducible Android Flutter foundation with canonical identity, strict local and CI gates, schema version 1 initialization, replaceable application/map boundaries, and a versioned but disabled recorder bridge/service. The app remains accountless, acquires no telemetry, requires no paid infrastructure, and makes no recorder-reliability claim. Stage 1 was not activated because the user approval gate applies at this transition.

@@ -37,13 +37,13 @@
     },
     {
       "path": "NEXTSTEPS.md",
-      "bytes": 1087,
-      "sha256": "2bb809e157a4f712c01e8faaa28dc226f486a69a5fe1d1dc69914b0a751cc693"
+      "bytes": 1421,
+      "sha256": "2ea22dc2fafefd99e7fed9e41305191339cf334dc00e8220509a684791d6c8a6"
     },
     {
       "path": "PACK_SUMMARY.md",
       "bytes": 1202,
-      "sha256": "6b353e8d7cd3ecde3b92dd0ab6235ae76f987d6774abc1575e587cd2588cdf09"
+      "sha256": "266ed6fe2181ece7c934d5dd32e846ecd1155680da4ad490c9ebd248d9079f32"
     },
     {
       "path": "PROJECT.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 2209,
-      "sha256": "ca8b546d2b9e6a263a855bffa4ad0daf77ee3ddf1f28c32efa75a3155da068e4"
+      "bytes": 2964,
+      "sha256": "7f5a96f373a91d110cb8dd8eadcbb1309c1cad9606da42160f31472de7dd9013"
     },
     {
       "path": "android/AGENTS.md",

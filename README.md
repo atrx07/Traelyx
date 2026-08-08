@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Stage 0 bootstrap is active. CI is green on `main`; the Flutter, Drift, and Kotlin architecture skeleton is the current step.
+Stage 0 and milestone M0 are complete. The local-first Flutter, Drift, provider-neutral map, and disabled Kotlin recorder skeletons are validated on device and in CI. Stage 1 is pending explicit user authorization.
 
 ## Roadmap
 
@@ -12,13 +12,13 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 
 | ID | Stage / Milestone | Step | Status | ETA | Last validated |
 |---|---|---|---|---|---|
-| M0 | Stage 0 — Governance & Project Bootstrap | Skeleton milestone | 🟡 In progress | ~1 day remaining | 2026-08-08 |
+| M0 | Stage 0 — Governance & Project Bootstrap | Skeleton milestone | ✅ Complete | Done | 2026-08-08 |
 | 0.1 | Stage 0 | Confirm identity | ✅ Complete | Done | 2026-08-08 |
 | 0.2 | Stage 0 | Initialize repository | ✅ Complete | Done | 2026-08-08 |
 | 0.3 | Stage 0 | Toolchain pinning | ✅ Complete | Done | 2026-08-08 |
 | 0.4 | Stage 0 | Quality commands | ✅ Complete | Done | 2026-08-08 |
 | 0.5 | Stage 0 | CI foundation | ✅ Complete | Done | 2026-08-08 |
-| 0.6 | Stage 0 | Core architecture skeleton | 🔵 Active | ~2–4 hours | — |
+| 0.6 | Stage 0 | Core architecture skeleton | ✅ Complete | Done | 2026-08-08 |
 | Stage 1 | Application Foundation | Theme, navigation, settings, schema, migrations, diagnostics | ⚪ Pending | ~4–6 days | — |
 | M1 / Stage 2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |
 | M2 / Stage 3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |

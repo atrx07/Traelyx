@@ -2,9 +2,15 @@
 
 > Keep this file concise. Detailed tasks belong in active execution plans.
 
-## P0 — Bootstrap
+## Approval gate
 
-1. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
+Roadmap step 0.6 and milestone M0 are complete. Do not activate or implement Stage 1 until the user explicitly authorizes the next step.
+
+## P0 — Application foundation (after authorization)
+
+1. Activate the Stage 1 execution plan.
+2. Begin roadmap step 1.1, design tokens/theme.
+3. Continue through navigation, settings, schema, migrations, and diagnostics only with the required approval between numbered steps.
 
 ## P1 — Recorder milestone
 
