@@ -109,6 +109,11 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 
 - JUnit 4.13.2 is test-only, mature, permissively usable, has no application runtime/data impact, and is replaceable when the Android test stack changes.
 - CI uses immutable revisions of official GitHub actions plus the open-source `subosito/flutter-action`; all are CI-only, require no product secrets or paid runtime service, and can be replaced with direct SDK setup.
+- Adopted the already-selected Riverpod and `go_router` application boundaries. Both are maintained, permissively licensed, local packages with no data collection or mandatory service cost.
+- Adopted Drift plus its official Flutter setup for typed SQLite persistence. It is MIT-licensed, local-first, and replaceable behind the database boundary; native SQLite assets increase artifact size and remain measured by CI.
+- Added `build_runner`, `drift_dev`, and `yaml` as development-only tooling. They do not ship application behavior or introduce paid/network runtime requirements.
+- Kept the recorder service disabled in the manifest. M0 exposes bridge capability state but cannot start telemetry acquisition.
+- Added an SDK-free map contract for route, marker, camera, replay, and visible cache operations; no tile provider or network dependency is selected in M0.
 
 ## Progress log
 
@@ -121,6 +126,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Roadmap step 0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
 - 2026-08-08: Roadmap step 0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
 - 2026-08-08: Roadmap step 0.5 completed after GitHub Actions run `31267469320` passed every gate and uploaded debug/release-validation artifacts without action-runtime warnings.
+- 2026-08-08: Roadmap step 0.6 architecture batch assembled for final local and remote validation.
 
 ## Completion summary
 
