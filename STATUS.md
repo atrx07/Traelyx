@@ -19,7 +19,8 @@
 
 ## Partial
 
-- CI and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
+- GitHub Actions CI, secret/contract validation, and debug/release APK-size reporting are implemented locally; the first remote run is pending.
+- Foundation implementation exists locally but is not yet persisted as roadmap step 0.6.
 
 ## Not implemented
 

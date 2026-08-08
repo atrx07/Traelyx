@@ -43,7 +43,7 @@
     {
       "path": "PACK_SUMMARY.md",
       "bytes": 1202,
-      "sha256": "e8390b32eb5c73da59a1567a11598c66c26c9be0c6460be47cd147b2e76e4ca2"
+      "sha256": "02571ed52bca464f7bd7f5e70e002b8eac967911c70cecc051f2f7b1a4b22881"
     },
     {
       "path": "PROJECT.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 2055,
-      "sha256": "3ad5539ad7be81495417d0e16c909dac9ad15388dd77c80d3b435b166c59032a"
+      "bytes": 2179,
+      "sha256": "65797bf2453c3173f4a156f2958f450b8f3d98968eb25eda72d9acb36bae1b35"
     },
     {
       "path": "android/AGENTS.md",

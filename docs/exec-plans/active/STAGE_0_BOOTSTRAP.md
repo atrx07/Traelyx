@@ -107,7 +107,8 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 
 ## Decisions made during execution
 
-- None yet. Durable decisions will be promoted to ADRs if required.
+- JUnit 4.13.2 is test-only, mature, permissively usable, has no application runtime/data impact, and is replaceable when the Android test stack changes.
+- CI uses immutable revisions of official GitHub actions plus the open-source `subosito/flutter-action`; all are CI-only, require no product secrets or paid runtime service, and can be replaced with direct SDK setup.
 
 ## Progress log
 
@@ -118,6 +119,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Roadmap step 0.2 scaffold validated with canonical Gradle identity and an Android debug build.
 - 2026-08-08: Roadmap step 0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
 - 2026-08-08: Roadmap step 0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
+- 2026-08-08: Roadmap step 0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
 
 ## Completion summary
 

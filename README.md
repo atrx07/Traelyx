@@ -40,6 +40,7 @@ flutter analyze
 flutter test
 flutter build apk --debug
 cd android && ./gradlew testDebugUnitTest
+flutter build apk --release
 dart run tool/validate_repository.dart
 dart run tool/report_apk_size.dart
 ```
