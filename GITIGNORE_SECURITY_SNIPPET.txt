@@ -1,0 +1,17 @@
+# Merge these rules into the repository .gitignore and adjust as needed.
+*.jks
+*.keystore
+key.properties
+.env
+.env.*
+!.env.example
+**/secrets.*
+**/*private-key*
+**/*api-key*
+
+# Local ML/data artifacts that should not accidentally enter Git without review
+ml/data/private/
+ml/checkpoints/
+*.tripdebug.private
+
+# Generated/local build files are normally supplied by Flutter/Android templates too.

@@ -1,0 +1,34 @@
+schema_version: 1
+relationship: guardian_connection
+permissions:
+  crash_alert:
+    default: true
+    driver_can_toggle: true
+    description: Receive high-confidence possible-crash alerts.
+  severe_drive_alert:
+    default: false
+    driver_can_toggle: true
+    description: Receive rare severe-risk-state alerts.
+  current_safety_state:
+    default: false
+    driver_can_toggle: true
+    description: View coarse active-trip safety state.
+  live_location:
+    default: false
+    driver_can_toggle: true
+    description: View live precise location if this feature is implemented and explicitly enabled.
+    sensitivity: high
+  current_speed:
+    default: false
+    driver_can_toggle: true
+    description: View current speed if explicitly enabled.
+  trip_history:
+    default: false
+    driver_can_toggle: true
+    description: View trip history if explicitly enabled.
+    sensitivity: high
+rules:
+  - Relationship creation does not imply all permissions.
+  - Revocation must be enforced server-side.
+  - Hidden Guardian connections are prohibited.
+  - Possible Crash safety messaging must remain clear regardless of humorous commentary settings.

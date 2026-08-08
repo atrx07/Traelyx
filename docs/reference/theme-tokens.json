@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "semantic_tokens_only_not_final_palette",
+  "color_roles": {
+    "surface_base": null,
+    "surface_elevated": null,
+    "text_primary": null,
+    "text_secondary": null,
+    "brand_accent": null,
+    "status_good": null,
+    "status_warning": null,
+    "status_severe": null,
+    "status_info": null
+  },
+  "motion": {
+    "reduced_motion_supported": true,
+    "avoid_flashing": true,
+    "event_bubble": {
+      "anchor_to_event_point": true,
+      "spring_or_ease": "tune_after_prototype",
+      "connector_visible": true
+    }
+  },
+  "principles": [
+    "Dark-first MVP",
+    "Semantic status colors",
+    "Do not rely on color alone",
+    "No generic neon racing-dashboard identity",
+    "Large glanceable live-drive metrics"
+  ]
+}

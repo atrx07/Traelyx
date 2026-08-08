@@ -1,0 +1,60 @@
+schema_version: 1
+status: draft
+
+defaults:
+  cooldown_seconds: null
+  max_bubbles_per_minute: null
+  cloud_payload_includes_precise_location: false
+  fallback_engine: procedural
+
+tones:
+  analyst:
+    style: concise_technical
+  chill:
+    style: casual_light
+  supportive:
+    style: encouraging_without_false_praise
+  roast:
+    style: playful_critical
+  unhinged:
+    style: chaotic_internet_humor_safety_bounded
+  silent:
+    style: none
+
+event_classes:
+  HIGH_LOAD_CONTROLLED_CORNER:
+    source_events: [EVT_CORNER_HIGH_LOAD_LEFT, EVT_CORNER_HIGH_LOAD_RIGHT]
+    allowed_tones: [analyst, chill, supportive, roast, unhinged]
+    examples:
+      chill: "okay, that was actually pretty clean"
+      roast: "this corner was personal huh?"
+      unhinged: "physics filed a restraining order"
+  ABRUPT_BRAKING:
+    source_events: [EVT_BRAKE_ABRUPT_TRANSITION, EVT_BRAKE_STRONG]
+    allowed_tones: [analyst, chill, supportive, roast, unhinged]
+    examples:
+      roast: "brakes filed a complaint"
+  REPEATED_DYNAMIC_EVENTS:
+    source_events: [EVT_ACCEL_STRONG, EVT_BRAKE_STRONG, EVT_CORNER_HIGH_LOAD_LEFT, EVT_CORNER_HIGH_LOAD_RIGHT]
+    allowed_tones: [chill, roast, unhinged]
+    context_required: true
+    examples:
+      roast: "okay this is apparently a personality trait now"
+  SMOOTH_STREAK:
+    source_events: []
+    derived_pattern: smooth_streak
+    allowed_tones: [analyst, chill, supportive, roast, unhinged]
+    examples:
+      supportive: "that whole section was beautifully consistent"
+  CRASH_LIKE:
+    source_events: [EVT_CRASH_LIKE_EVIDENCE]
+    allowed_tones: [analyst]
+    safety_critical: true
+    generative_text_allowed: false
+    use_trusted_template: true
+
+safety_rules:
+  - Generated commentary never changes event labels, safety states, integrity, or scores.
+  - Never state that a person is dead or injured based only on telemetry.
+  - Never encourage repeating dangerous maneuvers.
+  - Possible-crash notifications use trusted non-generative templates.

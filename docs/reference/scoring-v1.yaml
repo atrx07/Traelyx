@@ -1,0 +1,73 @@
+scoring_version: "1.0-draft"
+status: draft_unvalidated
+production_ready: false
+warning: >-
+  This file defines the shape of scoring configuration, not validated weights.
+  Null weights/thresholds MUST be calibrated from fixtures/data before production.
+scale:
+  minimum: 0
+  maximum: 100
+
+eligibility:
+  minimum_trip_duration_s: null
+  minimum_moving_duration_s: null
+  minimum_telemetry_confidence: null
+  integrity_states_allowed_for_ranking: [verified]
+
+confidence_policy:
+  mode: contribution_weighting_and_dimension_eligibility
+  low_confidence_behavior: reduce_or_exclude_evidence
+  missing_is_zero: false
+
+dimensions:
+  smoothness:
+    display_name: Smoothness
+    weight_in_overall: null
+    required_evidence: [jerk_distribution, transition_smoothness]
+    contributions:
+      excessive_jerk_penalty: null
+      smooth_streak_bonus: null
+      abrupt_transition_penalty: null
+  braking_control:
+    display_name: Braking Control
+    weight_in_overall: null
+    required_evidence: [braking_events, longitudinal_jerk, recovery_stability]
+    contributions:
+      abrupt_transition_penalty: null
+      repeated_event_penalty: null
+      progressive_braking_bonus: null
+      stable_recovery_bonus: null
+  acceleration_control:
+    display_name: Acceleration Control
+    weight_in_overall: null
+    required_evidence: [acceleration_events, longitudinal_jerk]
+    contributions:
+      abrupt_transition_penalty: null
+      repeated_event_penalty: null
+      progressive_acceleration_bonus: null
+  cornering_control:
+    display_name: Cornering Control
+    weight_in_overall: null
+    required_evidence: [corner_events, lateral_jerk, yaw_behavior, orientation_confidence]
+    contributions:
+      abrupt_entry_penalty: null
+      abrupt_exit_penalty: null
+      stable_load_bonus: null
+      consistent_recovery_bonus: null
+  consistency:
+    display_name: Consistency
+    weight_in_overall: null
+    required_evidence: [segment_variance, valid_personal_baseline]
+    contributions:
+      high_variance_penalty: null
+      stable_segment_bonus: null
+
+historical_policy:
+  preserve_original_score_version: true
+  auto_recalculate_old_trips: false
+  personal_baseline_scope: same_vehicle_profile_preferred
+
+ranking_policy:
+  max_speed_category_allowed: false
+  reward_extreme_lateral_g: false
+  server_validation_required: true

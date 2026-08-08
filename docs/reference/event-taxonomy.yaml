@@ -1,0 +1,89 @@
+schema_version: 1
+status: draft
+notes:
+  - Event IDs become stable once v0.1 data contracts are released.
+  - Detection is evidence, not moral judgment or final scoring.
+  - Thresholds are intentionally not defined here until empirically calibrated.
+
+events:
+  EVT_ACCEL_STRONG:
+    category: longitudinal
+    display_name: Strong acceleration
+    polarity: neutral
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [longitudinal_acceleration, jerk, speed_change, telemetry_confidence]
+  EVT_ACCEL_ABRUPT_TRANSITION:
+    category: longitudinal
+    display_name: Abrupt acceleration transition
+    polarity: negative_candidate
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [jerk, longitudinal_acceleration, context]
+  EVT_BRAKE_STRONG:
+    category: longitudinal
+    display_name: Strong braking
+    polarity: neutral
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [longitudinal_acceleration, jerk, speed_change, telemetry_confidence]
+  EVT_BRAKE_ABRUPT_TRANSITION:
+    category: longitudinal
+    display_name: Abrupt braking transition
+    polarity: negative_candidate
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [jerk, longitudinal_acceleration, context]
+  EVT_CORNER_HIGH_LOAD_LEFT:
+    category: lateral
+    display_name: High lateral-load left corner
+    polarity: neutral
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [lateral_acceleration, yaw_rate, speed, orientation_confidence]
+  EVT_CORNER_HIGH_LOAD_RIGHT:
+    category: lateral
+    display_name: High lateral-load right corner
+    polarity: neutral
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [lateral_acceleration, yaw_rate, speed, orientation_confidence]
+  EVT_CORNER_ABRUPT_ENTRY:
+    category: lateral
+    display_name: Abrupt corner entry
+    polarity: negative_candidate
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [lateral_jerk, yaw_rate_change, context]
+  EVT_CORNER_ABRUPT_EXIT:
+    category: lateral
+    display_name: Abrupt corner exit
+    polarity: negative_candidate
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [lateral_jerk, yaw_rate_change, context]
+  EVT_ROAD_IMPACT:
+    category: road_device
+    display_name: Road impact or bump
+    polarity: neutral
+    severity_levels: [mild, moderate, severe]
+    expected_evidence: [vertical_acceleration, impulse_shape, speed, context]
+  EVT_PHONE_MOVED:
+    category: road_device
+    display_name: Device moved during trip
+    polarity: quality
+    severity_levels: [notice, significant]
+    expected_evidence: [orientation_discontinuity, gravity_vector_change]
+  EVT_GNSS_QUALITY_LOSS:
+    category: quality
+    display_name: GNSS quality degraded
+    polarity: quality
+    severity_levels: [notice, significant, unusable]
+    expected_evidence: [horizontal_accuracy, gap_duration, source_health]
+  EVT_CRASH_LIKE_EVIDENCE:
+    category: safety
+    display_name: Crash-like impact evidence
+    polarity: safety
+    severity_levels: [possible, strong]
+    expected_evidence: [multi_axis_impact, speed_change, post_event_state, cross_sensor_agreement]
+    rules:
+      - Must never be decided by an LLM.
+      - Must require high-confidence corroboration before Guardian Possible Crash state.
+  EVT_TELEMETRY_INCONSISTENCY:
+    category: integrity
+    display_name: Telemetry inconsistency
+    polarity: integrity
+    severity_levels: [notice, significant, severe]
+    expected_evidence: [gnss_imu_disagreement, impossible_motion, temporal_integrity]

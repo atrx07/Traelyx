@@ -1,0 +1,504 @@
+{
+  "project_name": "Traelyx",
+  "project_identifier": "traelyx",
+  "pack_version": "1.0-bootstrap",
+  "generated_date": "2026-08-08",
+  "file_count_excluding_manifest": 99,
+  "files": [
+    {
+      "path": "00_READ_ME_FIRST.md",
+      "bytes": 4355,
+      "sha256": "c4c11049b87cd9a43ad88488aa1c9adc0712c25a617529d6a15ef57944ad7a53"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 7035,
+      "sha256": "927ac71275ede1664a13160a4c883300d2fc4ed13ce9f2d70c8705f20a5387c2"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "bytes": 7992,
+      "sha256": "4a72546b7fb671d9939319596d8942bbbc0038015b5e83a1c5d3c5cd23fffd14"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 1373,
+      "sha256": "6f3048c645ccf34818ac6976d1ed6632c2c43d0398b7ad416d89a41a38515b37"
+    },
+    {
+      "path": "FILE_MAP.md",
+      "bytes": 10713,
+      "sha256": "5efee243e9ce2f2a7ce3fe9e2c5686952d3e6ee9ecb831f3f99b8f1b83f29819"
+    },
+    {
+      "path": "GITIGNORE_SECURITY_SNIPPET.txt",
+      "bytes": 395,
+      "sha256": "e0b1e3f2db26a472349dad34bf09a4f16e294e3f3783922998f3f1e38c62b5be"
+    },
+    {
+      "path": "NEXTSTEPS.md",
+      "bytes": 1419,
+      "sha256": "9993ae06299a59c51eeae3c2c59fed0f8b6c0fc495388daa26aa21a5257172a8"
+    },
+    {
+      "path": "PACK_SUMMARY.md",
+      "bytes": 1159,
+      "sha256": "a0cceedb864bf5ce9c45f16d29b67d8e0bb1397435f7b89a096613c8ad110d9c"
+    },
+    {
+      "path": "PROJECT.md",
+      "bytes": 6701,
+      "sha256": "e6b7bec5ff91b0a0edcd0698d8faae0137b4aa475a97d395f85d603e80faa38f"
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 2094,
+      "sha256": "a1c2eb8e923a4cdd37a39b2f2303e678413d18b72b1a82de18455eb23da5cfc3"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 1254,
+      "sha256": "a306311910df031ef708d84fe3ef1fd75cf7788aa21049d3eeb1a49b9b45d10c"
+    },
+    {
+      "path": "android/AGENTS.md",
+      "bytes": 1456,
+      "sha256": "94ccdd5eaf9ff919dc8c78839b7e05f2665ccaaf5742e77293312f4f7b6db462"
+    },
+    {
+      "path": "app/AGENTS.md",
+      "bytes": 1481,
+      "sha256": "31de86065fdaf9506b19eb6efd93840febccbda82fc04c876a23f322a48d4760"
+    },
+    {
+      "path": "docs/decisions/ADR-0001-local-first.md",
+      "bytes": 850,
+      "sha256": "95de7e1550ef6b53e80e176f1a30e1361cce871e7f2e347357163973b8b31ff9"
+    },
+    {
+      "path": "docs/decisions/ADR-0002-flutter-kotlin-boundary.md",
+      "bytes": 823,
+      "sha256": "e261d22363e5821dd337eb7278a08b216fded32799c6e91a5afc51e6e1b7ab2b"
+    },
+    {
+      "path": "docs/decisions/ADR-0003-supabase-connected-layer.md",
+      "bytes": 759,
+      "sha256": "3cb16d16a7f5af0d6bcba2f33e94cb8176144065a72ad6cfe0fd2efa8ce0e873"
+    },
+    {
+      "path": "docs/decisions/ADR-0004-ml-evidence-explicit-scoring.md",
+      "bytes": 758,
+      "sha256": "ccc6ddb6686c710012eec0894266d7397ac7812e212d223cdb5f10116ede27e1"
+    },
+    {
+      "path": "docs/decisions/ADR-0005-provider-agnostic-commentary.md",
+      "bytes": 716,
+      "sha256": "e0d9440a760dfb8ac65c393cc0cb87aae9e235bd8cb82e0c725c7cbd7602c970"
+    },
+    {
+      "path": "docs/decisions/ADR-0006-github-release-distribution.md",
+      "bytes": 694,
+      "sha256": "a99ed9eaf17f94988c0f3b310f692b8e9434773dc8a1656d0108c8a4c9098e63"
+    },
+    {
+      "path": "docs/decisions/ADR-0007-raw-telemetry-local-summary-cloud.md",
+      "bytes": 668,
+      "sha256": "2228c5a9e8be1dec13d1769d14da2ab8dd8d9d92b2116212509c739a9090b38a"
+    },
+    {
+      "path": "docs/decisions/ADR-0008-safe-competition.md",
+      "bytes": 658,
+      "sha256": "9ed9b072e522d7aa0104b61ba2845809e9ace45e656746ffbba5f6533e7b1672"
+    },
+    {
+      "path": "docs/decisions/ADR-0009-release-key-local-custody.md",
+      "bytes": 632,
+      "sha256": "1dbe6d7bb666b251dc13daad06a132e7d3e15813792214fe94f8f6137e431da5"
+    },
+    {
+      "path": "docs/decisions/ADR-0010-progressive-agent-context.md",
+      "bytes": 684,
+      "sha256": "836384e94cee319f57a49f07e1c94738471224e31bf03e515f4d1b95ac7191db"
+    },
+    {
+      "path": "docs/decisions/index.md",
+      "bytes": 510,
+      "sha256": "9cbbb035254d60f78256125d194f3648d263aad903ed01453155b2b448043737"
+    },
+    {
+      "path": "docs/exec-plans/ROADMAP.md",
+      "bytes": 9369,
+      "sha256": "ecbe820d99208fe1b9d826bcdd5cf506fe7b7fa60398c62c62d0f5f2958b9681"
+    },
+    {
+      "path": "docs/exec-plans/active/README.md",
+      "bytes": 158,
+      "sha256": "b1502d3757c7e9a22507944ce8e88416548fd21cd3fc3adfeebd8a5643eedc5c"
+    },
+    {
+      "path": "docs/exec-plans/completed/README.md",
+      "bytes": 121,
+      "sha256": "f14847ad0be3efe9a1cb41f8ee4f8e8446124b94464531e37ef1a1fcc42b5b85"
+    },
+    {
+      "path": "docs/exec-plans/index.md",
+      "bytes": 239,
+      "sha256": "9e368c132bbb020fcf27fb48f81e9012d5ecec82bf34e7f2ec4931b39fc99819"
+    },
+    {
+      "path": "docs/exec-plans/stages/README.md",
+      "bytes": 189,
+      "sha256": "0b6c866b1abd22e57cdb604ab73544542cc44ed937ae48e82a139ba0bb98a3c3"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_0_BOOTSTRAP.md",
+      "bytes": 1667,
+      "sha256": "65cc4d0ed5105baaec0425f99ab3595dbfeed8a383af1e94ababda75e1fd6f28"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_1_APP_FOUNDATION.md",
+      "bytes": 1295,
+      "sha256": "8d3c95d2368d4a8dad70f0d9a5806b9c9cfa36b42c9a9d8b8bd147f66c127ce3"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_2_RECORDER.md",
+      "bytes": 1636,
+      "sha256": "5fba9ecf400d7931f60af0a70afb250b291667c3f9c4ad9b13bf40e77bbc17eb"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_3_TELEMETRY.md",
+      "bytes": 1231,
+      "sha256": "b2ed0f264be0f10044d72a49be5916486c1d00f471c55d560a620056295c9621"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_4_INTELLIGENCE_V1.md",
+      "bytes": 1191,
+      "sha256": "00078ef0b1407f909fd32e531e1acee7ca8db5fd6d1e665deb5829d57281b73a"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_5_EXPERIENCE.md",
+      "bytes": 1294,
+      "sha256": "b1ad44704d4e2754df03db89dbc4930090089e022a5a737dfd6f98a834e8ff82"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_6_CONNECTED.md",
+      "bytes": 1241,
+      "sha256": "3f1057ce8d3d4972885f68e3c9cea86cc9f68acf2569745551100daa257fe7c6"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_7_ML_COMMENTARY.md",
+      "bytes": 1912,
+      "sha256": "10df7b66ffd67aaad91e24b45827751e2120f14381ef6704246247c4ab0a6e55"
+    },
+    {
+      "path": "docs/exec-plans/stages/STAGE_8_RELEASE.md",
+      "bytes": 1482,
+      "sha256": "ae5ab45f789f96dcbda9367f54b52e482f6792b50ec13183bc3163063d9c9e6f"
+    },
+    {
+      "path": "docs/exec-plans/templates/CODEX_TASK_TEMPLATE.md",
+      "bytes": 631,
+      "sha256": "398138662e417617be505edbb8334f478bccf4b08a5937d10b2c15023d6f2d0c"
+    },
+    {
+      "path": "docs/exec-plans/templates/EXEC_PLAN_TEMPLATE.md",
+      "bytes": 1388,
+      "sha256": "1e7a9b6980cb606de0eafa05f9de270b907913ac74cc8ba3fa29abf561123d57"
+    },
+    {
+      "path": "docs/exec-plans/templates/REAL_DRIVE_TEST_TEMPLATE.md",
+      "bytes": 967,
+      "sha256": "31fb587482c11066c0fdc59d676e417b375c99147e722057a4fe6131b8441c94"
+    },
+    {
+      "path": "docs/governance/DATASET_GOVERNANCE.md",
+      "bytes": 1892,
+      "sha256": "7c6037da1ee13243f4f65b3da78f8cd8a1c5564d1088e056c77f0583785e15d8"
+    },
+    {
+      "path": "docs/governance/DEFINITION_OF_DONE.md",
+      "bytes": 2090,
+      "sha256": "4af29265ef4155f88118ce5c4b8154866b259d6a6da004843905dcca83e7a3cb"
+    },
+    {
+      "path": "docs/governance/DEPENDENCY_POLICY.md",
+      "bytes": 1764,
+      "sha256": "e3c32d35981c131f3825df6829dc5cea9df3199ade52de67dd28b4d34604ecb8"
+    },
+    {
+      "path": "docs/governance/DOCUMENTATION_POLICY.md",
+      "bytes": 1541,
+      "sha256": "904a9c95c5eff4383a19610a77694dace804c68ba512548a503936a1d8a2a5c3"
+    },
+    {
+      "path": "docs/governance/ML_GOVERNANCE.md",
+      "bytes": 2371,
+      "sha256": "f1c8e76c4a39462fa6dbe576df5b0f11ab668da685ad50018437b888dc3de378"
+    },
+    {
+      "path": "docs/governance/OPEN_SOURCE_POLICY.md",
+      "bytes": 1304,
+      "sha256": "641c5a2c3a8fd1e72bc2a5c4c47fb7cecd91a48bb8b7a79a88be8cbb56b21d75"
+    },
+    {
+      "path": "docs/governance/PERFORMANCE_BUDGETS.md",
+      "bytes": 2020,
+      "sha256": "a4ed09f0ed143889303fabf8e18d58d5550335e321946ba17e3c779dbb80cab0"
+    },
+    {
+      "path": "docs/governance/PRIVACY_POLICY_ENGINEERING.md",
+      "bytes": 1436,
+      "sha256": "44eec27a1ed4cfa1e2aedddb0c5774749e8fe9442ebf9d81e71398d3b3ade4c0"
+    },
+    {
+      "path": "docs/governance/SAFETY_GOVERNANCE.md",
+      "bytes": 1379,
+      "sha256": "e718c13707a536bfe38a75d397a994565164ae2c7c6ec67f534544a6a288d509"
+    },
+    {
+      "path": "docs/governance/TESTING_POLICY.md",
+      "bytes": 2505,
+      "sha256": "9a6027fbcbd2fc12cc3e571a2863fc1ca7fe50abd2a354b4c6cbfbb6649c419f"
+    },
+    {
+      "path": "docs/governance/UPSTREAM_CHANGE_POLICY.md",
+      "bytes": 1764,
+      "sha256": "8521cbc05684472c9497a4e44c1f3c4b22537eb21538601dc042d530639c8bab"
+    },
+    {
+      "path": "docs/governance/index.md",
+      "bytes": 741,
+      "sha256": "e1877bf0699959736309543ba0a660d454dc5fa2ddef2e871fc3fe7c95d05ddc"
+    },
+    {
+      "path": "docs/index.md",
+      "bytes": 2772,
+      "sha256": "5e791a6fac397e782460c9f044be2b3503b4103be621de5f007a5efce64f41c3"
+    },
+    {
+      "path": "docs/product/COMMENTARY_SPEC.md",
+      "bytes": 5257,
+      "sha256": "99cdc333dad3ec2465885aad04dfc6aeed1004e662825f495cad29e577c68ebc"
+    },
+    {
+      "path": "docs/product/COMPETITOR_BOUNDARIES.md",
+      "bytes": 2202,
+      "sha256": "eceb0cfbec5d394fa692a128859c996b215cd2f32907d3288781baa9b1dce5a9"
+    },
+    {
+      "path": "docs/product/DRIVE_DNA_SPEC.md",
+      "bytes": 4315,
+      "sha256": "b32458b324b4d4c7aaaf8867a57ba4bc23f6ed1440d006535cda4ab7a7e286a8"
+    },
+    {
+      "path": "docs/product/GUARDIAN_SPEC.md",
+      "bytes": 4073,
+      "sha256": "27863a15db08c774ad630ea04411552fbfe82605d7db4dc57eb373f94ac2d295"
+    },
+    {
+      "path": "docs/product/MVP_SCOPE.md",
+      "bytes": 4168,
+      "sha256": "ea7b08700fcf289a2ee6f0014cd4a713dcb396dd86b13132634b3b30b89e436e"
+    },
+    {
+      "path": "docs/product/PRIVACY_MODEL.md",
+      "bytes": 2976,
+      "sha256": "6ffdf5e02d7a1505b5e4446cd860fe4048aacb6022c2a9f4fc6c5b9c673ddef0"
+    },
+    {
+      "path": "docs/product/PRODUCT_SPEC.md",
+      "bytes": 8103,
+      "sha256": "ad278d2934f592e45bdd2e9cfdde70f75033985d00009a0e12c3577fc12c44d1"
+    },
+    {
+      "path": "docs/product/SOCIAL_RANKING_SPEC.md",
+      "bytes": 1743,
+      "sha256": "ef2f836ec7aff7bf826c308ae517bed53f1d520d13b4baede6e37be331b2e7e9"
+    },
+    {
+      "path": "docs/product/UX_SPEC.md",
+      "bytes": 7019,
+      "sha256": "302e9bc300b766b8142d89dd9fc598ba7869378a9b28f29386906b2af6982767"
+    },
+    {
+      "path": "docs/product/VEHICLE_PROFILE_SPEC.md",
+      "bytes": 1284,
+      "sha256": "230073f81142c23bb19fa5b78923047831a893d89da91202751ec7fd7daef5fc"
+    },
+    {
+      "path": "docs/product/index.md",
+      "bytes": 719,
+      "sha256": "6b4f1e3361c54bbec5aa5040b2605fcc05a09fe0a646a196d11133c9b7d2ae7e"
+    },
+    {
+      "path": "docs/reference/README.md",
+      "bytes": 650,
+      "sha256": "544adb3d0acbd4f5de4c906643ae6b711b7ded0a263a8d0dcc29d4c1e1f81690"
+    },
+    {
+      "path": "docs/reference/agent-routing.yaml",
+      "bytes": 1263,
+      "sha256": "a81e8cbf2661d847bbe0af9575f57eb8af023b3619f34c1a45a318ccceb81f4c"
+    },
+    {
+      "path": "docs/reference/commentary-benchmark.yaml",
+      "bytes": 1234,
+      "sha256": "dfad212d07eedc3b99dbcb8a66f8bbd0a12cdf4c9986a25042aaea9c3d29111b"
+    },
+    {
+      "path": "docs/reference/commentary-events.yaml",
+      "bytes": 1981,
+      "sha256": "b1e3430f422822f747ebd7ff69e091482a19bbe3aa767567d820c9654d31845c"
+    },
+    {
+      "path": "docs/reference/data-classification.yaml",
+      "bytes": 1160,
+      "sha256": "d773b6b8c6f1be249c8191d7a4a2f9931d8fb390ad8d6ae30131bbc0a5e2f90a"
+    },
+    {
+      "path": "docs/reference/dataset-registry.schema.json",
+      "bytes": 1120,
+      "sha256": "fcd5ccebe7667f95dd6ed3dbe5405dd244cbabbc42c9fec7089a9e9836a0eb65"
+    },
+    {
+      "path": "docs/reference/event-taxonomy.yaml",
+      "bytes": 3557,
+      "sha256": "cf34e97c5e4b2d726a6e410dc49fc6236c5f5979c69a00af1e813503f95fdddf"
+    },
+    {
+      "path": "docs/reference/model-manifest.schema.json",
+      "bytes": 1912,
+      "sha256": "edf4e2102665cf9b9c23eacd83f1f3021e519e7efd59640bd4bf2fc951e100bd"
+    },
+    {
+      "path": "docs/reference/permissions-matrix.yaml",
+      "bytes": 1148,
+      "sha256": "2c747ddf19ffaa2b2cdea38e0196a068c348a145ce944c239e7ed93124e96c2e"
+    },
+    {
+      "path": "docs/reference/provider-registry.json",
+      "bytes": 1589,
+      "sha256": "be71c2b6ba228ec2efb1723cba862c63f95dbda00f65a07f95e42d92bcaeb984"
+    },
+    {
+      "path": "docs/reference/release-checklist.yaml",
+      "bytes": 979,
+      "sha256": "d19c143d7d0e333d8d3e9ded7ccc0ab333d529113358a97b576edd54b2a0cba3"
+    },
+    {
+      "path": "docs/reference/scoring-v1.yaml",
+      "bytes": 2330,
+      "sha256": "151c2bda4361636d1abd61a1b8cd1b2953d46fe2d08daceceee148d797c91a26"
+    },
+    {
+      "path": "docs/reference/telemetry.schema.json",
+      "bytes": 2739,
+      "sha256": "cb9f6e24b2afba02b44c56c1b0888ff6fd8e4f54618df821d64ee0c18d59e12d"
+    },
+    {
+      "path": "docs/reference/theme-tokens.json",
+      "bytes": 774,
+      "sha256": "af475865f03fa6f879066de3603cf4b376dcd51edb5e5cd3cd8af4a247967ab1"
+    },
+    {
+      "path": "docs/technical/ANDROID_TRACKING.md",
+      "bytes": 2604,
+      "sha256": "e93d491297f15a21fd3889691270a84c6cbc7a4bcb1ffdd4a786a89d9eee5139"
+    },
+    {
+      "path": "docs/technical/AUTH_SPEC.md",
+      "bytes": 3003,
+      "sha256": "46a844122523de06b358ba854d294c086249cd1883ecfd88a060b79eb77272b3"
+    },
+    {
+      "path": "docs/technical/DATA_MODEL.md",
+      "bytes": 2838,
+      "sha256": "d4c01bf6c1799693216f4bc80293f1094f39fe57c55a0584a2e5286d1d6db9b2"
+    },
+    {
+      "path": "docs/technical/EVENT_ENGINE.md",
+      "bytes": 2944,
+      "sha256": "0d31dd5198643dcf54de5d91a5dc5b701d5647446b6fc79ca74b3d3804bf3361"
+    },
+    {
+      "path": "docs/technical/INTEGRITY_ENGINE.md",
+      "bytes": 2570,
+      "sha256": "f4674a8b48904c0003144d8b19f900327ec7812f28c21d03fd7dac71ff0d5ff3"
+    },
+    {
+      "path": "docs/technical/MAP_ARCHITECTURE.md",
+      "bytes": 1557,
+      "sha256": "85593f1b5d3c327fe3a1f212372e48b2baad167a4a2c693ad2624d86480cbb51"
+    },
+    {
+      "path": "docs/technical/ML_SYSTEM.md",
+      "bytes": 5140,
+      "sha256": "5a4e75d4818eb68cda56724db5b4148bfae856084cef7f8f349f2d6f57f97f07"
+    },
+    {
+      "path": "docs/technical/PROVIDER_ARCHITECTURE.md",
+      "bytes": 2508,
+      "sha256": "eac7d9b6a7675ed76aa8fc4337614c4596853799b41812f2979839c93beb4ff6"
+    },
+    {
+      "path": "docs/technical/RELEASE_SIGNING.md",
+      "bytes": 3330,
+      "sha256": "ebdd69d74571a6dead29825f6e29ddf0f32a52f89655aea73a48cb990fe28c7a"
+    },
+    {
+      "path": "docs/technical/SCORING_SPEC.md",
+      "bytes": 3478,
+      "sha256": "ad04f1992115740f7a1a1be73556fc5453f84047a29da2a82673f2e2ff44cb8e"
+    },
+    {
+      "path": "docs/technical/SENSOR_PIPELINE.md",
+      "bytes": 4554,
+      "sha256": "7bec53847ea599e2587b355beb5ffd04250695097ae5f28298bfa597bc98f1ba"
+    },
+    {
+      "path": "docs/technical/STORAGE_SPEC.md",
+      "bytes": 2062,
+      "sha256": "f507e85d7d06206fc744dd10295a41d05c59cb937f6f2d6424618e07c80cfe94"
+    },
+    {
+      "path": "docs/technical/SYNC_SPEC.md",
+      "bytes": 1573,
+      "sha256": "8cb678ed210b33a3d2a22c666b73cc881a8b5b79744817be2a0067ec03683f44"
+    },
+    {
+      "path": "docs/technical/TECH_STACK.md",
+      "bytes": 2721,
+      "sha256": "4a795d723926b30595199c1689ce75b80df8e34e070240dfae9d5c47888d6c0a"
+    },
+    {
+      "path": "docs/technical/TELEMETRY_SPEC.md",
+      "bytes": 6216,
+      "sha256": "20f9a398109275af83d01695c292a98a33765be8c1e56e5c88898a4bf7c37997"
+    },
+    {
+      "path": "docs/technical/UPDATE_DISTRIBUTION.md",
+      "bytes": 1169,
+      "sha256": "013aa65658d7d44b2af1e8fd4fadf91c64b18d79ccd57961eae2025d5c78d819"
+    },
+    {
+      "path": "docs/technical/index.md",
+      "bytes": 960,
+      "sha256": "8763a824dd83f2b6f7b068503e903ee16f936921644533f0f3b9c09e0aec9b90"
+    },
+    {
+      "path": "ml/AGENTS.md",
+      "bytes": 1290,
+      "sha256": "b7b1a499311eaaea3f3ace9493742a9d99c5c704ac8ef505cf8642abcd2751b6"
+    },
+    {
+      "path": "tests/AGENTS.md",
+      "bytes": 729,
+      "sha256": "459ff9d88422072fce7e4ab84e7ea78b231e90a45163667ada44d4143ee59b2d"
+    },
+    {
+      "path": "tests/fixtures/README.md",
+      "bytes": 687,
+      "sha256": "999659693388ef4fb9cbb24cf7d9a9d12822723d04d7a417b4d7ecedfb3a2025"
+    }
+  ]
+}

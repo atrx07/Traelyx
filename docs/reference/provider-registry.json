@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "bootstrap",
+  "policy": {
+    "hardcode_permanent_model_ids": false,
+    "default_fallback_engine": "procedural",
+    "precise_location_in_cloud_commentary": false,
+    "store_provider_keys_in_cloud": false
+  },
+  "providers": [
+    {
+      "id": "procedural",
+      "kind": "local_builtin",
+      "enabled_by_default": true,
+      "requires_key": false,
+      "model_discovery": false,
+      "network_required": false
+    },
+    {
+      "id": "local_model",
+      "kind": "local_downloadable",
+      "enabled_by_default": false,
+      "requires_key": false,
+      "model_discovery": true,
+      "network_required_after_download": false,
+      "notes": "Model/runtime registry selected through benchmarked manifests; model is not bundled into APK by default."
+    },
+    {
+      "id": "groq",
+      "kind": "cloud_byo_key",
+      "enabled_by_default": false,
+      "requires_key": true,
+      "secure_storage_required": true,
+      "model_discovery": true,
+      "network_required": true,
+      "model_policy": "Select from models available to the user's account; maintain recommendation separately from permanent code constants."
+    },
+    {
+      "id": "openai_compatible_custom",
+      "kind": "cloud_byo_key_advanced",
+      "enabled_by_default": false,
+      "requires_key": true,
+      "secure_storage_required": true,
+      "model_discovery": "provider_dependent",
+      "network_required": true,
+      "notes": "Advanced geek-mode adapter for compatible endpoints. Validate SSRF/endpoint handling before enabling arbitrary URLs."
+    }
+  ]
+}

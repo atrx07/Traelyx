@@ -1,0 +1,25 @@
+schema_version: 1
+policy: progressive_context_loading
+routes:
+  flutter_ui:
+    read: [app/AGENTS.md, docs/product/UX_SPEC.md]
+    optional: [docs/product/PRODUCT_SPEC.md]
+    avoid_by_default: [docs/technical/ML_SYSTEM.md, docs/technical/RELEASE_SIGNING.md]
+  android_recorder:
+    read: [android/AGENTS.md, docs/technical/ANDROID_TRACKING.md]
+    optional: [docs/technical/TELEMETRY_SPEC.md, docs/governance/PERFORMANCE_BUDGETS.md]
+  telemetry:
+    read: [docs/technical/TELEMETRY_SPEC.md, docs/technical/SENSOR_PIPELINE.md]
+  scoring:
+    read: [docs/technical/EVENT_ENGINE.md, docs/technical/SCORING_SPEC.md, docs/product/DRIVE_DNA_SPEC.md]
+  ml:
+    read: [ml/AGENTS.md, docs/technical/ML_SYSTEM.md, docs/governance/ML_GOVERNANCE.md]
+    optional: [docs/governance/DATASET_GOVERNANCE.md]
+  guardian:
+    read: [docs/product/GUARDIAN_SPEC.md, docs/reference/permissions-matrix.yaml]
+    optional: [docs/product/PRIVACY_MODEL.md, docs/technical/AUTH_SPEC.md]
+  commentary:
+    read: [docs/product/COMMENTARY_SPEC.md, docs/technical/PROVIDER_ARCHITECTURE.md]
+    optional: [docs/reference/commentary-events.yaml, docs/reference/provider-registry.json]
+  release:
+    read: [docs/technical/RELEASE_SIGNING.md, SECURITY.md, docs/reference/release-checklist.yaml]

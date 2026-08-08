@@ -1,0 +1,32 @@
+schema_version: 1
+classes:
+  secret:
+    examples: [release_signing_key, api_key, auth_refresh_token]
+    default_storage: secure_platform_storage_or_external_secure_location
+    cloud_sync: prohibited_unless_specific_security_design
+    logs: prohibited
+  precise_location:
+    examples: [route_geometry, latitude_longitude_history]
+    default_storage: local_private
+    cloud_sync: opt_in_or_feature_specific
+    public: false
+  raw_telemetry:
+    examples: [accelerometer_stream, gyroscope_stream, high_rate_gnss]
+    default_storage: local_private
+    cloud_sync: false_by_default
+    public: false
+  derived_private:
+    examples: [trip_summary, drive_dna, event_details]
+    default_storage: local
+    cloud_sync: optional_account_feature
+    public: false_by_default
+  sanitized_public:
+    examples: [username, avatar, ranking_metric, rank_eligibility]
+    default_storage: cloud
+    cloud_sync: true_when_account_enabled
+    public: explicit
+  ml_contribution:
+    examples: [anonymized_event_window, user_corrected_label]
+    default_storage: controlled_dataset
+    cloud_sync: explicit_separate_consent
+    precise_location: remove_unless_required

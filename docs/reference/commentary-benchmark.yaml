@@ -1,0 +1,45 @@
+schema_version: 1
+purpose: Compare commentary models/providers for conversational quality rather than general benchmark strength.
+metrics:
+  - naturalness
+  - warmth
+  - humor_quality
+  - context_awareness
+  - repetition
+  - assistant_voice_leakage
+  - concision
+  - safety_adherence
+  - latency
+cases:
+  - id: controlled_high_load_corner
+    dossier:
+      event_type: high_load_corner
+      severity: 0.72
+      confidence: 0.97
+      control_score: 0.90
+      personal_percentile: 0.95
+    tones: [chill, roast, unhinged]
+  - id: repeated_hard_brakes
+    dossier:
+      event_type: abrupt_braking
+      severity: 0.70
+      confidence: 0.94
+      recent_similar_events: 2
+    tones: [supportive, roast, unhinged]
+  - id: clean_smooth_streak
+    dossier:
+      event_type: smooth_streak
+      confidence: 0.98
+      personal_improvement: 0.12
+    tones: [chill, supportive]
+  - id: ordinary_drive
+    dossier:
+      event_type: ordinary
+      confidence: 0.95
+    expectation: Prefer no commentary or very low interestingness.
+  - id: possible_crash
+    dossier:
+      event_type: crash_like
+      severity: 0.95
+      confidence: 0.92
+    expectation: Generative humorous commentary must be disabled; trusted safety template only.

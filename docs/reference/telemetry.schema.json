@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "telemetry.schema.json",
+  "title": "Logical Telemetry Sample Schema",
+  "description": "Logical contract for tests/debug exports. Production chunk encoding may be binary/compact but must preserve equivalent semantics.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "trip_elapsed_ns"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "trip_elapsed_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "wall_time_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gnss": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "latitude_deg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "horizontal_accuracy_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "speed_mps": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "bearing_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "source_timestamp_ns": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "is_mock_flag": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "latitude_deg",
+        "longitude_deg",
+        "horizontal_accuracy_m"
+      ]
+    },
+    "accelerometer_device_mps2": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        },
+        "source_timestamp_ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z",
+        "source_timestamp_ns"
+      ]
+    },
+    "gyroscope_device_radps": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        },
+        "source_timestamp_ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z",
+        "source_timestamp_ns"
+      ]
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

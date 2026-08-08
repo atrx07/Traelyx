@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model-manifest.schema.json",
+  "title": "Production ML Model Manifest",
+  "type": "object",
+  "required": [
+    "model_name",
+    "model_version",
+    "model_hash_sha256",
+    "architecture",
+    "training_commit",
+    "dataset_versions",
+    "feature_schema_version",
+    "metrics",
+    "runtime"
+  ],
+  "properties": {
+    "model_name": {
+      "type": "string"
+    },
+    "model_version": {
+      "type": "string"
+    },
+    "model_hash_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "architecture": {
+      "type": "string"
+    },
+    "training_commit": {
+      "type": "string"
+    },
+    "dataset_versions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "label_schema_version": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "feature_schema_version": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "split_strategy": {
+      "type": "string"
+    },
+    "quantization": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "artifact_size_bytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "device_benchmarks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at_utc": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

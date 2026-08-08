@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dataset-registry.schema.json",
+  "title": "ML Dataset Registry Entry",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "version",
+    "source",
+    "license",
+    "provenance",
+    "label_schema",
+    "privacy"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "string"
+    },
+    "vehicle_population": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "device_population": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sensor_channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "label_schema": {
+      "type": "string"
+    },
+    "privacy": {
+      "type": "object"
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
