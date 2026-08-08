@@ -16,10 +16,10 @@
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
+- GitHub Actions passes generated-source, format, analysis, Flutter/Kotlin tests, repository validation, debug/release builds, size reporting, and artifact upload on `main`.
 
 ## Partial
 
-- GitHub Actions CI, secret/contract validation, and debug/release APK-size reporting are implemented locally; the first remote run is pending.
 - Foundation implementation exists locally but is not yet persisted as roadmap step 0.6.
 
 ## Not implemented

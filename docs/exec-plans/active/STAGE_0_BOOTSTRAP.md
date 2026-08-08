@@ -73,7 +73,7 @@ Developers can clone the repository, install dependencies, analyze and test the 
 - [ ] 2. Establish source boundaries, design tokens, and an honest local-first bootstrap screen.
 - [ ] 3. Add the Drift/SQLite schema version 1 foundation and migration test harness.
 - [ ] 4. Add a versioned Kotlin bridge and non-recording foreground-service skeleton.
-- [ ] 5. Add formatting, analysis, tests, CI, schema validation, secret scanning, and build-size reporting.
+- [x] 5. Add formatting, analysis, tests, CI, schema validation, secret scanning, and build-size reporting.
 - [ ] 6. Document repeatable commands and update project state and priority queue.
 
 Each step should be independently verifiable when practical.
@@ -85,7 +85,7 @@ Each step should be independently verifiable when practical.
 - [ ] database migration test
 - [x] Android debug build
 - [x] JSON/YAML validation
-- [ ] secret scan configuration review
+- [x] secret scan configuration review
 - [x] real-device launch smoke test
 
 Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation are not applicable until recording is implemented.
@@ -120,6 +120,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Roadmap step 0.3 toolchain baseline validated with Flutter Doctor and the generated Android build configuration.
 - 2026-08-08: Roadmap step 0.4 quality commands validated with strict analysis, Flutter and Kotlin tests, and repository contract checks.
 - 2026-08-08: Roadmap step 0.5 workflow implemented with pinned actions, debug/release validation, Kotlin tests, secret checks, and size artifacts; remote run pending.
+- 2026-08-08: Roadmap step 0.5 completed after GitHub Actions run `31267469320` passed every gate and uploaded debug/release-validation artifacts without action-runtime warnings.
 
 ## Completion summary
 
