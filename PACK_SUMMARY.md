@@ -5,7 +5,7 @@
 - Pack version: 1.0 bootstrap
 - Generated: 2026-08-08
 - Files before manifest: 99
-- Approximate words: 28,294
+- Approximate words: 28,442
 - JSON parse validation: PASS
 - YAML parse validation: PASS
 - JSON Schema meta-validation: PASS
@@ -16,7 +16,7 @@ This pack contains root/scoped agent governance, product/UX/privacy specificatio
 
 ## Important intentional incompleteness
 
-- The official product name is Traelyx; the Android application ID remains to be chosen during bootstrap.
+- The official identity is product `Traelyx`, repository/Flutter project `traelyx`, and Android namespace/application ID `io.github.atrx07.traelyx`.
 - Final open-source license is not chosen by the agent.
 - Empirical scoring weights/thresholds remain null/unvalidated until real telemetry supports them.
 - Fast-changing hosted AI model IDs and free-tier numbers are intentionally not pinned as permanent architecture.

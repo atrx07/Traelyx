@@ -21,6 +21,18 @@ The product should feel like a fusion of:
 
 It must be useful even when completely offline and even when the user never creates an account.
 
+### Canonical project and Android identity
+
+| Identity | Value |
+|---|---|
+| Product name | `Traelyx` |
+| Repository name | `traelyx` |
+| Flutter project name | `traelyx` |
+| Android namespace | `io.github.atrx07.traelyx` |
+| Android application ID | `io.github.atrx07.traelyx` |
+
+These values are authoritative for future scaffolding, Gradle configuration, release builds, and installation identity.
+
 ## 2. Signature product ideas
 
 Traelyx is differentiated by the combination of:

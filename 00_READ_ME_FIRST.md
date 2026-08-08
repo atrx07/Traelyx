@@ -28,7 +28,7 @@ This pack captures the product and technical decisions made during Traelyx's pla
 ## How to use this pack
 
 1. Place the pack contents in the Traelyx repository root.
-2. Use `Traelyx` for the visible product name and `traelyx` for repository/Flutter project identifiers where appropriate.
+2. Use `Traelyx` for the visible product name, `traelyx` for the repository/Flutter project name, and `io.github.atrx07.traelyx` for both the Android namespace and application ID.
 3. Do **not** delete governance files because implementation has started; evolve them alongside the code.
 4. Read `AGENTS.md` first. It is intentionally a map, not an encyclopedia.
 5. Read `PROJECT.md` and `ARCHITECTURE.md` when beginning substantial work.

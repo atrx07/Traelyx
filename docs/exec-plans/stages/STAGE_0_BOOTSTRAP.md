@@ -10,8 +10,23 @@ Root `AGENTS.md`, `PROJECT.md`, `ARCHITECTURE.md`, `TECH_STACK.md`, `TESTING_POL
 
 ## Work units
 
-1. Use the official `Traelyx` product name and `traelyx` repository/Flutter project identifier; choose a unique Android application ID that does not copy competitor naming.
-2. Initialize Flutter Android project and Git.
+1. Use the canonical identity: product `Traelyx`, repository/Flutter project `traelyx`, and Android namespace/application ID `io.github.atrx07.traelyx`.
+2. When an active Stage 0 execution plan authorizes scaffolding, initialize the Flutter Android project and Git using the equivalent of:
+
+   ```text
+   flutter create --org io.github.atrx07 --project-name traelyx --platforms=android .
+   ```
+
+   Verify the generated Android Gradle configuration retains:
+
+   ```kotlin
+   namespace = "io.github.atrx07.traelyx"
+
+   defaultConfig {
+       applicationId = "io.github.atrx07.traelyx"
+   }
+   ```
+
 3. Place governance files at repository root and preserve nested agent scopes.
 4. Establish Flutter/Dart/JDK/Android/Python toolchain constraints without needlessly pinning obsolete versions from this pack.
 5. Establish directory responsibilities and imports/layer rules.

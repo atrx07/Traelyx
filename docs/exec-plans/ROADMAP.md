@@ -21,8 +21,9 @@ Stages overlap, especially data collection/ML. Estimates are not promises.
 
 ### 0.1 Confirm identity
 - product name: `Traelyx`;
-- repository and Flutter project identifier: `traelyx`;
-- Android application ID;
+- repository and Flutter project name: `traelyx`;
+- Android namespace: `io.github.atrx07.traelyx`;
+- Android application ID: `io.github.atrx07.traelyx`;
 - initial versioning convention;
 - review naming conflicts before public release.
 

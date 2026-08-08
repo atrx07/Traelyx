@@ -4,7 +4,7 @@
 
 ## P0 — Bootstrap
 
-1. Use `traelyx` as the repository and Flutter project identifier; choose the Android application ID.
+1. Use the resolved identity for future scaffolding: repository/Flutter project `traelyx` and Android namespace/application ID `io.github.atrx07.traelyx`.
 2. Initialize Git repository and Flutter Android project.
 3. Install root/nested `AGENTS.md` files from this pack.
 4. Establish formatting, linting, test commands, and CI.

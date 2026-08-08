@@ -25,7 +25,9 @@ Exact commands are updated once repository paths/tool versions are established.
 
 The maintainer creates and controls the production release keystore/private key.
 
-The same signing identity is required for Android to accept future APKs as updates to an installed app.
+Traelyx release builds use the canonical Android application ID `io.github.atrx07.traelyx`.
+
+Android accepts future APKs as updates only when they retain both this application ID and the same signing identity.
 
 Losing the key can force users to uninstall/reinstall rather than seamlessly upgrade. Therefore maintain secure backups.
 

@@ -7,8 +7,8 @@
   "files": [
     {
       "path": "00_READ_ME_FIRST.md",
-      "bytes": 4355,
-      "sha256": "c4c11049b87cd9a43ad88488aa1c9adc0712c25a617529d6a15ef57944ad7a53"
+      "bytes": 4413,
+      "sha256": "297e372df63d926e78e41a086cd8f3fd5379f805dd7735ebc88ae9bcff001f59"
     },
     {
       "path": "AGENTS.md",
@@ -37,18 +37,18 @@
     },
     {
       "path": "NEXTSTEPS.md",
-      "bytes": 1419,
-      "sha256": "9993ae06299a59c51eeae3c2c59fed0f8b6c0fc495388daa26aa21a5257172a8"
+      "bytes": 1472,
+      "sha256": "4276c3ac1e3d319a9352580e13052698d7321e7c553f8fae2479594428953341"
     },
     {
       "path": "PACK_SUMMARY.md",
-      "bytes": 1159,
-      "sha256": "a0cceedb864bf5ce9c45f16d29b67d8e0bb1397435f7b89a096613c8ad110d9c"
+      "bytes": 1202,
+      "sha256": "9d5e2b47e61eba1aef1fb9973516e2f28370c18da519622cce0e7cf87cd69b66"
     },
     {
       "path": "PROJECT.md",
-      "bytes": 6701,
-      "sha256": "e6b7bec5ff91b0a0edcd0698d8faae0137b4aa475a97d395f85d603e80faa38f"
+      "bytes": 7103,
+      "sha256": "1e071eecc774bf954171b71bfd8f34614f414481747048e4c2d5906657460710"
     },
     {
       "path": "SECURITY.md",
@@ -57,8 +57,8 @@
     },
     {
       "path": "STATUS.md",
-      "bytes": 1254,
-      "sha256": "a306311910df031ef708d84fe3ef1fd75cf7788aa21049d3eeb1a49b9b45d10c"
+      "bytes": 1393,
+      "sha256": "0ccd9f33950906ec5a6c56462d2a5205a6d7b41e66defc4811b45ec68309cee6"
     },
     {
       "path": "android/AGENTS.md",
@@ -127,8 +127,8 @@
     },
     {
       "path": "docs/exec-plans/ROADMAP.md",
-      "bytes": 9369,
-      "sha256": "ecbe820d99208fe1b9d826bcdd5cf506fe7b7fa60398c62c62d0f5f2958b9681"
+      "bytes": 9440,
+      "sha256": "379d1ebd4c64d61d18db00c275aa4262bb9a09a29e169fcbb4a75e4a98a03e76"
     },
     {
       "path": "docs/exec-plans/active/README.md",
@@ -152,8 +152,8 @@
     },
     {
       "path": "docs/exec-plans/stages/STAGE_0_BOOTSTRAP.md",
-      "bytes": 1667,
-      "sha256": "65cc4d0ed5105baaec0425f99ab3595dbfeed8a383af1e94ababda75e1fd6f28"
+      "bytes": 2044,
+      "sha256": "f25881233f3305910edda11e7fc4eddba1ae489ef7b78c436f4cade0e929c2d4"
     },
     {
       "path": "docs/exec-plans/stages/STAGE_1_APP_FOUNDATION.md",
@@ -442,8 +442,8 @@
     },
     {
       "path": "docs/technical/RELEASE_SIGNING.md",
-      "bytes": 3330,
-      "sha256": "ebdd69d74571a6dead29825f6e29ddf0f32a52f89655aea73a48cb990fe28c7a"
+      "bytes": 3436,
+      "sha256": "ba17aae110becb23f79c6c76c558c2133e0e9e695b868f9aa8bb3aa091944023"
     },
     {
       "path": "docs/technical/SCORING_SPEC.md",
