@@ -13,14 +13,14 @@
 - Initial governance/reference pack created.
 - Main-first atomic commit/push discipline and public README roadmap tracking established.
 - Stage 0 execution plan activated.
+- Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 
 ## Partial
 
-- Flutter scaffold and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
+- Toolchain and foundation implementation exist locally but are not yet persisted as validated roadmap checkpoints.
 
 ## Not implemented
 
-- Flutter application shell.
 - Android foreground recorder.
 - Local database.
 - Telemetry pipeline.

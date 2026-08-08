@@ -69,7 +69,7 @@ Developers can clone the repository, install dependencies, analyze and test the 
 
 ## Implementation steps
 
-- [ ] 1. Scaffold the Flutter Android project with the canonical identity and preserve repository governance files.
+- [x] 1. Scaffold the Flutter Android project with the canonical identity and preserve repository governance files.
 - [ ] 2. Establish source boundaries, design tokens, and an honest local-first bootstrap screen.
 - [ ] 3. Add the Drift/SQLite schema version 1 foundation and migration test harness.
 - [ ] 4. Add a versioned Kotlin bridge and non-recording foreground-service skeleton.
@@ -115,6 +115,7 @@ Recorder lifecycle, battery, screen-lock, GPS recovery, and sensor validation ar
 - 2026-08-08: Plan activated before scaffolding.
 - 2026-08-08: Identity checkpoint committed and synchronized with `origin/main` before scaffold persistence.
 - 2026-08-08: Locally validated M0 implementation is being separated into bounded roadmap commits.
+- 2026-08-08: Roadmap step 0.2 scaffold validated with canonical Gradle identity and an Android debug build.
 
 ## Completion summary
 

@@ -4,11 +4,10 @@
 
 ## P0 — Bootstrap
 
-1. Persist and push the validated Flutter Android scaffold as roadmap step 0.2.
-2. Persist and push toolchain constraints as roadmap step 0.3.
-3. Persist and push quality commands/tests as roadmap step 0.4.
-4. Persist and verify CI/validation/build-size automation as roadmap step 0.5.
-5. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
+1. Persist and push toolchain constraints as roadmap step 0.3.
+2. Persist and push quality commands/tests as roadmap step 0.4.
+3. Persist and verify CI/validation/build-size automation as roadmap step 0.5.
+4. Persist the Flutter, Drift, and Kotlin bridge skeleton as roadmap step 0.6.
 
 ## P1 — Recorder milestone
 

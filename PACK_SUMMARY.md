@@ -5,7 +5,7 @@
 - Pack version: 1.0 bootstrap
 - Generated: 2026-08-08
 - Files before manifest: 99
-- Approximate words: 28,955
+- Approximate words: 28,953
 - JSON parse validation: PASS
 - YAML parse validation: PASS
 - JSON Schema meta-validation: PASS

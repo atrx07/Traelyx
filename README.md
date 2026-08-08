@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Stage 0 bootstrap is active. The canonical Android identity is locked, and Flutter repository initialization is the current step.
+Stage 0 bootstrap is active. The canonical Flutter/Android repository scaffold is validated, and toolchain constraints are the current step.
 
 ## Roadmap
 
@@ -14,8 +14,8 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 |---|---|---|---|---|---|
 | M0 | Stage 0 — Governance & Project Bootstrap | Skeleton milestone | 🟡 In progress | ~1 day remaining | 2026-08-08 |
 | 0.1 | Stage 0 | Confirm identity | ✅ Complete | Done | 2026-08-08 |
-| 0.2 | Stage 0 | Initialize repository | 🔵 Active | ~1–2 hours | — |
-| 0.3 | Stage 0 | Toolchain pinning | ⚪ Pending | ~1 hour | — |
+| 0.2 | Stage 0 | Initialize repository | ✅ Complete | Done | 2026-08-08 |
+| 0.3 | Stage 0 | Toolchain pinning | 🔵 Active | ~1 hour | — |
 | 0.4 | Stage 0 | Quality commands | ⚪ Pending | ~1–2 hours | — |
 | 0.5 | Stage 0 | CI foundation | ⚪ Pending | ~1–2 hours | — |
 | 0.6 | Stage 0 | Core architecture skeleton | ⚪ Pending | ~2–4 hours | — |
