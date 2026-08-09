@@ -24,6 +24,12 @@ Every persisted trip/raw chunk must declare a telemetry schema version, initiall
 
 Breaking semantic changes require a new version and migration/decoder compatibility strategy.
 
+### M2.4 persisted encoding baseline
+
+Native telemetry chunk encoding version 1 persists telemetry schema version 1 without changing the field semantics below. Every record retains `trip_elapsed_ns` and the original platform `source_timestamp_ns`; GNSS also retains source wall time, provider/mock evidence, all available accuracy fields, optionality, and quality flags, while IMU retains sensor type, Android device-frame axes, accuracy status, and quality flags.
+
+The chunk envelope declares trip UUID, monotonically increasing sequence, elapsed-time bounds, per-channel counts, compression algorithm, stored payload length, SHA-256 over stored payload bytes, and a completion marker. Decode independently bounds decompressed output, must reproduce global record order, and rejects unknown versions, checksum/length/count mismatches, invalid completion, or non-monotonic bounds rather than reinterpret them. The golden fixture under the native unit-test resources pins this compatibility contract.
+
 ## 3. Time model
 
 Use a monotonic clock for ordering/alignment of local sensor events where available, plus wall-clock UTC metadata for user-facing time.

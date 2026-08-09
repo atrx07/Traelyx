@@ -14,9 +14,8 @@ enum class GnssQualityFlag(val wireName: String) {
 /**
  * Versioned, unfiltered location evidence captured directly from Android.
  *
- * Coordinates are deliberately absent from health/diagnostic snapshots. M2.2
- * keeps these samples process-local until the durable M2.4 chunk contract is
- * implemented.
+ * Coordinates are deliberately absent from health/diagnostic snapshots. M2.4
+ * persists these samples only inside checksummed app-private chunks.
  */
 data class RawGnssSample(
     val schemaVersion: Int = RAW_GNSS_SCHEMA_VERSION,

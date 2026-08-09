@@ -12,7 +12,9 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.graphics.drawable.Icon
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.SystemClock
 import io.github.atrx07.traelyx.MainActivity
 import io.github.atrx07.traelyx.R
@@ -21,16 +23,17 @@ import java.util.UUID
 /**
  * Native foreground lifecycle owner for an active trip.
  *
- * M2.3 adds native GPS, accelerometer, and gyroscope acquisition while keeping
- * samples process-local until the durable chunk contract is implemented. It
- * holds no wake lock and never sends raw telemetry through logs, Flutter, or
- * the network.
+ * M2.4 durably buffers native GPS, accelerometer, and gyroscope evidence in
+ * app-private versioned chunks. It holds no wake lock and never sends raw
+ * telemetry through logs, Flutter, diagnostics, or the network.
  */
 class RecorderService : Service() {
     private lateinit var coordinator: RecorderLifecycleCoordinator
     private var promotedToForeground = false
     private var gnssAcquisition: AndroidGnssAcquisition? = null
     private var imuAcquisition: AndroidImuAcquisition? = null
+    private var telemetryRecorder: TelemetryChunkRecorder? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate() {
         super.onCreate()
@@ -40,7 +43,12 @@ class RecorderService : Service() {
     }
 
     override fun onDestroy() {
-        stopAcquisition()
+        if (
+            !stopAcquisition() &&
+            coordinator.query().lifecycleState != RecorderLifecycleState.ERROR
+        ) {
+            coordinator.markError("chunk_flush_failed")
+        }
         serviceCreated = false
         super.onDestroy()
     }
@@ -84,12 +92,18 @@ class RecorderService : Service() {
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
+        if (!startTelemetryRecorder(outcome.snapshot)) {
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         if (!startGnssAcquisition(outcome.snapshot)) {
+            stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
         if (!startImuAcquisition(outcome.snapshot)) {
             stopGnssAcquisition()
+            stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
@@ -106,12 +120,18 @@ class RecorderService : Service() {
             stopSelf(startId)
             return START_NOT_STICKY
         }
+        if (!startTelemetryRecorder(outcome.snapshot)) {
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         if (!startGnssAcquisition(outcome.snapshot)) {
+            stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
         if (!startImuAcquisition(outcome.snapshot)) {
             stopGnssAcquisition()
+            stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
@@ -124,7 +144,11 @@ class RecorderService : Service() {
             stopSelf(startId)
             return START_NOT_STICKY
         }
-        stopAcquisition()
+        if (!stopAcquisition()) {
+            coordinator.markError("chunk_flush_failed")
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         val stopping = coordinator.beginStop()
         if (stopping.kind == RecorderLifecycleOutcomeKind.REJECTED) {
             stopForegroundAndSelf(startId)
@@ -152,6 +176,7 @@ class RecorderService : Service() {
             AndroidGnssAcquisition(
                 context = applicationContext,
                 tripStartedAtElapsedRealtimeNanos = tripEpoch,
+                consumeSample = { telemetryRecorder?.accept(it) },
                 publishHealth = { latestGnssHealth = it },
             )
         gnssAcquisition = acquisition
@@ -181,6 +206,7 @@ class RecorderService : Service() {
             AndroidImuAcquisition(
                 context = applicationContext,
                 tripStartedAtElapsedRealtimeNanos = tripEpoch,
+                consumeSample = { telemetryRecorder?.accept(it) },
                 publishHealth = { latestImuHealth = it },
             )
         imuAcquisition = acquisition
@@ -197,9 +223,49 @@ class RecorderService : Service() {
         imuAcquisition = null
     }
 
-    private fun stopAcquisition() {
+    private fun startTelemetryRecorder(snapshot: RecorderStateSnapshot): Boolean {
+        val tripId = snapshot.tripId
+        if (tripId.isNullOrBlank()) {
+            coordinator.markError("chunk_trip_id_missing")
+            return false
+        }
+        telemetryRecorder?.let {
+            if (it.health().state == TelemetryBufferState.ACTIVE) return true
+        }
+        val recorder =
+            TelemetryChunkRecorder(
+                tripId = tripId,
+                store = AtomicFileTelemetryChunkStore(applicationContext),
+                publishHealth = { latestTelemetryHealth = it },
+                onFatalError = ::handleTelemetryFatalError,
+            )
+        telemetryRecorder = recorder
+        val result = recorder.start()
+        if (!result.started) {
+            coordinator.markError(result.errorCode ?: "chunk_start_failed")
+            return false
+        }
+        return true
+    }
+
+    private fun stopTelemetryRecorder(): Boolean {
+        val recorder = telemetryRecorder ?: return true
+        val stopped = recorder.stop()
+        telemetryRecorder = null
+        return stopped
+    }
+
+    private fun handleTelemetryFatalError(errorCode: String) {
+        mainHandler.post {
+            coordinator.markError(errorCode)
+            stopSelf()
+        }
+    }
+
+    private fun stopAcquisition(): Boolean {
         stopImuAcquisition()
         stopGnssAcquisition()
+        return stopTelemetryRecorder()
     }
 
     private fun promote(snapshot: RecorderStateSnapshot): Boolean {
@@ -336,6 +402,9 @@ class RecorderService : Service() {
         @Volatile
         private var latestImuHealth = ImuHealthSnapshot.idle()
 
+        @Volatile
+        private var latestTelemetryHealth = TelemetryBufferHealthSnapshot.idle()
+
         fun requestStart(context: Context): RecorderStateSnapshot {
             val coordinator = coordinator(context)
             val outcome =
@@ -407,6 +476,9 @@ class RecorderService : Service() {
 
         /** Vector-free internal proof surface; intentionally not part of the Flutter bridge yet. */
         internal fun queryImuHealth(): ImuHealthSnapshot = latestImuHealth
+
+        /** Raw-value-free durable-buffer proof surface; not part of the Flutter bridge yet. */
+        internal fun queryTelemetryHealth(): TelemetryBufferHealthSnapshot = latestTelemetryHealth
 
         private fun coordinator(context: Context): RecorderLifecycleCoordinator =
             RecorderLifecycleCoordinator(AtomicRecorderRecoveryStore(context.applicationContext))

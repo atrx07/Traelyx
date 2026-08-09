@@ -37,9 +37,17 @@ Each chunk needs:
 - checksum;
 - write completion marker/atomic strategy.
 
+### M2.4 implemented baseline
+
+Chunk encoding version 1 carries telemetry schema version 1 and deterministic GNSS/accelerometer/gyroscope records inside a self-describing binary envelope. It uses platform DEFLATE in best-speed mode, SHA-256 over the stored compressed payload, an explicit completion marker, and Android `AtomicFile` replacement. Files live only under app-private no-backup storage at `recorder/trips/<trip-id>/chunks/<sequence>.tlxc`; path components contain a trip UUID and sequence only.
+
+The native catalog verifies complete chunks independently and isolates corrupt, truncated, unknown-version, misnamed, out-of-order, and orphaned writes. Recovery advances beyond the highest observed filename and the last verified elapsed-time boundary so existing evidence is not overwritten. The existing Drift `trip_chunks` columns match this metadata contract, but verified native-to-Drift reconciliation is deferred to the authorized bridge/integration boundary; schema version 1 is unchanged.
+
 ## 4. Compression
 
 Favor fast, deterministic, mobile-friendly compression/delta encoding. Measure CPU/battery tradeoff.
+
+The M2.4 deterministic synthetic baseline (one 1 Hz GNSS sample plus two 100 Hz IMU streams) encoded at 4,244 bytes/second, approximately 14.57 MiB/hour. This is a provisional codec/storage-growth measurement, not a physical-drive battery result, a retention promise, or evidence that all devices will produce the same rate.
 
 ## 5. Retention
 

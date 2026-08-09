@@ -66,8 +66,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 
 - Raw routes and high-rate telemetry remain local-private by default.
 - M2.1 persists only minimal active-trip recovery metadata in app-private storage and performs no sensor, location, or network access.
-- M2.2 keeps acquired coordinates process-local and ephemeral until the authorized crash-safe chunk format exists in M2.4. Precise samples must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
-- M2.3 keeps raw device-frame motion vectors process-local and ephemeral until M2.4. Exact vectors must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
+- M2.2 acquired coordinates are handed directly to the M2.4 app-private durable writer. Precise samples must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
+- M2.3 raw device-frame motion vectors are handed directly to the M2.4 app-private durable writer. Exact vectors must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
+- M2.4 durable chunks remain under the app-private no-backup directory. Paths use only trip UUID and sequence, and health surfaces expose aggregate state/counts rather than raw values, precise timestamps, paths, or device identifiers.
 - Diagnostics and logs must not expose precise routes, raw samples, device identifiers, secrets, or API keys.
 
 ## Compatibility/migration implications
@@ -76,6 +77,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Database schema v1 is unchanged by M2.1.
 - Database schema v1 remains unchanged by M2.2; raw GNSS persistence and compatibility are deferred to the versioned chunk contract in M2.4.
 - Database schema v1 remains unchanged by M2.3; raw IMU persistence and decoder compatibility are deferred to M2.4.
+- M2.4 uses self-describing app-private chunk files whose metadata matches the existing `trip_chunks` schema. Native files are recoverable without Flutter; verified index reconciliation into Drift is deferred to the authorized bridge/integration boundary, so database schema version 1 remains unchanged.
 - Android foreground-service and notification behavior must be documented against supported API levels and OEM evidence.
 
 ## Implementation steps
@@ -102,7 +104,15 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Maintain vector-free health counters for accepted/rejected samples, accuracy, timestamp discontinuities, dropouts, registration, and batching capability.
   - [x] Stop callbacks deterministically on stop, error, or service destruction and restart them with a recovered lifecycle.
   - [x] Add native mapping/health unit tests and a controlled physical-device acquisition proof.
-- [ ] M2.4 Crash-safe buffering — gated on explicit approval after M2.3.
+- [x] M2.4 Crash-safe buffering
+  - [x] Define binary telemetry chunk encoding version 1 with telemetry schema version, trip ID, sequence, elapsed-time bounds, channel counts, compression, checksum, and completion marker.
+  - [x] Feed accepted GNSS/accelerometer/gyroscope samples into a bounded native queue without blocking acquisition callback threads on file I/O.
+  - [x] Reorder within a bounded two-second horizon, then flush at one-second or 256-sample boundaries; fail visibly on overflow, invalid trip time, or evidence arriving behind the committed boundary.
+  - [x] Persist chunks under app-private no-backup storage using platform DEFLATE, SHA-256 over stored payload bytes, and `AtomicFile` replacement.
+  - [x] Recover the next sequence and last committed boundary by scanning self-describing chunks; isolate corrupt/truncated/orphaned files without making other chunks unreadable or overwriting evidence.
+  - [x] Expose privacy-safe buffer health and storage-growth counters without routes, vectors, raw timestamps, filesystem paths, or device identifiers.
+  - [x] Add deterministic codec fixture, ordering/boundary, corruption/truncation, overflow, atomic-store, recovery, and service integration tests.
+  - [x] Measure encoded bytes/sample and estimated MB/hour; document that retention/default pruning remains undecided until broader storage measurements and UX work.
 - [ ] M2.5 Flutter↔Kotlin bridge — gated on explicit approval after M2.4.
 - [ ] M2.6 Permissions/onboarding — gated on explicit approval after M2.5.
 - [ ] M2.7 Service recovery tests — gated on explicit approval after M2.6.
@@ -126,6 +136,11 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - [x] M2.3 Android lint, Flutter regression checks, repository validation, instrumentation compilation, and debug/release builds.
 - [x] M2.3 controlled physical-device accelerometer/gyroscope proof without emitting raw vectors.
 - [x] Confirm M2.3 adds no filtering/fusion, durable telemetry, wake lock, network, database migration, high-rate sensor permission, or normal user-facing recording availability.
+- [x] M2.4 deterministic codec/golden-fixture tests preserve timestamps, units, flags, optional fields, and global decode order.
+- [x] M2.4 bounded-buffer tests cover flush thresholds, stop flush, overflow, invalid time, late evidence, write failure, corruption/truncation isolation, and sequence recovery.
+- [x] M2.4 Android lint, Flutter regression checks, repository validation, instrumentation compilation, and debug/release builds.
+- [x] M2.4 controlled physical-device proof verifies durable checksummed GNSS/IMU chunks before and after service recovery without emitting raw values or paths.
+- [x] Confirm M2.4 adds no filtering/fusion, cloud/network behavior, wake lock, permission, third-party dependency, database migration, retention default, or normal user-facing recording availability.
 
 ## Acceptance criteria
 
@@ -159,6 +174,17 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Both listeners stop with service teardown and restart after explicit lifecycle recovery.
 - No durable raw chunk, Flutter health bridge, network behavior, wake lock, new permission, third-party dependency, or database migration is introduced.
 
+### M2.4
+
+- Accepted GNSS, accelerometer, and gyroscope evidence is durably encoded in versioned, self-describing app-private chunks while the native recorder runs without Flutter or network access.
+- Producer memory and queued work are explicitly bounded; acquisition callbacks never perform compression or disk writes, and capacity/ordering/time failures stop recording conservatively instead of silently dropping evidence.
+- Chunk sequence and elapsed-time bounds are monotonic after a bounded reorder horizon; decode preserves all raw fields, SI units, device-frame semantics, optionality, and quality flags.
+- Each completed chunk uses explicit DEFLATE compression metadata, SHA-256 verification, an end marker, and atomic replacement. Truncated, corrupt, unknown-version, and orphaned writes are isolated and never treated as valid chunks.
+- Service recovery continues at a non-overwriting sequence after the last observed filename and after the last verified elapsed-time boundary; an unfinished recovered trip is never presented as normally finalized.
+- Health exposes only state, counts, byte totals, queue/buffer depths, sequence/boundary presence, corruption counts, and allowlisted error codes—never raw samples, precise coordinates, vectors, paths, or device identifiers.
+- Database schema version 1 remains unchanged; the existing `trip_chunks` columns already cover the file index contract, while verified native-to-Drift reconciliation remains gated with the bridge/integration work.
+- No filtering, resampling, derived channels, export, retention default/pruning, Flutter bridge expansion, normal recording availability, network behavior, wake lock, permission, or third-party dependency is introduced.
+
 ### M2 milestone
 
 - A normal 30–60 minute physical drive records synchronized raw GNSS/IMU with the screen locked.
@@ -183,6 +209,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Raw GNSS schema version 1 uses `Location.elapsedRealtimeNanos` as the source monotonic timestamp and preserves `Location.time` separately as source wall time. A missing/invalid horizontal accuracy rejects the fix; accuracy above 50 metres is retained with `GNSS_LOW_ACCURACY`.
 - M2.3 uses calibrated `Sensor.TYPE_ACCELEROMETER` (gravity included, m/s²) and `Sensor.TYPE_GYROSCOPE` (rad/s), preserving Android's device coordinate system anchored to the device's natural orientation without display-rotation swapping. It requests 100 Hz, below Android's 200 Hz `registerListener` limit for apps without `HIGH_SAMPLING_RATE_SENSORS`.
 - IMU schema version 1 preserves `SensorEvent.timestamp`, which shares the `SystemClock.elapsedRealtimeNanos()` time base for each sensor. Hardware FIFO batching is requested up to one second and bounded by each sensor's reported FIFO capacity; zero capacity falls back visibly to immediate delivery.
+- M2.4 chunk files live under `noBackupFilesDir/recorder/trips/<trip-id>/chunks` so precise routes and high-rate motion evidence remain app-private and are not copied through Android Auto Backup. The UUID and sequence name files; no route-derived information appears in paths.
+- Encoding version 1 uses a binary envelope plus deterministic record encoding, platform DEFLATE at best-speed, SHA-256 over the stored compressed payload, an explicit completion marker, and `AtomicFile` replacement. Compression is replaceable through the declared envelope field rather than implicit.
+- The asynchronous writer separately bounds ingress and the reorder heap at 1,024 samples each and reorders within two seconds, exceeding the requested one-second IMU FIFO latency. It emits at most 256 samples or one second per chunk and treats queue/reorder overflow, missing trip time, or evidence older than the committed boundary as explicit recorder errors.
 
 ## Progress log
 
@@ -192,6 +221,8 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - 2026-08-09: M2.2 local gates and controlled Android 14 device proof passed. Two shorter obstructed-view runs remained honestly in `awaiting_fix`; the improved-sky-view run acquired real fixes before and after explicit service recovery and cleaned up permissions/service/notification state.
 - 2026-08-09: M2.3 explicitly authorized. Timestamp, units, device-frame, batching, privacy, and physical-phone communication gates expanded before implementation.
 - 2026-08-09: M2.3 local gates and controlled Android 14 device proof passed. Both calibrated motion streams produced valid source timestamp/accuracy/configuration health before and after service recovery, then stopped cleanly; device permissions were restored.
+- 2026-08-09: M2.4 explicitly authorized. Chunk/index compatibility, buffer bounds, reorder/flush behavior, checksum/atomicity, corruption isolation, privacy, performance measurement, and physical-device communication gates expanded before implementation.
+- 2026-08-09: M2.4 implementation, local gates, and controlled Android 14 device proof passed. Real GNSS and dual-IMU evidence was durably checksummed before and after service recovery, sequence/catalog continuity and short background/screen-off survival were verified, and the proof removed its private files; independent cleanup confirmed zero proof files/directories, zero recorder services, and restored denied permissions.
 
 ## Completion summary
 
@@ -207,4 +238,8 @@ M2.3 adds dependency-free calibrated accelerometer/gyroscope acquisition, raw IM
 
 Validation passed: native IMU mapping/quality/health tests, all existing native tests, Android lint, Dart formatting, Flutter analysis, all 40 Flutter tests, repository validation, generated-source verification, instrumentation compilation, and debug/release APK builds. The controlled physical Android 14 Tecno LH8n proof acquired accelerometer and gyroscope events in the initial lifecycle and again after explicit service recovery, verified source/trip timestamps, accuracy status, and requested/effective batching configuration without emitting vectors, preserved the GNSS/lifecycle regression proof, and stopped listeners/GNSS/notification/service state cleanly. Temporary device permissions were restored to denied.
 
-Not yet verified or claimed: durable raw telemetry, crash-safe chunks, a 30–60 minute locked-screen drive, IMU delivery during deep sleep, process/device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, or telemetry durability. Those remain in M2.4–M2.8, and M2.4 requires explicit authorization.
+M2.4 adds dependency-free native crash-safe persistence for accepted GNSS, accelerometer, and gyroscope evidence. Encoding version 1 is self-describing and deterministic; platform DEFLATE, SHA-256, an explicit completion marker, and `AtomicFile` replacement protect each chunk. Separate 1,024-sample ingress/reorder bounds, a two-second reorder horizon, and one-second/256-sample flush limits fail visibly on capacity, time, ordering, sequence, or write errors. Recovery verifies and isolates files before continuing at a non-overwriting sequence and committed elapsed boundary. Privacy-safe health exposes aggregate state/counts/bytes only. Database schema version 1 and normal user-facing recording availability remain unchanged.
+
+Validation passed: deterministic codec/golden-fixture round trips; ordering, flush, stop, overflow, invalid-time, late-evidence, write-failure, corruption/truncation/orphan isolation, atomic-store, and sequence-recovery tests; all native tests; Android lint; Dart formatting; Flutter analysis; all 40 Flutter tests; repository validation; instrumentation compilation; and debug/release APK builds. The controlled physical Android 14 Tecno LH8n proof persisted checksummed real GNSS and dual-IMU evidence before and after explicit service recovery, verified recovered catalog/sequence continuity, survived activity recreation, backgrounding, and a short screen-off interval, then stopped and deleted its proof trip without emitting raw values or paths. Independent cleanup verified zero proof files/directories, zero recorder services, and denied temporary permissions. A deterministic synthetic 1 Hz GNSS plus dual-100 Hz IMU stream measured 4,244 encoded bytes/second (approximately 14.57 MiB/hour); this is provisional and does not set retention policy.
+
+Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, process/device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, native-to-Drift index reconciliation, Flutter health integration, permission onboarding, or a production retention default. Those remain in M2.5–M2.8 or later, and M2.5 requires explicit authorization.

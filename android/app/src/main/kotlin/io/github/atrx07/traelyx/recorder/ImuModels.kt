@@ -21,7 +21,7 @@ enum class ImuQualityFlag(val wireName: String) {
  * Versioned, unfiltered Android motion evidence in the device coordinate frame.
  *
  * Accelerometer axes use m/s² and include gravity. Gyroscope axes use rad/s.
- * M2.3 keeps these vectors process-local until M2.4 defines durable chunks.
+ * M2.4 persists these vectors only inside checksummed app-private chunks.
  */
 data class RawImuSample(
     val schemaVersion: Int = RAW_IMU_SCHEMA_VERSION,

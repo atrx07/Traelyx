@@ -4,21 +4,20 @@
 
 ## Current gate
 
-M2 is active and M2.3 IMU Acquisition is complete and validated locally and on the Android 14 Tecno device. Do not activate or implement M2.4 without explicit user authorization.
+M2 is active and M2.4 Crash-safe buffering is complete and validated locally and on the Android 14 Tecno device. Do not activate or implement M2.5 without explicit user authorization.
 
-## P0 — M2.4 approval gate
+## P0 — M2.5 approval gate
 
-1. Await explicit authorization for M2.4 crash-safe buffering.
-2. After authorization, implement only M2.4 against the active M2 execution plan.
+1. Await explicit authorization for M2.5 Flutter↔Kotlin bridge integration.
+2. After authorization, implement only M2.5 against the active M2 execution plan.
 3. Preserve the approval gate between every numbered M2 substep.
 
 ## P1 — Recorder milestone
 
-1. Define and implement crash-safe telemetry chunk buffering.
-2. Complete Flutter/native status and command integration.
-3. Add contextual permission onboarding and broader service recovery tests.
-4. Record the first real-device `.tripdebug` fixture.
-5. Verify a locked-screen 30–60 minute trip survives intact.
+1. Complete Flutter/native status and command integration.
+2. Add contextual permission onboarding and broader service recovery tests.
+3. Record the first real-device `.tripdebug` fixture.
+4. Verify a locked-screen 30–60 minute trip survives intact.
 
 ## P2 — Analysis foundation
 
