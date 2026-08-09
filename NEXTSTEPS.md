@@ -2,14 +2,15 @@
 
 > Keep this file concise. Detailed tasks belong in active execution plans.
 
-## Approval gate
+## Current gate
 
-Roadmap substep M1.2 is complete. Do not implement M1.3 until the user explicitly authorizes the next substep.
+M1.3 implementation and local/device validation are complete. Push the implementation checkpoint and obtain a definitive green GitHub Actions result before marking the substep complete.
 
 ## P0 — M1 Application Foundation
 
-1. After authorization, begin M1.3 local settings with explicit secure/non-secure boundaries.
-2. Continue through schema, migrations, and diagnostics only with the required approval between numbered substeps.
+1. Finish the M1.3 remote CI gate and completion tracking.
+2. Stop and await explicit authorization for M1.4 Drift schema version 1.
+3. Continue through migrations and diagnostics only with the required approval between numbered substeps.
 
 ## P1 — Recorder milestone
 

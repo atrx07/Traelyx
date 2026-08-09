@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.2 complete; awaiting explicit authorization for M1.3**
+**M1 active — M1.3 locally/device validated; remote CI pending**
 
 ## Working
 
@@ -24,11 +24,15 @@
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
+- Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries.
+- Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs.
+- The current debug APK update-installs and cold-launches on the Android 14 Tecno LH8n with existing app data preserved and no startup, Flutter, or database errors.
 
 ## Partial
 
 - The recorder bridge and service are structural only; trip recording remains unavailable.
 - Trips, DNA, Social, and You are navigation skeletons only; their product features remain unimplemented.
+- Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Drift contains only the bootstrap `app_settings` table; the application schema and migration harness belong to M1.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
@@ -57,6 +61,6 @@
 - Free-tier cloud limits if adoption becomes large.
 - APK/app-data growth if raw telemetry retention is unmanaged.
 
-## Next step
+## Current step
 
-**M1.3 — Local settings:** awaiting explicit user authorization before implementation.
+**M1.3 — Local settings:** implementation and local/device gates pass; awaiting required remote CI before completion.

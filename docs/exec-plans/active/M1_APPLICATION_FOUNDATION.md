@@ -74,6 +74,8 @@ functionality that does not exist.
   reduced-motion-aware motion primitives with focused tests.
 - [x] M1.2 — Add the deep-link-safe primary navigation skeleton.
 - [ ] M1.3 — Add local settings and explicit secure/non-secure boundaries.
+  Implementation and local/device validation are complete; remote CI is
+  pending.
 - [ ] M1.4 — Implement Drift application schema version 1.
 - [ ] M1.5 — Add database migration fixtures and upgrade tests.
 - [ ] M1.6 — Add a redacted diagnostics shell.
@@ -93,7 +95,14 @@ push, report, and user approval before the next substep begins.
 - [x] M1.2 compact/wide navigation and direct deep-link widget tests.
 - [x] M1.2 full Flutter test suite, repository validation, and debug build.
 - [x] M1.2 remote CI on `main`.
-- [ ] Persistence/migration fixture tests when M1.3–M1.5 are authorized.
+- [x] M1.3 Dart formatting and static analysis.
+- [x] M1.3 non-secret repository, corruption, stream, key-boundary, and secure
+  provider tests.
+- [x] M1.3 full Flutter test suite, generated-source check, repository
+  validation, and debug build.
+- [x] M1.3 Android 14 Tecno update-install and cold-launch smoke test.
+- [ ] M1.3 remote CI on `main`.
+- [ ] Migration fixture tests when M1.4–M1.5 are authorized.
 
 ## Acceptance criteria
 
@@ -123,6 +132,11 @@ push, report, and user approval before the next substep begins.
   retain an independent nested stack as later substeps add detail routes.
 - M1.2 exposes stable local route paths without adding Android verified-app-link
   intent filters before a public scheme/host contract exists.
+- M1.3 reuses the bootstrap `app_settings` table without changing schema
+  version 1; typed definitions and repositories own encoding and defaults.
+- M1.3 keeps secrets behind a separate replaceable interface. Its production
+  default fails closed until a platform-backed provider is deliberately added,
+  avoiding a premature dependency or insecure fallback.
 
 ## Progress log
 
@@ -131,6 +145,9 @@ push, report, and user approval before the next substep begins.
   `31296218766`; execution stopped at the M1.2 approval gate.
 - 2026-08-09: M1.2 checkpoint `566adcd` passed GitHub Actions run
   `31297225380`; execution stopped at the M1.3 approval gate.
+- 2026-08-09: M1.3 implementation and local gates passed; the debug APK
+  update-installed and cold-launched on the Android 14 Tecno LH8n with existing
+  data preserved. Remote CI is pending.
 
 ## M1.1 completion summary
 
@@ -149,3 +166,14 @@ and honest feature placeholders. Focused tests cover the root redirect, tab
 selection, every direct path, compact/wide layouts, and unknown paths. Local
 validation and GitHub Actions pass. No persistence, network, privacy, migration,
 recorder, or provider behavior changed.
+
+## M1.3 checkpoint summary
+
+M1.3 adds typed, reactive non-secret settings persistence over the existing
+schema-v1 Drift table plus Riverpod injection boundaries. Malformed persisted
+values fail visibly, sensitive-looking keys are rejected from the non-secret
+API, and the replaceable secure-value interface fails closed until a reviewed
+provider exists. Focused tests and the full suite pass. The existing app updates
+and cold-launches on the connected Android 14 Tecno device without startup or
+database errors. Remote CI must pass before completion. No schema, migration,
+network, recorder, or provider dependency changed.
