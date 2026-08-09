@@ -72,8 +72,7 @@ functionality that does not exist.
 
 - [x] M1.1 — Add semantic design tokens/theme, typography, spacing, and
   reduced-motion-aware motion primitives with focused tests.
-- [ ] M1.2 — Add the deep-link-safe primary navigation skeleton.
-  Implementation and local validation are complete; remote CI is pending.
+- [x] M1.2 — Add the deep-link-safe primary navigation skeleton.
 - [ ] M1.3 — Add local settings and explicit secure/non-secure boundaries.
 - [ ] M1.4 — Implement Drift application schema version 1.
 - [ ] M1.5 — Add database migration fixtures and upgrade tests.
@@ -93,7 +92,7 @@ push, report, and user approval before the next substep begins.
 - [x] M1.2 Dart formatting and static analysis.
 - [x] M1.2 compact/wide navigation and direct deep-link widget tests.
 - [x] M1.2 full Flutter test suite, repository validation, and debug build.
-- [ ] M1.2 remote CI on `main`.
+- [x] M1.2 remote CI on `main`.
 - [ ] Persistence/migration fixture tests when M1.3–M1.5 are authorized.
 
 ## Acceptance criteria
@@ -130,7 +129,8 @@ push, report, and user approval before the next substep begins.
 - 2026-08-09: M1 activated after explicit continuation approval.
 - 2026-08-09: M1.1 checkpoint `a79e33c` passed GitHub Actions run
   `31296218766`; execution stopped at the M1.2 approval gate.
-- 2026-08-09: M1.2 implementation and local gates passed; remote CI is pending.
+- 2026-08-09: M1.2 checkpoint `566adcd` passed GitHub Actions run
+  `31297225380`; execution stopped at the M1.3 approval gate.
 
 ## M1.1 completion summary
 
@@ -141,11 +141,11 @@ typography, control sizing, and reduced motion. Local validation and GitHub
 Actions pass. No persistence, network, privacy, migration, recorder, or provider
 behavior changed.
 
-## M1.2 checkpoint summary
+## M1.2 completion summary
 
 M1.2 adds responsive compact and wide navigation for Drive, Trips, DNA, Social,
 and You; direct route entry for every destination; safe unknown-route handling;
 and honest feature placeholders. Focused tests cover the root redirect, tab
 selection, every direct path, compact/wide layouts, and unknown paths. Local
-gates pass; remote CI must pass before completion. No persistence, network,
-privacy, migration, recorder, or provider behavior changed.
+validation and GitHub Actions pass. No persistence, network, privacy, migration,
+recorder, or provider behavior changed.
