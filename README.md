@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestone M0 and roadmap substeps M1.1–M1.3 are complete. M1.4 Drift schema v1 is locally and physically validated and awaiting remote CI. Trip recording remains intentionally unavailable.
+Milestone M0 and roadmap substeps M1.1–M1.4 are complete. M1 remains active but is stopped at the approval gate before M1.5. Trip recording remains intentionally unavailable.
 
 ## Roadmap
 
@@ -17,7 +17,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M1.1 | Application Foundation | Design tokens/theme | ✅ Complete | Done | 2026-08-09 |
 | M1.2 | Application Foundation | Navigation | ✅ Complete | Done | 2026-08-09 |
 | M1.3 | Application Foundation | Local settings | ✅ Complete | Done | 2026-08-09 |
-| M1.4 | Application Foundation | Drift schema v1 | 🟡 In progress | Remote CI pending | 2026-08-09 |
+| M1.4 | Application Foundation | Drift schema v1 | ✅ Complete | Done | 2026-08-09 |
 | M1.5 | Application Foundation | Migration harness | ⚪ Pending | — | — |
 | M1.6 | Application Foundation | Diagnostics shell | ⚪ Pending | — | — |
 | M2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |

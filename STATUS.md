@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.4 locally/device validated; remote CI pending**
+**M1 active — M1.4 complete; awaiting explicit authorization for M1.5**
 
 ## Working
 
@@ -19,7 +19,7 @@
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
 - GitHub Actions passes generated-source, format, analysis, Flutter/Kotlin tests, repository validation, debug/release builds, size reporting, and artifact upload on `main`.
 - The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
-- Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with tested relational constraints.
+- Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with relational constraints validated locally and in CI.
 - The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
@@ -64,4 +64,4 @@
 
 ## Current step
 
-**M1.4 — Drift schema version 1:** implementation and local/device gates pass; awaiting required remote CI before completion.
+**M1.5 — Migration harness:** awaiting explicit user authorization; no implementation has started.

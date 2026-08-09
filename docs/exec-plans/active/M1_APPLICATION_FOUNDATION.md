@@ -74,7 +74,7 @@ functionality that does not exist.
   reduced-motion-aware motion primitives with focused tests.
 - [x] M1.2 — Add the deep-link-safe primary navigation skeleton.
 - [x] M1.3 — Add local settings and explicit secure/non-secure boundaries.
-- [ ] M1.4 — Implement Drift application schema version 1.
+- [x] M1.4 — Implement Drift application schema version 1.
 - [ ] M1.5 — Add database migration fixtures and upgrade tests.
 - [ ] M1.6 — Add a redacted diagnostics shell.
 
@@ -106,7 +106,7 @@ push, report, and user approval before the next substep begins.
 - [x] M1.4 full Flutter test suite, generated-source check, repository
   validation, native Kotlin tests, and debug build.
 - [x] M1.4 Android 14 Tecno update-install and cold-launch smoke test.
-- [ ] M1.4 remote CI on `main`.
+- [x] M1.4 remote CI on `main`.
 - [ ] Migration fixture tests when M1.4–M1.5 are authorized.
 
 ## Acceptance criteria
@@ -162,11 +162,12 @@ push, report, and user approval before the next substep begins.
   `31298732771`; local gates passed and the debug APK update-installed and
   cold-launched on the Android 14 Tecno LH8n with existing data preserved.
   Execution stopped at the M1.4 approval gate.
-- 2026-08-09: M1.4 implementation and local gates passed; the debug APK
-  update-installed and cold-launched on the Android 14 Tecno LH8n with the
-  expected UI and no PID-scoped fatal or Flutter errors. The database remains
-  lazy in the placeholder UI and its fresh creation is covered by focused
-  tests. Remote CI is pending.
+- 2026-08-09: M1.4 checkpoint `c0953c9` passed GitHub Actions run
+  `31300923770`; local gates passed and the debug APK update-installed and
+  cold-launched on the Android 14 Tecno LH8n with the expected UI and no
+  PID-scoped fatal or Flutter errors. The database remains lazy in the
+  placeholder UI and its fresh creation is covered by focused tests. Execution
+  stopped at the M1.5 approval gate.
 
 ## M1.1 completion summary
 
@@ -197,7 +198,7 @@ and cold-launches on the connected Android 14 Tecno device without startup or
 database errors. Local validation and GitHub Actions pass. No schema, migration,
 network, recorder, or provider dependency changed.
 
-## M1.4 checkpoint summary
+## M1.4 completion summary
 
 M1.4 defines the complete fresh schema-v1 contract for vehicles, trips,
 telemetry chunk indexes, trip events, versioned scores, driver baselines, sync
@@ -205,5 +206,6 @@ queue operations, and existing non-secret settings. The schema enforces key
 relationships, time/range constraints, deletion behavior, score uniqueness,
 and sync idempotency while excluding raw samples and precise route geometry.
 Focused tests and the full local suite pass, and the current APK update-installs
-and cold-launches on the Android 14 Tecno device. Remote CI and completion
-tracking remain before the substep can be marked complete.
+and cold-launches on the Android 14 Tecno device. Local validation and GitHub
+Actions pass. M1.5 owns the explicit migration fixture and compatibility
+harness.
