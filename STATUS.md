@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M2 active — M2.2 complete; awaiting explicit authorization for M2.3**
+**M2 active — M2.3 complete; awaiting explicit authorization for M2.4**
 
 ## Working
 
@@ -21,7 +21,7 @@
 - The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
 - Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with relational constraints validated locally and in CI.
 - A committed Drift schema-v1 snapshot, generated verifier, and file-backed upgrade fixtures validate fresh/current databases and the exact settings-only development bootstrap shape locally and in CI. Unknown version-1 shapes fail visibly instead of being repaired implicitly.
-- The versioned Flutter/Kotlin recorder bridge reports conservative capability state; native lifecycle/GNSS foundations are enabled while `recordingAvailable` remains false pending later bridge and permission onboarding work.
+- The versioned Flutter/Kotlin recorder bridge reports conservative capability state; native lifecycle/GNSS/IMU foundations are enabled while `recordingAvailable` remains false pending buffering, bridge, and permission onboarding work.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
@@ -33,17 +33,19 @@
 - The M2.1 lifecycle survives activity recreation, service recreation into an explicit recovered state, app backgrounding, and a short screen-off interval on the physical Android 14 Tecno LH8n, then stops and removes its notification cleanly.
 - M2.2 provides native GPS-provider acquisition on a dedicated callback thread with raw schema version 1, platform monotonic/wall timestamps, SI units, explicit optional fields, auditable quality flags, and privacy-safe health counters.
 - The M2.2 physical proof acquired real GPS fixes before and after explicit service recovery on the Android 14 Tecno LH8n, preserved required timestamp/accuracy metadata, and stopped GNSS callbacks with the recorder lifecycle without printing or uploading coordinates.
+- M2.3 provides calibrated hardware accelerometer and gyroscope acquisition on a dedicated callback thread with raw IMU schema version 1, Android monotonic timestamps, device-frame axes, SI units, accuracy status, auditable dropout/clock flags, requested hardware FIFO batching, and vector-free health counters.
+- The M2.3 physical proof acquired both motion streams before and after explicit service recovery on the Android 14 Tecno LH8n, preserved timestamp/accuracy/configuration evidence, and stopped both listeners with the recorder lifecycle without printing or uploading raw vectors.
 
 ## Partial
 
-- Recorder lifecycle and ephemeral GNSS acquisition are operational, but IMU acquisition, durable telemetry buffering, Flutter health integration, and user permission onboarding are not; normal trip recording remains unavailable.
+- Recorder lifecycle and ephemeral GNSS/IMU acquisition are operational, but durable telemetry buffering, Flutter health integration, and user permission onboarding are not; normal trip recording remains unavailable.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
 ## Not implemented
 
-- Telemetry pipeline.
+- Telemetry persistence and processing pipeline.
 - Event engine.
 - Drive DNA/scoring.
 - Replay.
@@ -59,7 +61,7 @@
 - The centralized M1.1 palette is intentionally evolvable pending broader visual prototyping; consumers use semantic names rather than raw colors.
 - Unknown or partial schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair; any real occurrence will require an explicit recovery/export path.
 - Android background/foreground-service behavior across OS versions/OEMs.
-- M2.1/M2.2 physical validation proves a short lifecycle/recovery and stationary real-GPS sequence on one Android 14 OEM device, not yet a 30–60 minute locked-screen recording, battery behavior, or multi-version/OEM reliability.
+- M2.1–M2.3 physical validation proves a short lifecycle/recovery, stationary real-GPS, and dual-IMU sequence on one Android 14 OEM device, not yet a 30–60 minute locked-screen recording, battery behavior, vibration quality, or multi-version/OEM reliability.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -68,4 +70,4 @@
 
 ## Current step
 
-**M2.3 — IMU acquisition:** pending explicit user authorization; do not begin until approved.
+**M2.4 — Crash-safe buffering:** pending explicit user authorization; do not begin until approved.

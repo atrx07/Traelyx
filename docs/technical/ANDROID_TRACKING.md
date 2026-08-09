@@ -40,6 +40,18 @@ Mandatory coordinates, source timestamp, provider, and horizontal accuracy are v
 
 M2.2 health snapshots contain acquisition state, provider, requested interval, counts, last source/trip timestamps, last accuracy, and optional-field presence, but never coordinates. Raw fixes remain process-local and ephemeral until M2.4 defines the durable versioned chunk format. They are not logged, bridged to Flutter, sent through diagnostics, or uploaded. `recordingAvailable` remains false pending M2.5/M2.6 integration and permission onboarding.
 
+### M2.3 IMU baseline
+
+An active or recovered recorder service registers calibrated hardware `Sensor.TYPE_ACCELEROMETER` and `Sensor.TYPE_GYROSCOPE` listeners on a dedicated native handler thread. Absence or registration failure of either mandatory stream fails conservatively. Both listeners stop on recorder stop, error, or service destruction and restart with explicit lifecycle recovery.
+
+Raw IMU schema version 1 preserves `SensorEvent.timestamp`, whose per-sensor time base matches `SystemClock.elapsedRealtimeNanos()`. Trip elapsed nanoseconds are derived only for a valid same-boot monotonic epoch and strictly increasing per-sensor source order. Accelerometer vectors remain in Android's unchanged device frame, include gravity, and use m/s². Gyroscope vectors use the same device frame and rad/s. No filtering, gravity removal, fusion, orientation inference, screen-orientation axis swap, or vehicle-frame relabeling occurs during acquisition.
+
+The baseline requests a 10,000 microsecond period (100 Hz), below Android's 200 Hz permission threshold, and up to 1,000,000 microseconds of hardware FIFO report latency. Effective period never requests faster than the sensor's advertised `minDelay`; effective latency is bounded by reported FIFO capacity and falls back to zero when batching is unavailable. No `HIGH_SAMPLING_RATE_SENSORS` permission or wake lock is added.
+
+Invalid timestamps, non-finite axes, and unknown accuracy states are rejected and counted. Non-monotonic or invalid-epoch events carry `CLOCK_DISCONTINUITY`; gaps above five effective periods carry `IMU_DROPOUT`; Android accuracy status zero or below carries `SENSOR_UNRELIABLE`. These remain raw quality evidence, not filtered values or safety conclusions.
+
+M2.3 health snapshots expose sensor configuration/capability, counts, source/trip timestamps, accuracy status, gaps, and registration state without raw vectors. Samples remain process-local and ephemeral until M2.4 defines durable chunks; they are not logged, bridged to Flutter, sent through diagnostics, or uploaded. `recordingAvailable` remains false.
+
 ## 3. Acquisition
 
 Recorder owns:

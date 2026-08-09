@@ -24,13 +24,13 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             runLifecycleProof()
             results.putString(
                 "stream",
-                "\nM2.2 recorder lifecycle and privacy-safe GNSS proof passed.\n",
+                "\nM2.3 recorder lifecycle and privacy-safe GNSS/IMU proof passed.\n",
             )
             finish(Activity.RESULT_OK, results)
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.2 recorder lifecycle and GNSS proof failed:\n" +
+                "\nM2.3 recorder lifecycle and GNSS/IMU proof failed:\n" +
                     "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
@@ -71,6 +71,8 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(accepted.tripId == active.tripId) { "Active trip identity changed during start." }
             check(active.isActive) { "Recorder did not report an active lifecycle." }
             checkNotificationActive(context)
+            val initialImu = awaitImuSamples()
+            checkImuMetadata(initialImu)
             val initialGnss = awaitGnssFix()
             check(initialGnss.provider == "gps") { "Recorder did not use the GPS provider." }
             check(initialGnss.acceptedSampleCount > 0) { "No GNSS fix was accepted." }
@@ -110,6 +112,8 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(recovered.tripId == accepted.tripId) { "Recovery changed the active trip identity." }
             check(recovered.recoveryCount == 1) { "Recovery count was not incremented once." }
             checkNotificationActive(context)
+            val recoveredImu = awaitImuSamples()
+            checkImuMetadata(recoveredImu)
             val recoveredGnss = awaitGnssFix()
             check(recoveredGnss.acceptedSampleCount > 0) {
                 "GNSS acquisition did not restart with the recovered lifecycle."
@@ -141,11 +145,86 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(RecorderService.queryGnssHealth().state == GnssAcquisitionState.STOPPED) {
                 "GNSS callbacks did not stop with the recorder lifecycle."
             }
+            check(RecorderService.queryImuHealth().state == ImuAcquisitionState.STOPPED) {
+                "IMU callbacks did not stop with the recorder lifecycle."
+            }
         } finally {
             executeShellCommand("input keyevent 224")
             context.stopService(Intent(context, RecorderService::class.java))
             AtomicRecorderRecoveryStore(context).clear()
         }
+    }
+
+    private fun awaitImuSamples(): ImuHealthSnapshot {
+        val deadline = SystemClock.uptimeMillis() + IMU_SAMPLE_TIMEOUT_MILLIS
+        var latest = RecorderService.queryImuHealth()
+        while (
+            (latest.accelerometerAcceptedSampleCount < MINIMUM_IMU_SAMPLES_PER_SENSOR ||
+                latest.gyroscopeAcceptedSampleCount < MINIMUM_IMU_SAMPLES_PER_SENSOR) &&
+            latest.state != ImuAcquisitionState.ERROR &&
+            SystemClock.uptimeMillis() < deadline
+        ) {
+            SystemClock.sleep(IMU_POLL_INTERVAL_MILLIS)
+            latest = RecorderService.queryImuHealth()
+        }
+        check(latest.state != ImuAcquisitionState.ERROR) {
+            "IMU registration failed: ${latest.errorCode}"
+        }
+        check(latest.accelerometerAcceptedSampleCount >= MINIMUM_IMU_SAMPLES_PER_SENSOR) {
+            "Timed out waiting for accelerometer samples; " +
+                "accepted=${latest.accelerometerAcceptedSampleCount}, " +
+                "rejected=${latest.rejectedSampleCount}."
+        }
+        check(latest.gyroscopeAcceptedSampleCount >= MINIMUM_IMU_SAMPLES_PER_SENSOR) {
+            "Timed out waiting for gyroscope samples; " +
+                "accepted=${latest.gyroscopeAcceptedSampleCount}, " +
+                "rejected=${latest.rejectedSampleCount}."
+        }
+        return latest
+    }
+
+    private fun checkImuMetadata(health: ImuHealthSnapshot) {
+        val accelerometerConfig = health.accelerometerConfiguration
+        val gyroscopeConfig = health.gyroscopeConfiguration
+        check(accelerometerConfig != null) { "Accelerometer configuration was unavailable." }
+        check(gyroscopeConfig != null) { "Gyroscope configuration was unavailable." }
+        check(accelerometerConfig.sensorType == ImuSensorType.ACCELEROMETER)
+        check(gyroscopeConfig.sensorType == ImuSensorType.GYROSCOPE)
+        check(
+            accelerometerConfig.requestedSamplingPeriodMicros ==
+                IMU_REQUESTED_SAMPLING_PERIOD_MICROS,
+        )
+        check(
+            gyroscopeConfig.requestedSamplingPeriodMicros ==
+                IMU_REQUESTED_SAMPLING_PERIOD_MICROS,
+        )
+        check(
+            accelerometerConfig.effectiveMaxReportLatencyMicros <=
+                IMU_REQUESTED_MAX_REPORT_LATENCY_MICROS,
+        )
+        check(
+            gyroscopeConfig.effectiveMaxReportLatencyMicros <=
+                IMU_REQUESTED_MAX_REPORT_LATENCY_MICROS,
+        )
+        check(health.accelerometerFirstSourceTimestampNanos != null) {
+            "Accelerometer source timestamp was not preserved."
+        }
+        check(health.gyroscopeFirstSourceTimestampNanos != null) {
+            "Gyroscope source timestamp was not preserved."
+        }
+        check(health.accelerometerLastTripElapsedNanos != null) {
+            "Accelerometer trip elapsed time was unavailable."
+        }
+        check(health.gyroscopeLastTripElapsedNanos != null) {
+            "Gyroscope trip elapsed time was unavailable."
+        }
+        check(health.accelerometerLastAccuracyStatus != null) {
+            "Accelerometer accuracy status was not preserved."
+        }
+        check(health.gyroscopeLastAccuracyStatus != null) {
+            "Gyroscope accuracy status was not preserved."
+        }
+        check(health.errorCode == null) { "IMU health contained an error: ${health.errorCode}" }
     }
 
     private fun awaitGnssFix(): GnssHealthSnapshot {
@@ -233,5 +312,8 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         private const val POLL_INTERVAL_MILLIS = 50L
         private const val GNSS_FIX_TIMEOUT_MILLIS = 120_000L
         private const val GNSS_POLL_INTERVAL_MILLIS = 250L
+        private const val IMU_SAMPLE_TIMEOUT_MILLIS = 10_000L
+        private const val IMU_POLL_INTERVAL_MILLIS = 50L
+        private const val MINIMUM_IMU_SAMPLES_PER_SENSOR = 20L
     }
 }
