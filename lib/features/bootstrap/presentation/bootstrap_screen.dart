@@ -9,6 +9,7 @@ class BootstrapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final readiness = ref.watch(bootstrapReadinessProvider);
+    final colors = context.traelyxColors;
 
     return Scaffold(
       body: SafeArea(
@@ -16,34 +17,39 @@ class BootstrapScreen extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 720),
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(24, 28, 24, 36),
+              padding: const EdgeInsets.fromLTRB(
+                TraelyxSpacing.xl,
+                TraelyxSpacing.xxl,
+                TraelyxSpacing.xl,
+                TraelyxSpacing.section,
+              ),
               children: [
                 const _Wordmark(),
-                const SizedBox(height: 72),
+                const SizedBox(height: TraelyxSpacing.hero),
                 Text(
                   'Your drives.\nYour evidence.',
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: TraelyxSpacing.md),
                 Text(
                   'Traelyx is being built local-first. Trip recording stays '
                   'disabled until the native recorder passes its reliability '
                   'gate.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: TraelyxColors.textSecondary,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: colors.textSecondary),
                 ),
-                const SizedBox(height: 36),
+                const SizedBox(height: TraelyxSpacing.xxl),
                 _FoundationCard(readiness: readiness),
-                const SizedBox(height: 16),
+                const SizedBox(height: TraelyxSpacing.md),
                 const _RecorderCard(),
-                const SizedBox(height: 28),
+                const SizedBox(height: TraelyxSpacing.xxl),
                 FilledButton.icon(
                   onPressed: null,
                   icon: const Icon(Icons.route_outlined),
                   label: const Text('Start drive — available after M2'),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: TraelyxSpacing.sm),
                 Text(
                   'No account required · No telemetry uploaded',
                   textAlign: TextAlign.center,
@@ -63,17 +69,19 @@ class _Wordmark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.traelyxColors;
+
     return Row(
       children: [
         Container(
           width: 12,
           height: 12,
-          decoration: const BoxDecoration(
-            color: TraelyxColors.brandAccent,
+          decoration: BoxDecoration(
+            color: colors.accent,
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: TraelyxSpacing.sm),
         Text(
           'TRAELYX',
           style: Theme.of(
@@ -96,23 +104,23 @@ class _FoundationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(TraelyxSpacing.lg),
         child: readiness.when(
-          loading: () => const _StatusRow(
+          loading: () => _StatusRow(
             icon: Icons.sync,
-            color: TraelyxColors.statusInfo,
+            color: context.traelyxColors.information,
             title: 'Checking foundation',
             detail: 'Opening local storage and native bridge…',
           ),
-          error: (error, stackTrace) => const _StatusRow(
+          error: (error, stackTrace) => _StatusRow(
             icon: Icons.error_outline,
-            color: TraelyxColors.statusSevere,
+            color: context.traelyxColors.critical,
             title: 'Foundation check failed',
             detail: 'Open diagnostics before continuing.',
           ),
           data: (status) => _StatusRow(
             icon: Icons.check_circle_outline,
-            color: TraelyxColors.statusGood,
+            color: context.traelyxColors.positive,
             title: 'Local foundation ready',
             detail:
                 'Database v1 · Native bridge v${status.bridgeVersion} · '
@@ -129,12 +137,12 @@ class _RecorderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(TraelyxSpacing.lg),
         child: _StatusRow(
           icon: Icons.shield_outlined,
-          color: TraelyxColors.statusWarning,
+          color: context.traelyxColors.caution,
           title: 'Recorder intentionally unavailable',
           detail: 'No sensors, location, or background service are active.',
         ),
@@ -162,13 +170,13 @@ class _StatusRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: color, semanticLabel: title),
-        const SizedBox(width: 14),
+        const SizedBox(width: TraelyxSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: Theme.of(context).textTheme.labelLarge),
-              const SizedBox(height: 4),
+              const SizedBox(height: TraelyxSpacing.xxs),
               Text(detail, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),

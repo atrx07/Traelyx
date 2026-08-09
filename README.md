@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestone M0 is complete. The local-first Flutter, Drift, provider-neutral map, and disabled Kotlin recorder skeletons are validated on device and in CI. M1 is pending explicit user authorization.
+Milestone M0 is complete. M1 is active, with M1.1 design tokens/theme locally validated and awaiting remote CI. Trip recording remains intentionally unavailable.
 
 ## Roadmap
 
@@ -19,7 +19,8 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M0.4 | Project Bootstrap | Quality commands | ✅ Complete | Done | 2026-08-08 |
 | M0.5 | Project Bootstrap | CI foundation | ✅ Complete | Done | 2026-08-08 |
 | M0.6 | Project Bootstrap | Core architecture skeleton | ✅ Complete | Done | 2026-08-08 |
-| M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | ⚪ Pending | ~4–6 days | — |
+| M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | 🔵 Active | ~4–6 days | 2026-08-09 |
+| M1.1 | Application Foundation | Design tokens/theme | 🟡 In progress | Remote CI pending | 2026-08-09 |
 | M2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |

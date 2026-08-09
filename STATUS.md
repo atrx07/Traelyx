@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M0 complete — awaiting explicit authorization for M1**
+**M1 active — M1.1 locally validated; remote CI pending**
 
 ## Working
 
@@ -13,6 +13,7 @@
 - Initial governance/reference pack created.
 - Main-first atomic commit/push discipline and public README roadmap tracking established.
 - M0 execution plan completed and archived.
+- M1 execution plan activated after explicit user authorization.
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
@@ -21,6 +22,7 @@
 - Drift schema version 1 initializes and persists local settings under test.
 - The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
+- Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and locally validated.
 
 ## Partial
 
@@ -45,6 +47,7 @@
 ## Known risks
 
 - Generated Flutter Gradle compatibility flags emit AGP 9 built-in-Kotlin deprecation warnings; current builds and Kotlin tests pass.
+- The centralized M1.1 palette is intentionally evolvable pending broader visual prototyping; consumers use semantic names rather than raw colors.
 - Android background/foreground-service behavior across OS versions/OEMs.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
 - Map tile/provider policy and offline/cache strategy.
@@ -52,6 +55,6 @@
 - Free-tier cloud limits if adoption becomes large.
 - APK/app-data growth if raw telemetry retention is unmanaged.
 
-## Next milestone
+## Current step
 
-**M1 — Application Foundation:** awaiting explicit user authorization before plan activation or implementation.
+**M1.1 — Design tokens/theme:** implementation and local gates pass; awaiting required remote CI before completion.
