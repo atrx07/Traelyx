@@ -1,0 +1,1626 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "app_settings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "key",
+            "getter_name": "key",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "value",
+            "getter_name": "value",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_micros",
+            "getter_name": "updatedAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "key"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "vehicles",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "owner_namespace",
+            "getter_name": "ownerNamespace",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "display_name",
+            "getter_name": "displayName",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vehicle_type",
+            "getter_name": "vehicleType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "manufacturer",
+            "getter_name": "manufacturer",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "model",
+            "getter_name": "model",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "model_year",
+            "getter_name": "modelYear",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "calibration_metadata_json",
+            "getter_name": "calibrationMetadataJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "baseline_metadata_json",
+            "getter_name": "baselineMetadataJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_micros",
+            "getter_name": "updatedAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "trips",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vehicle_id",
+            "getter_name": "vehicleId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES vehicles (id) ON DELETE RESTRICT",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES vehicles (id) ON DELETE RESTRICT"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "vehicles",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "restrict"
+                }
+              }
+            ]
+          },
+          {
+            "name": "start_wall_time_micros",
+            "getter_name": "startWallTimeMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_wall_time_micros",
+            "getter_name": "endWallTimeMicros",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "start_elapsed_nanos",
+            "getter_name": "startElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_elapsed_nanos",
+            "getter_name": "endElapsedNanos",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "duration_millis",
+            "getter_name": "durationMillis",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "distance_meters",
+            "getter_name": "distanceMeters",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "completion_state",
+            "getter_name": "completionState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "recovery_state",
+            "getter_name": "recoveryState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "telemetry_schema_version",
+            "getter_name": "telemetrySchemaVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "scoring_version",
+            "getter_name": "scoringVersion",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "event_engine_version",
+            "getter_name": "eventEngineVersion",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "ml_model_refs_json",
+            "getter_name": "mlModelRefsJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "integrity_status",
+            "getter_name": "integrityStatus",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "telemetry_confidence",
+            "getter_name": "telemetryConfidence",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "telemetry_quality_summary_json",
+            "getter_name": "telemetryQualitySummaryJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cloud_sync_state",
+            "getter_name": "cloudSyncState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_micros",
+            "getter_name": "updatedAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (end_wall_time_micros IS NULL OR end_wall_time_micros >= start_wall_time_micros)",
+          "CHECK (end_elapsed_nanos IS NULL OR end_elapsed_nanos >= start_elapsed_nanos)",
+          "CHECK (duration_millis IS NULL OR duration_millis >= 0)",
+          "CHECK (distance_meters IS NULL OR distance_meters >= 0)",
+          "CHECK (telemetry_schema_version > 0)",
+          "CHECK (telemetry_confidence IS NULL OR (telemetry_confidence >= 0 AND telemetry_confidence <= 1))"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "trip_chunks",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "trip_id",
+            "getter_name": "tripId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES trips (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES trips (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "trips",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "sequence",
+            "getter_name": "sequence",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "storage_reference",
+            "getter_name": "storageReference",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "encoding_version",
+            "getter_name": "encodingVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "start_elapsed_nanos",
+            "getter_name": "startElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_elapsed_nanos",
+            "getter_name": "endElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "channel_sample_counts_json",
+            "getter_name": "channelSampleCountsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "compression",
+            "getter_name": "compression",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "atomic_write_strategy",
+            "getter_name": "atomicWriteStrategy",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "checksum_algorithm",
+            "getter_name": "checksumAlgorithm",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "checksum",
+            "getter_name": "checksum",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "byte_length",
+            "getter_name": "byteLength",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "write_state",
+            "getter_name": "writeState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (sequence >= 0)",
+          "CHECK (encoding_version > 0)",
+          "CHECK (end_elapsed_nanos >= start_elapsed_nanos)",
+          "CHECK (byte_length >= 0)"
+        ],
+        "explicit_pk": [
+          "trip_id",
+          "sequence"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "trip_events",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trip_id",
+            "getter_name": "tripId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES trips (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES trips (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "trips",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "event_type",
+            "getter_name": "eventType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "start_elapsed_nanos",
+            "getter_name": "startElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "peak_elapsed_nanos",
+            "getter_name": "peakElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_elapsed_nanos",
+            "getter_name": "endElapsedNanos",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "severity",
+            "getter_name": "severity",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "severity_calibration_version",
+            "getter_name": "severityCalibrationVersion",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "confidence",
+            "getter_name": "confidence",
+            "moor_type": "double",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "quality_flags_json",
+            "getter_name": "qualityFlagsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "primary_measurements_json",
+            "getter_name": "primaryMeasurementsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "rule_evidence_json",
+            "getter_name": "ruleEvidenceJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "ml_evidence_json",
+            "getter_name": "mlEvidenceJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "context_tags_json",
+            "getter_name": "contextTagsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "algorithm_version",
+            "getter_name": "algorithmVersion",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (peak_elapsed_nanos >= start_elapsed_nanos)",
+          "CHECK (end_elapsed_nanos >= peak_elapsed_nanos)",
+          "CHECK (severity >= 0 AND severity <= 1)",
+          "CHECK (confidence >= 0 AND confidence <= 1)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "driver_baselines",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "owner_namespace",
+            "getter_name": "ownerNamespace",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vehicle_id",
+            "getter_name": "vehicleId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES vehicles (id) ON DELETE SET NULL",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES vehicles (id) ON DELETE SET NULL"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "vehicles",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "setNull"
+                }
+              }
+            ]
+          },
+          {
+            "name": "lifecycle_state",
+            "getter_name": "lifecycleState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "dimension_statistics_json",
+            "getter_name": "dimensionStatisticsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "baseline_schema_version",
+            "getter_name": "baselineSchemaVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "scoring_version",
+            "getter_name": "scoringVersion",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "valid_trip_count",
+            "getter_name": "validTripCount",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "window_start_wall_time_micros",
+            "getter_name": "windowStartWallTimeMicros",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "window_end_wall_time_micros",
+            "getter_name": "windowEndWallTimeMicros",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "confidence",
+            "getter_name": "confidence",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_micros",
+            "getter_name": "updatedAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (baseline_schema_version > 0)",
+          "CHECK (valid_trip_count >= 0)",
+          "CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1))",
+          "CHECK (window_start_wall_time_micros IS NULL OR window_end_wall_time_micros IS NULL OR window_end_wall_time_micros >= window_start_wall_time_micros)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "references": [
+        2,
+        5
+      ],
+      "type": "table",
+      "data": {
+        "name": "trip_scores",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trip_id",
+            "getter_name": "tripId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES trips (id) ON DELETE CASCADE",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES trips (id) ON DELETE CASCADE"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "trips",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "cascade"
+                }
+              }
+            ]
+          },
+          {
+            "name": "score_schema_version",
+            "getter_name": "scoreSchemaVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "scoring_version",
+            "getter_name": "scoringVersion",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "dimension_values_json",
+            "getter_name": "dimensionValuesJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overall_score",
+            "getter_name": "overallScore",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "confidence",
+            "getter_name": "confidence",
+            "moor_type": "double",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "eligibility_state",
+            "getter_name": "eligibilityState",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "audit_contributions_json",
+            "getter_name": "auditContributionsJson",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "baseline_id",
+            "getter_name": "baselineId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES driver_baselines (id) ON DELETE SET NULL",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES driver_baselines (id) ON DELETE SET NULL"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "driver_baselines",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": "setNull"
+                }
+              }
+            ]
+          },
+          {
+            "name": "model_versions_json",
+            "getter_name": "modelVersionsJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (score_schema_version > 0)",
+          "CHECK (overall_score IS NULL OR (overall_score >= 0 AND overall_score <= 100))",
+          "CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1))"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "sync_queue",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "operation_id",
+            "getter_name": "operationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "idempotency_key",
+            "getter_name": "idempotencyKey",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entity_type",
+            "getter_name": "entityType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entity_id",
+            "getter_name": "entityId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entity_version",
+            "getter_name": "entityVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "operation_type",
+            "getter_name": "operationType",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "state",
+            "getter_name": "state",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payload_json",
+            "getter_name": "payloadJson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "attempt_count",
+            "getter_name": "attemptCount",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "next_attempt_at_micros",
+            "getter_name": "nextAttemptAtMicros",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "last_error_code",
+            "getter_name": "lastErrorCode",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_micros",
+            "getter_name": "createdAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_micros",
+            "getter_name": "updatedAtMicros",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (entity_version >= 0)",
+          "CHECK (attempt_count >= 0)"
+        ],
+        "explicit_pk": [
+          "operation_id"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "references": [
+        1
+      ],
+      "type": "index",
+      "data": {
+        "on": 1,
+        "name": "vehicles_owner_namespace",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "owner_namespace",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "references": [
+        2
+      ],
+      "type": "index",
+      "data": {
+        "on": 2,
+        "name": "trips_vehicle_start",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "vehicle_id",
+            "order_by": null
+          },
+          {
+            "column": "start_wall_time_micros",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        2
+      ],
+      "type": "index",
+      "data": {
+        "on": 2,
+        "name": "trips_start_time",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "start_wall_time_micros",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "references": [
+        4
+      ],
+      "type": "index",
+      "data": {
+        "on": 4,
+        "name": "trip_events_trip_start",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "trip_id",
+            "order_by": null
+          },
+          {
+            "column": "start_elapsed_nanos",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "references": [
+        6
+      ],
+      "type": "index",
+      "data": {
+        "on": 6,
+        "name": "trip_scores_trip_version",
+        "sql": null,
+        "unique": true,
+        "columns": [
+          {
+            "column": "trip_id",
+            "order_by": null
+          },
+          {
+            "column": "score_schema_version",
+            "order_by": null
+          },
+          {
+            "column": "scoring_version",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "references": [
+        5
+      ],
+      "type": "index",
+      "data": {
+        "on": 5,
+        "name": "driver_baselines_owner_vehicle",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "owner_namespace",
+            "order_by": null
+          },
+          {
+            "column": "vehicle_id",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "references": [
+        7
+      ],
+      "type": "index",
+      "data": {
+        "on": 7,
+        "name": "sync_queue_idempotency_key",
+        "sql": null,
+        "unique": true,
+        "columns": [
+          {
+            "column": "idempotency_key",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "references": [
+        7
+      ],
+      "type": "index",
+      "data": {
+        "on": 7,
+        "name": "sync_queue_state_next_attempt",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "state",
+            "order_by": null
+          },
+          {
+            "column": "next_attempt_at_micros",
+            "order_by": null
+          }
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "app_settings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"app_settings\" (\"key\" TEXT NOT NULL, \"value\" TEXT NOT NULL, \"updated_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"key\"));"
+        }
+      ]
+    },
+    {
+      "name": "vehicles",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"vehicles\" (\"id\" TEXT NOT NULL, \"owner_namespace\" TEXT NOT NULL, \"display_name\" TEXT NOT NULL, \"vehicle_type\" TEXT NOT NULL, \"manufacturer\" TEXT NULL, \"model\" TEXT NULL, \"model_year\" INTEGER NULL, \"calibration_metadata_json\" TEXT NULL, \"baseline_metadata_json\" TEXT NULL, \"created_at_micros\" INTEGER NOT NULL, \"updated_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "trips",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"trips\" (\"id\" TEXT NOT NULL, \"vehicle_id\" TEXT NOT NULL REFERENCES vehicles (id) ON DELETE RESTRICT, \"start_wall_time_micros\" INTEGER NOT NULL, \"end_wall_time_micros\" INTEGER NULL, \"start_elapsed_nanos\" INTEGER NOT NULL, \"end_elapsed_nanos\" INTEGER NULL, \"duration_millis\" INTEGER NULL, \"distance_meters\" REAL NULL, \"completion_state\" TEXT NOT NULL, \"recovery_state\" TEXT NOT NULL, \"telemetry_schema_version\" INTEGER NOT NULL, \"scoring_version\" TEXT NULL, \"event_engine_version\" TEXT NULL, \"ml_model_refs_json\" TEXT NULL, \"integrity_status\" TEXT NOT NULL, \"telemetry_confidence\" REAL NULL, \"telemetry_quality_summary_json\" TEXT NULL, \"cloud_sync_state\" TEXT NOT NULL, \"created_at_micros\" INTEGER NOT NULL, \"updated_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"id\"), CHECK (end_wall_time_micros IS NULL OR end_wall_time_micros >= start_wall_time_micros), CHECK (end_elapsed_nanos IS NULL OR end_elapsed_nanos >= start_elapsed_nanos), CHECK (duration_millis IS NULL OR duration_millis >= 0), CHECK (distance_meters IS NULL OR distance_meters >= 0), CHECK (telemetry_schema_version > 0), CHECK (telemetry_confidence IS NULL OR (telemetry_confidence >= 0 AND telemetry_confidence <= 1)));"
+        }
+      ]
+    },
+    {
+      "name": "trip_chunks",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"trip_chunks\" (\"trip_id\" TEXT NOT NULL REFERENCES trips (id) ON DELETE CASCADE, \"sequence\" INTEGER NOT NULL, \"storage_reference\" TEXT NOT NULL, \"encoding_version\" INTEGER NOT NULL, \"start_elapsed_nanos\" INTEGER NOT NULL, \"end_elapsed_nanos\" INTEGER NOT NULL, \"channel_sample_counts_json\" TEXT NOT NULL, \"compression\" TEXT NOT NULL, \"atomic_write_strategy\" TEXT NOT NULL, \"checksum_algorithm\" TEXT NOT NULL, \"checksum\" TEXT NOT NULL, \"byte_length\" INTEGER NOT NULL, \"write_state\" TEXT NOT NULL, \"created_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"trip_id\", \"sequence\"), CHECK (sequence >= 0), CHECK (encoding_version > 0), CHECK (end_elapsed_nanos >= start_elapsed_nanos), CHECK (byte_length >= 0));"
+        }
+      ]
+    },
+    {
+      "name": "trip_events",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"trip_events\" (\"id\" TEXT NOT NULL, \"trip_id\" TEXT NOT NULL REFERENCES trips (id) ON DELETE CASCADE, \"event_type\" TEXT NOT NULL, \"start_elapsed_nanos\" INTEGER NOT NULL, \"peak_elapsed_nanos\" INTEGER NOT NULL, \"end_elapsed_nanos\" INTEGER NOT NULL, \"severity\" REAL NOT NULL, \"severity_calibration_version\" TEXT NOT NULL, \"confidence\" REAL NOT NULL, \"quality_flags_json\" TEXT NOT NULL, \"primary_measurements_json\" TEXT NOT NULL, \"rule_evidence_json\" TEXT NOT NULL, \"ml_evidence_json\" TEXT NULL, \"context_tags_json\" TEXT NOT NULL, \"algorithm_version\" TEXT NOT NULL, \"created_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"id\"), CHECK (peak_elapsed_nanos >= start_elapsed_nanos), CHECK (end_elapsed_nanos >= peak_elapsed_nanos), CHECK (severity >= 0 AND severity <= 1), CHECK (confidence >= 0 AND confidence <= 1));"
+        }
+      ]
+    },
+    {
+      "name": "driver_baselines",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"driver_baselines\" (\"id\" TEXT NOT NULL, \"owner_namespace\" TEXT NOT NULL, \"vehicle_id\" TEXT NULL REFERENCES vehicles (id) ON DELETE SET NULL, \"lifecycle_state\" TEXT NOT NULL, \"dimension_statistics_json\" TEXT NOT NULL, \"baseline_schema_version\" INTEGER NOT NULL, \"scoring_version\" TEXT NOT NULL, \"valid_trip_count\" INTEGER NOT NULL, \"window_start_wall_time_micros\" INTEGER NULL, \"window_end_wall_time_micros\" INTEGER NULL, \"confidence\" REAL NULL, \"created_at_micros\" INTEGER NOT NULL, \"updated_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"id\"), CHECK (baseline_schema_version > 0), CHECK (valid_trip_count >= 0), CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1)), CHECK (window_start_wall_time_micros IS NULL OR window_end_wall_time_micros IS NULL OR window_end_wall_time_micros >= window_start_wall_time_micros));"
+        }
+      ]
+    },
+    {
+      "name": "trip_scores",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"trip_scores\" (\"id\" TEXT NOT NULL, \"trip_id\" TEXT NOT NULL REFERENCES trips (id) ON DELETE CASCADE, \"score_schema_version\" INTEGER NOT NULL, \"scoring_version\" TEXT NOT NULL, \"dimension_values_json\" TEXT NOT NULL, \"overall_score\" REAL NULL, \"confidence\" REAL NULL, \"eligibility_state\" TEXT NOT NULL, \"audit_contributions_json\" TEXT NOT NULL, \"baseline_id\" TEXT NULL REFERENCES driver_baselines (id) ON DELETE SET NULL, \"model_versions_json\" TEXT NULL, \"created_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"id\"), CHECK (score_schema_version > 0), CHECK (overall_score IS NULL OR (overall_score >= 0 AND overall_score <= 100)), CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1)));"
+        }
+      ]
+    },
+    {
+      "name": "sync_queue",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"sync_queue\" (\"operation_id\" TEXT NOT NULL, \"idempotency_key\" TEXT NOT NULL, \"entity_type\" TEXT NOT NULL, \"entity_id\" TEXT NOT NULL, \"entity_version\" INTEGER NOT NULL, \"operation_type\" TEXT NOT NULL, \"state\" TEXT NOT NULL, \"payload_json\" TEXT NULL, \"attempt_count\" INTEGER NOT NULL, \"next_attempt_at_micros\" INTEGER NULL, \"last_error_code\" TEXT NULL, \"created_at_micros\" INTEGER NOT NULL, \"updated_at_micros\" INTEGER NOT NULL, PRIMARY KEY (\"operation_id\"), CHECK (entity_version >= 0), CHECK (attempt_count >= 0));"
+        }
+      ]
+    },
+    {
+      "name": "vehicles_owner_namespace",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX vehicles_owner_namespace ON vehicles (owner_namespace)"
+        }
+      ]
+    },
+    {
+      "name": "trips_vehicle_start",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX trips_vehicle_start ON trips (vehicle_id, start_wall_time_micros)"
+        }
+      ]
+    },
+    {
+      "name": "trips_start_time",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX trips_start_time ON trips (start_wall_time_micros)"
+        }
+      ]
+    },
+    {
+      "name": "trip_events_trip_start",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX trip_events_trip_start ON trip_events (trip_id, start_elapsed_nanos)"
+        }
+      ]
+    },
+    {
+      "name": "trip_scores_trip_version",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE UNIQUE INDEX trip_scores_trip_version ON trip_scores (trip_id, score_schema_version, scoring_version)"
+        }
+      ]
+    },
+    {
+      "name": "driver_baselines_owner_vehicle",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX driver_baselines_owner_vehicle ON driver_baselines (owner_namespace, vehicle_id)"
+        }
+      ]
+    },
+    {
+      "name": "sync_queue_idempotency_key",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE UNIQUE INDEX sync_queue_idempotency_key ON sync_queue (idempotency_key)"
+        }
+      ]
+    },
+    {
+      "name": "sync_queue_state_next_attempt",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX sync_queue_state_next_attempt ON sync_queue (state, next_attempt_at_micros)"
+        }
+      ]
+    }
+  ]
+}

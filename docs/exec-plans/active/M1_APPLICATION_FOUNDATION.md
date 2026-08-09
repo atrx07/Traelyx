@@ -107,7 +107,15 @@ push, report, and user approval before the next substep begins.
   validation, native Kotlin tests, and debug build.
 - [x] M1.4 Android 14 Tecno update-install and cold-launch smoke test.
 - [x] M1.4 remote CI on `main`.
-- [ ] Migration fixture tests when M1.4–M1.5 are authorized.
+- [x] M1.5 committed schema-v1 snapshot and generated strict verifier.
+- [x] M1.5 file-backed fresh/current and settings-only development upgrade
+  fixtures, transactional preservation, idempotency, and unknown-shape failure
+  tests.
+- [x] M1.5 full Flutter suite, formatting, static analysis, generated-source
+  and schema-snapshot reproducibility, repository validation, native Kotlin
+  tests, and debug build.
+- [x] M1.5 Android 14 Tecno update-install and cold-launch smoke test.
+- [ ] M1.5 remote CI on `main`.
 
 ## Acceptance criteria
 
@@ -150,6 +158,13 @@ push, report, and user approval before the next substep begins.
 - M1.4 defines the complete fresh-install schema version 1. The earlier
   settings-only development bootstrap used the same SQLite user version; M1.5
   owns the explicit fixture/compatibility harness before domain data ships.
+- M1.5 commits Drift's schema-v1 JSON snapshot and generated native verifier,
+  and CI regenerates both to detect unversioned schema drift.
+- M1.5 recognizes only the exact historical settings-only version-1 table and
+  column fingerprint. It transactionally creates the remaining version-1
+  tables while preserving settings; complete version-1 databases are a no-op,
+  and unknown or partial shapes fail visibly rather than receiving an
+  unaudited implicit repair.
 
 ## Progress log
 
@@ -168,6 +183,12 @@ push, report, and user approval before the next substep begins.
   PID-scoped fatal or Flutter errors. The database remains lazy in the
   placeholder UI and its fresh creation is covered by focused tests. Execution
   stopped at the M1.5 approval gate.
+- 2026-08-09: M1.5 was explicitly authorized. The committed snapshot,
+  generated verifier, exact-fingerprint settings-only compatibility path, and
+  unknown-shape failure behavior pass focused and full local gates. The debug
+  APK update-installed and cold-launched on the Android 14 Tecno LH8n; the lazy
+  placeholder UI does not open a database, so file-backed native SQLite tests
+  are the authoritative migration validation. Remote CI is pending.
 
 ## M1.1 completion summary
 
@@ -209,3 +230,13 @@ Focused tests and the full local suite pass, and the current APK update-installs
 and cold-launches on the Android 14 Tecno device. Local validation and GitHub
 Actions pass. M1.5 owns the explicit migration fixture and compatibility
 harness.
+
+## M1.5 checkpoint summary
+
+M1.5 adds an auditable schema migration harness before domain data exists in
+the wild. Drift's schema-v1 snapshot and generated native verifier are
+committed and reproducibility-checked in CI. File-backed tests validate the
+current schema, transactionally upgrade only the exact historical
+settings-only development shape while preserving its data, prove reopen
+idempotency, and reject unknown version-1 shapes. All local gates and the
+physical-device APK smoke check pass; exact-HEAD remote CI remains pending.

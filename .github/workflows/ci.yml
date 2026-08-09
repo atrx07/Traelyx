@@ -37,6 +37,13 @@ jobs:
           dart run build_runner build
           git diff --exit-code
 
+      - name: Verify Drift schema snapshots
+        run: |
+          dart run drift_dev make-migrations
+          dart run drift_dev schema generate drift_schemas/app_database test/core/database/migrations/generated --data-classes --companions
+          dart format test/core/database/migrations/generated
+          git diff --exit-code -- drift_schemas test/core/database/migrations/generated
+
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed lib test tool
 

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:traelyx/core/database/app_schema.dart';
+import 'package:traelyx/core/database/database_migrations.dart';
 
 part 'app_database.g.dart';
 
@@ -28,6 +29,7 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (migrator) => migrator.createAll(),
     beforeOpen: (_) async {
+      await migrateRecognizedDevelopmentSchemas(this);
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
