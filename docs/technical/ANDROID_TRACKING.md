@@ -22,6 +22,14 @@ Use the appropriate Android foreground-service type/notification and current pla
 
 The user must be able to tell recording is active.
 
+### M2.1 lifecycle baseline
+
+Recorder lifecycle state contract version 1 uses explicit `idle`, `starting`, `recording`, `stopping`, `recovered`, and `error` states. `recovered` is an active but visibly non-fresh state; it must not be presented as an uninterrupted normal trip. Duplicate start requests preserve the existing trip identity rather than creating a second lifecycle.
+
+Before foreground promotion, the native recorder atomically persists versioned active-trip recovery metadata under the app-private no-backup directory. The record contains only trip identity, start wall/monotonic timestamps, lifecycle state, recovery count, and an allowlisted failure code. Missing, partial, unknown-version, or otherwise invalid metadata fails closed.
+
+The service is non-exported, survives activity task removal, uses the Android `location` foreground-service type, and requires coarse or fine location permission before foreground promotion. The M2.1 bridge can start, stop, and query this lifecycle for validation, but `recordingAvailable` remains false until acquisition and permission onboarding are implemented. M2.1 acquires no GNSS/IMU samples, holds no wake lock, and performs no network access.
+
 ## 3. Acquisition
 
 Recorder owns:

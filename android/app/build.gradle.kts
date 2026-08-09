@@ -23,6 +23,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        testInstrumentationRunner =
+            "io.github.atrx07.traelyx.recorder.RecorderLifecycleInstrumentation"
     }
 
     buildTypes {
