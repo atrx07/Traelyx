@@ -124,6 +124,7 @@ Then:
 - Do not let completed validated work accumulate uncommitted across roadmap substeps. Never mark a substep or milestone complete before its required validation passes.
 - Include corresponding execution-plan, `STATUS.md`, `NEXTSTEPS.md`, and README roadmap updates in the completion commit.
 - Roadmap identifiers use the canonical M-system only (`M0`–`M8`, with substeps such as `M0.6` and `M2.3`). Do not introduce parallel Stage-N identifiers or aliases.
+- README roadmap presentation uses current-milestone expansion: completed and future milestones have one summary row, while only the currently authorized active milestone exposes all canonical substeps. See `docs/governance/DOCUMENTATION_POLICY.md`.
 - After completing and reporting any numbered roadmap substep, stop and wait for explicit user authorization before beginning the next substep. Successful validation, push, or milestone activation is not authorization.
 - While awaiting approval, do not implement, edit for, pre-build, or substantially prepare the next substep. Milestone transitions require the same approval unless the user explicitly authorizes continuous execution.
 

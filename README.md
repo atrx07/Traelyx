@@ -8,21 +8,18 @@ Milestone M0 and roadmap substeps M1.1–M1.3 are complete. M1 remains active bu
 
 ## Roadmap
 
-Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass.
+Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |
 |---|---|---|---|---|---|
 | M0 | Project Bootstrap | Skeleton milestone | ✅ Complete | Done | 2026-08-08 |
-| M0.1 | Project Bootstrap | Confirm identity | ✅ Complete | Done | 2026-08-08 |
-| M0.2 | Project Bootstrap | Initialize repository | ✅ Complete | Done | 2026-08-08 |
-| M0.3 | Project Bootstrap | Toolchain pinning | ✅ Complete | Done | 2026-08-08 |
-| M0.4 | Project Bootstrap | Quality commands | ✅ Complete | Done | 2026-08-08 |
-| M0.5 | Project Bootstrap | CI foundation | ✅ Complete | Done | 2026-08-08 |
-| M0.6 | Project Bootstrap | Core architecture skeleton | ✅ Complete | Done | 2026-08-08 |
 | M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | 🔵 Active | ~4–6 days | 2026-08-09 |
 | M1.1 | Application Foundation | Design tokens/theme | ✅ Complete | Done | 2026-08-09 |
 | M1.2 | Application Foundation | Navigation | ✅ Complete | Done | 2026-08-09 |
 | M1.3 | Application Foundation | Local settings | ✅ Complete | Done | 2026-08-09 |
+| M1.4 | Application Foundation | Drift schema v1 | ⚪ Pending | — | — |
+| M1.5 | Application Foundation | Migration harness | ⚪ Pending | — | — |
+| M1.6 | Application Foundation | Diagnostics shell | ⚪ Pending | — | — |
 | M2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |

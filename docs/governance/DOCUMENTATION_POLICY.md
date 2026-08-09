@@ -71,6 +71,8 @@ Completed, validated work must not accumulate only in the working tree. A commit
 
 After a roadmap substep passes its required gates, update its active execution plan, `STATUS.md`/`NEXTSTEPS.md` where applicable, and the corresponding README roadmap row in the same completion commit. Push the commit and verify synchronization. Do not mark the next substep active until the user authorizes it.
 
+README roadmap presentation uses current-milestone expansion: each completed or future milestone appears as one summary row, while only the currently authorized active milestone exposes all of its canonical substeps. When a milestone completes, collapse its child rows from README while retaining detailed history in the authoritative roadmap and execution-plan records. A known next milestone remains a single pending summary row until user authorization activates it.
+
 Use only this status vocabulary:
 
 - ✅ Complete
