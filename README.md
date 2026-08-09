@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestone M0 and roadmap substeps M1.1–M1.5 are complete. M1.6 is locally and device validated, with remote CI pending. Trip recording remains intentionally unavailable.
+Milestones M0 and M1 are complete. Development is stopped at the approval gate before M2; trip recording remains intentionally unavailable.
 
 ## Roadmap
 
@@ -13,13 +13,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | ID | Milestone | Step | Status | ETA | Last validated |
 |---|---|---|---|---|---|
 | M0 | Project Bootstrap | Skeleton milestone | ✅ Complete | Done | 2026-08-08 |
-| M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | 🔵 Active | ~4–6 days | 2026-08-09 |
-| M1.1 | Application Foundation | Design tokens/theme | ✅ Complete | Done | 2026-08-09 |
-| M1.2 | Application Foundation | Navigation | ✅ Complete | Done | 2026-08-09 |
-| M1.3 | Application Foundation | Local settings | ✅ Complete | Done | 2026-08-09 |
-| M1.4 | Application Foundation | Drift schema v1 | ✅ Complete | Done | 2026-08-09 |
-| M1.5 | Application Foundation | Migration harness | ✅ Complete | Done | 2026-08-09 |
-| M1.6 | Application Foundation | Diagnostics shell | 🟡 In progress | Remote CI pending | 2026-08-09 |
+| M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | ✅ Complete | Done | 2026-08-09 |
 | M2 | Native Recording Engine | Reliable recorder milestone | ⚪ Pending | ~1.5–2 weeks | — |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |

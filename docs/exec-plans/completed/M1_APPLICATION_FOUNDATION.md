@@ -1,6 +1,6 @@
 # Execution Plan — M1 Application Foundation
 
-**Status:** Active
+**Status:** Complete
 **Owner:** Codex/maintainer
 **Milestone:** M1 — Application Foundation
 **Started:** 2026-08-09
@@ -76,7 +76,7 @@ functionality that does not exist.
 - [x] M1.3 — Add local settings and explicit secure/non-secure boundaries.
 - [x] M1.4 — Implement Drift application schema version 1.
 - [x] M1.5 — Add database migration fixtures and upgrade tests.
-- [ ] M1.6 — Add a redacted diagnostics shell.
+- [x] M1.6 — Add a redacted diagnostics shell.
 
 Each numbered substep requires an independent validation, completion commit,
 push, report, and user approval before the next substep begins.
@@ -123,7 +123,7 @@ push, report, and user approval before the next substep begins.
   tests, and debug build.
 - [x] M1.6 Android 14 Tecno update-install, cold launch, diagnostics open,
   scroll, aggregate-value, accessibility-hierarchy, and back-navigation checks.
-- [ ] M1.6 remote CI on `main`.
+- [x] M1.6 remote CI on `main`.
 
 ## Acceptance criteria
 
@@ -209,13 +209,14 @@ push, report, and user approval before the next substep begins.
   placeholder UI does not open a database, so file-backed native SQLite tests
   are the authoritative migration validation. Execution stopped at the M1.6
   approval gate.
-- 2026-08-09: M1.6 was explicitly authorized. Forty Flutter tests and all
+- 2026-08-09: M1.6 checkpoint `baf79ab` passed GitHub Actions run
+  `31312867735`. Forty Flutter tests and all
   local generated-source, schema, format, analysis, repository/security,
   Kotlin, and debug-build gates pass. The APK update-installed and
   cold-launched on the Android 14 Tecno LH8n; the diagnostics screen opened,
   scrolled through real aggregate storage values, exposed no sensitive fields,
   and returned safely to You. PID-scoped logs showed no Flutter/app exception.
-  Remote CI is pending.
+  M1 completed and execution stopped at the M2 activation gate.
 
 ## M1.1 completion summary
 
@@ -269,13 +270,24 @@ idempotency, and reject unknown version-1 shapes. All local gates and the
 physical-device APK smoke check and exact-HEAD GitHub Actions pass. No new
 dependency, network flow, telemetry collection, or user-data upload was added.
 
-## M1.6 checkpoint summary
+## M1.6 completion summary
 
 M1.6 adds a deep-link-safe Developer / Diagnostics destination under You. A
 versioned native/Dart contract composes app/build metadata, schema version,
 the conservative recorder placeholder, and aggregate installed-app/SQLite
 storage values. The UI explains its redaction boundary, hides underlying error
 details, and keeps future storage categories and export controls honest. All
-local gates and physical-device validation pass; exact-HEAD remote CI remains
-pending. No schema, migration, dependency, network flow, recorder activation,
+local gates, physical-device validation, and exact-HEAD GitHub Actions pass. No
+schema, migration, dependency, network flow, recorder activation,
 telemetry collection, or user-data upload changed.
+
+## M1 completion summary
+
+M1 delivers the complete accountless Application Foundation: semantic theme
+tokens, deep-link-safe five-destination navigation, typed non-secret settings
+and a fail-closed secure-store boundary, the full schema-v1 contract, an
+auditable migration harness, and redacted local diagnostics. Every numbered
+substep passed its focused tests, full local gates, required Tecno validation,
+and exact-HEAD GitHub Actions. The app remains offline-capable and does not
+record sensors, request location, require an account, or upload user data. M2
+remains inactive pending explicit user authorization.

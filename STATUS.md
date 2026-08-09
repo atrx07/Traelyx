@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.6 locally and device validated; remote CI pending**
+**M1 complete — awaiting explicit authorization to activate M2**
 
 ## Working
 
@@ -13,7 +13,7 @@
 - Initial governance/reference pack created.
 - Main-first atomic commit/push discipline and public README roadmap tracking established.
 - M0 execution plan completed and archived.
-- M1 execution plan activated after explicit user authorization.
+- M1 execution plan completed and archived after all six authorized substeps passed their required gates.
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
@@ -27,7 +27,7 @@
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
 - Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries, validated locally and in CI.
 - Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs, validated locally and in CI.
-- A deep-link-safe Developer / Diagnostics screen reports allowlisted app/build metadata, schema version, recorder capability state, and aggregate storage bytes without exposing routes, raw samples, filenames, device identifiers, credentials, or API keys. Local and physical-device gates pass; remote CI is pending.
+- A deep-link-safe Developer / Diagnostics screen reports allowlisted app/build metadata, schema version, recorder capability state, and aggregate storage bytes without exposing routes, raw samples, filenames, device identifiers, credentials, or API keys, validated locally, on-device, and in CI.
 - The current debug APK update-installs and cold-launches on the Android 14 Tecno LH8n with existing app data preserved and no startup, Flutter, or database errors.
 
 ## Partial
@@ -64,4 +64,4 @@
 
 ## Current step
 
-**M1.6 — Diagnostics shell:** implementation and local/device gates pass; remote CI is pending.
+**M2 — Native Recording Engine:** pending explicit user authorization; no M2 implementation has started.
