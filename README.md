@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0 and M1 are complete. M2 is active and M2.1 Foreground Service Lifecycle is complete; development is stopped at the approval gate before M2.2. Trip recording remains intentionally unavailable until acquisition and permission work is delivered.
+Milestones M0 and M1 are complete. M2 is active and M2.2 GNSS Acquisition is complete; development is stopped at the approval gate before M2.3. Trip recording remains intentionally unavailable until the remaining acquisition, buffering, bridge, and permission work is delivered.
 
 ## Roadmap
 
@@ -16,7 +16,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | ✅ Complete | Done | 2026-08-09 |
 | M2 | Native Recording Engine | Reliable recorder milestone | 🚧 In Progress | ~1.5–2 weeks | 2026-08-09 |
 | M2.1 | Native Recording Engine | Foreground service lifecycle | ✅ Complete | Done | 2026-08-09 |
-| M2.2 | Native Recording Engine | GNSS acquisition | ⚪ Pending | ~1–2 days | — |
+| M2.2 | Native Recording Engine | GNSS acquisition | ✅ Complete | Done | 2026-08-09 |
 | M2.3 | Native Recording Engine | IMU acquisition | ⚪ Pending | ~1–2 days | — |
 | M2.4 | Native Recording Engine | Crash-safe buffering | ⚪ Pending | ~2–3 days | — |
 | M2.5 | Native Recording Engine | Flutter↔Kotlin bridge | ⚪ Pending | ~1–2 days | — |

@@ -4,23 +4,22 @@
 
 ## Current gate
 
-M2 is active and M2.1 Foreground Service Lifecycle is complete and validated locally and on the Android 14 Tecno device. Do not activate or implement M2.2 without explicit user authorization.
+M2 is active and M2.2 GNSS Acquisition is complete and validated locally and on the Android 14 Tecno device. Do not activate or implement M2.3 without explicit user authorization.
 
-## P0 — M2.2 approval gate
+## P0 — M2.3 approval gate
 
-1. Await explicit authorization for M2.2 GNSS acquisition.
-2. After authorization, implement only M2.2 against the active M2 execution plan.
+1. Await explicit authorization for M2.3 IMU acquisition.
+2. After authorization, implement only M2.3 against the active M2 execution plan.
 3. Preserve the approval gate between every numbered M2 substep.
 
 ## P1 — Recorder milestone
 
-1. Implement GNSS acquisition with authoritative timestamps and quality fields.
-2. Implement IMU acquisition with authoritative timestamps.
-3. Define and implement crash-safe telemetry chunk buffering.
-4. Complete Flutter/native status and command integration.
-5. Add contextual permission onboarding and broader service recovery tests.
-6. Record the first real-device `.tripdebug` fixture.
-7. Verify a locked-screen 30–60 minute trip survives intact.
+1. Implement IMU acquisition with authoritative timestamps.
+2. Define and implement crash-safe telemetry chunk buffering.
+3. Complete Flutter/native status and command integration.
+4. Add contextual permission onboarding and broader service recovery tests.
+5. Record the first real-device `.tripdebug` fixture.
+6. Verify a locked-screen 30–60 minute trip survives intact.
 
 ## P2 — Analysis foundation
 

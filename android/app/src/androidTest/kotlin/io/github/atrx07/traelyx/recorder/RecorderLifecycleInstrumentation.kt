@@ -22,12 +22,16 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         val results = Bundle()
         try {
             runLifecycleProof()
-            results.putString("stream", "\nM2.1 recorder lifecycle proof passed.\n")
+            results.putString(
+                "stream",
+                "\nM2.2 recorder lifecycle and privacy-safe GNSS proof passed.\n",
+            )
             finish(Activity.RESULT_OK, results)
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.1 recorder lifecycle proof failed:\n${error.stackTraceToString()}\n",
+                "\nM2.2 recorder lifecycle and GNSS proof failed:\n" +
+                    "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
         }
@@ -67,6 +71,25 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(accepted.tripId == active.tripId) { "Active trip identity changed during start." }
             check(active.isActive) { "Recorder did not report an active lifecycle." }
             checkNotificationActive(context)
+            val initialGnss = awaitGnssFix()
+            check(initialGnss.provider == "gps") { "Recorder did not use the GPS provider." }
+            check(initialGnss.acceptedSampleCount > 0) { "No GNSS fix was accepted." }
+            check(initialGnss.rejectedSampleCount >= 0) { "Invalid rejected-sample counter." }
+            check(initialGnss.firstSourceTimestampNanos != null) {
+                "GNSS source timestamp was not preserved."
+            }
+            check(initialGnss.lastSourceTimestampNanos != null) {
+                "GNSS last source timestamp was not preserved."
+            }
+            check(initialGnss.lastTripElapsedNanos != null) {
+                "GNSS trip elapsed time was unavailable for the same-boot trip."
+            }
+            check(initialGnss.lastHorizontalAccuracyMetres != null) {
+                "GNSS horizontal accuracy was not preserved."
+            }
+            check(initialGnss.errorCode == null) {
+                "GNSS health contained an acquisition error: ${initialGnss.errorCode}"
+            }
 
             activity.runOnUiThread(activity::recreate)
             waitForIdleSync()
@@ -87,6 +110,10 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(recovered.tripId == accepted.tripId) { "Recovery changed the active trip identity." }
             check(recovered.recoveryCount == 1) { "Recovery count was not incremented once." }
             checkNotificationActive(context)
+            val recoveredGnss = awaitGnssFix()
+            check(recoveredGnss.acceptedSampleCount > 0) {
+                "GNSS acquisition did not restart with the recovered lifecycle."
+            }
 
             context.startActivity(
                 Intent(Intent.ACTION_MAIN)
@@ -111,11 +138,42 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             val idle = awaitState(context) { it.lifecycleState == RecorderLifecycleState.IDLE }
             check(!idle.isActive) { "Recorder remained active after stop." }
             checkNotificationStopped(context)
+            check(RecorderService.queryGnssHealth().state == GnssAcquisitionState.STOPPED) {
+                "GNSS callbacks did not stop with the recorder lifecycle."
+            }
         } finally {
             executeShellCommand("input keyevent 224")
             context.stopService(Intent(context, RecorderService::class.java))
             AtomicRecorderRecoveryStore(context).clear()
         }
+    }
+
+    private fun awaitGnssFix(): GnssHealthSnapshot {
+        val deadline = SystemClock.uptimeMillis() + GNSS_FIX_TIMEOUT_MILLIS
+        var latest = RecorderService.queryGnssHealth()
+        while (
+            latest.acceptedSampleCount == 0L &&
+            latest.state != GnssAcquisitionState.PROVIDER_DISABLED &&
+            latest.state != GnssAcquisitionState.ERROR &&
+            SystemClock.uptimeMillis() < deadline
+        ) {
+            SystemClock.sleep(GNSS_POLL_INTERVAL_MILLIS)
+            latest = RecorderService.queryGnssHealth()
+        }
+        check(latest.state != GnssAcquisitionState.PROVIDER_DISABLED) {
+            "GPS provider is disabled; enable precise device location before running the proof."
+        }
+        check(latest.state != GnssAcquisitionState.ERROR) {
+            "GNSS registration failed: ${latest.errorCode}"
+        }
+        check(latest.acceptedSampleCount > 0) {
+            "Timed out waiting for a real GPS fix; " +
+                "state=${latest.state.wireName}, " +
+                "rejected=${latest.rejectedSampleCount}, " +
+                "registrationFailures=${latest.registrationFailureCount}. " +
+                "Place the phone outdoors with a clear sky view."
+        }
+        return latest
     }
 
     private fun awaitState(
@@ -173,5 +231,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
     companion object {
         private const val STATE_TIMEOUT_MILLIS = 5_000L
         private const val POLL_INTERVAL_MILLIS = 50L
+        private const val GNSS_FIX_TIMEOUT_MILLIS = 120_000L
+        private const val GNSS_POLL_INTERVAL_MILLIS = 250L
     }
 }

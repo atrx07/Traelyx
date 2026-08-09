@@ -21,13 +21,14 @@ import java.util.UUID
 /**
  * Native foreground lifecycle owner for an active trip.
  *
- * M2.1 deliberately acquires no sensors or location and holds no wake lock. It
- * establishes only the persistent lifecycle and user-visible notification that
- * later acquisition steps will run inside.
+ * M2.2 adds native GPS-provider acquisition while keeping samples process-local
+ * until the durable chunk contract is implemented. It holds no wake lock and
+ * never sends precise telemetry through logs, Flutter, or the network.
  */
 class RecorderService : Service() {
     private lateinit var coordinator: RecorderLifecycleCoordinator
     private var promotedToForeground = false
+    private var gnssAcquisition: AndroidGnssAcquisition? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -37,6 +38,7 @@ class RecorderService : Service() {
     }
 
     override fun onDestroy() {
+        stopGnssAcquisition()
         serviceCreated = false
         super.onDestroy()
     }
@@ -80,6 +82,10 @@ class RecorderService : Service() {
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
+        if (!startGnssAcquisition(outcome.snapshot)) {
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         return START_STICKY
     }
 
@@ -93,6 +99,10 @@ class RecorderService : Service() {
             stopSelf(startId)
             return START_NOT_STICKY
         }
+        if (!startGnssAcquisition(outcome.snapshot)) {
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         return START_STICKY
     }
 
@@ -102,6 +112,7 @@ class RecorderService : Service() {
             stopSelf(startId)
             return START_NOT_STICKY
         }
+        stopGnssAcquisition()
         val stopping = coordinator.beginStop()
         if (stopping.kind == RecorderLifecycleOutcomeKind.REJECTED) {
             stopForegroundAndSelf(startId)
@@ -114,6 +125,35 @@ class RecorderService : Service() {
         coordinator.completeStop()
         stopSelf(startId)
         return START_NOT_STICKY
+    }
+
+    private fun startGnssAcquisition(snapshot: RecorderStateSnapshot): Boolean {
+        val tripEpoch = snapshot.startedAtElapsedRealtimeNanos
+        if (tripEpoch == null) {
+            coordinator.markError("gnss_trip_epoch_missing")
+            return false
+        }
+        gnssAcquisition?.let {
+            if (it.health().state != GnssAcquisitionState.STOPPED) return true
+        }
+        val acquisition =
+            AndroidGnssAcquisition(
+                context = applicationContext,
+                tripStartedAtElapsedRealtimeNanos = tripEpoch,
+                publishHealth = { latestGnssHealth = it },
+            )
+        gnssAcquisition = acquisition
+        val result = acquisition.start()
+        if (!result.started) {
+            coordinator.markError(result.errorCode ?: "gnss_registration_failed")
+            return false
+        }
+        return true
+    }
+
+    private fun stopGnssAcquisition() {
+        gnssAcquisition?.stop()
+        gnssAcquisition = null
     }
 
     private fun promote(snapshot: RecorderStateSnapshot): Boolean {
@@ -173,9 +213,9 @@ class RecorderService : Service() {
             }
         val text =
             if (snapshot.lifecycleState == RecorderLifecycleState.RECOVERED) {
-                "Recorder lifecycle recovered. No telemetry is collected yet."
+                "Recording location locally after recorder recovery."
             } else {
-                "Recorder lifecycle active. No telemetry is collected yet."
+                "Recording location locally."
             }
         val builder =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -244,6 +284,9 @@ class RecorderService : Service() {
         @Volatile
         private var serviceCreated = false
 
+        @Volatile
+        private var latestGnssHealth = GnssHealthSnapshot.idle()
+
         fun requestStart(context: Context): RecorderStateSnapshot {
             val coordinator = coordinator(context)
             val outcome =
@@ -309,6 +352,9 @@ class RecorderService : Service() {
         }
 
         fun queryState(context: Context): RecorderStateSnapshot = coordinator(context).query()
+
+        /** Privacy-safe internal proof surface; intentionally not part of the Flutter bridge yet. */
+        internal fun queryGnssHealth(): GnssHealthSnapshot = latestGnssHealth
 
         private fun coordinator(context: Context): RecorderLifecycleCoordinator =
             RecorderLifecycleCoordinator(AtomicRecorderRecoveryStore(context.applicationContext))

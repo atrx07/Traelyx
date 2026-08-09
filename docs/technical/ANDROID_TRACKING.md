@@ -28,7 +28,17 @@ Recorder lifecycle state contract version 1 uses explicit `idle`, `starting`, `r
 
 Before foreground promotion, the native recorder atomically persists versioned active-trip recovery metadata under the app-private no-backup directory. The record contains only trip identity, start wall/monotonic timestamps, lifecycle state, recovery count, and an allowlisted failure code. Missing, partial, unknown-version, or otherwise invalid metadata fails closed.
 
-The service is non-exported, survives activity task removal, uses the Android `location` foreground-service type, and requires coarse or fine location permission before foreground promotion. The M2.1 bridge can start, stop, and query this lifecycle for validation, but `recordingAvailable` remains false until acquisition and permission onboarding are implemented. M2.1 acquires no GNSS/IMU samples, holds no wake lock, and performs no network access.
+The service is non-exported, survives activity task removal, uses the Android `location` foreground-service type, and requires coarse or fine location permission before foreground promotion. The M2.1 bridge can start, stop, and query this lifecycle for validation. M2.1 itself acquired no GNSS/IMU samples, held no wake lock, and performed no network access.
+
+### M2.2 GNSS baseline
+
+While an active or recovered recorder service owns the lifecycle, a dedicated native handler thread registers `LocationManager.GPS_PROVIDER` at a requested one-second minimum interval and zero minimum distance. Fine location permission is required for this precise GPS path. Listener registration, provider disablement, sample mapping, and teardown are explicit; acquisition stops on recorder stop, error, or service destruction.
+
+Raw GNSS schema version 1 preserves Android `Location.elapsedRealtimeNanos` as the source monotonic timestamp and `Location.time` separately as source wall time. Trip elapsed nanoseconds are derived only when the persisted same-boot monotonic epoch and fix ordering are valid. Latitude/longitude use degrees; accuracy, altitude, and speed use SI units; source-dependent altitude, speed, bearing, and associated accuracy fields remain nullable rather than becoming fabricated zeros.
+
+Mandatory coordinates, source timestamp, provider, and horizontal accuracy are validated before acceptance. Horizontal accuracy above 50 metres is retained with `GNSS_LOW_ACCURACY`; invalid/non-monotonic epoch evidence receives `CLOCK_DISCONTINUITY`; Android's mock-location signal receives `MOCK_LOCATION_SIGNAL`. The latter is evidence only, never a standalone integrity verdict.
+
+M2.2 health snapshots contain acquisition state, provider, requested interval, counts, last source/trip timestamps, last accuracy, and optional-field presence, but never coordinates. Raw fixes remain process-local and ephemeral until M2.4 defines the durable versioned chunk format. They are not logged, bridged to Flutter, sent through diagnostics, or uploaded. `recordingAvailable` remains false pending M2.5/M2.6 integration and permission onboarding.
 
 ## 3. Acquisition
 
