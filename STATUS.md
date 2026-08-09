@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.5 locally and device validated; remote CI pending**
+**M1 active — M1.5 complete; awaiting explicit authorization for M1.6**
 
 ## Working
 
@@ -20,7 +20,7 @@
 - GitHub Actions passes generated-source, format, analysis, Flutter/Kotlin tests, repository validation, debug/release builds, size reporting, and artifact upload on `main`.
 - The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
 - Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with relational constraints validated locally and in CI.
-- A committed Drift schema-v1 snapshot, generated verifier, and file-backed upgrade fixtures validate fresh/current databases and the exact settings-only development bootstrap shape. Unknown version-1 shapes fail visibly instead of being repaired implicitly.
+- A committed Drift schema-v1 snapshot, generated verifier, and file-backed upgrade fixtures validate fresh/current databases and the exact settings-only development bootstrap shape locally and in CI. Unknown version-1 shapes fail visibly instead of being repaired implicitly.
 - The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
@@ -34,7 +34,6 @@
 - The recorder bridge and service are structural only; trip recording remains unavailable.
 - Trips, DNA, Social, and You are navigation skeletons only; their product features remain unimplemented.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
-- The migration harness is locally validated; its exact-HEAD GitHub Actions gate is pending.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
 ## Not implemented
@@ -65,4 +64,4 @@
 
 ## Current step
 
-**M1.5 — Migration harness:** implementation and local/device gates pass; remote CI is pending.
+**M1.6 — Diagnostics shell:** awaiting explicit user authorization; no implementation has started.

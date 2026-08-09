@@ -75,7 +75,7 @@ functionality that does not exist.
 - [x] M1.2 — Add the deep-link-safe primary navigation skeleton.
 - [x] M1.3 — Add local settings and explicit secure/non-secure boundaries.
 - [x] M1.4 — Implement Drift application schema version 1.
-- [ ] M1.5 — Add database migration fixtures and upgrade tests.
+- [x] M1.5 — Add database migration fixtures and upgrade tests.
 - [ ] M1.6 — Add a redacted diagnostics shell.
 
 Each numbered substep requires an independent validation, completion commit,
@@ -115,7 +115,7 @@ push, report, and user approval before the next substep begins.
   and schema-snapshot reproducibility, repository validation, native Kotlin
   tests, and debug build.
 - [x] M1.5 Android 14 Tecno update-install and cold-launch smoke test.
-- [ ] M1.5 remote CI on `main`.
+- [x] M1.5 remote CI on `main`.
 
 ## Acceptance criteria
 
@@ -183,12 +183,14 @@ push, report, and user approval before the next substep begins.
   PID-scoped fatal or Flutter errors. The database remains lazy in the
   placeholder UI and its fresh creation is covered by focused tests. Execution
   stopped at the M1.5 approval gate.
-- 2026-08-09: M1.5 was explicitly authorized. The committed snapshot,
+- 2026-08-09: M1.5 checkpoint `21aaf7b` passed GitHub Actions run
+  `31311125764`. The committed snapshot,
   generated verifier, exact-fingerprint settings-only compatibility path, and
   unknown-shape failure behavior pass focused and full local gates. The debug
   APK update-installed and cold-launched on the Android 14 Tecno LH8n; the lazy
   placeholder UI does not open a database, so file-backed native SQLite tests
-  are the authoritative migration validation. Remote CI is pending.
+  are the authoritative migration validation. Execution stopped at the M1.6
+  approval gate.
 
 ## M1.1 completion summary
 
@@ -231,7 +233,7 @@ and cold-launches on the Android 14 Tecno device. Local validation and GitHub
 Actions pass. M1.5 owns the explicit migration fixture and compatibility
 harness.
 
-## M1.5 checkpoint summary
+## M1.5 completion summary
 
 M1.5 adds an auditable schema migration harness before domain data exists in
 the wild. Drift's schema-v1 snapshot and generated native verifier are
@@ -239,4 +241,5 @@ committed and reproducibility-checked in CI. File-backed tests validate the
 current schema, transactionally upgrade only the exact historical
 settings-only development shape while preserving its data, prove reopen
 idempotency, and reject unknown version-1 shapes. All local gates and the
-physical-device APK smoke check pass; exact-HEAD remote CI remains pending.
+physical-device APK smoke check and exact-HEAD GitHub Actions pass. No new
+dependency, network flow, telemetry collection, or user-data upload was added.
