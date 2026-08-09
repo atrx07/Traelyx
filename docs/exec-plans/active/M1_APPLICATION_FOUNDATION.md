@@ -70,9 +70,8 @@ functionality that does not exist.
 
 ## Implementation steps
 
-- [ ] M1.1 — Add semantic design tokens/theme, typography, spacing, and
-  reduced-motion-aware motion primitives with focused tests. Implementation
-  and local validation are complete; remote CI is pending.
+- [x] M1.1 — Add semantic design tokens/theme, typography, spacing, and
+  reduced-motion-aware motion primitives with focused tests.
 - [ ] M1.2 — Add the deep-link-safe primary navigation skeleton.
 - [ ] M1.3 — Add local settings and explicit secure/non-secure boundaries.
 - [ ] M1.4 — Implement Drift application schema version 1.
@@ -89,7 +88,7 @@ push, report, and user approval before the next substep begins.
 - [x] M1.1 full Flutter test suite.
 - [x] M1.1 repository contract/secret validation.
 - [x] M1.1 Android debug build.
-- [ ] M1.1 remote CI on `main`.
+- [x] M1.1 remote CI on `main`.
 - [ ] Navigation/deep-link tests when M1.2 is authorized.
 - [ ] Persistence/migration fixture tests when M1.3–M1.5 are authorized.
 
@@ -121,13 +120,14 @@ push, report, and user approval before the next substep begins.
 ## Progress log
 
 - 2026-08-09: M1 activated after explicit continuation approval.
-- 2026-08-09: M1.1 implementation and local gates passed; remote CI is pending.
+- 2026-08-09: M1.1 checkpoint `a79e33c` passed GitHub Actions run
+  `31296218766`; execution stopped at the M1.2 approval gate.
 
-## M1.1 checkpoint summary
+## M1.1 completion summary
 
 M1.1 centralizes the dark-first semantic color system, typography, spacing,
 radii, and reduced-motion-aware timing primitives. The bootstrap shell consumes
 the semantic tokens, and focused tests cover theme mapping, contrast, numeric
-typography, control sizing, and reduced motion. Local gates pass; remote CI must
-pass before completion. No persistence, network, privacy, migration, recorder,
-or provider behavior changed.
+typography, control sizing, and reduced motion. Local validation and GitHub
+Actions pass. No persistence, network, privacy, migration, recorder, or provider
+behavior changed.

@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.1 locally validated; remote CI pending**
+**M1 active — M1.1 complete; awaiting explicit authorization for M1.2**
 
 ## Working
 
@@ -22,7 +22,7 @@
 - Drift schema version 1 initializes and persists local settings under test.
 - The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
-- Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and locally validated.
+- Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 
 ## Partial
 
@@ -55,6 +55,6 @@
 - Free-tier cloud limits if adoption becomes large.
 - APK/app-data growth if raw telemetry retention is unmanaged.
 
-## Current step
+## Next step
 
-**M1.1 — Design tokens/theme:** implementation and local gates pass; awaiting required remote CI before completion.
+**M1.2 — Navigation:** awaiting explicit user authorization before implementation.
