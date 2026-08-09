@@ -5,4 +5,5 @@ abstract final class TraelyxRoutes {
   static const dna = '/dna';
   static const social = '/social';
   static const you = '/you';
+  static const youDiagnostics = '/you/diagnostics';
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
+import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
+import 'package:traelyx/features/navigation/presentation/you_screen.dart';
 
 GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
   return GoRouter(
@@ -84,14 +86,13 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
             routes: [
               GoRoute(
                 path: TraelyxRoutes.you,
-                builder: (context, state) => const FoundationDestinationScreen(
-                  icon: Icons.person_outline_rounded,
-                  eyebrow: 'YOUR CONTROLS',
-                  title: 'You',
-                  description:
-                      'Vehicles, local settings, privacy controls, and data '
-                      'management will be collected here.',
-                ),
+                builder: (context, state) => const YouScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'diagnostics',
+                    builder: (context, state) => const DiagnosticsScreen(),
+                  ),
+                ],
               ),
             ],
           ),

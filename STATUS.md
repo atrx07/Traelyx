@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.5 complete; awaiting explicit authorization for M1.6**
+**M1 active — M1.6 locally and device validated; remote CI pending**
 
 ## Working
 
@@ -27,19 +27,19 @@
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
 - Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries, validated locally and in CI.
 - Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs, validated locally and in CI.
+- A deep-link-safe Developer / Diagnostics screen reports allowlisted app/build metadata, schema version, recorder capability state, and aggregate storage bytes without exposing routes, raw samples, filenames, device identifiers, credentials, or API keys. Local and physical-device gates pass; remote CI is pending.
 - The current debug APK update-installs and cold-launches on the Android 14 Tecno LH8n with existing app data preserved and no startup, Flutter, or database errors.
 
 ## Partial
 
 - The recorder bridge and service are structural only; trip recording remains unavailable.
-- Trips, DNA, Social, and You are navigation skeletons only; their product features remain unimplemented.
+- Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
 ## Not implemented
 
 - Android foreground recorder.
-- Application database schema beyond bootstrap settings.
 - Telemetry pipeline.
 - Event engine.
 - Drive DNA/scoring.
@@ -64,4 +64,4 @@
 
 ## Current step
 
-**M1.6 — Diagnostics shell:** awaiting explicit user authorization; no implementation has started.
+**M1.6 — Diagnostics shell:** implementation and local/device gates pass; remote CI is pending.

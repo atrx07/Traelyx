@@ -116,6 +116,14 @@ push, report, and user approval before the next substep begins.
   tests, and debug build.
 - [x] M1.5 Android 14 Tecno update-install and cold-launch smoke test.
 - [x] M1.5 remote CI on `main`.
+- [x] M1.6 allowlisted platform-contract, service-composition, byte-format,
+  nested-route, compact-layout, and redacted-error tests.
+- [x] M1.6 full Flutter suite, formatting, static analysis, generated-source
+  and schema-snapshot reproducibility, repository validation, native Kotlin
+  tests, and debug build.
+- [x] M1.6 Android 14 Tecno update-install, cold launch, diagnostics open,
+  scroll, aggregate-value, accessibility-hierarchy, and back-navigation checks.
+- [ ] M1.6 remote CI on `main`.
 
 ## Acceptance criteria
 
@@ -165,6 +173,16 @@ push, report, and user approval before the next substep begins.
   tables while preserving settings; complete version-1 databases are a no-op,
   and unknown or partial shapes fail visibly rather than receiving an
   unaudited implicit repair.
+- M1.6 uses a versioned, allowlisted Android method-channel contract. The
+  report contains only package/version/build mode, schema version, recorder
+  capability fields, and aggregate byte counts; it excludes routes, precise
+  locations, raw samples, filenames, exact paths, device identifiers,
+  credentials, and API keys.
+- M1.6 measures installed app packages and the current SQLite main/WAL/SHM
+  files. Unimplemented raw telemetry, map-cache, and local-model categories
+  report explicit zeroes rather than prematurely defining future storage
+  paths. Export and destructive storage controls remain in later roadmap
+  steps. No dependency was added.
 
 ## Progress log
 
@@ -191,6 +209,13 @@ push, report, and user approval before the next substep begins.
   placeholder UI does not open a database, so file-backed native SQLite tests
   are the authoritative migration validation. Execution stopped at the M1.6
   approval gate.
+- 2026-08-09: M1.6 was explicitly authorized. Forty Flutter tests and all
+  local generated-source, schema, format, analysis, repository/security,
+  Kotlin, and debug-build gates pass. The APK update-installed and
+  cold-launched on the Android 14 Tecno LH8n; the diagnostics screen opened,
+  scrolled through real aggregate storage values, exposed no sensitive fields,
+  and returned safely to You. PID-scoped logs showed no Flutter/app exception.
+  Remote CI is pending.
 
 ## M1.1 completion summary
 
@@ -243,3 +268,14 @@ settings-only development shape while preserving its data, prove reopen
 idempotency, and reject unknown version-1 shapes. All local gates and the
 physical-device APK smoke check and exact-HEAD GitHub Actions pass. No new
 dependency, network flow, telemetry collection, or user-data upload was added.
+
+## M1.6 checkpoint summary
+
+M1.6 adds a deep-link-safe Developer / Diagnostics destination under You. A
+versioned native/Dart contract composes app/build metadata, schema version,
+the conservative recorder placeholder, and aggregate installed-app/SQLite
+storage values. The UI explains its redaction boundary, hides underlying error
+details, and keeps future storage categories and export controls honest. All
+local gates and physical-device validation pass; exact-HEAD remote CI remains
+pending. No schema, migration, dependency, network flow, recorder activation,
+telemetry collection, or user-data upload changed.

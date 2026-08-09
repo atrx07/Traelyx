@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_app.dart';
 import 'package:traelyx/app/traelyx_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
+import 'package:traelyx/core/diagnostics/diagnostics_providers.dart';
+import 'package:traelyx/core/diagnostics/diagnostics_report.dart';
+import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 
 void main() {
@@ -90,6 +93,32 @@ void main() {
     );
     expect(find.byKey(const ValueKey('destination-Social')), findsOneWidget);
   });
+
+  testWidgets('You opens diagnostics as a deep-link-safe nested route', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter(initialLocation: TraelyxRoutes.you);
+    addTearDown(router.dispose);
+
+    await _pumpApp(tester, router);
+    await tester.tap(find.byKey(const ValueKey('open-diagnostics')));
+    await tester.pumpAndSettle();
+
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.youDiagnostics,
+    );
+    expect(find.byKey(const ValueKey('diagnostics-screen')), findsOneWidget);
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      4,
+    );
+
+    await tester.tap(find.byTooltip('Back to You'));
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
+    expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
+  });
 }
 
 Future<void> _pumpApp(
@@ -113,6 +142,7 @@ Future<void> _pumpApp(
             recordingAvailable: false,
           ),
         ),
+        diagnosticsReportProvider.overrideWith((ref) async => _report),
       ],
       child: TraelyxApp(router: router),
     ),
@@ -166,3 +196,27 @@ const _deepLinks = [
     contentKey: 'destination-You',
   ),
 ];
+
+const _report = DiagnosticsReport(
+  platform: PlatformDiagnosticsSnapshot(
+    contractVersion: 1,
+    packageName: 'io.github.atrx07.traelyx',
+    versionName: '0.1.0',
+    versionCode: 1,
+    buildMode: 'debug',
+    storage: DiagnosticsStorageBreakdown(
+      appBytes: 1536,
+      databaseBytes: 512,
+      rawTelemetryBytes: 0,
+      mapCacheBytes: 0,
+      localModelBytes: 0,
+    ),
+  ),
+  databaseSchemaVersion: 1,
+  recorder: RecorderCapabilities(
+    bridgeVersion: 1,
+    implementationState: 'skeleton',
+    recordingAvailable: false,
+    serviceRegistered: true,
+  ),
+);

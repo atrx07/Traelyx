@@ -4,13 +4,13 @@
 
 ## Current gate
 
-M1.5 is complete and validated locally, on the Android 14 Tecno device, and in GitHub Actions. Do not begin M1.6 without explicit user authorization.
+M1.6 is implemented and validated locally and on the Android 14 Tecno device. Complete the checkpoint push and exact-HEAD GitHub Actions gate; do not begin M2.
 
 ## P0 — M1 Application Foundation
 
-1. Await explicit authorization for M1.6 diagnostics shell.
-2. After authorization, implement and validate M1.6 as one bounded substep.
-3. Complete M1 and transition milestones only after the required approval and validation gates.
+1. Push the bounded M1.6 diagnostics checkpoint and verify exact-HEAD GitHub Actions.
+2. Mark M1.6 and M1 complete only after all required gates pass.
+3. Stop and await explicit authorization before activating M2.
 
 ## P1 — Recorder milestone
 

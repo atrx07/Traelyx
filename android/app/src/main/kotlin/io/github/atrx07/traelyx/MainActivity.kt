@@ -3,6 +3,8 @@ package io.github.atrx07.traelyx
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
+import io.github.atrx07.traelyx.diagnostics.DiagnosticsContract
+import io.github.atrx07.traelyx.diagnostics.DiagnosticsSnapshotCollector
 import io.github.atrx07.traelyx.recorder.RecorderContract
 
 class MainActivity : FlutterActivity() {
@@ -31,6 +33,18 @@ class MainActivity : FlutterActivity() {
                     "recorder_not_implemented",
                     "Trip recording is unavailable during bootstrap.",
                     null,
+                )
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DiagnosticsContract.CHANNEL_NAME,
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                DiagnosticsContract.GET_SNAPSHOT -> result.success(
+                    DiagnosticsSnapshotCollector(applicationContext).collect(),
                 )
                 else -> result.notImplemented()
             }
