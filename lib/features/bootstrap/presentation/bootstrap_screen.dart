@@ -11,52 +11,50 @@ class BootstrapScreen extends ConsumerWidget {
     final readiness = ref.watch(bootstrapReadinessProvider);
     final colors = context.traelyxColors;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                TraelyxSpacing.xl,
-                TraelyxSpacing.xxl,
-                TraelyxSpacing.xl,
-                TraelyxSpacing.section,
-              ),
-              children: [
-                const _Wordmark(),
-                const SizedBox(height: TraelyxSpacing.hero),
-                Text(
-                  'Your drives.\nYour evidence.',
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-                const SizedBox(height: TraelyxSpacing.md),
-                Text(
-                  'Traelyx is being built local-first. Trip recording stays '
-                  'disabled until the native recorder passes its reliability '
-                  'gate.',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(color: colors.textSecondary),
-                ),
-                const SizedBox(height: TraelyxSpacing.xxl),
-                _FoundationCard(readiness: readiness),
-                const SizedBox(height: TraelyxSpacing.md),
-                const _RecorderCard(),
-                const SizedBox(height: TraelyxSpacing.xxl),
-                FilledButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.route_outlined),
-                  label: const Text('Start drive — available after M2'),
-                ),
-                const SizedBox(height: TraelyxSpacing.sm),
-                Text(
-                  'No account required · No telemetry uploaded',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+    return SafeArea(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              TraelyxSpacing.xl,
+              TraelyxSpacing.xxl,
+              TraelyxSpacing.xl,
+              TraelyxSpacing.section,
             ),
+            children: [
+              const _Wordmark(),
+              const SizedBox(height: TraelyxSpacing.hero),
+              Text(
+                'Your drives.\nYour evidence.',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
+              Text(
+                'Traelyx is being built local-first. Trip recording stays '
+                'disabled until the native recorder passes its reliability '
+                'gate.',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: colors.textSecondary),
+              ),
+              const SizedBox(height: TraelyxSpacing.xxl),
+              _FoundationCard(readiness: readiness),
+              const SizedBox(height: TraelyxSpacing.md),
+              const _RecorderCard(),
+              const SizedBox(height: TraelyxSpacing.xxl),
+              FilledButton.icon(
+                onPressed: null,
+                icon: const Icon(Icons.route_outlined),
+                label: const Text('Start drive — available after M2'),
+              ),
+              const SizedBox(height: TraelyxSpacing.sm),
+              Text(
+                'No account required · No telemetry uploaded',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
           ),
         ),
       ),
@@ -82,14 +80,22 @@ class _Wordmark extends StatelessWidget {
           ),
         ),
         const SizedBox(width: TraelyxSpacing.sm),
-        Text(
-          'TRAELYX',
-          style: Theme.of(
-            context,
-          ).textTheme.labelLarge?.copyWith(letterSpacing: 2.8),
+        Expanded(
+          child: Text(
+            'TRAELYX',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(letterSpacing: 2.8),
+          ),
         ),
-        const Spacer(),
-        Text('M0 · FOUNDATION', style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(width: TraelyxSpacing.sm),
+        Text(
+          'M1 · FOUNDATION',
+          maxLines: 1,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
       ],
     );
   }

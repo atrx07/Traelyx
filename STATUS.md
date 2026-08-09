@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.1 complete; awaiting explicit authorization for M1.2**
+**M1 active — M1.2 locally validated; remote CI pending**
 
 ## Working
 
@@ -23,10 +23,12 @@
 - The versioned Flutter/Kotlin recorder bridge reports conservative capability state; its service is registered but disabled and acquires no telemetry.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
+- Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states.
 
 ## Partial
 
 - The recorder bridge and service are structural only; trip recording remains unavailable.
+- Trips, DNA, Social, and You are navigation skeletons only; their product features remain unimplemented.
 - Drift contains only the bootstrap `app_settings` table; the application schema and migration harness belong to M1.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
@@ -55,6 +57,6 @@
 - Free-tier cloud limits if adoption becomes large.
 - APK/app-data growth if raw telemetry retention is unmanaged.
 
-## Next step
+## Current step
 
-**M1.2 — Navigation:** awaiting explicit user authorization before implementation.
+**M1.2 — Navigation:** implementation and local gates pass; awaiting required remote CI before completion.
