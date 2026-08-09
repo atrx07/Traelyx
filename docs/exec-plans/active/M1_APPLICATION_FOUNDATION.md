@@ -73,9 +73,7 @@ functionality that does not exist.
 - [x] M1.1 — Add semantic design tokens/theme, typography, spacing, and
   reduced-motion-aware motion primitives with focused tests.
 - [x] M1.2 — Add the deep-link-safe primary navigation skeleton.
-- [ ] M1.3 — Add local settings and explicit secure/non-secure boundaries.
-  Implementation and local/device validation are complete; remote CI is
-  pending.
+- [x] M1.3 — Add local settings and explicit secure/non-secure boundaries.
 - [ ] M1.4 — Implement Drift application schema version 1.
 - [ ] M1.5 — Add database migration fixtures and upgrade tests.
 - [ ] M1.6 — Add a redacted diagnostics shell.
@@ -101,7 +99,7 @@ push, report, and user approval before the next substep begins.
 - [x] M1.3 full Flutter test suite, generated-source check, repository
   validation, and debug build.
 - [x] M1.3 Android 14 Tecno update-install and cold-launch smoke test.
-- [ ] M1.3 remote CI on `main`.
+- [x] M1.3 remote CI on `main`.
 - [ ] Migration fixture tests when M1.4–M1.5 are authorized.
 
 ## Acceptance criteria
@@ -145,9 +143,10 @@ push, report, and user approval before the next substep begins.
   `31296218766`; execution stopped at the M1.2 approval gate.
 - 2026-08-09: M1.2 checkpoint `566adcd` passed GitHub Actions run
   `31297225380`; execution stopped at the M1.3 approval gate.
-- 2026-08-09: M1.3 implementation and local gates passed; the debug APK
-  update-installed and cold-launched on the Android 14 Tecno LH8n with existing
-  data preserved. Remote CI is pending.
+- 2026-08-09: M1.3 checkpoint `e555c13` passed GitHub Actions run
+  `31298732771`; local gates passed and the debug APK update-installed and
+  cold-launched on the Android 14 Tecno LH8n with existing data preserved.
+  Execution stopped at the M1.4 approval gate.
 
 ## M1.1 completion summary
 
@@ -167,7 +166,7 @@ selection, every direct path, compact/wide layouts, and unknown paths. Local
 validation and GitHub Actions pass. No persistence, network, privacy, migration,
 recorder, or provider behavior changed.
 
-## M1.3 checkpoint summary
+## M1.3 completion summary
 
 M1.3 adds typed, reactive non-secret settings persistence over the existing
 schema-v1 Drift table plus Riverpod injection boundaries. Malformed persisted
@@ -175,5 +174,5 @@ values fail visibly, sensitive-looking keys are rejected from the non-secret
 API, and the replaceable secure-value interface fails closed until a reviewed
 provider exists. Focused tests and the full suite pass. The existing app updates
 and cold-launches on the connected Android 14 Tecno device without startup or
-database errors. Remote CI must pass before completion. No schema, migration,
+database errors. Local validation and GitHub Actions pass. No schema, migration,
 network, recorder, or provider dependency changed.

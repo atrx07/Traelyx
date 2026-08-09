@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M1 active — M1.3 locally/device validated; remote CI pending**
+**M1 active — M1.3 complete; awaiting explicit authorization for M1.4**
 
 ## Working
 
@@ -24,8 +24,8 @@
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
-- Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries.
-- Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs.
+- Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries, validated locally and in CI.
+- Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs, validated locally and in CI.
 - The current debug APK update-installs and cold-launches on the Android 14 Tecno LH8n with existing app data preserved and no startup, Flutter, or database errors.
 
 ## Partial
@@ -63,4 +63,4 @@
 
 ## Current step
 
-**M1.3 — Local settings:** implementation and local/device gates pass; awaiting required remote CI before completion.
+**M1.4 — Drift schema version 1:** awaiting explicit user authorization; no implementation has started.
