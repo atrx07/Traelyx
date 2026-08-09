@@ -1,20 +1,21 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:traelyx/core/database/app_schema.dart';
 
 part 'app_database.g.dart';
 
-class AppSettings extends Table {
-  TextColumn get key => text()();
-
-  TextColumn get value => text()();
-
-  IntColumn get updatedAtMicros => integer()();
-
-  @override
-  Set<Column<Object>> get primaryKey => {key};
-}
-
-@DriftDatabase(tables: [AppSettings])
+@DriftDatabase(
+  tables: [
+    AppSettings,
+    Vehicles,
+    Trips,
+    TripChunks,
+    TripEvents,
+    TripScores,
+    DriverBaselines,
+    SyncQueue,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
@@ -22,4 +23,12 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (migrator) => migrator.createAll(),
+    beforeOpen: (_) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 }

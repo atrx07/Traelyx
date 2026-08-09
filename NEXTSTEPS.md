@@ -4,12 +4,12 @@
 
 ## Current gate
 
-M1.3 is complete and validated locally, on the Android 14 Tecno device, and in GitHub Actions. Do not begin M1.4 without explicit user authorization.
+M1.4 implementation and local/device validation are complete. Push the implementation checkpoint and obtain a definitive green GitHub Actions result before marking the substep complete.
 
 ## P0 — M1 Application Foundation
 
-1. Await explicit authorization for M1.4 Drift schema version 1.
-2. After authorization, implement and validate M1.4 as one bounded substep.
+1. Finish the M1.4 remote CI gate and completion tracking.
+2. Stop and await explicit authorization for M1.5 migration harness.
 3. Continue through migrations and diagnostics only with the required approval between numbered substeps.
 
 ## P1 — Recorder milestone
