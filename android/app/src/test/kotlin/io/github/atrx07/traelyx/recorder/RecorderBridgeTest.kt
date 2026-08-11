@@ -16,7 +16,7 @@ class RecorderBridgeTest {
         assertEquals(false, map["recordingAvailable"])
         assertEquals(true, map["commandsAvailable"])
         assertEquals(true, map["healthAvailable"])
-        assertEquals(false, map["permissionOnboardingAvailable"])
+        assertEquals(true, map["permissionOnboardingAvailable"])
     }
 
     @Test

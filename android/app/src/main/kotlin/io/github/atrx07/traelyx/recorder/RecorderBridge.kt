@@ -12,7 +12,7 @@ data class RecorderBridgeCapabilities(
     val serviceRegistered: Boolean = true,
     val commandsAvailable: Boolean = true,
     val healthAvailable: Boolean = true,
-    val permissionOnboardingAvailable: Boolean = false,
+    val permissionOnboardingAvailable: Boolean = true,
 ) {
     fun toMap(): Map<String, Any> =
         linkedMapOf(
@@ -132,10 +132,14 @@ interface RecorderBridgeGateway {
     fun recoverTrip(): Map<String, Any>
 }
 
-class AndroidRecorderBridgeGateway(context: Context) : RecorderBridgeGateway {
+class AndroidRecorderBridgeGateway(
+    context: Context,
+    private val recordingReadiness: () -> Boolean = { isPlatformRecordingReady(context) },
+) : RecorderBridgeGateway {
     private val applicationContext = context.applicationContext
 
-    override fun capabilities(): Map<String, Any> = RecorderBridgeCapabilities().toMap()
+    override fun capabilities(): Map<String, Any> =
+        RecorderBridgeCapabilities(recordingAvailable = recordingReadiness()).toMap()
 
     override fun status(): Map<String, Any> = collectStatus().toMap()
 

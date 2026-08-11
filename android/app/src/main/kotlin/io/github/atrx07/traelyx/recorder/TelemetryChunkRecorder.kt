@@ -26,6 +26,7 @@ class TelemetryChunkRecorder(
 
     private val queue = ArrayBlockingQueue<WriterCommand>(queueCapacity)
     private val pending = PriorityQueue(TELEMETRY_SAMPLE_COMPARATOR)
+    private val staged = ArrayList<TelemetrySampleRecord>(maxChunkSamples)
     private val accepting = AtomicBoolean(false)
     private val fatalSignalled = AtomicBoolean(false)
     private val lifecycleLock = Any()
@@ -187,8 +188,8 @@ class TelemetryChunkRecorder(
     }
 
     private fun process(record: TelemetrySampleRecord): Boolean {
-        val committedEnd = committedEndElapsedNanos
-        if (committedEnd != null && record.tripElapsedNanos < committedEnd) {
+        val safeEnd = staged.lastOrNull()?.tripElapsedNanos ?: committedEndElapsedNanos
+        if (safeEnd != null && record.tripElapsedNanos < safeEnd) {
             updateHealth { it.copy(lateSampleCount = it.lateSampleCount + 1) }
             signalFatal("chunk_late_sample")
             return false
@@ -208,32 +209,30 @@ class TelemetryChunkRecorder(
 
     private fun flushThrough(cutoffElapsedNanos: Long): Boolean {
         while (pending.peek()?.tripElapsedNanos?.let { it <= cutoffElapsedNanos } == true) {
-            val batch = takeBatch(cutoffElapsedNanos)
-            if (!writeBatch(batch)) return false
-        }
-        return true
-    }
-
-    private fun flushAll(): Boolean {
-        while (pending.isNotEmpty()) {
-            val batch = takeBatch(Long.MAX_VALUE)
-            if (!writeBatch(batch)) return false
+            val next = requireNotNull(pending.remove())
+            val first = staged.firstOrNull()
+            if (first != null && next.tripElapsedNanos - first.tripElapsedNanos > maxChunkSpanNanos) {
+                if (!writeStaged()) return false
+            }
+            staged += next
+            if (staged.size == maxChunkSamples && !writeStaged()) return false
         }
         updateDepths()
         return true
     }
 
-    private fun takeBatch(cutoffElapsedNanos: Long): List<TelemetrySampleRecord> {
-        val first = requireNotNull(pending.peek()).tripElapsedNanos
-        val batch = ArrayList<TelemetrySampleRecord>(maxChunkSamples)
-        while (batch.size < maxChunkSamples) {
-            val next = pending.peek() ?: break
-            if (next.tripElapsedNanos > cutoffElapsedNanos) break
-            if (next.tripElapsedNanos - first > maxChunkSpanNanos) break
-            batch += pending.remove()
-        }
-        require(batch.isNotEmpty())
-        return batch
+    private fun flushAll(): Boolean {
+        if (!flushThrough(Long.MAX_VALUE)) return false
+        return staged.isEmpty() || writeStaged()
+    }
+
+    private fun writeStaged(): Boolean {
+        check(staged.isNotEmpty())
+        val records = staged.toList()
+        if (!writeBatch(records)) return false
+        staged.clear()
+        updateDepths()
+        return true
     }
 
     private fun writeBatch(records: List<TelemetrySampleRecord>): Boolean {
@@ -277,7 +276,6 @@ class TelemetryChunkRecorder(
                 lastCompletedSequence = encoded.metadata.sequence,
                 hasCommittedElapsedBoundary = true,
                 queueDepth = queue.size.coerceAtMost(queueCapacity),
-                bufferedSampleCount = pending.size + queue.size,
             )
         }
         return true
@@ -287,7 +285,7 @@ class TelemetryChunkRecorder(
         updateHealth {
             it.copy(
                 queueDepth = queue.size.coerceAtMost(queueCapacity),
-                bufferedSampleCount = pending.size + queue.size,
+                bufferedSampleCount = staged.size + pending.size + queue.size,
             )
         }
     }

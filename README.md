@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0 and M1 are complete. M2 is active and M2.5 Flutter↔Kotlin bridge integration is complete; development is stopped at the approval gate before M2.6. Trip recording remains intentionally unavailable until permission, recovery/finalization, and real-drive work is delivered.
+Milestones M0 and M1 are complete. M2 is active and M2.6 contextual permissions/onboarding is complete; development is stopped at the approval gate before M2.7. A ready Android device can start and stop the native recorder from Drive, while finalization/index reconciliation, broader recovery testing, and the first real-drive fixture remain pending.
 
 ## Roadmap
 
@@ -20,7 +20,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M2.3 | Native Recording Engine | IMU acquisition | ✅ Complete | Done | 2026-08-09 |
 | M2.4 | Native Recording Engine | Crash-safe buffering | ✅ Complete | Done | 2026-08-09 |
 | M2.5 | Native Recording Engine | Flutter↔Kotlin bridge | ✅ Complete | Done | 2026-08-11 |
-| M2.6 | Native Recording Engine | Permissions/onboarding | ⚪ Pending | ~1–2 days | — |
+| M2.6 | Native Recording Engine | Permissions/onboarding | ✅ Complete | Done | 2026-08-11 |
 | M2.7 | Native Recording Engine | Service recovery tests | ⚪ Pending | ~1–2 days | — |
 | M2.8 | Native Recording Engine | First real-drive fixture | ⚪ Pending | ~1 day plus drive | — |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |

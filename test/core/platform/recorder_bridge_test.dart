@@ -38,7 +38,7 @@ void main() {
       'serviceRegistered': true,
       'commandsAvailable': true,
       'healthAvailable': true,
-      'permissionOnboardingAvailable': false,
+      'permissionOnboardingAvailable': true,
     });
 
     expect(capabilities.bridgeVersion, 1);
@@ -47,7 +47,46 @@ void main() {
     expect(capabilities.recordingAvailable, isFalse);
     expect(capabilities.commandsAvailable, isTrue);
     expect(capabilities.healthAvailable, isTrue);
-    expect(capabilities.permissionOnboardingAvailable, isFalse);
+    expect(capabilities.permissionOnboardingAvailable, isTrue);
+  });
+
+  test('permission parser preserves the bounded onboarding state', () {
+    final status = RecorderPermissionStatus.fromMap(permissionStatusMap);
+
+    expect(status.contractVersion, 1);
+    expect(status.platformApiLevel, 35);
+    expect(status.locationState, RecorderPermissionState.requestable);
+    expect(status.notificationState, RecorderPermissionState.requestable);
+    expect(status.backgroundLocationRequired, isFalse);
+    expect(status.recordingReady, isFalse);
+  });
+
+  test('permission parser rejects unknown, missing, and mistyped values', () {
+    expect(
+      () => RecorderPermissionStatus.fromMap(const {}),
+      throwsA(isA<FormatException>()),
+    );
+
+    final unknownState = Map<Object?, Object?>.from(permissionStatusMap);
+    unknownState['locationState'] = 'always_allow';
+    expect(
+      () => RecorderPermissionStatus.fromMap(unknownState),
+      throwsA(isA<FormatException>()),
+    );
+
+    final unknownVersion = Map<Object?, Object?>.from(permissionStatusMap);
+    unknownVersion['contractVersion'] = 2;
+    expect(
+      () => RecorderPermissionStatus.fromMap(unknownVersion),
+      throwsA(isA<FormatException>()),
+    );
+
+    final unsafeFlag = Map<Object?, Object?>.from(permissionStatusMap);
+    unsafeFlag['backgroundLocationRequired'] = 'no';
+    expect(
+      () => RecorderPermissionStatus.fromMap(unsafeFlag),
+      throwsA(isA<FormatException>()),
+    );
   });
 
   test('status parser preserves aggregate versioned health', () {
@@ -112,12 +151,21 @@ void main() {
               'permissionOnboardingAvailable': false,
             };
           }
+          if (call.method.contains('Permission') ||
+              call.method.contains('Settings')) {
+            return permissionStatusMap;
+          }
           return statusMap;
         });
     const bridge = RecorderBridge(channel: channel);
 
     await bridge.getCapabilities();
     await bridge.getStatus();
+    await bridge.getPermissionStatus();
+    await bridge.requestLocationPermission();
+    await bridge.requestNotificationPermission();
+    await bridge.openAppSettings();
+    await bridge.openLocationSettings();
     await bridge.startTrip();
     await bridge.recoverTrip();
     await bridge.stopTrip();
@@ -125,6 +173,11 @@ void main() {
     expect(methods, [
       'getCapabilities',
       'getStatus',
+      'getPermissionStatus',
+      'requestLocationPermission',
+      'requestNotificationPermission',
+      'openAppSettings',
+      'openLocationSettings',
       'startTrip',
       'recoverTrip',
       'stopTrip',
@@ -140,7 +193,32 @@ void main() {
       throwsA(isA<FormatException>()),
     );
   });
+
+  test('bridge rejects null permission responses', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (_) async => null);
+
+    await expectLater(
+      const RecorderBridge(channel: channel).getPermissionStatus(),
+      throwsA(isA<FormatException>()),
+    );
+  });
 }
+
+const permissionStatusMap = <Object?, Object?>{
+  'contractVersion': 1,
+  'platformApiLevel': 35,
+  'locationState': 'requestable',
+  'notificationState': 'requestable',
+  'fineLocationGranted': false,
+  'coarseLocationGranted': false,
+  'gpsProviderEnabled': true,
+  'canRequestLocation': true,
+  'canRequestNotification': true,
+  'backgroundLocationRequired': false,
+  'recordingReady': false,
+  'foregroundNotificationVisible': false,
+};
 
 const tripId = 'd181f268-f3ef-4a43-a142-8bf0671dcd49';
 

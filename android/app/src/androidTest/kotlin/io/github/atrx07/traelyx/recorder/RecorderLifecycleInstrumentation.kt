@@ -26,13 +26,13 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             runLifecycleProof()
             results.putString(
                 "stream",
-                "\nM2.5 Flutter/Kotlin bridge, lifecycle, and privacy-safe durable chunk proof passed.\n",
+                "\nM2.6 recorder bridge, lifecycle, readiness, and privacy-safe durable chunk proof passed.\n",
             )
             finish(Activity.RESULT_OK, results)
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.5 Flutter/Kotlin bridge and durable chunk proof failed:\n" +
+                "\nM2.6 recorder bridge, readiness, and durable chunk proof failed:\n" +
                     "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
@@ -112,8 +112,19 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
 
             activity.runOnUiThread(activity::recreate)
             waitForIdleSync()
-            check(RecorderService.queryState(context).isActive) {
-                "Recorder stopped during activity recreation."
+            val afterActivityRecreation = RecorderService.queryState(context)
+            val afterActivityRecreationBuffer = RecorderService.queryTelemetryHealth()
+            check(afterActivityRecreation.isActive) {
+                "Recorder stopped during activity recreation: " +
+                    "lifecycle=${afterActivityRecreation.lifecycleState.wireName}/" +
+                    "${afterActivityRecreation.errorCode}, " +
+                    "buffer=${afterActivityRecreationBuffer.state.wireName}/" +
+                    "${afterActivityRecreationBuffer.errorCode}, " +
+                    "queue=${afterActivityRecreationBuffer.queueDepth}, " +
+                    "buffered=${afterActivityRecreationBuffer.bufferedSampleCount}, " +
+                    "overflow=${afterActivityRecreationBuffer.overflowCount}, " +
+                    "late=${afterActivityRecreationBuffer.lateSampleCount}, " +
+                    "write=${afterActivityRecreationBuffer.writeFailureCount}."
             }
 
             check(context.stopService(Intent(context, RecorderService::class.java))) {
@@ -227,10 +238,19 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(capabilities["bridgeVersion"] == RecorderContract.BRIDGE_VERSION)
         check(capabilities["statusContractVersion"] == RECORDER_STATUS_CONTRACT_VERSION)
         check(capabilities["implementationState"] == "bridge_ready")
-        check(capabilities["recordingAvailable"] == false)
+        check(capabilities["recordingAvailable"] == isPlatformRecordingReady(targetContext))
         check(capabilities["commandsAvailable"] == true)
         check(capabilities["healthAvailable"] == true)
-        check(capabilities["permissionOnboardingAvailable"] == false)
+        check(capabilities["permissionOnboardingAvailable"] == true)
+        val requestedPermissions =
+            targetContext.packageManager
+                .getPackageInfo(targetContext.packageName, PackageManager.GET_PERMISSIONS)
+                .requestedPermissions
+                ?.toSet()
+                .orEmpty()
+        check(Manifest.permission.ACCESS_BACKGROUND_LOCATION !in requestedPermissions) {
+            "Recorder must not declare background location permission."
+        }
     }
 
     private fun checkBridgeStatus(

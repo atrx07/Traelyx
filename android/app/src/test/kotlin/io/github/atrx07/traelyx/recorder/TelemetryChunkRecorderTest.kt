@@ -44,6 +44,67 @@ class TelemetryChunkRecorderTest {
     }
 
     @Test
+    fun `continuous monotonic evidence is batched after the reorder horizon`() {
+        val store = MemoryChunkStore()
+        val recorder =
+            recorder(
+                store,
+                reorderHorizonNanos = 20,
+                maxChunkSamples = 4,
+                maxChunkSpanNanos = 1_000,
+            )
+        assertTrue(recorder.start().started)
+        repeat(6) { index ->
+            assertTrue(
+                recorder.accept(
+                    testImuSample(
+                        tripElapsedNanos = 100L + (index * 10L),
+                        sourceTimestampNanos = 1_100L + (index * 10L),
+                    ),
+                ),
+            )
+        }
+
+        assertTrue(await { recorder.health().completedChunkCount == 1L })
+        assertEquals(4L, recorder.health().persistedAccelerometerSampleCount)
+        assertTrue(recorder.stop())
+
+        val catalog = store.scan(TEST_TRIP_ID)
+        assertEquals(listOf(4, 2), catalog.validChunks.map { it.records.size })
+        assertEquals(6, catalog.validChunks.sumOf { it.records.size })
+    }
+
+    @Test
+    fun `horizon-cleared output batch is bounded separately from reorder heap`() {
+        val store = MemoryChunkStore()
+        val recorder =
+            recorder(
+                store,
+                reorderBufferCapacity = 2,
+                reorderHorizonNanos = 0,
+                maxChunkSamples = 4,
+                maxChunkSpanNanos = 1_000,
+            )
+        assertTrue(recorder.start().started)
+        repeat(4) { index ->
+            assertTrue(
+                recorder.accept(
+                    testImuSample(
+                        tripElapsedNanos = 100L + (index * 10L),
+                        sourceTimestampNanos = 1_100L + (index * 10L),
+                    ),
+                ),
+            )
+        }
+
+        assertTrue(await { recorder.health().completedChunkCount == 1L })
+        assertEquals(TelemetryBufferState.ACTIVE, recorder.health().state)
+        assertEquals(0L, recorder.health().overflowCount)
+        assertTrue(recorder.stop())
+        assertEquals(4, store.scan(TEST_TRIP_ID).validChunks.single().records.size)
+    }
+
+    @Test
     fun `missing trip time and evidence behind committed boundary fail visibly`() {
         val invalidErrors = Collections.synchronizedList(mutableListOf<String>())
         val invalid = recorder(MemoryChunkStore(), onFatalError = invalidErrors::add)
@@ -55,7 +116,13 @@ class TelemetryChunkRecorderTest {
         invalid.stop()
 
         val lateErrors = Collections.synchronizedList(mutableListOf<String>())
-        val late = recorder(MemoryChunkStore(), reorderHorizonNanos = 0, onFatalError = lateErrors::add)
+        val late =
+            recorder(
+                MemoryChunkStore(),
+                reorderHorizonNanos = 0,
+                maxChunkSamples = 1,
+                onFatalError = lateErrors::add,
+            )
         late.start()
         assertTrue(late.accept(testImuSample(tripElapsedNanos = 200L, sourceTimestampNanos = 1_200L)))
         assertTrue(await { late.health().completedChunkCount == 1L })
@@ -87,7 +154,7 @@ class TelemetryChunkRecorderTest {
         overflow.stop()
 
         val failingStore = MemoryChunkStore(failWrites = true)
-        val failed = recorder(failingStore, reorderHorizonNanos = 0)
+        val failed = recorder(failingStore, reorderHorizonNanos = 0, maxChunkSamples = 1)
         failed.start()
         assertTrue(failed.accept(testImuSample(tripElapsedNanos = 100L, sourceTimestampNanos = 1_100L)))
         assertTrue(await { failed.health().state == TelemetryBufferState.ERROR })

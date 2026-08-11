@@ -2,7 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/app/traelyx_app.dart';
+import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
+
+import 'core/platform/recorder_bridge_test.dart'
+    show permissionStatusMap, statusMap;
 
 void main() {
   testWidgets('bootstrap shell states recorder limitations clearly', (
@@ -19,6 +24,13 @@ void main() {
               recordingAvailable: false,
             ),
           ),
+          recorderPermissionStatusProvider.overrideWith(
+            (ref) async =>
+                RecorderPermissionStatus.fromMap(permissionStatusMap),
+          ),
+          recorderStatusProvider.overrideWith(
+            (ref) async => RecorderStatus.fromMap(statusMap),
+          ),
         ],
         child: const TraelyxApp(),
       ),
@@ -28,7 +40,7 @@ void main() {
     expect(find.text('TRAELYX'), findsOneWidget);
     expect(find.text('Your drives.\nYour evidence.'), findsOneWidget);
     expect(find.text('Local foundation ready'), findsOneWidget);
-    expect(find.text('Recorder intentionally unavailable'), findsOneWidget);
+    expect(find.text('Drive recording is active'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.textContaining('No telemetry uploaded'),

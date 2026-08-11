@@ -42,6 +42,88 @@ class RecorderCapabilities {
   final bool permissionOnboardingAvailable;
 }
 
+enum RecorderPermissionState {
+  granted('granted'),
+  approximateOnly('approximate_only'),
+  requestable('requestable'),
+  settingsRequired('settings_required'),
+  notRequired('not_required');
+
+  const RecorderPermissionState(this.wireName);
+
+  final String wireName;
+
+  static RecorderPermissionState parse(String value) {
+    for (final state in values) {
+      if (state.wireName == value) return state;
+    }
+    throw FormatException('Unknown recorder permission state: $value.');
+  }
+}
+
+class RecorderPermissionStatus {
+  const RecorderPermissionStatus({
+    required this.contractVersion,
+    required this.platformApiLevel,
+    required this.locationState,
+    required this.notificationState,
+    required this.fineLocationGranted,
+    required this.coarseLocationGranted,
+    required this.gpsProviderEnabled,
+    required this.canRequestLocation,
+    required this.canRequestNotification,
+    required this.backgroundLocationRequired,
+    required this.recordingReady,
+    required this.foregroundNotificationVisible,
+  });
+
+  factory RecorderPermissionStatus.fromMap(Map<Object?, Object?> value) {
+    final contractVersion = _requiredPositiveInt(value, 'contractVersion');
+    if (contractVersion != RecorderBridge.supportedPermissionContractVersion) {
+      throw const FormatException(
+        'Unsupported recorder permission contract version.',
+      );
+    }
+    return RecorderPermissionStatus(
+      contractVersion: contractVersion,
+      platformApiLevel: _requiredPositiveInt(value, 'platformApiLevel'),
+      locationState: RecorderPermissionState.parse(
+        _requiredString(value, 'locationState'),
+      ),
+      notificationState: RecorderPermissionState.parse(
+        _requiredString(value, 'notificationState'),
+      ),
+      fineLocationGranted: _requiredBool(value, 'fineLocationGranted'),
+      coarseLocationGranted: _requiredBool(value, 'coarseLocationGranted'),
+      gpsProviderEnabled: _requiredBool(value, 'gpsProviderEnabled'),
+      canRequestLocation: _requiredBool(value, 'canRequestLocation'),
+      canRequestNotification: _requiredBool(value, 'canRequestNotification'),
+      backgroundLocationRequired: _requiredBool(
+        value,
+        'backgroundLocationRequired',
+      ),
+      recordingReady: _requiredBool(value, 'recordingReady'),
+      foregroundNotificationVisible: _requiredBool(
+        value,
+        'foregroundNotificationVisible',
+      ),
+    );
+  }
+
+  final int contractVersion;
+  final int platformApiLevel;
+  final RecorderPermissionState locationState;
+  final RecorderPermissionState notificationState;
+  final bool fineLocationGranted;
+  final bool coarseLocationGranted;
+  final bool gpsProviderEnabled;
+  final bool canRequestLocation;
+  final bool canRequestNotification;
+  final bool backgroundLocationRequired;
+  final bool recordingReady;
+  final bool foregroundNotificationVisible;
+}
+
 class RecorderLifecycleStatus {
   const RecorderLifecycleStatus({
     required this.contractVersion,
@@ -388,6 +470,7 @@ class RecorderBridge {
   static const channelName = 'io.github.atrx07.traelyx/recorder/v1';
   static const supportedBridgeVersion = 1;
   static const supportedStatusContractVersion = 1;
+  static const supportedPermissionContractVersion = 1;
 
   final MethodChannel _channel;
 
@@ -403,6 +486,21 @@ class RecorderBridge {
 
   Future<RecorderStatus> getStatus() => _invokeStatus('getStatus');
 
+  Future<RecorderPermissionStatus> getPermissionStatus() =>
+      _invokePermissionStatus('getPermissionStatus');
+
+  Future<RecorderPermissionStatus> requestLocationPermission() =>
+      _invokePermissionStatus('requestLocationPermission');
+
+  Future<RecorderPermissionStatus> requestNotificationPermission() =>
+      _invokePermissionStatus('requestNotificationPermission');
+
+  Future<RecorderPermissionStatus> openAppSettings() =>
+      _invokePermissionStatus('openAppSettings');
+
+  Future<RecorderPermissionStatus> openLocationSettings() =>
+      _invokePermissionStatus('openLocationSettings');
+
   Future<RecorderStatus> startTrip() => _invokeStatus('startTrip');
 
   Future<RecorderStatus> stopTrip() => _invokeStatus('stopTrip');
@@ -415,6 +513,18 @@ class RecorderBridge {
       throw FormatException('Recorder bridge returned no status for $method.');
     }
     return RecorderStatus.fromMap(value);
+  }
+
+  Future<RecorderPermissionStatus> _invokePermissionStatus(
+    String method,
+  ) async {
+    final value = await _channel.invokeMapMethod<Object?, Object?>(method);
+    if (value == null) {
+      throw FormatException(
+        'Recorder bridge returned no permission status for $method.',
+      );
+    }
+    return RecorderPermissionStatus.fromMap(value);
   }
 }
 
