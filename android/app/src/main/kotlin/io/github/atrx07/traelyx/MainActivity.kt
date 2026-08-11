@@ -5,6 +5,9 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsContract
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsSnapshotCollector
+import io.github.atrx07.traelyx.recorder.AndroidRecorderBridgeGateway
+import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatchResult
+import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatcher
 import io.github.atrx07.traelyx.recorder.RecorderContract
 import io.github.atrx07.traelyx.recorder.RecorderService
 
@@ -17,29 +20,15 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
+        val recorderDispatcher =
+            RecorderBridgeDispatcher(AndroidRecorderBridgeGateway(applicationContext))
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             RecorderContract.CHANNEL_NAME,
         ).setMethodCallHandler { call, result ->
-            when (call.method) {
-                RecorderContract.GET_CAPABILITIES -> result.success(
-                    mapOf(
-                        "bridgeVersion" to RecorderContract.BRIDGE_VERSION,
-                        "implementationState" to "lifecycle_ready",
-                        "recordingAvailable" to false,
-                        "serviceRegistered" to true,
-                    ),
-                )
-                RecorderContract.GET_STATE -> result.success(
-                    RecorderService.queryState(applicationContext).toMap(),
-                )
-                RecorderContract.START_TRIP -> result.success(
-                    RecorderService.requestStart(applicationContext).toMap(),
-                )
-                RecorderContract.STOP_TRIP -> result.success(
-                    RecorderService.requestStop(applicationContext).toMap(),
-                )
-                else -> result.notImplemented()
+            when (val dispatched = recorderDispatcher.dispatch(call.method)) {
+                is RecorderBridgeDispatchResult.Handled -> result.success(dispatched.payload)
+                RecorderBridgeDispatchResult.NotImplemented -> result.notImplemented()
             }
         }
 

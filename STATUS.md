@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M2 active — M2.4 complete; awaiting explicit authorization for M2.5**
+**M2 active — M2.5 complete; awaiting explicit authorization for M2.6**
 
 ## Working
 
@@ -21,7 +21,7 @@
 - The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
 - Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with relational constraints validated locally and in CI.
 - A committed Drift schema-v1 snapshot, generated verifier, and file-backed upgrade fixtures validate fresh/current databases and the exact settings-only development bootstrap shape locally and in CI. Unknown version-1 shapes fail visibly instead of being repaired implicitly.
-- The versioned Flutter/Kotlin recorder bridge reports conservative capability state; native lifecycle/GNSS/IMU and durable-chunk foundations are enabled while `recordingAvailable` remains false pending bridge integration and permission onboarding work.
+- The stable Flutter/Kotlin recorder bridge v1 reports `bridge_ready`, exposes typed pull-based lifecycle/GNSS/IMU/buffer status and idempotent start/stop/recover commands, and keeps `recordingAvailable=false` pending permission onboarding.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 - Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
@@ -38,10 +38,12 @@
 - M2.4 provides bounded asynchronous native persistence for accepted GNSS/IMU evidence using self-describing encoding version 1, platform DEFLATE, SHA-256, completion markers, app-private no-backup storage, and Android atomic replacement; invalid capacity/time/order/write states fail visibly.
 - M2.4 recovery verifies and isolates corrupt/truncated/orphaned files, continues after the highest observed sequence and valid elapsed boundary, exposes aggregate privacy-safe health, and leaves Drift schema version 1 unchanged. The deterministic synthetic baseline measured approximately 14.57 MiB/hour, without setting a retention default.
 - The M2.4 physical proof persisted and verified real GNSS and dual-IMU chunks before and after explicit service recovery on the Android 14 Tecno LH8n, preserved catalog/sequence continuity through activity/background/short-screen-off transitions, and cleaned all proof data and temporary permissions.
+- M2.5 maps native lifecycle and aggregate health into immutable Dart models without crossing coordinates, vectors, raw sample timestamps, precise fix values, paths, or device identifiers. Native dispatch and Dart channel/provider boundaries are independently testable.
+- The M2.5 physical proof exercised bridge start/status/recover/stop with real GNSS, dual IMU, durable chunks, service recovery, backgrounding, and a short screen-off interval; normal Flutter launch then displayed `Recorder bridge_ready` through the real MethodChannel. Cleanup left zero recorder services/proof files and denied temporary permissions.
 
 ## Partial
 
-- Recorder lifecycle, GNSS/IMU acquisition, and native durable chunk buffering are operational, but native-to-Drift index reconciliation, Flutter health/command integration, and user permission onboarding are not; normal trip recording remains unavailable.
+- Recorder lifecycle, GNSS/IMU acquisition, native durable chunk buffering, and Flutter health/command integration are operational, but native-to-Drift finalization/index reconciliation and user permission onboarding are not; normal trip recording remains unavailable.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -64,7 +66,7 @@
 - The centralized M1.1 palette is intentionally evolvable pending broader visual prototyping; consumers use semantic names rather than raw colors.
 - Unknown or partial schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair; any real occurrence will require an explicit recovery/export path.
 - Android background/foreground-service behavior across OS versions/OEMs.
-- M2.1–M2.4 physical validation proves a short lifecycle/recovery, stationary real-GPS, dual-IMU, and durable-chunk sequence on one Android 14 OEM device, not yet a 30–60 minute locked-screen recording, deep-sleep/reboot recovery, battery behavior, vibration quality, or multi-version/OEM reliability.
+- M2.1–M2.5 physical validation proves a short lifecycle/recovery, bridge orchestration, stationary real-GPS, dual-IMU, and durable-chunk sequence on one Android 14 OEM device, not yet a 30–60 minute locked-screen recording, deep-sleep/reboot recovery, battery behavior, vibration quality, or multi-version/OEM reliability.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -73,4 +75,4 @@
 
 ## Current step
 
-**M2.5 — Flutter↔Kotlin bridge:** pending explicit user authorization; do not begin until approved.
+**M2.6 — Permissions/onboarding:** pending explicit user authorization; do not begin until approved.

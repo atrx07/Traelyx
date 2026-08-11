@@ -51,7 +51,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 ## Preconditions
 
 - M0 and M1 are complete and synchronized to `origin/main`.
-- The recorder service and versioned bridge skeleton exist but acquire no telemetry.
+- The recorder service, GNSS/IMU acquisition, durable native chunk writer, and versioned bridge skeleton exist; Flutter commands and aggregate recorder health are not yet integrated.
 - Android 14 physical-device validation is available when a claim depends on background behavior.
 
 ## Affected components
@@ -69,6 +69,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - M2.2 acquired coordinates are handed directly to the M2.4 app-private durable writer. Precise samples must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
 - M2.3 raw device-frame motion vectors are handed directly to the M2.4 app-private durable writer. Exact vectors must not enter logs, notifications, Flutter bridge payloads, diagnostics, or network traffic.
 - M2.4 durable chunks remain under the app-private no-backup directory. Paths use only trip UUID and sequence, and health surfaces expose aggregate state/counts rather than raw values, precise timestamps, paths, or device identifiers.
+- M2.5 bridge payloads expose only lifecycle identity/state, aggregate sensor and buffer counters, capability flags, and allowlisted error codes. Coordinates, vectors, raw sample timestamps, precise fix metadata, filesystem paths, and device identifiers never cross the Flutter boundary.
 - Diagnostics and logs must not expose precise routes, raw samples, device identifiers, secrets, or API keys.
 
 ## Compatibility/migration implications
@@ -78,6 +79,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Database schema v1 remains unchanged by M2.2; raw GNSS persistence and compatibility are deferred to the versioned chunk contract in M2.4.
 - Database schema v1 remains unchanged by M2.3; raw IMU persistence and decoder compatibility are deferred to M2.4.
 - M2.4 uses self-describing app-private chunk files whose metadata matches the existing `trip_chunks` schema. Native files are recoverable without Flutter; verified index reconciliation into Drift is deferred to the authorized bridge/integration boundary, so database schema version 1 remains unchanged.
+- M2.5 keeps database schema version 1 unchanged. Native-to-Drift chunk-index reconciliation requires an explicit finalization/index transaction and remains deferred to M2.7 rather than exposing private paths or partially indexing an active native write stream through the health bridge.
 - Android foreground-service and notification behavior must be documented against supported API levels and OEM evidence.
 
 ## Implementation steps
@@ -113,7 +115,13 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Expose privacy-safe buffer health and storage-growth counters without routes, vectors, raw timestamps, filesystem paths, or device identifiers.
   - [x] Add deterministic codec fixture, ordering/boundary, corruption/truncation, overflow, atomic-store, recovery, and service integration tests.
   - [x] Measure encoded bytes/sample and estimated MB/hour; document that retention/default pruning remains undecided until broader storage measurements and UX work.
-- [ ] M2.5 Flutter↔Kotlin bridge — gated on explicit approval after M2.4.
+- [x] M2.5 Flutter↔Kotlin bridge — completed and validated on 2026-08-11.
+  - [x] Define a stable bridge-v1 capability and recorder-status contract with conservative parsing on both sides.
+  - [x] Expose idempotent start, stop, explicit recovery, lifecycle query, and aggregate health query commands through a testable native dispatcher.
+  - [x] Map GNSS, IMU, and durable-buffer health without coordinates, vectors, raw sample timestamps, precise fix values, paths, or device identifiers.
+  - [x] Add immutable Dart lifecycle/health/status models plus Riverpod query and command boundaries; keep Flutter non-authoritative for recorder survival.
+  - [x] Keep `recordingAvailable=false` and add no permission prompt, Drive control, database migration, network behavior, wake lock, or third-party dependency.
+  - [x] Add Kotlin contract/dispatcher tests, Dart parsing/channel/provider tests, and a controlled physical-device bridge/service proof.
 - [ ] M2.6 Permissions/onboarding — gated on explicit approval after M2.5.
 - [ ] M2.7 Service recovery tests — gated on explicit approval after M2.6.
 - [ ] M2.8 First real-drive fixture — gated on explicit approval after M2.7.
@@ -141,6 +149,11 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - [x] M2.4 Android lint, Flutter regression checks, repository validation, instrumentation compilation, and debug/release builds.
 - [x] M2.4 controlled physical-device proof verifies durable checksummed GNSS/IMU chunks before and after service recovery without emitting raw values or paths.
 - [x] Confirm M2.4 adds no filtering/fusion, cloud/network behavior, wake lock, permission, third-party dependency, database migration, retention default, or normal user-facing recording availability.
+- [x] M2.5 native contract and dispatcher tests cover all methods, exact version fields, idempotent outcomes, unknown methods, and privacy allowlists.
+- [x] M2.5 Dart tests cover conservative parsing, every MethodChannel command, nested status health, malformed/null responses, and Riverpod refresh behavior.
+- [x] M2.5 Android lint, Flutter format/analyze/tests, repository validation, instrumentation compilation, and debug/release builds.
+- [x] M2.5 controlled physical-device proof verifies Flutter capability handshake plus native bridge start/query/recover/stop and aggregate health without emitting raw values or paths.
+- [x] Confirm M2.5 adds no permission/onboarding UI, normal recording availability, database migration, network behavior, wake lock, third-party dependency, or native-to-Drift partial indexing.
 
 ## Acceptance criteria
 
@@ -182,8 +195,18 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Each completed chunk uses explicit DEFLATE compression metadata, SHA-256 verification, an end marker, and atomic replacement. Truncated, corrupt, unknown-version, and orphaned writes are isolated and never treated as valid chunks.
 - Service recovery continues at a non-overwriting sequence after the last observed filename and after the last verified elapsed-time boundary; an unfinished recovered trip is never presented as normally finalized.
 - Health exposes only state, counts, byte totals, queue/buffer depths, sequence/boundary presence, corruption counts, and allowlisted error codes—never raw samples, precise coordinates, vectors, paths, or device identifiers.
-- Database schema version 1 remains unchanged; the existing `trip_chunks` columns already cover the file index contract, while verified native-to-Drift reconciliation remains gated with the bridge/integration work.
+- Database schema version 1 remains unchanged; the existing `trip_chunks` columns already cover the file index contract, while verified native-to-Drift reconciliation remains gated to the M2.7 finalization/recovery transaction.
 - No filtering, resampling, derived channels, export, retention default/pruning, Flutter bridge expansion, normal recording availability, network behavior, wake lock, permission, or third-party dependency is introduced.
+
+### M2.5
+
+- The stable recorder channel reports bridge and nested status contract versions, rejects missing/malformed responses conservatively in Dart, and keeps existing capability consumers compatible.
+- Flutter can query lifecycle plus aggregate GNSS, IMU, and durable-buffer health and can issue idempotent start, stop, and explicit recovery commands without becoming authoritative for service lifetime.
+- Native dispatch is independently testable from `MainActivity`; unknown methods remain unimplemented and native failures return allowlisted state/error evidence rather than exception text.
+- Bridge payloads contain no coordinates, motion vectors, raw sample timestamps, precise fix accuracy/time, filesystem paths, device identifiers, secrets, or chunk contents.
+- `recordingAvailable` remains false until M2.6 supplies contextual permission/onboarding and user-facing controls; no existing screen can begin normal trip recording.
+- Database schema version 1 remains unchanged and no active native write stream is partially reconciled into Drift. Finalization/index reconciliation remains an explicit M2.7 recovery transaction.
+- No new dependency, network behavior, cloud behavior, wake lock, sensor rate, chunk encoding, retention policy, or permission is introduced.
 
 ### M2 milestone
 
@@ -212,6 +235,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - M2.4 chunk files live under `noBackupFilesDir/recorder/trips/<trip-id>/chunks` so precise routes and high-rate motion evidence remain app-private and are not copied through Android Auto Backup. The UUID and sequence name files; no route-derived information appears in paths.
 - Encoding version 1 uses a binary envelope plus deterministic record encoding, platform DEFLATE at best-speed, SHA-256 over the stored compressed payload, an explicit completion marker, and `AtomicFile` replacement. Compression is replaceable through the declared envelope field rather than implicit.
 - The asynchronous writer separately bounds ingress and the reorder heap at 1,024 samples each and reorders within two seconds, exceeding the requested one-second IMU FIFO latency. It emits at most 256 samples or one second per chunk and treats queue/reorder overflow, missing trip time, or evidence older than the committed boundary as explicit recorder errors.
+- M2.5 keeps the existing `/recorder/v1` channel stable and adds a nested recorder-status contract version. Health is pull-based so Flutter can refresh on demand without creating a second authoritative lifecycle or an always-on event stream.
+- Bridge lifecycle maps intentionally omit native monotonic start timestamps; GNSS/IMU health omits raw source timestamps and precise fix values. Flutter receives the trip UUID, lifecycle/recovery state, aggregate counters, capability flags, and allowlisted errors needed for UI orchestration.
+- Native-to-Drift chunk indexing is deferred to the M2.7 finalization/recovery transaction because M2.5 must not expose private filesystem paths or create a partially indexed active stream.
 
 ## Progress log
 
@@ -223,6 +249,8 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - 2026-08-09: M2.3 local gates and controlled Android 14 device proof passed. Both calibrated motion streams produced valid source timestamp/accuracy/configuration health before and after service recovery, then stopped cleanly; device permissions were restored.
 - 2026-08-09: M2.4 explicitly authorized. Chunk/index compatibility, buffer bounds, reorder/flush behavior, checksum/atomicity, corruption isolation, privacy, performance measurement, and physical-device communication gates expanded before implementation.
 - 2026-08-09: M2.4 implementation, local gates, and controlled Android 14 device proof passed. Real GNSS and dual-IMU evidence was durably checksummed before and after service recovery, sequence/catalog continuity and short background/screen-off survival were verified, and the proof removed its private files; independent cleanup confirmed zero proof files/directories, zero recorder services, and restored denied permissions.
+- 2026-08-11: M2.5 explicitly authorized. Repository/toolchain readiness and Tecno ADB authorization were reverified after host background processes were closed; implementation is limited to the versioned command/status bridge and its privacy, regression, and controlled-device gates.
+- 2026-08-11: M2.5 implementation and all local/device gates passed. The controlled Tecno proof exercised bridge start/status/recover/stop over real GNSS, dual IMU, durable chunks, activity/service recovery, backgrounding, and a short screen-off interval; a normal Flutter launch displayed `Recorder bridge_ready`, and cleanup left no service, proof files, test APK, or temporary permissions.
 
 ## Completion summary
 
@@ -242,4 +270,8 @@ M2.4 adds dependency-free native crash-safe persistence for accepted GNSS, accel
 
 Validation passed: deterministic codec/golden-fixture round trips; ordering, flush, stop, overflow, invalid-time, late-evidence, write-failure, corruption/truncation/orphan isolation, atomic-store, and sequence-recovery tests; all native tests; Android lint; Dart formatting; Flutter analysis; all 40 Flutter tests; repository validation; instrumentation compilation; and debug/release APK builds. The controlled physical Android 14 Tecno LH8n proof persisted checksummed real GNSS and dual-IMU evidence before and after explicit service recovery, verified recovered catalog/sequence continuity, survived activity recreation, backgrounding, and a short screen-off interval, then stopped and deleted its proof trip without emitting raw values or paths. Independent cleanup verified zero proof files/directories, zero recorder services, and denied temporary permissions. A deterministic synthetic 1 Hz GNSS plus dual-100 Hz IMU stream measured 4,244 encoded bytes/second (approximately 14.57 MiB/hour); this is provisional and does not set retention policy.
 
-Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, process/device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, native-to-Drift index reconciliation, Flutter health integration, permission onboarding, or a production retention default. Those remain in M2.5–M2.8 or later, and M2.5 requires explicit authorization.
+M2.5 completes the stable `/recorder/v1` integration with a separately versioned aggregate status contract, a testable native dispatcher, idempotent start/stop/recover/query commands, immutable Dart lifecycle/GNSS/IMU/buffer models, and pull-based Riverpod query/command boundaries. Public payloads omit precise sensor evidence and private storage details, Flutter remains non-authoritative for recorder survival, and normal recording stays unavailable pending M2.6.
+
+Validation passed: native contract/privacy/dispatcher tests, all native regression tests, instrumentation compilation, Android lint, Dart formatting, Flutter analysis, all 45 Flutter tests, repository validation, debug/release APK builds, and APK size reporting. The controlled Android 14 Tecno LH8n proof passed bridge start/status/recover/stop with real stationary GNSS, dual IMU, durable chunks, activity/service recovery, backgrounding, and a short screen-off interval. A normal Flutter launch then rendered `Database v1 · Native bridge v1 · Recorder bridge_ready` through the real MethodChannel while recording remained disabled. Cleanup verified zero recorder services/proof files, removal of the test APK, and denied temporary permissions.
+
+Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, process/device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, native-to-Drift finalization/index reconciliation, permission onboarding, or a production retention default. Those remain in M2.6–M2.8 or later, and M2.6 requires explicit authorization.

@@ -26,13 +26,13 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             runLifecycleProof()
             results.putString(
                 "stream",
-                "\nM2.4 recorder lifecycle and privacy-safe durable chunk proof passed.\n",
+                "\nM2.5 Flutter/Kotlin bridge, lifecycle, and privacy-safe durable chunk proof passed.\n",
             )
             finish(Activity.RESULT_OK, results)
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.4 recorder lifecycle and durable chunk proof failed:\n" +
+                "\nM2.5 Flutter/Kotlin bridge and durable chunk proof failed:\n" +
                     "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
@@ -41,6 +41,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
 
     private fun runLifecycleProof() {
         val context = targetContext
+        val bridge = RecorderBridgeDispatcher(AndroidRecorderBridgeGateway(context))
 
         try {
             check(
@@ -64,15 +65,19 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                 )
             waitForIdleSync()
+            checkBridgeCapabilities(bridge)
 
-            val accepted = RecorderService.requestStart(context)
-            check(accepted.lifecycleState == RecorderLifecycleState.STARTING) {
-                "Start was not accepted: ${accepted.lifecycleState.wireName}/${accepted.errorCode}"
+            val startStatus = bridgePayload(bridge, RecorderContract.START_TRIP)
+            val startLifecycle = startStatus.mapValue("lifecycle")
+            check(startLifecycle["state"] in setOf("starting", "recording")) {
+                "Bridge start was not accepted: ${startLifecycle["state"]}/${startLifecycle["errorCode"]}"
             }
+            val accepted = RecorderService.queryState(context)
             proofTripId = accepted.tripId
             val active = awaitState(context) { it.lifecycleState == RecorderLifecycleState.RECORDING }
             check(accepted.tripId == active.tripId) { "Active trip identity changed during start." }
             check(active.isActive) { "Recorder did not report an active lifecycle." }
+            checkBridgeStatus(bridge, expectedActive = true)
             checkNotificationActive(context)
             val initialImu = awaitImuSamples()
             checkImuMetadata(initialImu)
@@ -103,6 +108,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     minimumGyroscopeSamples = MINIMUM_IMU_SAMPLES_PER_SENSOR,
                 )
             checkTelemetryHealth(initialTelemetry)
+            checkBridgeStatus(bridge, expectedActive = true)
 
             activity.runOnUiThread(activity::recreate)
             waitForIdleSync()
@@ -118,9 +124,12 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 "Stopping the service erased active-trip recovery metadata."
             }
             checkTelemetryHealth(stoppedForRecovery)
-            val recovered = awaitRecovery(context)
+            bridgePayload(bridge, RecorderContract.RECOVER_TRIP)
+            val recovered =
+                awaitState(context) { it.lifecycleState == RecorderLifecycleState.RECOVERED }
             check(recovered.tripId == accepted.tripId) { "Recovery changed the active trip identity." }
             check(recovered.recoveryCount == 1) { "Recovery count was not incremented once." }
+            checkBridgeStatus(bridge, expectedActive = true)
             checkNotificationActive(context)
             val recoveredCatalogHealth = awaitTelemetryWriterActive()
             check(
@@ -148,6 +157,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                             MINIMUM_IMU_SAMPLES_PER_SENSOR,
                 )
             checkTelemetryHealth(afterRecoveryTelemetry)
+            checkBridgeStatus(bridge, expectedActive = true)
 
             context.startActivity(
                 Intent(Intent.ACTION_MAIN)
@@ -168,9 +178,10 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             checkNotificationActive(context)
             executeShellCommand("input keyevent 224")
 
-            RecorderService.requestStop(context)
+            bridgePayload(bridge, RecorderContract.STOP_TRIP)
             val idle = awaitState(context) { it.lifecycleState == RecorderLifecycleState.IDLE }
             check(!idle.isActive) { "Recorder remained active after stop." }
+            checkBridgeStatus(bridge, expectedActive = false)
             checkNotificationStopped(context)
             check(RecorderService.queryGnssHealth().state == GnssAcquisitionState.STOPPED) {
                 "GNSS callbacks did not stop with the recorder lifecycle."
@@ -210,6 +221,52 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             }
         }
     }
+
+    private fun checkBridgeCapabilities(bridge: RecorderBridgeDispatcher) {
+        val capabilities = bridgePayload(bridge, RecorderContract.GET_CAPABILITIES)
+        check(capabilities["bridgeVersion"] == RecorderContract.BRIDGE_VERSION)
+        check(capabilities["statusContractVersion"] == RECORDER_STATUS_CONTRACT_VERSION)
+        check(capabilities["implementationState"] == "bridge_ready")
+        check(capabilities["recordingAvailable"] == false)
+        check(capabilities["commandsAvailable"] == true)
+        check(capabilities["healthAvailable"] == true)
+        check(capabilities["permissionOnboardingAvailable"] == false)
+    }
+
+    private fun checkBridgeStatus(
+        bridge: RecorderBridgeDispatcher,
+        expectedActive: Boolean,
+    ) {
+        val status = bridgePayload(bridge, RecorderContract.GET_STATUS)
+        check(status["contractVersion"] == RECORDER_STATUS_CONTRACT_VERSION)
+        check(status["bridgeVersion"] == RecorderContract.BRIDGE_VERSION)
+        val lifecycle = status.mapValue("lifecycle")
+        val gnss = status.mapValue("gnss")
+        val imu = status.mapValue("imu")
+        val buffer = status.mapValue("buffer")
+        check(lifecycle["active"] == expectedActive)
+        check(!lifecycle.containsKey("startedAtUtcEpochMillis"))
+        check(!lifecycle.containsKey("startedAtElapsedRealtimeNanos"))
+        check(!gnss.containsKey("lastSourceTimestampNanos"))
+        check(!gnss.containsKey("lastHorizontalAccuracyMetres"))
+        check(!gnss.containsKey("lastFixWallTimeUtcEpochMillis"))
+        check(imu.keys.none { it.contains("Timestamp") || it.contains("AccuracyStatus") })
+        check(buffer.keys.none { it.contains("path", ignoreCase = true) })
+        check(status.keys.none { it.contains("device", ignoreCase = true) })
+    }
+
+    private fun bridgePayload(
+        bridge: RecorderBridgeDispatcher,
+        method: String,
+    ): Map<String, Any?> =
+        when (val result = bridge.dispatch(method)) {
+            is RecorderBridgeDispatchResult.Handled -> result.payload
+            RecorderBridgeDispatchResult.NotImplemented -> error("Bridge method was unavailable: $method")
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun Map<String, Any?>.mapValue(key: String): Map<String, Any?> =
+        getValue(key) as Map<String, Any?>
 
     private fun awaitTelemetryWriterTeardown() {
         val deadline = SystemClock.uptimeMillis() + TELEMETRY_STATE_TIMEOUT_MILLIS

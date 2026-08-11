@@ -5,6 +5,8 @@ object RecorderContract {
     const val CHANNEL_NAME = "io.github.atrx07.traelyx/recorder/v1"
     const val GET_CAPABILITIES = "getCapabilities"
     const val GET_STATE = "getState"
+    const val GET_STATUS = "getStatus"
     const val START_TRIP = "startTrip"
     const val STOP_TRIP = "stopTrip"
+    const val RECOVER_TRIP = "recoverTrip"
 }
