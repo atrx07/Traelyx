@@ -51,6 +51,14 @@ Required approach:
 
 **Documentation discovery is not permission to consume documentation wholesale.**
 
+### Optional known-tooling context
+
+- `docs/reference/KNOWN_TOOLING_ISSUES.md` is optional, relevance-triggered context. Do not read it during normal startup.
+- Read or search it only when a host, toolchain, environment, build, or test command fails; when the symptom resembles a documented issue; or when the task explicitly concerns local build/test tooling.
+- Before inventing a workaround for a failure likely to recur, check for a matching entry and try its documented safe fix first. If that fix fails, investigate the current evidence and update the entry only after validating a revised remedy.
+- Keep entries concise and operational. Include only recurring issues likely to affect later sessions, not product defects, transient external failures, or one-off operator mistakes.
+- A tooling-reference update is not a roadmap step. Apply normal step discipline when it accompanies active work: validate it, synchronize status documents only when project state changed, commit and push the bounded change atomically, and preserve the approval gate before the next numbered roadmap substep.
+
 ### Task routing
 
 | Task area | Primary references |

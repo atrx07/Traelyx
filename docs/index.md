@@ -56,3 +56,5 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 ## Machine-readable references
 
 `reference/` contains YAML/JSON contracts suitable for validation, tests, generators, and tooling. Treat them as contracts and keep them synchronized with prose specs.
+
+`reference/KNOWN_TOOLING_ISSUES.md` is the exception: it is an optional, failure-triggered operational reference for recurring local toolchain issues. Do not load it as normal startup context.
