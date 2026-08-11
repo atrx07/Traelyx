@@ -134,6 +134,69 @@ void main() {
     );
   });
 
+  test('finalization parser preserves only verified index metadata', () {
+    final batch = RecorderFinalizationBatch.fromMap(finalizationBatchMap);
+    final finalization = batch.finalizations.single;
+    final chunk = finalization.chunks.single;
+
+    expect(batch.invalidRecordCount, 0);
+    expect(finalization.tripId, tripId);
+    expect(finalization.completionState, 'completed');
+    expect(finalization.recoveryState, 'recovered');
+    expect(chunk.sequence, 0);
+    expect(
+      chunk.storageReference,
+      'recorder/trips/$tripId/chunks/0000000000.tlxc',
+    );
+  });
+
+  test('finalization parser rejects absolute paths and malformed evidence', () {
+    final invalid = Map<Object?, Object?>.from(finalizationBatchMap);
+    final item = Map<Object?, Object?>.from(
+      (finalizationBatchMap['finalizations']! as List<Object?>).single
+          as Map<Object?, Object?>,
+    );
+    final chunk = Map<Object?, Object?>.from(
+      (item['chunks']! as List<Object?>).single as Map<Object?, Object?>,
+    );
+    chunk['storageReference'] = '/data/user/0/private/0000000000.tlxc';
+    item['chunks'] = [chunk];
+    invalid['finalizations'] = [item];
+
+    expect(
+      () => RecorderFinalizationBatch.fromMap(invalid),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
+  test(
+    'finalization parser rejects unknown or inconsistent quality evidence',
+    () {
+      final base =
+          (finalizationBatchMap['finalizations']! as List<Object?>).single
+              as Map<Object?, Object?>;
+      final unknownFlag = <Object?, Object?>{
+        ...base,
+        'qualityFlags': <Object?>['recorder_recovered', 'future_flag'],
+      };
+      final inconsistentState = <Object?, Object?>{
+        ...base,
+        'completionState': 'incomplete',
+        'integrityStatus': 'review_required',
+      };
+
+      for (final item in [unknownFlag, inconsistentState]) {
+        expect(
+          () => RecorderFinalizationBatch.fromMap(<Object?, Object?>{
+            ...finalizationBatchMap,
+            'finalizations': <Object?>[item],
+          }),
+          throwsA(isA<FormatException>()),
+        );
+      }
+    },
+  );
+
   test('bridge invokes every versioned status and command method', () async {
     final methods = <String>[];
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -155,6 +218,17 @@ void main() {
               call.method.contains('Settings')) {
             return permissionStatusMap;
           }
+          if (call.method == 'getPendingFinalizations') {
+            return finalizationBatchMap;
+          }
+          if (call.method == 'acknowledgeTripFinalization') {
+            return <Object?, Object?>{
+              'contractVersion': 1,
+              'tripId': (call.arguments! as Map<Object?, Object?>)['tripId'],
+              'acknowledged': true,
+              'errorCode': null,
+            };
+          }
           return statusMap;
         });
     const bridge = RecorderBridge(channel: channel);
@@ -169,6 +243,8 @@ void main() {
     await bridge.startTrip();
     await bridge.recoverTrip();
     await bridge.stopTrip();
+    await bridge.getPendingFinalizations();
+    await bridge.acknowledgeTripFinalization(tripId);
 
     expect(methods, [
       'getCapabilities',
@@ -181,6 +257,8 @@ void main() {
       'startTrip',
       'recoverTrip',
       'stopTrip',
+      'getPendingFinalizations',
+      'acknowledgeTripFinalization',
     ]);
   });
 
@@ -203,6 +281,16 @@ void main() {
       throwsA(isA<FormatException>()),
     );
   });
+
+  test('bridge rejects null finalization responses', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (_) async => null);
+
+    await expectLater(
+      const RecorderBridge(channel: channel).getPendingFinalizations(),
+      throwsA(isA<FormatException>()),
+    );
+  });
 }
 
 const permissionStatusMap = <Object?, Object?>{
@@ -221,6 +309,51 @@ const permissionStatusMap = <Object?, Object?>{
 };
 
 const tripId = 'd181f268-f3ef-4a43-a142-8bf0671dcd49';
+
+const finalizationBatchMap = <Object?, Object?>{
+  'contractVersion': 1,
+  'invalidRecordCount': 0,
+  'finalizations': <Object?>[
+    <Object?, Object?>{
+      'contractVersion': 1,
+      'finalizationLogicVersion': 1,
+      'tripId': tripId,
+      'startedAtUtcEpochMillis': 1786200000000,
+      'startedAtElapsedRealtimeNanos': 987654321,
+      'stoppedAtUtcEpochMillis': 1786200005000,
+      'endElapsedRealtimeNanos': 1087654321,
+      'durationMillis': 100,
+      'completionState': 'completed',
+      'recoveryState': 'recovered',
+      'integrityStatus': 'unassessed',
+      'recoveryCount': 1,
+      'qualityFlags': <Object?>['recorder_recovered'],
+      'corruptChunkCount': 0,
+      'orphanedWriteCount': 0,
+      'orderingViolationCount': 0,
+      'chunks': <Object?>[
+        <Object?, Object?>{
+          'sequence': 0,
+          'storageReference': 'recorder/trips/$tripId/chunks/0000000000.tlxc',
+          'encodingVersion': 1,
+          'telemetrySchemaVersion': 1,
+          'startElapsedNanos': 0,
+          'endElapsedNanos': 100000000,
+          'gnssSampleCount': 1,
+          'accelerometerSampleCount': 10,
+          'gyroscopeSampleCount': 10,
+          'compression': 'deflate',
+          'atomicWriteStrategy': 'android_atomic_file',
+          'checksumAlgorithm': 'sha256',
+          'checksum':
+              '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+          'byteLength': 1024,
+          'createdAtUtcEpochMillis': 1786200001000,
+        },
+      ],
+    },
+  ],
+};
 
 const statusMap = <Object?, Object?>{
   'contractVersion': 1,

@@ -12,3 +12,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0008-safe-competition.md`
 - `ADR-0009-release-key-local-custody.md`
 - `ADR-0010-progressive-agent-context.md`
+- `ADR-0011-native-drift-finalization-handoff.md`

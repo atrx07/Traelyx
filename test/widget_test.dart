@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/app/traelyx_app.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 
@@ -30,6 +31,12 @@ void main() {
           ),
           recorderStatusProvider.overrideWith(
             (ref) async => RecorderStatus.fromMap(statusMap),
+          ),
+          recorderFinalizationSyncProvider.overrideWith(
+            (ref) async => const RecorderFinalizationSyncResult(
+              reconciledTripIds: [],
+              invalidNativeRecordCount: 0,
+            ),
           ),
         ],
         child: const TraelyxApp(),

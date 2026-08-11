@@ -7,15 +7,20 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import io.github.atrx07.traelyx.MainActivity
+import java.io.File
+import java.util.UUID
 
 class RecorderLifecycleInstrumentation : Instrumentation() {
     private var proofTripId: String? = null
+    private var instrumentationArguments: Bundle? = null
 
     override fun onCreate(arguments: Bundle?) {
+        instrumentationArguments = arguments
         super.onCreate(arguments)
         start()
     }
@@ -23,19 +28,124 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
     override fun onStart() {
         val results = Bundle()
         try {
-            runLifecycleProof()
+            val stream =
+                when (instrumentationArguments?.getString("mode")) {
+                    "index" ->
+                        runIndexProof(
+                            requireNotNull(instrumentationArguments?.getString("tripId")),
+                        )
+                    "cleanup" ->
+                        runCleanupProof(
+                            requireNotNull(instrumentationArguments?.getString("tripId")),
+                        )
+                    else -> {
+                        runLifecycleProof()
+                        "M2.7 recorder recovery, finalization handoff, and privacy-safe chunk proof passed."
+                    }
+                }
             results.putString(
                 "stream",
-                "\nM2.6 recorder bridge, lifecycle, readiness, and privacy-safe durable chunk proof passed.\n",
+                "\n$stream\n",
             )
             finish(Activity.RESULT_OK, results)
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.6 recorder bridge, readiness, and durable chunk proof failed:\n" +
+                "\nM2.7 recorder recovery, finalization handoff, and chunk proof failed:\n" +
                     "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
+        }
+    }
+
+    private fun runCleanupProof(tripId: String): String {
+        check(runCatching { UUID.fromString(tripId) }.isSuccess) {
+            "Cleanup requires a valid trip UUID."
+        }
+        val databaseFile =
+            File(targetContext.applicationInfo.dataDir, "app_flutter/traelyx.sqlite")
+        check(databaseFile.isFile) { "Traelyx database is unavailable." }
+        val deletedChunks: Int
+        val deletedTrips: Int
+        SQLiteDatabase.openDatabase(databaseFile.path, null, SQLiteDatabase.OPEN_READWRITE).use {
+                database ->
+            database.beginTransaction()
+            try {
+                deletedChunks = database.delete("trip_chunks", "trip_id = ?", arrayOf(tripId))
+                deletedTrips = database.delete("trips", "id = ?", arrayOf(tripId))
+                database.execSQL(
+                    """
+                    DELETE FROM vehicles
+                    WHERE id = ?
+                      AND NOT EXISTS (SELECT 1 FROM trips WHERE vehicle_id = vehicles.id)
+                    """.trimIndent(),
+                    arrayOf("local-recorder-vehicle-v1"),
+                )
+                database.setTransactionSuccessful()
+            } finally {
+                database.endTransaction()
+            }
+        }
+        check(deletedTrips == 1) { "Exact proof trip cleanup deleted $deletedTrips trip rows." }
+        check(deletedChunks > 0) { "Exact proof trip cleanup deleted no chunk rows." }
+        check(AtomicFileTelemetryChunkStore(targetContext).deleteTripForTest(tripId)) {
+            "Exact proof telemetry directory could not be deleted."
+        }
+        check(AtomicRecorderFinalizationStore(targetContext).acknowledge(tripId)) {
+            "Exact proof pending-finalization cleanup failed."
+        }
+        return "M2.7 exact-UUID cleanup passed: deletedTripRows=$deletedTrips, " +
+            "deletedChunkRows=$deletedChunks, privateTelemetryRemoved=true."
+    }
+
+    private fun runIndexProof(tripId: String): String {
+        check(runCatching { UUID.fromString(tripId) }.isSuccess) {
+            "Index proof requires a valid trip UUID."
+        }
+        val databaseFile =
+            File(targetContext.applicationInfo.dataDir, "app_flutter/traelyx.sqlite")
+        check(databaseFile.isFile) { "Traelyx database is unavailable." }
+        SQLiteDatabase.openDatabase(
+            databaseFile.path,
+            null,
+            SQLiteDatabase.OPEN_READONLY,
+        ).use { database ->
+            database.rawQuery(
+                """
+                SELECT t.completion_state, t.recovery_state, t.integrity_status,
+                       COUNT(c.sequence),
+                       SUM(CASE WHEN c.storage_reference LIKE ? THEN 0 ELSE 1 END)
+                FROM trips AS t
+                LEFT JOIN trip_chunks AS c ON c.trip_id = t.id
+                WHERE t.id = ?
+                GROUP BY t.id, t.completion_state, t.recovery_state, t.integrity_status
+                """.trimIndent(),
+                arrayOf("recorder/trips/$tripId/chunks/%", tripId),
+            ).use { cursor ->
+                check(cursor.moveToFirst()) { "Exact proof trip is absent from Drift." }
+                val completionState = cursor.getString(0)
+                val recoveryState = cursor.getString(1)
+                val integrityStatus = cursor.getString(2)
+                val chunkCount = cursor.getLong(3)
+                val invalidReferenceCount = cursor.getLong(4)
+                check(!cursor.moveToNext()) { "Exact proof trip was indexed more than once." }
+                check(completionState == "completed") {
+                    "Proof trip did not finalize as completed."
+                }
+                check(recoveryState == "recovered") {
+                    "Process-restarted proof trip did not retain recovered state."
+                }
+                check(integrityStatus == "unassessed") {
+                    "Proof trip integrity state was unexpectedly altered."
+                }
+                check(chunkCount > 0) { "Proof trip has no indexed chunks." }
+                check(invalidReferenceCount == 0L) {
+                    "Proof trip contains a non-relative chunk reference."
+                }
+                return "M2.7 exact-UUID Drift index proof passed: " +
+                    "completion=$completionState, recovery=$recoveryState, " +
+                    "integrity=$integrityStatus, indexedChunks=$chunkCount."
+            }
         }
     }
 
@@ -220,16 +330,64 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(finalCatalog.validChunks.all { it.metadata.checksumHex.length == 64 }) {
                 "A final chunk did not contain a verified SHA-256 checksum."
             }
+            checkFinalizationHandoff(bridge, requireNotNull(accepted.tripId), finalCatalog)
         } finally {
             executeShellCommand("input keyevent 224")
             context.stopService(Intent(context, RecorderService::class.java))
             AtomicRecorderRecoveryStore(context).clear()
             proofTripId?.let { tripId ->
+                AtomicRecorderFinalizationStore(context).acknowledge(tripId)
                 awaitTelemetryWriterTeardown()
                 check(deleteProofTripWithRetry(context, tripId)) {
                     "Could not remove the proof trip's private telemetry chunks."
                 }
             }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun checkFinalizationHandoff(
+        bridge: RecorderBridgeDispatcher,
+        tripId: String,
+        catalog: TelemetryChunkCatalogSnapshot,
+    ) {
+        val batch = bridgePayload(bridge, RecorderContract.GET_PENDING_FINALIZATIONS)
+        check(batch["contractVersion"] == RECORDER_FINALIZATION_CONTRACT_VERSION)
+        check(batch["invalidRecordCount"] == 0)
+        val finalizations = batch["finalizations"] as List<Map<String, Any?>>
+        val finalization = finalizations.single { it["tripId"] == tripId }
+        check(finalization["completionState"] == "completed")
+        check(finalization["recoveryState"] == "recovered")
+        check(finalization["integrityStatus"] == "unassessed")
+        val chunks = finalization["chunks"] as List<Map<String, Any?>>
+        check(chunks.size == catalog.validChunks.size)
+        check(chunks.all { chunk ->
+            val reference = chunk["storageReference"] as? String
+            reference != null &&
+                reference.startsWith("recorder/trips/$tripId/chunks/") &&
+                !reference.startsWith("/") &&
+                !reference.contains("\\")
+        }) {
+            "Finalization exposed an invalid or absolute storage reference."
+        }
+        check(chunks.none { chunk ->
+            chunk.keys.any { key ->
+                key.contains("coordinate", ignoreCase = true) ||
+                    key.contains("vector", ignoreCase = true) ||
+                    key.contains("sourceTimestamp", ignoreCase = true)
+            }
+        }) {
+            "Finalization exposed raw telemetry evidence."
+        }
+        val acknowledged =
+            bridgePayload(
+                bridge,
+                RecorderContract.ACKNOWLEDGE_TRIP_FINALIZATION,
+                mapOf("tripId" to tripId),
+            )
+        check(acknowledged["acknowledged"] == true)
+        check(AtomicRecorderFinalizationStore(targetContext).load(tripId) == null) {
+            "Finalization acknowledgement did not remove the pending handoff."
         }
     }
 
@@ -278,8 +436,9 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
     private fun bridgePayload(
         bridge: RecorderBridgeDispatcher,
         method: String,
+        arguments: Map<String, Any?>? = null,
     ): Map<String, Any?> =
-        when (val result = bridge.dispatch(method)) {
+        when (val result = bridge.dispatch(method, arguments)) {
             is RecorderBridgeDispatchResult.Handled -> result.payload
             RecorderBridgeDispatchResult.NotImplemented -> error("Bridge method was unavailable: $method")
         }

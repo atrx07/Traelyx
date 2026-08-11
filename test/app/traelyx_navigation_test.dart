@@ -8,6 +8,8 @@ import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/diagnostics/diagnostics_providers.dart';
 import 'package:traelyx/core/diagnostics/diagnostics_report.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_finalization.dart';
+import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 
 void main() {
@@ -143,6 +145,12 @@ Future<void> _pumpApp(
           ),
         ),
         diagnosticsReportProvider.overrideWith((ref) async => _report),
+        recorderFinalizationSyncProvider.overrideWith(
+          (ref) async => const RecorderFinalizationSyncResult(
+            reconciledTripIds: [],
+            invalidNativeRecordCount: 0,
+          ),
+        ),
       ],
       child: TraelyxApp(router: router),
     ),

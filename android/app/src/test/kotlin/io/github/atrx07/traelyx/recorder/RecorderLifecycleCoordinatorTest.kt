@@ -47,7 +47,7 @@ class RecorderLifecycleCoordinatorTest {
     }
 
     @Test
-    fun restartWhileStoppingCompletesTheInterruptedStop() {
+    fun restartWhileStoppingPreservesTheHandoffUntilServiceFinalization() {
         val store = InMemoryRecorderRecoveryStore()
         val coordinator = RecorderLifecycleCoordinator(store)
         coordinator.beginStart(TRIP_ID, WALL_TIME_MILLIS, ELAPSED_NANOS)
@@ -56,9 +56,9 @@ class RecorderLifecycleCoordinatorTest {
 
         val recovered = coordinator.recover()
 
-        assertEquals(RecorderLifecycleOutcomeKind.APPLIED, recovered.kind)
-        assertEquals(RecorderLifecycleState.IDLE, recovered.snapshot.lifecycleState)
-        assertNull(store.record)
+        assertEquals(RecorderLifecycleOutcomeKind.NO_OP, recovered.kind)
+        assertEquals(RecorderLifecycleState.STOPPING, recovered.snapshot.lifecycleState)
+        assertEquals(RecorderLifecycleState.STOPPING, store.record?.lifecycleState)
     }
 
     @Test

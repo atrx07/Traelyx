@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:traelyx/core/database/recorder_finalization_repository.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 
-import 'recorder_bridge_test.dart' show permissionStatusMap, statusMap;
+import 'recorder_bridge_test.dart'
+    show finalizationBatchMap, permissionStatusMap, statusMap, tripId;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -95,4 +97,61 @@ void main() {
       ]);
     },
   );
+
+  test('stop waits for transactional finalization before refreshing', () async {
+    final calls = <String>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          calls.add(call.method);
+          if (call.method == 'getPendingFinalizations') {
+            return finalizationBatchMap;
+          }
+          if (call.method == 'acknowledgeTripFinalization') {
+            return <Object?, Object?>{
+              'contractVersion': 1,
+              'tripId': tripId,
+              'acknowledged': true,
+              'errorCode': null,
+            };
+          }
+          return statusMap;
+        });
+    final container = ProviderContainer(
+      overrides: [
+        recorderBridgeProvider.overrideWithValue(
+          const RecorderBridge(channel: channel),
+        ),
+        recorderFinalizationRepositoryProvider.overrideWithValue(
+          _FakeFinalizationRepository(calls),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final status = await container
+        .read(recorderCommandControllerProvider)
+        .stopTrip();
+
+    expect(status.lifecycle.tripId, tripId);
+    expect(calls.take(6), [
+      'getStatus',
+      'stopTrip',
+      'getPendingFinalizations',
+      'repository:$tripId',
+      'acknowledgeTripFinalization',
+      'getStatus',
+    ]);
+    expect(calls.skip(6), everyElement('getStatus'));
+  });
+}
+
+class _FakeFinalizationRepository implements RecorderFinalizationRepository {
+  const _FakeFinalizationRepository(this.calls);
+
+  final List<String> calls;
+
+  @override
+  Future<void> reconcile(RecorderTripFinalization finalization) async {
+    calls.add('repository:${finalization.tripId}');
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
@@ -17,6 +18,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     with WidgetsBindingObserver {
   bool _actionInProgress = false;
   String? _actionError;
+  String? _actionSuccess;
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       ref.read(recorderPermissionControllerProvider).refresh();
+      ref.invalidate(recorderFinalizationSyncProvider);
     }
   }
 
@@ -42,6 +45,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     final readiness = ref.watch(bootstrapReadinessProvider);
     final permissions = ref.watch(recorderPermissionStatusProvider);
     final recorder = ref.watch(recorderStatusProvider);
+    final finalization = ref.watch(recorderFinalizationSyncProvider);
     final colors = context.traelyxColors;
 
     return SafeArea(
@@ -74,6 +78,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
               _FoundationCard(readiness: readiness),
               const SizedBox(height: TraelyxSpacing.md),
               _DriveCard(permissions: permissions, recorder: recorder),
+              _FinalizationCard(finalization: finalization),
               const SizedBox(height: TraelyxSpacing.md),
               _NotificationCard(
                 permissions: permissions,
@@ -100,6 +105,17 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
                   ).textTheme.bodyMedium?.copyWith(color: colors.critical),
                 ),
               ],
+              if (_actionSuccess != null) ...[
+                const SizedBox(height: TraelyxSpacing.md),
+                Text(
+                  _actionSuccess!,
+                  key: const ValueKey('drive-action-success'),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: colors.positive),
+                ),
+              ],
               const SizedBox(height: TraelyxSpacing.xxl),
               _PrimaryDriveButton(
                 permissions: permissions,
@@ -116,7 +132,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
               ),
               const SizedBox(height: TraelyxSpacing.sm),
               Text(
-                'Trip finalization and interrupted-drive recovery arrive in M2.7.',
+                'Stopped drives are finalized into local history before native handoff cleanup.',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
@@ -140,7 +156,10 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
       case DrivePrimaryAction.startTrip:
         await _runStatusAction(commands.startTrip);
       case DrivePrimaryAction.stopTrip:
-        await _runStatusAction(commands.stopTrip);
+        await _runStatusAction(
+          commands.stopTrip,
+          successMessage: 'Drive finalized and indexed in local history.',
+        );
       case DrivePrimaryAction.none:
         return;
     }
@@ -150,17 +169,28 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     Future<RecorderPermissionStatus> Function() action,
   ) => _runAction(action);
 
-  Future<void> _runStatusAction(Future<RecorderStatus> Function() action) =>
-      _runAction(action);
+  Future<void> _runStatusAction(
+    Future<RecorderStatus> Function() action, {
+    String? successMessage,
+  }) => _runAction(action, successMessage: successMessage);
 
-  Future<void> _runAction<T>(Future<T> Function() action) async {
+  Future<void> _runAction<T>(
+    Future<T> Function() action, {
+    String? successMessage,
+  }) async {
     if (_actionInProgress) return;
     setState(() {
       _actionInProgress = true;
       _actionError = null;
+      _actionSuccess = null;
     });
     try {
       await action();
+      if (mounted && successMessage != null) {
+        setState(() {
+          _actionSuccess = successMessage;
+        });
+      }
     } catch (_) {
       if (mounted) {
         setState(() {
@@ -362,6 +392,52 @@ class _NotificationCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FinalizationCard extends StatelessWidget {
+  const _FinalizationCard({required this.finalization});
+
+  final AsyncValue<RecorderFinalizationSyncResult> finalization;
+
+  @override
+  Widget build(BuildContext context) {
+    return finalization.when(
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) => Padding(
+        padding: const EdgeInsets.only(top: TraelyxSpacing.md),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(TraelyxSpacing.lg),
+            child: _StatusRow(
+              icon: Icons.warning_amber_outlined,
+              color: context.traelyxColors.critical,
+              title: 'A stopped drive needs attention',
+              detail:
+                  'Its native evidence remains preserved, but local history indexing did not complete.',
+            ),
+          ),
+        ),
+      ),
+      data: (result) {
+        if (result.reconciledTripIds.isEmpty) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(top: TraelyxSpacing.md),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(TraelyxSpacing.lg),
+              child: _StatusRow(
+                icon: Icons.inventory_2_outlined,
+                color: context.traelyxColors.positive,
+                title: 'Recovered drive saved locally',
+                detail:
+                    'Verified native chunks were indexed without uploading telemetry.',
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

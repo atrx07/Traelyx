@@ -41,10 +41,11 @@ class DriveControlModel {
 
     if (recorder.lifecycle.state == 'error') {
       return const DriveControlModel(
-        title: 'Recorder needs attention',
-        detail: 'Recording cannot start until the recorder error is cleared.',
-        action: DrivePrimaryAction.none,
-        actionLabel: 'Start unavailable',
+        title: 'Finalize interrupted drive',
+        detail:
+            'Traelyx preserved the recorder error and will index only verified local evidence.',
+        action: DrivePrimaryAction.stopTrip,
+        actionLabel: 'Finalize drive',
       );
     }
 

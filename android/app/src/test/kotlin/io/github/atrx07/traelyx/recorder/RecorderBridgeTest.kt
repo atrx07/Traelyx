@@ -52,11 +52,23 @@ class RecorderBridgeTest {
         assertTrue(dispatcher.dispatch(RecorderContract.START_TRIP) is RecorderBridgeDispatchResult.Handled)
         assertTrue(dispatcher.dispatch(RecorderContract.STOP_TRIP) is RecorderBridgeDispatchResult.Handled)
         assertTrue(dispatcher.dispatch(RecorderContract.RECOVER_TRIP) is RecorderBridgeDispatchResult.Handled)
+        assertTrue(
+            dispatcher.dispatch(RecorderContract.GET_PENDING_FINALIZATIONS) is
+                RecorderBridgeDispatchResult.Handled,
+        )
+        assertTrue(
+            dispatcher.dispatch(
+                RecorderContract.ACKNOWLEDGE_TRIP_FINALIZATION,
+                mapOf("tripId" to TRIP_ID),
+            ) is RecorderBridgeDispatchResult.Handled,
+        )
         assertEquals(RecorderBridgeDispatchResult.NotImplemented, dispatcher.dispatch("unknown"))
         assertEquals(2, gateway.statusCount)
         assertEquals(1, gateway.startCount)
         assertEquals(1, gateway.stopCount)
         assertEquals(1, gateway.recoverCount)
+        assertEquals(1, gateway.pendingCount)
+        assertEquals(listOf(TRIP_ID), gateway.acknowledgedTripIds)
     }
 
     private fun sampleStatus(): RecorderStatusSnapshot =
@@ -119,6 +131,8 @@ class RecorderBridgeTest {
         var startCount = 0
         var stopCount = 0
         var recoverCount = 0
+        var pendingCount = 0
+        val acknowledgedTripIds = mutableListOf<String?>()
 
         override fun capabilities(): Map<String, Any> = RecorderBridgeCapabilities().toMap()
 
@@ -140,6 +154,25 @@ class RecorderBridgeTest {
         override fun recoverTrip(): Map<String, Any> {
             recoverCount += 1
             return status
+        }
+
+        override fun pendingFinalizations(): Map<String, Any> {
+            pendingCount += 1
+            return mapOf(
+                "contractVersion" to RECORDER_FINALIZATION_CONTRACT_VERSION,
+                "invalidRecordCount" to 0,
+                "finalizations" to emptyList<Map<String, Any?>>(),
+            )
+        }
+
+        override fun acknowledgeTripFinalization(tripId: String?): Map<String, Any?> {
+            acknowledgedTripIds += tripId
+            return mapOf(
+                "contractVersion" to RECORDER_FINALIZATION_CONTRACT_VERSION,
+                "tripId" to tripId,
+                "acknowledged" to true,
+                "errorCode" to null,
+            )
         }
     }
 

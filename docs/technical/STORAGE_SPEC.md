@@ -41,7 +41,7 @@ Each chunk needs:
 
 Chunk encoding version 1 carries telemetry schema version 1 and deterministic GNSS/accelerometer/gyroscope records inside a self-describing binary envelope. It uses platform DEFLATE in best-speed mode, SHA-256 over the stored compressed payload, an explicit completion marker, and Android `AtomicFile` replacement. Files live only under app-private no-backup storage at `recorder/trips/<trip-id>/chunks/<sequence>.tlxc`; path components contain a trip UUID and sequence only.
 
-The native catalog verifies complete chunks independently and isolates corrupt, truncated, unknown-version, misnamed, out-of-order, and orphaned writes. Recovery advances beyond the highest observed filename and the last verified elapsed-time boundary so existing evidence is not overwritten. The existing Drift `trip_chunks` columns match this metadata contract, but verified native-to-Drift reconciliation is deferred to the authorized bridge/integration boundary; schema version 1 is unchanged.
+The native catalog verifies complete chunks independently and isolates corrupt, truncated, unknown-version, misnamed, out-of-order, and orphaned writes. Recovery advances beyond the highest observed filename and the last verified elapsed-time boundary so existing evidence is not overwritten. M2.7 now rescans and reconciles the complete verified catalog into the existing Drift `trips` and `trip_chunks` tables in one idempotent transaction, then acknowledges the app-private pending-finalization record. Schema version 1 and raw chunk encoding version 1 are unchanged; corrupt or incomplete evidence remains explicit and is never indexed as a perfect trip.
 
 ## 4. Compression
 

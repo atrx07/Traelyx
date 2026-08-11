@@ -130,6 +130,10 @@ interface RecorderBridgeGateway {
     fun stopTrip(): Map<String, Any>
 
     fun recoverTrip(): Map<String, Any>
+
+    fun pendingFinalizations(): Map<String, Any>
+
+    fun acknowledgeTripFinalization(tripId: String?): Map<String, Any?>
 }
 
 class AndroidRecorderBridgeGateway(
@@ -137,6 +141,8 @@ class AndroidRecorderBridgeGateway(
     private val recordingReadiness: () -> Boolean = { isPlatformRecordingReady(context) },
 ) : RecorderBridgeGateway {
     private val applicationContext = context.applicationContext
+    private val finalizationStore = AtomicRecorderFinalizationStore(applicationContext)
+    private val chunkStore = AtomicFileTelemetryChunkStore(applicationContext)
 
     override fun capabilities(): Map<String, Any> =
         RecorderBridgeCapabilities(recordingAvailable = recordingReadiness()).toMap()
@@ -158,6 +164,29 @@ class AndroidRecorderBridgeGateway(
         return status()
     }
 
+    override fun pendingFinalizations(): Map<String, Any> {
+        val read = finalizationStore.loadAll()
+        val finalizations =
+            read.records.map { record ->
+                RecorderFinalizationEvaluator.evaluate(record, chunkStore.scan(record.tripId)).toMap()
+            }
+        return linkedMapOf(
+            "contractVersion" to RECORDER_FINALIZATION_CONTRACT_VERSION,
+            "invalidRecordCount" to read.invalidRecordCount,
+            "finalizations" to finalizations,
+        )
+    }
+
+    override fun acknowledgeTripFinalization(tripId: String?): Map<String, Any?> {
+        val acknowledged = tripId != null && finalizationStore.acknowledge(tripId)
+        return linkedMapOf(
+            "contractVersion" to RECORDER_FINALIZATION_CONTRACT_VERSION,
+            "tripId" to tripId,
+            "acknowledged" to acknowledged,
+            "errorCode" to if (acknowledged) null else "finalization_acknowledgement_failed",
+        )
+    }
+
     private fun collectStatus(): RecorderStatusSnapshot =
         RecorderStatusSnapshot(
             lifecycle = RecorderService.queryState(applicationContext),
@@ -174,7 +203,10 @@ sealed interface RecorderBridgeDispatchResult {
 }
 
 class RecorderBridgeDispatcher(private val gateway: RecorderBridgeGateway) {
-    fun dispatch(method: String): RecorderBridgeDispatchResult =
+    fun dispatch(
+        method: String,
+        arguments: Map<String, Any?>? = null,
+    ): RecorderBridgeDispatchResult =
         when (method) {
             RecorderContract.GET_CAPABILITIES -> handled(gateway.capabilities())
             RecorderContract.GET_STATE -> {
@@ -186,9 +218,17 @@ class RecorderBridgeDispatcher(private val gateway: RecorderBridgeGateway) {
             RecorderContract.START_TRIP -> handled(gateway.startTrip())
             RecorderContract.STOP_TRIP -> handled(gateway.stopTrip())
             RecorderContract.RECOVER_TRIP -> handled(gateway.recoverTrip())
+            RecorderContract.GET_PENDING_FINALIZATIONS -> handled(gateway.pendingFinalizations())
+            RecorderContract.ACKNOWLEDGE_TRIP_FINALIZATION ->
+                handledNullable(
+                    gateway.acknowledgeTripFinalization(arguments?.get("tripId") as? String),
+                )
             else -> RecorderBridgeDispatchResult.NotImplemented
         }
 
     private fun handled(payload: Map<String, Any>): RecorderBridgeDispatchResult.Handled =
+        RecorderBridgeDispatchResult.Handled(payload)
+
+    private fun handledNullable(payload: Map<String, Any?>): RecorderBridgeDispatchResult.Handled =
         RecorderBridgeDispatchResult.Handled(payload)
 }

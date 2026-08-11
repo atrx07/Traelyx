@@ -87,7 +87,11 @@ class RecorderLifecycleCoordinator(private val store: RecorderRecoveryStore) {
                             read.record.toSnapshot(),
                         )
 
-                    RecorderLifecycleState.STOPPING -> completeStop()
+                    RecorderLifecycleState.STOPPING ->
+                        RecorderLifecycleOutcome(
+                            RecorderLifecycleOutcomeKind.NO_OP,
+                            read.record.toSnapshot(),
+                        )
                     RecorderLifecycleState.ERROR ->
                         RecorderLifecycleOutcome(
                             RecorderLifecycleOutcomeKind.REJECTED,

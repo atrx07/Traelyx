@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
@@ -74,6 +75,15 @@ void main() {
     expect(find.text('Drive recording is active'), findsOneWidget);
     await _revealPrimaryButton(tester);
     expect(find.text('Stop drive'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('drive-primary-action')));
+    await tester.pumpAndSettle();
+
+    expect(commands.calls, ['stopTrip']);
+    expect(
+      find.text('Drive finalized and indexed in local history.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('stopping Drive disables repeated commands', (tester) async {
@@ -158,6 +168,31 @@ void main() {
     );
     expect(button.onPressed, isNull);
   });
+
+  testWidgets('Drive surfaces preserved finalization failures', (tester) async {
+    await _pumpDrive(
+      tester,
+      finalizationFuture: () async => throw StateError('index failed'),
+    );
+
+    expect(find.text('A stopped drive needs attention'), findsOneWidget);
+    expect(find.textContaining('evidence remains preserved'), findsOneWidget);
+  });
+
+  testWidgets('Drive confirms recovered native evidence was indexed locally', (
+    tester,
+  ) async {
+    await _pumpDrive(
+      tester,
+      finalizationFuture: () async => const RecorderFinalizationSyncResult(
+        reconciledTripIds: ['d181f268-f3ef-4a43-a142-8bf0671dcd49'],
+        invalidNativeRecordCount: 0,
+      ),
+    );
+
+    expect(find.text('Recovered drive saved locally'), findsOneWidget);
+    expect(find.textContaining('without uploading telemetry'), findsOneWidget);
+  });
 }
 
 Future<void> _pumpDrive(
@@ -166,6 +201,7 @@ Future<void> _pumpDrive(
   RecorderStatus? recorderStatus,
   _FakePermissionActions? permissions,
   _FakeRecorderCommands? commands,
+  Future<RecorderFinalizationSyncResult> Function()? finalizationFuture,
 }) async {
   final effectivePermissionStatus = permissionStatus ?? _permissionStatus();
   final effectiveRecorderStatus = recorderStatus ?? _recorderStatus();
@@ -185,6 +221,16 @@ Future<void> _pumpDrive(
         ),
         recorderStatusProvider.overrideWith(
           (ref) async => effectiveRecorderStatus,
+        ),
+        recorderFinalizationSyncProvider.overrideWith(
+          (ref) =>
+              finalizationFuture?.call() ??
+              Future.value(
+                const RecorderFinalizationSyncResult(
+                  reconciledTripIds: [],
+                  invalidNativeRecordCount: 0,
+                ),
+              ),
         ),
         recorderPermissionControllerProvider.overrideWithValue(
           permissions ?? _FakePermissionActions(effectivePermissionStatus),
@@ -223,6 +269,12 @@ Future<void> _pumpDriveWithPermissionFuture(
           (ref) => permissionFuture(),
         ),
         recorderStatusProvider.overrideWith((ref) async => recorderStatus),
+        recorderFinalizationSyncProvider.overrideWith(
+          (ref) async => const RecorderFinalizationSyncResult(
+            reconciledTripIds: [],
+            invalidNativeRecordCount: 0,
+          ),
+        ),
         recorderPermissionControllerProvider.overrideWithValue(
           _FakePermissionActions(_permissionStatus()),
         ),

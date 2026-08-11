@@ -72,7 +72,9 @@ Flutter commands:
 - stop trip;
 - query current recorder state;
 - stream/retrieve live summary/health;
-- recover existing active trip state.
+- recover existing active trip state;
+- retrieve pending finalized-trip metadata and verified chunk indexes;
+- acknowledge a pending finalization only after its local database transaction commits.
 
 Do not require Flutter to remain alive to preserve raw acquisition.
 
@@ -86,7 +88,15 @@ Chunk encoding version 1 is self-describing and declares telemetry schema versio
 
 Completed chunks are atomically replaced with Android `AtomicFile` under `noBackupFilesDir/recorder/trips/<trip-id>/chunks/<sequence>.tlxc`. Recovery scans and verifies self-describing files to continue after the highest observed sequence and last valid committed elapsed boundary. Corrupt, truncated, unknown-version, misnamed, out-of-order, and orphaned writes are isolated from the valid catalog and are never overwritten as recovered evidence.
 
-Buffer health is internal and privacy-safe: it exposes state, bounded depths/capacities, counts, byte totals, sequence/boundary presence, isolated-file counts, and allowlisted errors, but no raw values, precise coordinates, vectors, timestamps, paths, or device identifiers. Native-to-Drift index reconciliation remains gated with M2.5 integration; database schema version 1 is unchanged and normal recording remains unavailable.
+Buffer health is internal and privacy-safe: it exposes state, bounded depths/capacities, counts, byte totals, sequence/boundary presence, isolated-file counts, and allowlisted errors, but no raw values, precise coordinates, vectors, timestamps, paths, or device identifiers. M2.7 finalization now reconciles the complete verified catalog into the existing Drift schema version 1 without changing the chunk encoding.
+
+### M2.7 finalization and recovery baseline
+
+Stop flushes acquisition and writes a versioned app-private pending-finalization record before active recovery metadata can be cleared. If process death interrupts Stop after that handoff, recovery completes finalization without restarting acquisition; without a handoff, the active trip remains explicitly recoverable.
+
+The bridge exposes lifecycle metadata, aggregate recovery/corruption evidence, and verified per-chunk index metadata with stable relative references under `recorder/trips/<trip-id>/chunks/`. It never exposes coordinates, vectors, raw sample timestamps, absolute paths, chunk contents, device identifiers, or exception text.
+
+Flutter reconciles each trip and its complete chunk catalog into Drift schema version 1 in one idempotent transaction, using a stable accountless placeholder vehicle until vehicle onboarding exists. Native pending metadata is acknowledged only after commit. Recovered, incomplete, corrupt, orphaned, misordered, and recorder-error outcomes remain explicit rather than appearing as an uninterrupted perfect trip.
 
 ## 6. Permissions
 
@@ -122,7 +132,9 @@ On app reopen:
 - detect active/recovered trip;
 - show recorder state;
 - avoid starting duplicate service/recording;
-- finalize recovered trip with appropriate quality flags if needed.
+- discover and transactionally reconcile pending finalizations;
+- finalize recovered trip with appropriate quality flags if needed;
+- acknowledge native pending metadata only after the verified local index commits.
 
 ## 10. Initial proof-of-concept gate
 

@@ -132,7 +132,14 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Replace the disabled Drive placeholder with accessible, low-distraction onboarding and native Start/Stop controls while keeping Flutter non-authoritative for recorder survival.
   - [x] Refresh permission/capability/recorder state after app resume and every request/command without auto-prompting at launch.
   - [x] Add pure native permission-decision tests, Dart bridge/provider tests, widget state tests, and a controlled physical-device denied→request→ready→recording→stopped→restored proof.
-- [ ] M2.7 Service recovery tests — gated on explicit approval after M2.6.
+- [x] M2.7 Service recovery tests — explicitly authorized and completed 2026-08-11.
+  - [x] Persist a versioned app-private pending-finalization record before active recovery metadata can be cleared, including interrupted Stop recovery without duplicating or resuming a finalized write stream.
+  - [x] Expose a strict finalization bridge contract containing trip lifecycle metadata, verified chunk index metadata, relative app-private storage references, aggregate corruption/recovery evidence, and no raw telemetry or absolute paths.
+  - [x] Reconcile each pending trip and its complete verified chunk catalog into existing Drift schema v1 in one idempotent transaction; acknowledge native pending metadata only after the transaction commits.
+  - [x] Keep incomplete/corrupt/recovered outcomes explicit through versioned completion, recovery, integrity, and quality fields so failure cannot masquerade as a perfect finalized trip.
+  - [x] Discover and reconcile pending finalizations on app reopen/resume and after Drive Stop while keeping native Kotlin authoritative for recorder survival.
+  - [x] Add deterministic lifecycle, codec/catalog, bridge/privacy, Drift rollback/idempotence, provider, and UI regression coverage.
+  - [x] Run controlled Tecno proofs for background/activity recreation, short screen lock, offline recording, GNSS loss/recovery, process/UI restart recovery, Stop finalization, local index visibility, and complete state restoration.
 - [ ] M2.8 First real-drive fixture — gated on explicit approval after M2.7.
 
 ## Tests / validation
@@ -169,6 +176,11 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - [x] M2.6 Android lint, Flutter format/analyze/tests, repository validation, instrumentation compilation, and debug/release builds.
 - [x] M2.6 controlled Tecno proof verifies contextual system-dialog launch, real MethodChannel readiness refresh, native Start/Stop, notification/service visibility, and complete permission/service/proof-data cleanup.
 - [x] Confirm M2.6 adds no background location, auto-prompt, unrelated permission, account/cloud/network behavior, wake lock, sensor/encoding change, database migration, third-party dependency, or M2.7 finalization/index work.
+- [x] M2.7 native tests cover pending-finalization atomicity, normal/error/recovered/stopping outcomes, corrupt/orphan catalog propagation, idempotent acknowledgement, and restart ordering.
+- [x] M2.7 Dart/Drift tests cover strict finalization parsing, atomic trip+chunk replacement, rollback without acknowledgement, idempotent replay, stable accountless vehicle ownership, and resume/Stop orchestration.
+- [x] M2.7 Android lint, Flutter format/analyze/tests, repository validation, generated-source verification, instrumentation compilation, and debug/release builds.
+- [x] M2.7 controlled Tecno proof covers offline, GNSS loss/recovery, background, activity recreation, short screen lock, process/UI restart, and exact-UUID finalization/index cleanup without exposing raw telemetry.
+- [x] Confirm M2.7 adds no schema migration, dependency, network/cloud behavior, wake lock, sensor/chunk encoding change, retention default, telemetry decode/analysis, or M2.8 fixture work.
 
 ## Acceptance criteria
 
@@ -233,6 +245,17 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Permission payloads contain only booleans, version/state labels, and platform API level—never coordinates, sensor evidence, paths, device identifiers, or exception text.
 - M2.7 finalization/index reconciliation remains unavailable and is described honestly; M2.6 changes no schema, chunk, sensor, network, account, retention, wake-lock, or dependency contract.
 
+### M2.7
+
+- Stop flushes native acquisition before a pending-finalization record is durably written, and active recovery metadata is not cleared unless that handoff is recoverable after process death.
+- An interrupted Stop with a durable pending handoff completes without restarting acquisition; a recording without such a handoff remains recoverable and does not silently lose its lifecycle.
+- Finalization scans and verifies the native catalog again. Only complete verified chunks enter Drift; corrupt, orphaned, misordered, missing, or recorder-error evidence remains explicit in the trip completion/integrity/quality state.
+- The Flutter bridge exposes no coordinates, vectors, raw sample timestamps, absolute filesystem paths, device identifiers, or exception text. Chunk storage references are stable relative identifiers rooted under the app-private recorder namespace.
+- Drift creates or updates the accountless local trip and replaces its verified `trip_chunks` index in one transaction using schema version 1. Replay after a crash is idempotent, and a failed transaction leaves the native pending record unacknowledged.
+- Native pending metadata is acknowledged only after Drift commit; raw chunk files remain app-private and retained for M2.8 export/replay work.
+- App reopen/resume and Drive Stop discover pending work without making Flutter authoritative for service lifetime. A recovery or quality limitation is never presented as a perfect uninterrupted trip.
+- M2.7 changes no database schema, raw telemetry/chunk encoding, sample rate, wake behavior, permission, network/account/cloud behavior, dependency, retention default, or M2.8 fixture contract.
+
 ### M2 milestone
 
 - A normal 30–60 minute physical drive records synchronized raw GNSS/IMU with the screen locked.
@@ -266,6 +289,8 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - M2.6 uses platform permission APIs directly rather than adding a permission dependency. The native contract persists only whether each contextual prompt has previously been attempted so `shouldShowRequestPermissionRationale` can distinguish a first request from settings-required denial.
 - Fine and coarse location are requested together because Android 12+ may ignore a fine-only request and can grant approximate-only access. Background location is unnecessary for this user-initiated, visible-activity start followed by the declared location foreground service, so it is not added.
 - Notification permission is requested only on Android 13+ and does not gate `recordingAvailable`; without it, Android still permits the foreground service but may show its notice only in system task-management surfaces rather than the notification drawer.
+- M2.7 uses an atomic native pending-finalization handoff before clearing active recovery metadata. Drift consumes the handoff transactionally and acknowledges it afterward, making either side of a process crash safely replayable without exposing absolute private paths.
+- Schema v1 requires every trip to reference a vehicle. Until vehicle onboarding exists, finalized accountless recorder trips use one stable local placeholder vehicle row that is inserted only when absent and remains replaceable by later user-facing vehicle assignment.
 
 ## Progress log
 
@@ -282,6 +307,8 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - 2026-08-11: M2.6 explicitly authorized. Official Android foreground-service, approximate/precise location, and notification rules were rechecked; implementation is limited to contextual permission state/requests, readiness refresh, Drive Start/Stop orchestration, and their local/device gates.
 - 2026-08-11: The first M2.6 UI recording exposed 24,066 one-sample chunk files, proving continuous horizon-cleared evidence bypassed the existing one-second/256-sample grouping intent. The proof stopped safely and deleted its sole UUID-validated trip. The writer now stages horizon-cleared evidence into a separately bounded output batch; regression tests cover continuous monotonic delivery and separation from the 1,024-entry reorder heap.
 - 2026-08-11: A corrected 20-second Tecno UI retry produced 21 active chunks and 27 after Stop flush. Two subsequent lifecycle proofs exposed and diagnosed an over-coupled staged/reorder bound, then the final proof passed real GNSS, dual IMU, activity/service recovery, backgrounding, and short screen-off survival. Final cleanup left zero services, recovery metadata, proof trips, test APKs, or temporary permission grants.
+- 2026-08-11: M2.7 explicitly authorized. Scope is limited to crash-safe Stop/finalization handoff, verified native-to-Drift schema-v1 reconciliation, recovery/failure regression coverage, and controlled lifecycle/device proofs; M2.8 remains unauthorized.
+- 2026-08-11: M2.7 implementation, local gates, and controlled Tecno proofs passed. The device survived real GNSS/dual-IMU activity/service recovery, background and short screen-off transitions, a verified no-default-network window, GNSS disable/restore, and force-stop/cold-relaunch Stop finalization. The exact UUID committed as `completed`/`recovered` with 577 indexed chunks, then cleanup deleted only its row/index/files and restored the phone's original state.
 
 ## Completion summary
 
@@ -309,4 +336,8 @@ M2.6 adds a dependency-free, versioned Android permission-readiness contract; co
 
 Validation passed: pure permission evaluation/privacy tests, continuous-stream chunk-batching regressions, all native tests, instrumentation compilation, Android lint, Dart formatting, Flutter analysis, all 66 Flutter tests, repository validation, generated-source verification, and debug/release APK builds. The controlled Android 14 Tecno LH8n proof traversed denied → contextual location/notification dialogs → ready → UI Start/Stop, verified foreground service/notification visibility and bounded chunk creation, then passed real GNSS, dual IMU, activity/service recovery, backgrounding, and a short screen-off interval. Cleanup left no service, recovery metadata, proof trip, test APK, or temporary permission grants.
 
-Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, process/device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, native-to-Drift finalization/index reconciliation, or a production retention default. Those remain in M2.7–M2.8 or later, and M2.7 requires explicit authorization.
+M2.7 adds a versioned atomic pending-finalization handoff, privacy-safe verified-catalog bridge contract, and idempotent Drift schema-v1 trip/chunk transaction with acknowledgement only after commit. App reopen/resume and Drive Stop discover pending work; recovered and incomplete evidence stays explicit. No schema, encoding, sensor-rate, permission, network/cloud, wake-lock, dependency, or retention-default contract changed.
+
+Validation passed: pending-record/codec/evaluator/catalog/bridge/restart native tests; strict parser, Drift rollback/idempotence/ownership, provider/reconciler, and UI success/failure tests; all native tests; instrumentation compilation; Android lint; Dart formatting; Flutter analysis; all 79 Flutter tests; repository validation; generated-source/schema verification; and debug/release APK builds. Controlled Android 14 Tecno proofs passed real sensor capture, activity/service recovery, backgrounding, short screen-off, full offline recording, GNSS loss/restoration, force-stop/cold-relaunch recovery, UI finalization, and an exact-UUID read-only Drift verification of `completed`/`recovered`/`unassessed` with 577 indexed chunks. UUID-scoped cleanup and a final snapshot confirmed original connectivity, denied temporary permissions, asleep screen state, zero recorder services/test packages, and no proof files/finalization artifact.
+
+Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, export/replay of a physical-drive fixture, or a production retention default. Those remain in M2.8 or later, and M2.8 requires explicit authorization.

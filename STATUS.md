@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M2 active — M2.6 complete; awaiting explicit authorization for M2.7**
+**M2 active — M2.7 complete; awaiting explicit authorization for M2.8**
 
 ## Working
 
@@ -43,10 +43,13 @@
 - The M2.5 physical proof exercised bridge start/status/recover/stop with real GNSS, dual IMU, durable chunks, service recovery, backgrounding, and a short screen-off interval; normal Flutter launch then displayed `Recorder bridge_ready` through the real MethodChannel. Cleanup left zero recorder services/proof files and denied temporary permissions.
 - M2.6 provides a versioned permission-readiness contract, explicit fine+coarse while-in-use location and Android 13+ notification requests, approximate/denied/GPS-disabled settings recovery, resume refresh, and large Drive Start/Stop controls without auto-prompting or background-location access.
 - The M2.6 Tecno proof traversed denied → contextual system dialogs → ready → recording → stopped through the real Flutter/MethodChannel UI, then passed native GNSS/dual-IMU/chunk recovery, background, and short screen-off checks. Cleanup left no service, recovery metadata, proof trips, test APK, or temporary grants.
+- M2.7 adds an atomic native pending-finalization handoff, strict privacy-safe finalization bridge payloads, and an idempotent Drift schema-v1 transaction that writes one accountless trip plus its complete verified chunk index before native acknowledgement.
+- Recovered, incomplete, corrupt, orphaned, misordered, and recorder-error outcomes remain explicit through versioned completion/recovery/integrity/quality fields; raw telemetry and absolute private paths do not cross the bridge.
+- The M2.7 Tecno proof passed real GNSS/dual-IMU capture, activity/service recovery, background and short screen-off survival, verified offline recording, GNSS loss/restoration, force-stop/cold-relaunch recovery, UI Stop finalization, and an exact-UUID Drift check of 577 indexed chunks. Cleanup restored original connectivity, denied permissions, asleep screen state, zero services/test packages, and removed only the proof UUID.
 
 ## Partial
 
-- Recorder lifecycle, GNSS/IMU acquisition, native durable chunks, Flutter health/commands, contextual permission onboarding, and Drive Start/Stop are operational. Native-to-Drift finalization/index reconciliation and broader recovery/finalization tests remain pending, so recorded evidence is not yet presented as a finalized trip.
+- Recorder lifecycle, GNSS/IMU acquisition, native durable chunks, Flutter health/commands, contextual permission onboarding, Drive Start/Stop, crash-safe finalization, and verified Drift chunk indexing are operational. The first privacy-safe real-drive fixture/export/replay proof remains pending in M2.8.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -69,7 +72,7 @@
 - The centralized M1.1 palette is intentionally evolvable pending broader visual prototyping; consumers use semantic names rather than raw colors.
 - Unknown or partial schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair; any real occurrence will require an explicit recovery/export path.
 - Android background/foreground-service behavior across OS versions/OEMs.
-- M2.1–M2.6 physical validation proves contextual permission/UI orchestration plus a short lifecycle/recovery, stationary real-GPS, dual-IMU, and bounded durable-chunk sequence on one Android 14 OEM device, not yet a 30–60 minute locked-screen recording, deep-sleep/reboot recovery, battery behavior, vibration quality, or multi-version/OEM reliability.
+- M2.1–M2.7 physical validation proves contextual permission/UI orchestration, short lifecycle/process recovery, offline and GNSS-loss survival, stationary real-GPS/dual-IMU capture, durable chunks, and exact-UUID finalization/index cleanup on one Android 14 OEM device. It does not yet prove a 30–60 minute locked-screen drive, deep-sleep/device-reboot recovery, battery behavior, vibration quality, or multi-version/OEM reliability.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -78,4 +81,4 @@
 
 ## Current step
 
-**M2.7 — Service recovery tests:** pending explicit user authorization; do not begin until approved.
+**M2.8 — First real-drive fixture:** pending explicit user authorization; do not begin until approved.

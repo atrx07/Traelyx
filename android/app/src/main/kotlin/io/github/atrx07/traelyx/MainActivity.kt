@@ -52,7 +52,14 @@ class MainActivity : FlutterActivity() {
                     result.success(permissionGateway.snapshot().toMap())
                 }
                 else ->
-                    when (val dispatched = recorderDispatcher.dispatch(call.method)) {
+                    when (
+                        val dispatched =
+                            recorderDispatcher.dispatch(
+                                call.method,
+                                @Suppress("UNCHECKED_CAST")
+                                (call.arguments as? Map<String, Any?>),
+                            )
+                    ) {
                         is RecorderBridgeDispatchResult.Handled -> result.success(dispatched.payload)
                         RecorderBridgeDispatchResult.NotImplemented -> result.notImplemented()
                     }

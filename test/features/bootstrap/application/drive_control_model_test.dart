@@ -91,7 +91,7 @@ void main() {
     expect(model.actionLabel, 'Stop drive');
   });
 
-  test('a recorder error fails closed', () {
+  test('a recorder error can finalize only verified preserved evidence', () {
     final model = DriveControlModel.from(
       permissions: _permissions(
         locationState: RecorderPermissionState.granted,
@@ -103,8 +103,8 @@ void main() {
       recorder: _recorder(state: 'error'),
     );
 
-    expect(model.action, DrivePrimaryAction.none);
-    expect(model.actionLabel, 'Start unavailable');
+    expect(model.action, DrivePrimaryAction.stopTrip);
+    expect(model.actionLabel, 'Finalize drive');
   });
 
   test('a stopping recorder disables repeated commands', () {

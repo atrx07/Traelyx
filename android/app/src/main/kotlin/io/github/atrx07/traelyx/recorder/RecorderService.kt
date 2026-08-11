@@ -29,6 +29,7 @@ import java.util.UUID
  */
 class RecorderService : Service() {
     private lateinit var coordinator: RecorderLifecycleCoordinator
+    private lateinit var finalizationStore: RecorderFinalizationStore
     private var promotedToForeground = false
     private var gnssAcquisition: AndroidGnssAcquisition? = null
     private var imuAcquisition: AndroidImuAcquisition? = null
@@ -39,6 +40,7 @@ class RecorderService : Service() {
         super.onCreate()
         serviceCreated = true
         coordinator = coordinator(applicationContext)
+        finalizationStore = AtomicRecorderFinalizationStore(applicationContext)
         ensureNotificationChannel()
     }
 
@@ -111,6 +113,11 @@ class RecorderService : Service() {
     }
 
     private fun handleRecovery(startId: Int): Int {
+        val current = coordinator.query()
+        val pending = current.tripId?.let(finalizationStore::load)
+        if (current.lifecycleState == RecorderLifecycleState.STOPPING || pending != null) {
+            return completePendingStop(current, pending, startId)
+        }
         val outcome = coordinator.recover()
         if (!outcome.snapshot.isActive || outcome.kind == RecorderLifecycleOutcomeKind.REJECTED) {
             stopSelf(startId)
@@ -149,6 +156,11 @@ class RecorderService : Service() {
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
+        if (!persistPendingFinalization(current)) {
+            coordinator.markError("finalization_persistence_failed")
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
         val stopping = coordinator.beginStop()
         if (stopping.kind == RecorderLifecycleOutcomeKind.REJECTED) {
             stopForegroundAndSelf(startId)
@@ -161,6 +173,51 @@ class RecorderService : Service() {
         coordinator.completeStop()
         stopSelf(startId)
         return START_NOT_STICKY
+    }
+
+    private fun completePendingStop(
+        current: RecorderStateSnapshot,
+        pending: PendingTripFinalizationRecord?,
+        startId: Int,
+    ): Int {
+        if (!stopAcquisition()) {
+            coordinator.markError("chunk_flush_failed")
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
+        if (pending == null && !persistPendingFinalization(current)) {
+            coordinator.markError("finalization_persistence_failed")
+            stopForegroundAndSelf(startId)
+            return START_NOT_STICKY
+        }
+        if (current.lifecycleState != RecorderLifecycleState.STOPPING) {
+            val stopping = coordinator.beginStop()
+            if (stopping.kind == RecorderLifecycleOutcomeKind.REJECTED) {
+                stopForegroundAndSelf(startId)
+                return START_NOT_STICKY
+            }
+        }
+        coordinator.completeStop()
+        stopForegroundAndSelf(startId)
+        return START_NOT_STICKY
+    }
+
+    private fun persistPendingFinalization(snapshot: RecorderStateSnapshot): Boolean {
+        val tripId = snapshot.tripId ?: return true
+        val startedAtWall = snapshot.startedAtUtcEpochMillis ?: return false
+        val startedAtElapsed = snapshot.startedAtElapsedRealtimeNanos ?: return false
+        finalizationStore.load(tripId)?.let { return true }
+        val stoppedAtWall = System.currentTimeMillis()
+        return finalizationStore.save(
+            PendingTripFinalizationRecord(
+                tripId = tripId,
+                startedAtUtcEpochMillis = startedAtWall,
+                startedAtElapsedRealtimeNanos = startedAtElapsed,
+                stoppedAtUtcEpochMillis = stoppedAtWall,
+                recoveryCount = snapshot.recoveryCount,
+                recorderErrorCode = snapshot.errorCode,
+            ),
+        )
     }
 
     private fun startGnssAcquisition(snapshot: RecorderStateSnapshot): Boolean {
