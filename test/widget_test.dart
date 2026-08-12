@@ -38,6 +38,7 @@ void main() {
               invalidNativeRecordCount: 0,
             ),
           ),
+          latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
         ],
         child: const TraelyxApp(),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/core/database/database_providers.dart';
 import 'package:traelyx/core/database/recorder_finalization_repository.dart';
+import 'package:traelyx/core/database/trip_debug_export_repository.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_finalization.dart';
 
@@ -45,6 +46,39 @@ final recorderFinalizationSyncProvider =
           .reconcilePending();
     });
 
+final tripDebugExportRepositoryProvider = Provider<TripDebugExportRepository>((
+  ref,
+) {
+  return DriftTripDebugExportRepository(ref.watch(appDatabaseProvider));
+});
+
+final latestTripDebugExportTripIdProvider = FutureProvider<String?>((
+  ref,
+) async {
+  await ref.watch(recorderFinalizationSyncProvider.future);
+  return ref.watch(tripDebugExportRepositoryProvider).latestFinalizedTripId();
+});
+
+final recorderTripDebugExporterProvider = Provider<RecorderTripDebugExporter>((
+  ref,
+) {
+  return RecorderTripDebugExportController(ref.watch(recorderBridgeProvider));
+});
+
+abstract interface class RecorderTripDebugExporter {
+  Future<TripDebugExportResult> exportTrip(String tripId);
+}
+
+class RecorderTripDebugExportController implements RecorderTripDebugExporter {
+  const RecorderTripDebugExportController(this._bridge);
+
+  final RecorderBridge _bridge;
+
+  @override
+  Future<TripDebugExportResult> exportTrip(String tripId) =>
+      _bridge.exportTripDebug(tripId);
+}
+
 final recorderCommandControllerProvider = Provider<RecorderCommands>((ref) {
   return RecorderCommandController(ref);
 });
@@ -70,16 +104,24 @@ class RecorderCommandController implements RecorderCommands {
   Future<RecorderStatus> stopTrip() async {
     final bridge = _ref.read(recorderBridgeProvider);
     final beforeStop = await bridge.getStatus();
-    await bridge.stopTrip();
-    final tripId = beforeStop.lifecycle.tripId;
-    if (tripId != null) {
-      await _ref
-          .read(recorderFinalizationReconcilerProvider)
-          .reconcileAfterStop(tripId);
+    try {
+      await bridge.stopTrip();
+      final tripId = beforeStop.lifecycle.tripId;
+      if (tripId != null) {
+        await _ref
+            .read(recorderFinalizationReconcilerProvider)
+            .reconcileAfterStop(tripId);
+      }
+      return await bridge.getStatus();
+    } finally {
+      if (_ref.exists(recorderFinalizationSyncProvider)) {
+        _ref.invalidate(recorderFinalizationSyncProvider);
+      }
+      if (_ref.exists(latestTripDebugExportTripIdProvider)) {
+        _ref.invalidate(latestTripDebugExportTripIdProvider);
+      }
+      _refresh();
     }
-    final status = await bridge.getStatus();
-    _refresh();
-    return status;
   }
 
   @override

@@ -61,3 +61,5 @@ key.properties
 ml/data/private/
 ml/checkpoints/
 *.tripdebug.private
+*.tripdebug
+!tests/fixtures/**/*.tripdebug

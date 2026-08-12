@@ -18,7 +18,7 @@ class RecorderFinalizationReconciler {
     required RecorderBridge bridge,
     required RecorderFinalizationRepository repository,
     Future<void> Function(Duration) delay = Future<void>.delayed,
-    int stopPollAttempts = 50,
+    int stopPollAttempts = 150,
     Duration stopPollInterval = const Duration(milliseconds: 100),
   }) : this._(bridge, repository, delay, stopPollAttempts, stopPollInterval);
 

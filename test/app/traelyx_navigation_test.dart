@@ -151,6 +151,7 @@ Future<void> _pumpApp(
             invalidNativeRecordCount: 0,
           ),
         ),
+        latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
       ],
       child: TraelyxApp(router: router),
     ),

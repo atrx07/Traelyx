@@ -150,6 +150,41 @@ void main() {
     );
   });
 
+  test(
+    'trip-debug export parser preserves privacy-safe aggregate evidence',
+    () {
+      final result = TripDebugExportResult.fromMap(tripDebugExportMap);
+
+      expect(result.exported, isTrue);
+      expect(result.tripId, tripId);
+      expect(result.privacyClass, 'precise_private');
+      expect(result.containsPreciseLocation, isTrue);
+      expect(result.chunkCount, 12);
+      expect(result.maxGnssGapNanos, 1100000000);
+    },
+  );
+
+  test('trip-debug export parser rejects unsafe or inconsistent results', () {
+    final unsafe = <Object?, Object?>{
+      ...tripDebugExportMap,
+      'privacyClass': 'public_anonymized',
+    };
+    final inconsistent = <Object?, Object?>{
+      ...tripDebugExportMap,
+      'exported': true,
+      'errorCode': 'export_failed',
+    };
+
+    expect(
+      () => TripDebugExportResult.fromMap(unsafe),
+      throwsA(isA<FormatException>()),
+    );
+    expect(
+      () => TripDebugExportResult.fromMap(inconsistent),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
   test('finalization parser rejects absolute paths and malformed evidence', () {
     final invalid = Map<Object?, Object?>.from(finalizationBatchMap);
     final item = Map<Object?, Object?>.from(
@@ -229,6 +264,7 @@ void main() {
               'errorCode': null,
             };
           }
+          if (call.method == 'exportTripDebug') return tripDebugExportMap;
           return statusMap;
         });
     const bridge = RecorderBridge(channel: channel);
@@ -245,6 +281,7 @@ void main() {
     await bridge.stopTrip();
     await bridge.getPendingFinalizations();
     await bridge.acknowledgeTripFinalization(tripId);
+    await bridge.exportTripDebug(tripId);
 
     expect(methods, [
       'getCapabilities',
@@ -259,6 +296,7 @@ void main() {
       'stopTrip',
       'getPendingFinalizations',
       'acknowledgeTripFinalization',
+      'exportTripDebug',
     ]);
   });
 
@@ -309,6 +347,26 @@ const permissionStatusMap = <Object?, Object?>{
 };
 
 const tripId = 'd181f268-f3ef-4a43-a142-8bf0671dcd49';
+
+const tripDebugExportMap = <Object?, Object?>{
+  'contractVersion': 1,
+  'archiveVersion': 1,
+  'tripId': tripId,
+  'exported': true,
+  'containsPreciseLocation': true,
+  'privacyClass': 'precise_private',
+  'chunkCount': 12,
+  'gnssSampleCount': 10,
+  'accelerometerSampleCount': 100,
+  'gyroscopeSampleCount': 100,
+  'durationNanos': 10000000000,
+  'archiveByteLength': 40960,
+  'maxChunkGapNanos': 1000000,
+  'maxGnssGapNanos': 1100000000,
+  'maxAccelerometerGapNanos': 12000000,
+  'maxGyroscopeGapNanos': 12000000,
+  'errorCode': null,
+};
 
 const finalizationBatchMap = <Object?, Object?>{
   'contractVersion': 1,

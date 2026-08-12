@@ -2,6 +2,11 @@ import 'package:drift/drift.dart';
 
 const _bootstrapV1Tables = {'app_settings'};
 
+// Android's SQLite stack may create this platform-owned locale metadata table.
+// It is not part of Traelyx's product schema and must never trigger a data
+// rewrite or be treated as an application table.
+const _platformMetadataTables = {'android_metadata'};
+
 const _completeV1Tables = {
   'app_settings',
   'driver_baselines',
@@ -36,7 +41,10 @@ Future<void> migrateRecognizedDevelopmentSchemas(
         "AND name NOT LIKE 'sqlite_%' ORDER BY name",
       )
       .get();
-  final tableNames = tableRows.map((row) => row.read<String>('name')).toSet();
+  final discoveredTableNames = tableRows
+      .map((row) => row.read<String>('name'))
+      .toSet();
+  final tableNames = discoveredTableNames.difference(_platformMetadataTables);
 
   if (_sameSet(tableNames, _completeV1Tables)) {
     return;
@@ -52,7 +60,8 @@ Future<void> migrateRecognizedDevelopmentSchemas(
 
   throw StateError(
     'Unrecognized Traelyx schema shape for SQLite user version 1. '
-    'Refusing an implicit repair so local data remains auditable.',
+    'Refusing an implicit repair so local data remains auditable. '
+    'Found application tables: ${tableNames.toList()..sort()}.',
   );
 }
 

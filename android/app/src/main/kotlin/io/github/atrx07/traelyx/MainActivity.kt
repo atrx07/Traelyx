@@ -1,6 +1,8 @@
 package io.github.atrx07.traelyx
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
@@ -9,15 +11,27 @@ import io.github.atrx07.traelyx.diagnostics.DiagnosticsContract
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsSnapshotCollector
 import io.github.atrx07.traelyx.recorder.AndroidRecorderBridgeGateway
 import io.github.atrx07.traelyx.recorder.AndroidRecorderPermissionGateway
+import io.github.atrx07.traelyx.recorder.AtomicRecorderFinalizationStore
 import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatchResult
 import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatcher
 import io.github.atrx07.traelyx.recorder.RecorderContract
 import io.github.atrx07.traelyx.recorder.RecorderService
+import io.github.atrx07.traelyx.recorder.PreparedTripDebugExport
+import io.github.atrx07.traelyx.recorder.TripDebugArchiveExporter
+import io.github.atrx07.traelyx.recorder.TripDebugPreparationResult
+import io.github.atrx07.traelyx.recorder.toBridgeMap
+import io.github.atrx07.traelyx.recorder.tripDebugExportFailureMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : FlutterActivity() {
     private val permissionGateway by lazy { AndroidRecorderPermissionGateway(this) }
     private var pendingLocationResult: MethodChannel.Result? = null
     private var pendingNotificationResult: MethodChannel.Result? = null
+    private var pendingTripDebugResult: MethodChannel.Result? = null
+    private var pendingTripDebugTripId: String? = null
+    private var preparedTripDebugExport: PreparedTripDebugExport? = null
+    private val tripDebugExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onPostResume() {
         super.onPostResume()
@@ -51,6 +65,8 @@ class MainActivity : FlutterActivity() {
                     permissionGateway.openLocationSettings()
                     result.success(permissionGateway.snapshot().toMap())
                 }
+                RecorderContract.EXPORT_TRIPDEBUG ->
+                    beginTripDebugExport(call.argument<String>("tripId"), result)
                 else ->
                     when (
                         val dispatched =
@@ -77,6 +93,129 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    private fun beginTripDebugExport(
+        tripId: String?,
+        result: MethodChannel.Result,
+    ) {
+        if (pendingTripDebugResult != null) {
+            result.success(tripDebugExportFailureMap(tripId, "export_in_progress"))
+            return
+        }
+        if (tripId == null) {
+            result.success(tripDebugExportFailureMap(null, "export_invalid_trip_id"))
+            return
+        }
+        val lifecycle = RecorderService.queryState(applicationContext)
+        if (lifecycle.isActive) {
+            result.success(tripDebugExportFailureMap(tripId, "export_recorder_active"))
+            return
+        }
+        if (AtomicRecorderFinalizationStore(applicationContext).load(tripId) != null) {
+            result.success(tripDebugExportFailureMap(tripId, "export_finalization_pending"))
+            return
+        }
+        pendingTripDebugResult = result
+        pendingTripDebugTripId = tripId
+        tripDebugExecutor.execute {
+            val preparation = TripDebugArchiveExporter(applicationContext).prepare(tripId)
+            runOnUiThread {
+                if (pendingTripDebugResult == null || isDestroyed) {
+                    if (preparation is TripDebugPreparationResult.Success) {
+                        preparation.prepared.deleteTemporaryFile()
+                    }
+                    return@runOnUiThread
+                }
+                when (preparation) {
+                    is TripDebugPreparationResult.Failure -> {
+                        pendingTripDebugResult?.success(
+                            tripDebugExportFailureMap(tripId, preparation.errorCode),
+                        )
+                        pendingTripDebugResult = null
+                        pendingTripDebugTripId = null
+                    }
+                    is TripDebugPreparationResult.Success -> {
+                        preparedTripDebugExport = preparation.prepared
+                        val intent =
+                            Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "application/octet-stream"
+                                putExtra(Intent.EXTRA_TITLE, preparation.prepared.suggestedFileName)
+                            }
+                        try {
+                            startActivityForResult(intent, TRIPDEBUG_EXPORT_REQUEST_CODE)
+                        } catch (_: Exception) {
+                            completeTripDebugExport(false, "export_picker_unavailable")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Android platform API; retained for FlutterActivity compatibility")
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != TRIPDEBUG_EXPORT_REQUEST_CODE) return
+        if (resultCode != Activity.RESULT_OK || data?.data == null) {
+            completeTripDebugExport(false, "export_cancelled")
+            return
+        }
+        val target = requireNotNull(data.data)
+        val prepared = preparedTripDebugExport
+        if (prepared == null) {
+            completeTripDebugExport(false, "export_preparation_missing")
+            return
+        }
+        tripDebugExecutor.execute {
+            val written =
+                runCatching {
+                    contentResolver.openOutputStream(target, "w")?.use(prepared::copyTo) != null
+                }.getOrDefault(false)
+            runOnUiThread {
+                completeTripDebugExport(
+                    exported = written,
+                    errorCode = if (written) null else "export_write_failed",
+                )
+            }
+        }
+    }
+
+    private fun completeTripDebugExport(
+        exported: Boolean,
+        errorCode: String?,
+    ) {
+        val prepared = preparedTripDebugExport
+        val payload =
+            if (prepared != null) {
+                prepared.inspection.toBridgeMap(exported = exported, errorCode = errorCode)
+            } else {
+                tripDebugExportFailureMap(pendingTripDebugTripId, errorCode ?: "export_failed")
+            }
+        pendingTripDebugResult?.success(payload)
+        pendingTripDebugResult = null
+        pendingTripDebugTripId = null
+        prepared?.deleteTemporaryFile()
+        preparedTripDebugExport = null
+    }
+
+    override fun onDestroy() {
+        runCatching {
+            pendingTripDebugResult?.success(
+                tripDebugExportFailureMap(pendingTripDebugTripId, "export_activity_destroyed"),
+            )
+        }
+        pendingTripDebugResult = null
+        pendingTripDebugTripId = null
+        preparedTripDebugExport?.deleteTemporaryFile()
+        preparedTripDebugExport = null
+        tripDebugExecutor.shutdownNow()
+        super.onDestroy()
     }
 
     private fun requestLocation(result: MethodChannel.Result) {
@@ -136,5 +275,6 @@ class MainActivity : FlutterActivity() {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 7302
         private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 7303
+        private const val TRIPDEBUG_EXPORT_REQUEST_CODE = 7308
     }
 }

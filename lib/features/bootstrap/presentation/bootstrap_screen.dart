@@ -17,6 +17,7 @@ class BootstrapScreen extends ConsumerStatefulWidget {
 class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     with WidgetsBindingObserver {
   bool _actionInProgress = false;
+  bool _exportInProgress = false;
   String? _actionError;
   String? _actionSuccess;
 
@@ -46,6 +47,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     final permissions = ref.watch(recorderPermissionStatusProvider);
     final recorder = ref.watch(recorderStatusProvider);
     final finalization = ref.watch(recorderFinalizationSyncProvider);
+    final latestExportTripId = ref.watch(latestTripDebugExportTripIdProvider);
     final colors = context.traelyxColors;
 
     return SafeArea(
@@ -79,6 +81,12 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
               const SizedBox(height: TraelyxSpacing.md),
               _DriveCard(permissions: permissions, recorder: recorder),
               _FinalizationCard(finalization: finalization),
+              _TripDebugExportCard(
+                latestTripId: latestExportTripId,
+                recorder: recorder,
+                exportInProgress: _exportInProgress,
+                onExport: _runTripDebugExport,
+              ),
               const SizedBox(height: TraelyxSpacing.md),
               _NotificationCard(
                 permissions: permissions,
@@ -141,6 +149,43 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
         ),
       ),
     );
+  }
+
+  Future<void> _runTripDebugExport(String tripId) async {
+    if (_exportInProgress || _actionInProgress) return;
+    setState(() {
+      _exportInProgress = true;
+      _actionError = null;
+      _actionSuccess = null;
+    });
+    try {
+      final result = await ref
+          .read(recorderTripDebugExporterProvider)
+          .exportTrip(tripId);
+      if (!mounted) return;
+      setState(() {
+        if (result.exported) {
+          _actionSuccess =
+              'Private fixture exported and verified (${result.chunkCount} chunks).';
+        } else if (result.errorCode == 'export_cancelled') {
+          _actionSuccess = 'Export cancelled. No file was written.';
+        } else {
+          _actionError = 'The private fixture could not be exported safely.';
+        }
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _actionError = 'The private fixture could not be exported safely.';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _exportInProgress = false;
+        });
+      }
+    }
   }
 
   Future<void> _runPrimaryAction(DrivePrimaryAction action) async {
@@ -438,6 +483,66 @@ class _FinalizationCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _TripDebugExportCard extends StatelessWidget {
+  const _TripDebugExportCard({
+    required this.latestTripId,
+    required this.recorder,
+    required this.exportInProgress,
+    required this.onExport,
+  });
+
+  final AsyncValue<String?> latestTripId;
+  final AsyncValue<RecorderStatus> recorder;
+  final bool exportInProgress;
+  final ValueChanged<String> onExport;
+
+  @override
+  Widget build(BuildContext context) {
+    final tripId = latestTripId.valueOrNull;
+    final recorderStatus = recorder.valueOrNull;
+    if (tripId == null ||
+        recorderStatus == null ||
+        recorderStatus.lifecycle.active) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: TraelyxSpacing.md),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(TraelyxSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _StatusRow(
+                icon: Icons.lock_outline,
+                color: context.traelyxColors.caution,
+                title: 'Export private drive fixture',
+                detail:
+                    'The .tripdebug file contains the exact route and raw motion. '
+                    'Save it only somewhere private.',
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
+              OutlinedButton.icon(
+                key: const ValueKey('tripdebug-export-action'),
+                onPressed: exportInProgress ? null : () => onExport(tripId),
+                icon: exportInProgress
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.file_download_outlined),
+                label: Text(
+                  exportInProgress ? 'Verifying…' : 'Export private .tripdebug',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

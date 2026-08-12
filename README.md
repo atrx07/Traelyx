@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0 and M1 are complete. M2 is active and M2.7 service recovery/finalization is complete; development is stopped at the approval gate before M2.8. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history without an account or network. The first 30–60 minute real-drive fixture remains pending.
+Milestones M0 and M1 are complete. M2 is active and M2.8 first real-drive fixture work was authorized on 2026-08-12. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history without an account or network. The versioned local-private export/inspection path is implemented and device-validated; a clean rehearsal and the formal 30–60 minute locked-screen drive proof remain in progress.
 
 ## Roadmap
 
@@ -22,7 +22,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M2.5 | Native Recording Engine | Flutter↔Kotlin bridge | ✅ Complete | Done | 2026-08-11 |
 | M2.6 | Native Recording Engine | Permissions/onboarding | ✅ Complete | Done | 2026-08-11 |
 | M2.7 | Native Recording Engine | Service recovery tests | ✅ Complete | Done | 2026-08-11 |
-| M2.8 | Native Recording Engine | First real-drive fixture | ⚪ Pending | ~1 day plus drive | — |
+| M2.8 | Native Recording Engine | First real-drive fixture | 🚧 In Progress | ~1 day plus drive | — |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | ⚪ Pending | ~1–2 weeks | — |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |
 | M5 | Experience & Replay | Product experience milestone | ⚪ Pending | ~1.5–2 weeks | — |

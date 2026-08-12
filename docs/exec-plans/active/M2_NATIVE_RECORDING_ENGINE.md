@@ -140,7 +140,14 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Discover and reconcile pending finalizations on app reopen/resume and after Drive Stop while keeping native Kotlin authoritative for recorder survival.
   - [x] Add deterministic lifecycle, codec/catalog, bridge/privacy, Drift rollback/idempotence, provider, and UI regression coverage.
   - [x] Run controlled Tecno proofs for background/activity recreation, short screen lock, offline recording, GNSS loss/recovery, process/UI restart recovery, Stop finalization, local index visibility, and complete state restoration.
-- [ ] M2.8 First real-drive fixture — gated on explicit approval after M2.7.
+- [ ] M2.8 First real-drive fixture — explicitly authorized 2026-08-12.
+  - [x] Define a dependency-free, versioned `.tripdebug` archive containing a minimal privacy-classified manifest and the original verified telemetry chunks without device identity or absolute paths.
+  - [x] Add deterministic archive inspection/replay validation for format/version, entry bounds, duplicate/path traversal rejection, chunk checksums/decoding, sequence/timeline ordering, and aggregate channel counts.
+  - [x] Add an explicit local Android document export that refuses active/corrupt/incomplete catalogs, self-inspects before success, warns that the private fixture contains a precise route, and performs no network access.
+  - [x] Add native bridge, Dart parsing/provider, UI, exporter, corruption/privacy, and external-fixture inspection coverage without changing raw chunk encoding, sensor rates, wake behavior, database schema, dependency set, or retention defaults.
+  - [ ] Run a short disposable Tecno rehearsal through UI Start, background/screen lock, Stop/finalize, document export, deterministic inspection, and UUID-scoped cleanup before handoff.
+  - [ ] Record one normal/legal 30–60 minute motorcycle trip with the phone secured in a pocket, app backgrounded, and screen locked; treat orientation as uncontrolled/body-relative and make no vehicle-frame/scoring claim.
+  - [ ] After return, verify exact-trip finalization, export and inspect the local-private fixture, record duration/channel/gap/corruption/restart/battery evidence, and keep precise route data out of Git and logs.
 
 ## Tests / validation
 
@@ -181,6 +188,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - [x] M2.7 Android lint, Flutter format/analyze/tests, repository validation, generated-source verification, instrumentation compilation, and debug/release builds.
 - [x] M2.7 controlled Tecno proof covers offline, GNSS loss/recovery, background, activity recreation, short screen lock, process/UI restart, and exact-UUID finalization/index cleanup without exposing raw telemetry.
 - [x] Confirm M2.7 adds no schema migration, dependency, network/cloud behavior, wake lock, sensor/chunk encoding change, retention default, telemetry decode/analysis, or M2.8 fixture work.
+- [ ] M2.8 archive/export unit tests, bridge/Dart/widget tests, external-fixture inspection, local gates, debug/release builds, and controlled Tecno rehearsal.
+- [ ] M2.8 30–60 minute locked-screen motorcycle proof and privacy-safe real-drive test record.
+- [ ] Confirm M2.8 adds no sensor/chunk encoding change, sample-rate/wake behavior, database migration, third-party dependency, network/cloud behavior, retention default, scoring/event logic, or mounted-orientation claim.
 
 ## Acceptance criteria
 
@@ -291,6 +301,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - Notification permission is requested only on Android 13+ and does not gate `recordingAvailable`; without it, Android still permits the foreground service but may show its notice only in system task-management surfaces rather than the notification drawer.
 - M2.7 uses an atomic native pending-finalization handoff before clearing active recovery metadata. Drift consumes the handoff transactionally and acknowledges it afterward, making either side of a process crash safely replayable without exposing absolute private paths.
 - Schema v1 requires every trip to reference a vehicle. Until vehicle onboarding exists, finalized accountless recorder trips use one stable local placeholder vehicle row that is inserted only when absent and remains replaceable by later user-facing vehicle assignment.
+- M2.8 archive version 1 stores the exact verified native chunk files in a deterministic ZIP with a minimal `precise_private` manifest and complete-file SHA-256 descriptors. Android and the independent host inspector fail closed on malformed structure, path traversal, sequence/version/order/count/checksum disagreement, or unsupported bounds.
+- Android's standard `android_metadata` table is platform-owned metadata, not a Traelyx schema object. Schema-v1 recognition excludes only that allowlisted name and continues to reject every other unexpected application table without implicit repair.
+- Drive Stop polling allows 15 seconds, exceeding the native writer's 10-second stop ceiling; status refresh happens in `finally`, and latest-export discovery awaits startup finalization reconciliation so delayed evidence cannot leave stale active/warning/export UI.
 
 ## Progress log
 
@@ -309,6 +322,9 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - 2026-08-11: A corrected 20-second Tecno UI retry produced 21 active chunks and 27 after Stop flush. Two subsequent lifecycle proofs exposed and diagnosed an over-coupled staged/reorder bound, then the final proof passed real GNSS, dual IMU, activity/service recovery, backgrounding, and short screen-off survival. Final cleanup left zero services, recovery metadata, proof trips, test APKs, or temporary permission grants.
 - 2026-08-11: M2.7 explicitly authorized. Scope is limited to crash-safe Stop/finalization handoff, verified native-to-Drift schema-v1 reconciliation, recovery/failure regression coverage, and controlled lifecycle/device proofs; M2.8 remains unauthorized.
 - 2026-08-11: M2.7 implementation, local gates, and controlled Tecno proofs passed. The device survived real GNSS/dual-IMU activity/service recovery, background and short screen-off transitions, a verified no-default-network window, GNSS disable/restore, and force-stop/cold-relaunch Stop finalization. The exact UUID committed as `completed`/`recovered` with 577 indexed chunks, then cleanup deleted only its row/index/files and restored the phone's original state.
+- 2026-08-12: M2.8 explicitly authorized. Preparation is limited to a versioned local `.tripdebug` archive/export/inspection path and a short Tecno rehearsal before handoff. The physical proof will be a normal 30–60 minute motorcycle drive with the phone pocket-carried; that validates recorder continuity and integrity, not mounted vehicle-frame dynamics or scoring.
+- 2026-08-12: The first M2.8 rehearsal exposed one shared database blocker: Android's standard `android_metadata` table made the exact schema-v1 recognizer reject an otherwise canonical database, so native recording/finalization succeeded but Drift indexing, the foundation card, and Stop UI completion failed. The recognizer now ignores only that platform table, delayed Stop handoff waits beyond the native writer ceiling, status refresh is unconditional, and export discovery awaits startup reconciliation; regression tests cover each boundary.
+- 2026-08-12: Two pending trips recovered transactionally after the fix. The later pocket-carried motorcycle recording exported as a verified 7,986,635-byte archive spanning 15m42.2s with 1,482 chunks, 941 GNSS, 189,149 accelerometer, and 189,140 gyroscope samples; maximum observed gaps were 1.573s GNSS, 14.9ms IMU, and 10.0ms between chunks. This remains diagnostic recovery evidence rather than the formal M2.8 proof. Device/host SHA-256 matched, only the isolated audit folder was removed from Downloads, then explicit app-data cleanup restored an empty, stopped, permission-denied Tecno baseline.
 
 ## Completion summary
 

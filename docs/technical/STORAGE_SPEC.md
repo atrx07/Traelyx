@@ -43,6 +43,8 @@ Chunk encoding version 1 carries telemetry schema version 1 and deterministic GN
 
 The native catalog verifies complete chunks independently and isolates corrupt, truncated, unknown-version, misnamed, out-of-order, and orphaned writes. Recovery advances beyond the highest observed filename and the last verified elapsed-time boundary so existing evidence is not overwritten. M2.7 now rescans and reconciles the complete verified catalog into the existing Drift `trips` and `trip_chunks` tables in one idempotent transaction, then acknowledges the app-private pending-finalization record. Schema version 1 and raw chunk encoding version 1 are unchanged; corrupt or incomplete evidence remains explicit and is never indexed as a perfect trip.
 
+M2.8 adds explicit user-directed `.tripdebug` export without changing the storage authority or retention default. Android creates a temporary deterministic archive in app cache, self-inspects it, copies it only to the user-selected document destination, and removes the temporary copy. The export remains precise-private and does not delete or replace the authoritative app-private chunks.
+
 ## 4. Compression
 
 Favor fast, deterministic, mobile-friendly compression/delta encoding. Measure CPU/battery tradeoff.

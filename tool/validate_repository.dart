@@ -14,6 +14,7 @@ const _textExtensions = {
   '.kt',
   '.md',
   '.properties',
+  '.py',
   '.txt',
   '.yaml',
   '.yml',
@@ -45,6 +46,13 @@ void main() {
         (name.startsWith('.env') && name != '.env.example') ||
         lowerPath.endsWith('/key.properties')) {
       failures.add('$normalizedPath: sensitive file must not be committed');
+      continue;
+    }
+
+    if (extension == '.tripdebug' && !lowerPath.contains('tests/fixtures/')) {
+      failures.add(
+        '$normalizedPath: precise/private trip archive must stay outside the repository',
+      );
       continue;
     }
 

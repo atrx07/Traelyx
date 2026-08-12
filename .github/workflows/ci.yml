@@ -53,6 +53,9 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Test trip-debug inspector
+        run: python -m unittest tests.tool.test_inspect_tripdebug
+
       - name: Validate repository contracts and secrets
         run: dart run tool/validate_repository.dart
 

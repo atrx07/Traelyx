@@ -193,6 +193,35 @@ void main() {
     expect(find.text('Recovered drive saved locally'), findsOneWidget);
     expect(find.textContaining('without uploading telemetry'), findsOneWidget);
   });
+
+  testWidgets('finalized drive offers explicit precise-private export', (
+    tester,
+  ) async {
+    final exporter = _FakeTripDebugExporter();
+    await _pumpDrive(
+      tester,
+      latestExportTripId: 'd181f268-f3ef-4a43-a142-8bf0671dcd49',
+      exporter: exporter,
+    );
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('tripdebug-export-action')),
+      240,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.drag(find.byType(ListView), const Offset(0, -360));
+    await tester.pumpAndSettle();
+    expect(find.text('Export private drive fixture'), findsOneWidget);
+    expect(find.textContaining('exact route and raw motion'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('tripdebug-export-action')));
+    await tester.pumpAndSettle();
+
+    expect(exporter.tripIds, ['d181f268-f3ef-4a43-a142-8bf0671dcd49']);
+    expect(
+      find.textContaining('Private fixture exported and verified'),
+      findsOneWidget,
+    );
+  });
 }
 
 Future<void> _pumpDrive(
@@ -201,6 +230,8 @@ Future<void> _pumpDrive(
   RecorderStatus? recorderStatus,
   _FakePermissionActions? permissions,
   _FakeRecorderCommands? commands,
+  String? latestExportTripId,
+  _FakeTripDebugExporter? exporter,
   Future<RecorderFinalizationSyncResult> Function()? finalizationFuture,
 }) async {
   final effectivePermissionStatus = permissionStatus ?? _permissionStatus();
@@ -231,6 +262,12 @@ Future<void> _pumpDrive(
                   invalidNativeRecordCount: 0,
                 ),
               ),
+        ),
+        latestTripDebugExportTripIdProvider.overrideWith(
+          (ref) async => latestExportTripId,
+        ),
+        recorderTripDebugExporterProvider.overrideWithValue(
+          exporter ?? _FakeTripDebugExporter(),
         ),
         recorderPermissionControllerProvider.overrideWithValue(
           permissions ?? _FakePermissionActions(effectivePermissionStatus),
@@ -274,6 +311,10 @@ Future<void> _pumpDriveWithPermissionFuture(
             reconciledTripIds: [],
             invalidNativeRecordCount: 0,
           ),
+        ),
+        latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
+        recorderTripDebugExporterProvider.overrideWithValue(
+          _FakeTripDebugExporter(),
         ),
         recorderPermissionControllerProvider.overrideWithValue(
           _FakePermissionActions(_permissionStatus()),
@@ -398,5 +439,33 @@ class _FakeRecorderCommands implements RecorderCommands {
   Future<RecorderStatus> stopTrip() async {
     calls.add('stopTrip');
     return status;
+  }
+}
+
+class _FakeTripDebugExporter implements RecorderTripDebugExporter {
+  final tripIds = <String>[];
+
+  @override
+  Future<TripDebugExportResult> exportTrip(String tripId) async {
+    tripIds.add(tripId);
+    return TripDebugExportResult.fromMap(<Object?, Object?>{
+      'contractVersion': 1,
+      'archiveVersion': 1,
+      'tripId': tripId,
+      'exported': true,
+      'containsPreciseLocation': true,
+      'privacyClass': 'precise_private',
+      'chunkCount': 12,
+      'gnssSampleCount': 10,
+      'accelerometerSampleCount': 100,
+      'gyroscopeSampleCount': 100,
+      'durationNanos': 10000000000,
+      'archiveByteLength': 40960,
+      'maxChunkGapNanos': 1000000,
+      'maxGnssGapNanos': 1100000000,
+      'maxAccelerometerGapNanos': 12000000,
+      'maxGyroscopeGapNanos': 12000000,
+      'errorCode': null,
+    });
   }
 }

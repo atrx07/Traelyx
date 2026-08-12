@@ -794,6 +794,94 @@ class RecorderStatus {
   final RecorderBufferHealth buffer;
 }
 
+class TripDebugExportResult {
+  const TripDebugExportResult({
+    required this.contractVersion,
+    required this.archiveVersion,
+    required this.tripId,
+    required this.exported,
+    required this.containsPreciseLocation,
+    required this.privacyClass,
+    required this.chunkCount,
+    required this.gnssSampleCount,
+    required this.accelerometerSampleCount,
+    required this.gyroscopeSampleCount,
+    required this.durationNanos,
+    required this.archiveByteLength,
+    required this.maxChunkGapNanos,
+    required this.maxGnssGapNanos,
+    required this.maxAccelerometerGapNanos,
+    required this.maxGyroscopeGapNanos,
+    required this.errorCode,
+  });
+
+  factory TripDebugExportResult.fromMap(Map<Object?, Object?> value) {
+    final result = TripDebugExportResult(
+      contractVersion: _requiredPositiveInt(value, 'contractVersion'),
+      archiveVersion: _requiredPositiveInt(value, 'archiveVersion'),
+      tripId: _requiredUuid(value, 'tripId'),
+      exported: _requiredBool(value, 'exported'),
+      containsPreciseLocation: _requiredBool(value, 'containsPreciseLocation'),
+      privacyClass: _requiredEnumString(value, 'privacyClass', const {
+        'precise_private',
+      }),
+      chunkCount: _requiredNonNegativeInt(value, 'chunkCount'),
+      gnssSampleCount: _requiredNonNegativeInt(value, 'gnssSampleCount'),
+      accelerometerSampleCount: _requiredNonNegativeInt(
+        value,
+        'accelerometerSampleCount',
+      ),
+      gyroscopeSampleCount: _requiredNonNegativeInt(
+        value,
+        'gyroscopeSampleCount',
+      ),
+      durationNanos: _requiredNonNegativeInt(value, 'durationNanos'),
+      archiveByteLength: _requiredNonNegativeInt(value, 'archiveByteLength'),
+      maxChunkGapNanos: _requiredNonNegativeInt(value, 'maxChunkGapNanos'),
+      maxGnssGapNanos: _requiredNonNegativeInt(value, 'maxGnssGapNanos'),
+      maxAccelerometerGapNanos: _requiredNonNegativeInt(
+        value,
+        'maxAccelerometerGapNanos',
+      ),
+      maxGyroscopeGapNanos: _requiredNonNegativeInt(
+        value,
+        'maxGyroscopeGapNanos',
+      ),
+      errorCode: _nullableErrorCode(value, 'errorCode'),
+    );
+    if (result.contractVersion != 1 ||
+        result.archiveVersion != 1 ||
+        !result.containsPreciseLocation ||
+        result.privacyClass != 'precise_private' ||
+        (result.exported &&
+            (result.errorCode != null ||
+                result.chunkCount == 0 ||
+                result.archiveByteLength == 0)) ||
+        (!result.exported && result.errorCode == null)) {
+      throw const FormatException('Invalid trip-debug export result.');
+    }
+    return result;
+  }
+
+  final int contractVersion;
+  final int archiveVersion;
+  final String tripId;
+  final bool exported;
+  final bool containsPreciseLocation;
+  final String privacyClass;
+  final int chunkCount;
+  final int gnssSampleCount;
+  final int accelerometerSampleCount;
+  final int gyroscopeSampleCount;
+  final int durationNanos;
+  final int archiveByteLength;
+  final int maxChunkGapNanos;
+  final int maxGnssGapNanos;
+  final int maxAccelerometerGapNanos;
+  final int maxGyroscopeGapNanos;
+  final String? errorCode;
+}
+
 class RecorderBridge {
   const RecorderBridge({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(channelName);
@@ -804,6 +892,8 @@ class RecorderBridge {
   static const supportedPermissionContractVersion = 1;
   static const supportedFinalizationContractVersion = 1;
   static const supportedFinalizationLogicVersion = 1;
+  static const supportedTripDebugExportContractVersion = 1;
+  static const supportedTripDebugArchiveVersion = 1;
 
   final MethodChannel _channel;
 
@@ -872,6 +962,26 @@ class RecorderBridge {
         'Recorder finalization acknowledgement: $errorCode.',
       );
     }
+  }
+
+  Future<TripDebugExportResult> exportTripDebug(String tripId) async {
+    if (_requiredUuid({'tripId': tripId}, 'tripId') != tripId) {
+      throw const FormatException('Trip ID is invalid.');
+    }
+    final value = await _channel.invokeMapMethod<Object?, Object?>(
+      'exportTripDebug',
+      {'tripId': tripId},
+    );
+    if (value == null) {
+      throw const FormatException('Recorder bridge returned no export result.');
+    }
+    final result = TripDebugExportResult.fromMap(value);
+    if (result.tripId != tripId ||
+        result.contractVersion != supportedTripDebugExportContractVersion ||
+        result.archiveVersion != supportedTripDebugArchiveVersion) {
+      throw const FormatException('Recorder bridge returned the wrong export.');
+    }
+    return result;
   }
 
   Future<RecorderStatus> _invokeStatus(String method) async {

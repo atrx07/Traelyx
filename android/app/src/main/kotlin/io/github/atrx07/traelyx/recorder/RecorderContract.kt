@@ -16,4 +16,5 @@ object RecorderContract {
     const val RECOVER_TRIP = "recoverTrip"
     const val GET_PENDING_FINALIZATIONS = "getPendingFinalizations"
     const val ACKNOWLEDGE_TRIP_FINALIZATION = "acknowledgeTripFinalization"
+    const val EXPORT_TRIPDEBUG = "exportTripDebug"
 }

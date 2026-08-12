@@ -83,6 +83,43 @@ void main() {
 
     expect(calls, ['getPendingFinalizations']);
   });
+
+  test(
+    'default stop polling tolerates a handoff beyond five seconds',
+    () async {
+      var polls = 0;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            if (call.method == 'getPendingFinalizations') {
+              polls += 1;
+              if (polls <= 60) {
+                return const <Object?, Object?>{
+                  'contractVersion': 1,
+                  'invalidRecordCount': 0,
+                  'finalizations': <Object?>[],
+                };
+              }
+              return finalizationBatchMap;
+            }
+            return <Object?, Object?>{
+              'contractVersion': 1,
+              'tripId': tripId,
+              'acknowledged': true,
+              'errorCode': null,
+            };
+          });
+      final reconciler = RecorderFinalizationReconciler(
+        bridge: const RecorderBridge(channel: channel),
+        repository: _FakeRepository(<String>[]),
+        delay: (_) async {},
+      );
+
+      final result = await reconciler.reconcileAfterStop(tripId);
+
+      expect(result.reconciledTripIds, [tripId]);
+      expect(polls, 61);
+    },
+  );
 }
 
 class _FakeRepository implements RecorderFinalizationRepository {

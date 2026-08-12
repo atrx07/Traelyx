@@ -16,6 +16,8 @@ interface TelemetryChunkStore {
     fun scan(tripId: String): TelemetryChunkCatalogSnapshot
 
     fun write(chunk: EncodedTelemetryChunk): TelemetryChunkWriteResult
+
+    fun read(tripId: String, sequence: Long): ByteArray? = null
 }
 
 class AtomicFileTelemetryChunkStore(context: Context) : TelemetryChunkStore {
@@ -109,6 +111,13 @@ class AtomicFileTelemetryChunkStore(context: Context) : TelemetryChunkStore {
         } else {
             TelemetryChunkWriteResult.Failure("chunk_postwrite_verification_failed")
         }
+    }
+
+    override fun read(tripId: String, sequence: Long): ByteArray? {
+        if (!isValidTripId(tripId) || sequence < 0) return null
+        val baseFile = File(chunkDirectory(tripId), fileName(sequence))
+        if (!baseFile.exists() && !File(baseFile.path + ".bak").exists()) return null
+        return runCatching { AtomicFile(baseFile).openRead().use { it.readBytes() } }.getOrNull()
     }
 
     internal fun deleteTripForTest(tripId: String): Boolean {

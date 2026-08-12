@@ -78,6 +78,46 @@ void main() {
   });
 
   test(
+    'Android metadata table does not invalidate a recognized schema',
+    () async {
+      final fixture = await _createBootstrapV1Fixture(
+        mutate: (database) async {
+          await database.customStatement(
+            'CREATE TABLE android_metadata (locale TEXT)',
+          );
+          await database.customStatement(
+            "INSERT INTO android_metadata (locale) VALUES ('en_IN')",
+          );
+        },
+      );
+
+      final database = AppDatabase(NativeDatabase(fixture.file));
+      expect(
+        (await database.select(database.appSettings).getSingle()).value,
+        'true',
+      );
+      expect(
+        await database
+            .customSelect('SELECT locale FROM android_metadata')
+            .map((row) => row.read<String>('locale'))
+            .getSingle(),
+        'en_IN',
+      );
+      expect(
+        await _tableNames(database),
+        containsAll(<String>[
+          'android_metadata',
+          'app_settings',
+          'trips',
+          'vehicles',
+        ]),
+      );
+      await database.close();
+      await fixture.dispose();
+    },
+  );
+
+  test(
     'unrecognized version 1 shape fails instead of implicit repair',
     () async {
       final fixture = await _createBootstrapV1Fixture(

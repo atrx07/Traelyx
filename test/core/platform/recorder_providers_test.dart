@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/core/database/recorder_finalization_repository.dart';
+import 'package:traelyx/core/database/trip_debug_export_repository.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 
 import 'recorder_bridge_test.dart'
@@ -143,6 +147,100 @@ void main() {
     ]);
     expect(calls.skip(6), everyElement('getStatus'));
   });
+
+  test('failed stop still refreshes the pull-based status provider', () async {
+    final methods = <String>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          methods.add(call.method);
+          if (call.method == 'stopTrip') {
+            throw PlatformException(code: 'stop_failed');
+          }
+          return statusMap;
+        });
+    final container = ProviderContainer(
+      overrides: [
+        recorderBridgeProvider.overrideWithValue(
+          const RecorderBridge(channel: channel),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(recorderStatusProvider.future);
+    await expectLater(
+      container.read(recorderCommandControllerProvider).stopTrip(),
+      throwsA(isA<PlatformException>()),
+    );
+    await container.read(recorderStatusProvider.future);
+
+    expect(methods, ['getStatus', 'getStatus', 'stopTrip', 'getStatus']);
+  });
+
+  test('failed stop refreshes watched finalization attention state', () async {
+    var finalizationReads = 0;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          if (call.method == 'stopTrip') {
+            throw PlatformException(code: 'stop_failed');
+          }
+          return statusMap;
+        });
+    final container = ProviderContainer(
+      overrides: [
+        recorderBridgeProvider.overrideWithValue(
+          const RecorderBridge(channel: channel),
+        ),
+        recorderFinalizationSyncProvider.overrideWith((ref) async {
+          finalizationReads += 1;
+          return const RecorderFinalizationSyncResult(
+            reconciledTripIds: <String>[],
+            invalidNativeRecordCount: 0,
+          );
+        }),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(recorderFinalizationSyncProvider.future);
+    await expectLater(
+      container.read(recorderCommandControllerProvider).stopTrip(),
+      throwsA(isA<PlatformException>()),
+    );
+    await container.read(recorderFinalizationSyncProvider.future);
+
+    expect(finalizationReads, 2);
+  });
+
+  test('latest export waits for startup finalization reconciliation', () async {
+    final reconciliation = Completer<RecorderFinalizationSyncResult>();
+    final repository = _FakeTripDebugExportRepository();
+    final container = ProviderContainer(
+      overrides: [
+        recorderFinalizationSyncProvider.overrideWith(
+          (ref) => reconciliation.future,
+        ),
+        tripDebugExportRepositoryProvider.overrideWithValue(repository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final latestTrip = container.read(
+      latestTripDebugExportTripIdProvider.future,
+    );
+    await Future<void>.delayed(Duration.zero);
+    expect(repository.readCount, 0);
+
+    reconciliation.complete(
+      const RecorderFinalizationSyncResult(
+        reconciledTripIds: <String>[],
+        invalidNativeRecordCount: 0,
+      ),
+    );
+
+    expect(await latestTrip, tripId);
+    expect(repository.readCount, 1);
+  });
 }
 
 class _FakeFinalizationRepository implements RecorderFinalizationRepository {
@@ -153,5 +251,15 @@ class _FakeFinalizationRepository implements RecorderFinalizationRepository {
   @override
   Future<void> reconcile(RecorderTripFinalization finalization) async {
     calls.add('repository:${finalization.tripId}');
+  }
+}
+
+class _FakeTripDebugExportRepository implements TripDebugExportRepository {
+  int readCount = 0;
+
+  @override
+  Future<String?> latestFinalizedTripId() async {
+    readCount += 1;
+    return tripId;
   }
 }

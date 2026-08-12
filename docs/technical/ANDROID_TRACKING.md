@@ -98,6 +98,12 @@ The bridge exposes lifecycle metadata, aggregate recovery/corruption evidence, a
 
 Flutter reconciles each trip and its complete chunk catalog into Drift schema version 1 in one idempotent transaction, using a stable accountless placeholder vehicle until vehicle onboarding exists. Native pending metadata is acknowledged only after commit. Recovered, incomplete, corrupt, orphaned, misordered, and recorder-error outcomes remain explicit rather than appearing as an uninterrupted perfect trip.
 
+### M2.8 local export baseline
+
+After finalization and Drift reconciliation, the user may explicitly export a versioned `.tripdebug` archive through Android's system document picker. Native Kotlin remains the raw-chunk authority: it refuses active, empty, corrupt, orphaned, misordered, sequence-gapped, unreadable, changed, or mixed-version catalogs; writes the original verified chunks with a minimal `precise_private` manifest; then reopens and fully inspects the archive before reporting success. The bridge returns aggregate counts/gaps only and never transfers chunk bytes, coordinates, vectors, source timestamps, absolute paths, device identity, or exception text.
+
+Export does not change acquisition, sampling, batching, wake behavior, raw encoding, database schema, retention, or network behavior. The version 1 contract and independent host inspector are defined in `docs/reference/TRIPDEBUG_FORMAT.md`.
+
 ## 6. Permissions
 
 Request contextually and explain:
