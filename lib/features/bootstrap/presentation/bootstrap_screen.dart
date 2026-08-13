@@ -46,6 +46,7 @@ class _BootstrapScreenState extends ConsumerState<BootstrapScreen>
     final readiness = ref.watch(bootstrapReadinessProvider);
     final permissions = ref.watch(recorderPermissionStatusProvider);
     final recorder = ref.watch(recorderStatusProvider);
+    ref.watch(recorderStatusPollingProvider);
     final finalization = ref.watch(recorderFinalizationSyncProvider);
     final latestExportTripId = ref.watch(latestTripDebugExportTripIdProvider);
     final colors = context.traelyxColors;

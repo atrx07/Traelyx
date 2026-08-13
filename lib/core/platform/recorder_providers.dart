@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/core/database/database_providers.dart';
 import 'package:traelyx/core/database/recorder_finalization_repository.dart';
@@ -17,6 +19,22 @@ final recorderCapabilitiesProvider = FutureProvider<RecorderCapabilities>((
 
 final recorderStatusProvider = FutureProvider<RecorderStatus>((ref) {
   return ref.watch(recorderBridgeProvider).getStatus();
+});
+
+final recorderStatusPollIntervalProvider = Provider<Duration>(
+  (ref) => const Duration(seconds: 1),
+);
+
+final recorderStatusPollingProvider = Provider<void>((ref) {
+  final isActive =
+      ref.watch(recorderStatusProvider).valueOrNull?.lifecycle.active ?? false;
+  if (!isActive) return;
+
+  final timer = Timer.periodic(
+    ref.watch(recorderStatusPollIntervalProvider),
+    (_) => ref.invalidate(recorderStatusProvider),
+  );
+  ref.onDispose(timer.cancel);
 });
 
 final recorderPermissionStatusProvider =

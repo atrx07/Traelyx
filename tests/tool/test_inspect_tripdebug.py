@@ -84,6 +84,17 @@ def _archive(path: Path, *, extra_entry: bool = False) -> None:
 
 
 class InspectTripDebugTest(unittest.TestCase):
+    def test_coverage_gaps_include_edges_and_fully_missing_channels(self):
+        result = MODULE._coverage_gaps(
+            100,
+            900,
+            {1: 500, 2: 100},
+            {1: 500, 2: 900},
+            {1: 0, 2: 250, 3: 0},
+        )
+
+        self.assertEqual(result, {1: 400, 2: 250, 3: 800})
+
     def test_verifies_archive_without_raw_sample_output(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "fixture.tripdebug"
@@ -93,6 +104,7 @@ class InspectTripDebugTest(unittest.TestCase):
         self.assertTrue(result["verified"])
         self.assertEqual(result["chunk_count"], 1)
         self.assertEqual(result["sample_counts"]["accelerometer"], 1)
+        self.assertEqual(result["max_gap_nanos"]["gnss"], 0)
         self.assertNotIn("latitude", result)
         self.assertNotIn("vectors", result)
 

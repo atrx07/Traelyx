@@ -31,9 +31,43 @@ class DriveControlModel {
     }
 
     if (recorder.lifecycle.active) {
+      if (recorder.gnss.acceptedSampleCount == 0) {
+        return const DriveControlModel(
+          title: 'Recording started — finding GPS',
+          detail:
+              'Keep the phone exposed and remain stationary until Traelyx confirms GPS is recording.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+        );
+      }
+      if (recorder.imu.accelerometerAcceptedSampleCount == 0 ||
+          recorder.imu.gyroscopeAcceptedSampleCount == 0) {
+        return const DriveControlModel(
+          title: 'Recording started — checking motion sensors',
+          detail:
+              'Keep the phone still briefly while Traelyx confirms both motion sensors.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+        );
+      }
+      final motionSampleCount =
+          recorder.imu.accelerometerAcceptedSampleCount +
+          recorder.imu.gyroscopeAcceptedSampleCount;
+      final hasPersistentUnreliableMotion =
+          recorder.imu.unreliableAccuracySampleCount >= 100 &&
+          recorder.imu.unreliableAccuracySampleCount * 4 >= motionSampleCount;
+      if (hasPersistentUnreliableMotion) {
+        return const DriveControlModel(
+          title: 'Recording active with limited motion confidence',
+          detail:
+              'GPS and motion evidence are stored, but Android reports persistently unreliable motion-sensor accuracy.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+        );
+      }
       return const DriveControlModel(
         title: 'Drive recording is active',
-        detail: 'Location and motion samples are being stored on this phone.',
+        detail: 'GPS and motion samples are being stored on this phone.',
         action: DrivePrimaryAction.stopTrip,
         actionLabel: 'Stop drive',
       );

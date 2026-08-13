@@ -102,6 +102,8 @@ Flutter reconciles each trip and its complete chunk catalog into Drift schema ve
 
 After finalization and Drift reconciliation, the user may explicitly export a versioned `.tripdebug` archive through Android's system document picker. Native Kotlin remains the raw-chunk authority: it refuses active, empty, corrupt, orphaned, misordered, sequence-gapped, unreadable, changed, or mixed-version catalogs; writes the original verified chunks with a minimal `precise_private` manifest; then reopens and fully inspects the archive before reporting success. The bridge returns aggregate counts/gaps only and never transfers chunk bytes, coordinates, vectors, source timestamps, absolute paths, device identity, or exception text.
 
+Maximum per-channel gaps include leading acquisition time and trailing loss relative to the complete trip bounds, not only intervals between samples. While the recorder is active, Flutter polls this aggregate health and must continue to show GPS acquisition or missing-motion status until samples from each required channel are observed; it must not claim that location and motion are being stored merely because the service started.
+
 Export does not change acquisition, sampling, batching, wake behavior, raw encoding, database schema, retention, or network behavior. The version 1 contract and independent host inspector are defined in `docs/reference/TRIPDEBUG_FORMAT.md`.
 
 ## 6. Permissions

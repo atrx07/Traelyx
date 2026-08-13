@@ -253,8 +253,10 @@ object TripDebugArchiveCodec {
                     ?: return invalid("tripdebug_manifest_invalid")
                 zip.closeEntry()
 
+                var firstChunkStart: Long? = null
                 var previousChunkEnd: Long? = null
                 var maxChunkGap = 0L
+                val firstByChannel = mutableMapOf<TelemetryChannel, Long>()
                 val lastByChannel = mutableMapOf<TelemetryChannel, Long>()
                 val maxGapByChannel = mutableMapOf<TelemetryChannel, Long>()
                 var gnssCount = 0L
@@ -294,8 +296,12 @@ object TripDebugArchiveCodec {
                         }
                         maxChunkGap = maxOf(maxChunkGap, chunk.metadata.startElapsedNanos - previousChunkEnd)
                     }
+                    if (firstChunkStart == null) {
+                        firstChunkStart = chunk.metadata.startElapsedNanos
+                    }
                     previousChunkEnd = chunk.metadata.endElapsedNanos
                     for (record in chunk.records) {
+                        firstByChannel.putIfAbsent(record.channel, record.tripElapsedNanos)
                         val previous = lastByChannel.put(record.channel, record.tripElapsedNanos)
                         if (previous != null) {
                             if (record.tripElapsedNanos < previous) {
@@ -316,11 +322,31 @@ object TripDebugArchiveCodec {
                 }
                 if (zip.nextEntry != null) return invalid("tripdebug_unexpected_entry")
                 if (
+                    firstChunkStart != manifest.startElapsedNanos ||
+                    previousChunkEnd != manifest.endElapsedNanos
+                ) {
+                    return invalid("tripdebug_manifest_bounds_mismatch")
+                }
+                if (
                     gnssCount != manifest.gnssSampleCount ||
                     accelerometerCount != manifest.accelerometerSampleCount ||
                     gyroscopeCount != manifest.gyroscopeSampleCount
                 ) {
                     return invalid("tripdebug_sample_count_mismatch")
+                }
+                for (channel in TelemetryChannel.entries) {
+                    val first = firstByChannel[channel]
+                    val last = lastByChannel[channel]
+                    maxGapByChannel[channel] =
+                        if (first == null || last == null) {
+                            manifest.endElapsedNanos - manifest.startElapsedNanos
+                        } else {
+                            maxOf(
+                                maxGapByChannel[channel] ?: 0L,
+                                first - manifest.startElapsedNanos,
+                                manifest.endElapsedNanos - last,
+                            )
+                        }
                 }
                 TripDebugInspectionResult.Success(
                     TripDebugInspection(

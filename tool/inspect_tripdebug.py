@@ -288,6 +288,26 @@ def decode_chunk(data: bytes) -> dict[str, object]:
     }
 
 
+def _coverage_gaps(
+    start: int,
+    end: int,
+    first_by_channel: dict[int, int],
+    last_by_channel: dict[int, int],
+    adjacent_gaps: dict[int, int],
+) -> dict[int, int]:
+    duration = end - start
+    result: dict[int, int] = {}
+    for channel, adjacent_gap in adjacent_gaps.items():
+        first = first_by_channel.get(channel)
+        last = last_by_channel.get(channel)
+        result[channel] = (
+            duration
+            if first is None or last is None
+            else max(adjacent_gap, first - start, end - last)
+        )
+    return result
+
+
 def inspect_archive(path: Path) -> dict[str, object]:
     archive_size = path.stat().st_size
     if archive_size <= 0 or archive_size > MAX_ARCHIVE_BYTES:
@@ -310,8 +330,10 @@ def inspect_archive(path: Path) -> dict[str, object]:
             raise TripDebugInvalid("archive_compression_invalid")
 
         totals = [0, 0, 0]
+        first_chunk_start: int | None = None
         previous_end: int | None = None
         max_chunk_gap = 0
+        first_by_channel: dict[int, int] = {}
         last_by_channel: dict[int, int] = {}
         max_gap_by_channel = {1: 0, 2: 0, 3: 0}
         for descriptor, info in zip(manifest.chunks, infos[1:]):
@@ -330,6 +352,8 @@ def inspect_archive(path: Path) -> dict[str, object]:
                 raise TripDebugInvalid("archive_chunk_metadata_invalid")
             start = int(decoded["start"])
             end = int(decoded["end"])
+            if first_chunk_start is None:
+                first_chunk_start = start
             if previous_end is not None:
                 if start < previous_end:
                     raise TripDebugInvalid("archive_chunk_order_invalid")
@@ -342,6 +366,7 @@ def inspect_archive(path: Path) -> dict[str, object]:
             assert isinstance(elapsed_by_channel, dict)
             for channel, samples in elapsed_by_channel.items():
                 for elapsed in samples:
+                    first_by_channel.setdefault(channel, elapsed)
                     previous = last_by_channel.get(channel)
                     if previous is not None:
                         if elapsed < previous:
@@ -355,8 +380,21 @@ def inspect_archive(path: Path) -> dict[str, object]:
             manifest.sample_counts["accelerometer"],
             manifest.sample_counts["gyroscope"],
         ]
+        if (
+            first_chunk_start != manifest.start_elapsed_nanos
+            or previous_end != manifest.end_elapsed_nanos
+        ):
+            raise TripDebugInvalid("archive_manifest_bounds_invalid")
         if totals != expected_totals:
             raise TripDebugInvalid("archive_sample_count_invalid")
+        duration = manifest.end_elapsed_nanos - manifest.start_elapsed_nanos
+        max_gap_by_channel = _coverage_gaps(
+            manifest.start_elapsed_nanos,
+            manifest.end_elapsed_nanos,
+            first_by_channel,
+            last_by_channel,
+            max_gap_by_channel,
+        )
         return {
             "format": "traelyx.tripdebug",
             "archive_version": ARCHIVE_VERSION,
@@ -365,7 +403,7 @@ def inspect_archive(path: Path) -> dict[str, object]:
             "trip_id": manifest.trip_id,
             "archive_byte_length": archive_size,
             "chunk_count": manifest.chunk_count,
-            "duration_nanos": manifest.end_elapsed_nanos - manifest.start_elapsed_nanos,
+            "duration_nanos": duration,
             "sample_counts": manifest.sample_counts,
             "max_gap_nanos": {
                 "chunks": max_chunk_gap,

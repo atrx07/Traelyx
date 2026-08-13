@@ -51,6 +51,41 @@ void main() {
     expect(methods, ['getStatus', 'startTrip', 'getStatus']);
   });
 
+  test('active recorder status is polled for live sensor readiness', () async {
+    var statusReads = 0;
+    final secondRead = Completer<void>();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+          if (call.method == 'getStatus') {
+            statusReads += 1;
+            if (statusReads >= 2 && !secondRead.isCompleted) {
+              secondRead.complete();
+            }
+          }
+          return statusMap;
+        });
+    final container = ProviderContainer(
+      overrides: [
+        recorderBridgeProvider.overrideWithValue(
+          const RecorderBridge(channel: channel),
+        ),
+        recorderStatusPollIntervalProvider.overrideWithValue(
+          const Duration(milliseconds: 1),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.listen<void>(
+      recorderStatusPollingProvider,
+      (previous, next) {},
+      fireImmediately: true,
+    );
+
+    await secondRead.future.timeout(const Duration(seconds: 1));
+
+    expect(statusReads, greaterThanOrEqualTo(2));
+  });
+
   test(
     'permission actions refresh the pull-based permission provider',
     () async {

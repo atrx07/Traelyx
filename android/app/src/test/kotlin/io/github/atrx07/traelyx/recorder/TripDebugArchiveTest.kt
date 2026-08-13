@@ -33,10 +33,41 @@ class TripDebugArchiveTest {
         assertEquals(1, inspection.manifest.gyroscopeSampleCount)
         assertTrue(inspection.manifest.containsPreciseLocation)
         assertEquals(TRIPDEBUG_PRIVACY_CLASS, inspection.manifest.privacyClass)
+        assertEquals(120_000_000L, inspection.maxGnssGapNanos)
         assertEquals(100_000_000L, inspection.maxAccelerometerGapNanos)
+        assertEquals(120_000_000L, inspection.maxGyroscopeGapNanos)
 
         val second = exporter.prepare(TEST_TRIP_ID) as TripDebugPreparationResult.Success
         assertArrayEquals(firstBytes, second.prepared.file.readBytes())
+    }
+
+    @Test
+    fun inspectorReportsFullTripDurationForMissingChannels() {
+        val chunk =
+            TelemetryChunkCodec.encode(
+                tripId = TEST_TRIP_ID,
+                sequence = 0,
+                records =
+                    listOf(
+                        TelemetrySampleRecord.Imu(
+                            testImuSample(tripElapsedNanos = 100_000_000L),
+                        ),
+                        TelemetrySampleRecord.Imu(
+                            testImuSample(
+                                tripElapsedNanos = 900_000_000L,
+                                sourceTimestampNanos = 1_900_000_000L,
+                            ),
+                        ),
+                    ),
+                createdAtUtcEpochMillis = 1_777_777_777_000L,
+            )
+        val inspection =
+            (TripDebugArchiveExporter(FakeReadableStore(listOf(chunk)), temporaryFolder.root)
+                .prepare(TEST_TRIP_ID) as TripDebugPreparationResult.Success).prepared.inspection
+
+        assertEquals(800_000_000L, inspection.maxGnssGapNanos)
+        assertEquals(800_000_000L, inspection.maxAccelerometerGapNanos)
+        assertEquals(800_000_000L, inspection.maxGyroscopeGapNanos)
     }
 
     @Test

@@ -91,6 +91,64 @@ void main() {
     expect(model.actionLabel, 'Stop drive');
   });
 
+  test(
+    'an active recorder reports GPS acquisition before claiming samples',
+    () {
+      final model = DriveControlModel.from(
+        permissions: _permissions(
+          locationState: RecorderPermissionState.granted,
+        ),
+        recorder: _recorder(active: true, state: 'recording', gnssSamples: 0),
+      );
+
+      expect(model.title, 'Recording started — finding GPS');
+      expect(model.action, DrivePrimaryAction.stopTrip);
+    },
+  );
+
+  test('an active recorder reports missing motion streams', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(locationState: RecorderPermissionState.granted),
+      recorder: _recorder(
+        active: true,
+        state: 'recording',
+        accelerometerSamples: 0,
+      ),
+    );
+
+    expect(model.title, 'Recording started — checking motion sensors');
+    expect(model.action, DrivePrimaryAction.stopTrip);
+  });
+
+  test('an active recorder propagates unreliable motion accuracy', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(locationState: RecorderPermissionState.granted),
+      recorder: _recorder(
+        active: true,
+        state: 'recording',
+        accelerometerSamples: 200,
+        gyroscopeSamples: 200,
+        unreliableSamples: 100,
+      ),
+    );
+
+    expect(model.title, 'Recording active with limited motion confidence');
+    expect(model.action, DrivePrimaryAction.stopTrip);
+  });
+
+  test('a transient unreliable sample does not become a permanent warning', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(locationState: RecorderPermissionState.granted),
+      recorder: _recorder(
+        active: true,
+        state: 'recording',
+        unreliableSamples: 1,
+      ),
+    );
+
+    expect(model.title, 'Drive recording is active');
+  });
+
   test('a recorder error can finalize only verified preserved evidence', () {
     final model = DriveControlModel.from(
       permissions: _permissions(
@@ -149,7 +207,14 @@ RecorderPermissionStatus _permissions({
   });
 }
 
-RecorderStatus _recorder({bool active = false, String state = 'idle'}) {
+RecorderStatus _recorder({
+  bool active = false,
+  String state = 'idle',
+  int gnssSamples = 3,
+  int accelerometerSamples = 20,
+  int gyroscopeSamples = 19,
+  int unreliableSamples = 0,
+}) {
   return RecorderStatus.fromMap(<Object?, Object?>{
     ...statusMap,
     'lifecycle': <Object?, Object?>{
@@ -158,6 +223,16 @@ RecorderStatus _recorder({bool active = false, String state = 'idle'}) {
       'active': active,
       'tripId': active ? tripId : null,
       'errorCode': state == 'error' ? 'recorder_error' : null,
+    },
+    'gnss': <Object?, Object?>{
+      ...statusMap['gnss']! as Map<Object?, Object?>,
+      'acceptedSampleCount': gnssSamples,
+    },
+    'imu': <Object?, Object?>{
+      ...statusMap['imu']! as Map<Object?, Object?>,
+      'accelerometerAcceptedSampleCount': accelerometerSamples,
+      'gyroscopeAcceptedSampleCount': gyroscopeSamples,
+      'unreliableAccuracySampleCount': unreliableSamples,
     },
   });
 }

@@ -49,10 +49,14 @@
 - M2.8 now provides a deterministic version-1 `.tripdebug` archive, explicit Android document export, native self-inspection, strict Dart/UI orchestration, and an independent aggregate-only host inspector. Exports are `precise_private`, contain the original verified chunks, require explicit destination selection, and perform no network access.
 - Android's standard `android_metadata` table is now excluded from Traelyx schema-shape comparison without being altered; arbitrary unknown application tables still fail closed. Stop waits beyond the native writer ceiling, refreshes status on failure, and startup export discovery waits for pending finalization reconciliation.
 - A recovered pocket-carried motorcycle recording verified 15m42.2s, 1,482 ordered chunks, 941 GNSS, 189,149 accelerometer, and 189,140 gyroscope samples with a 1.573s maximum GNSS gap, 14.9ms maximum IMU gap, and verified archive hashes/counts. This is diagnostic recovery evidence, not the formal M2.8 field proof; its private exports and all Traelyx app data were explicitly removed afterward.
+- The clean M2.8 Tecno rehearsal passed UI Start, locked/background persistence, Stop/finalization, isolated export, device/host hash equality, independent inspection, and scoped cleanup with 138 verified chunks and continuous dual-IMU evidence.
+- The first formal 41m08.2s pocket-carried motorcycle attempt finalized and indexed 3,615 intact chunks containing 1,788 GNSS, 427,510 accelerometer, and 495,956 gyroscope samples. Exact archive hashes matched and no checksum, sequence, corruption, or adjacent-stream discontinuity failure occurred; the maintainer observed a coarse battery change from 40% to 38%.
+- M2.8 inspection now includes leading/trailing channel coverage instead of only adjacent-sample gaps. Live Drive status polls aggregate recorder health, waits for actual GPS and both motion streams before claiming readiness, and propagates persistent Android unreliable-motion accuracy without treating one transient sample as a permanent warning.
+- The corrected APK preserves the formal ride during update-install and has device-validated the negative readiness path: a separate 47-second stationary test stayed visibly in `finding GPS`, kept Stop available, finalized/indexed 91 chunks cleanly, and left no recorder service/state file. An exposed-sky positive-transition proof is still pending.
 
 ## Partial
 
-- Recorder lifecycle, GNSS/IMU acquisition, native durable chunks, Flutter health/commands, contextual permission onboarding, Drive Start/Stop, crash-safe finalization, verified Drift chunk indexing, and the local-private export/inspection path are operational. A clean disposable rehearsal and the formal 30–60 minute locked-screen fixture remain pending in M2.8.
+- Recorder lifecycle, GNSS/IMU acquisition, native durable chunks, Flutter health/commands, contextual permission onboarding, Drive Start/Stop, crash-safe finalization, verified Drift chunk indexing, and the local-private export/inspection path are operational. The clean rehearsal passed, but the first formal attempt is diagnostic only because GNSS did not begin until 11m20.2s; a first-fix-confirmed repeat remains pending in M2.8.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -77,6 +81,7 @@
 - Android background/foreground-service behavior across OS versions/OEMs.
 - M2.1–M2.7 physical validation proves contextual permission/UI orchestration, short lifecycle/process recovery, offline and GNSS-loss survival, stationary real-GPS/dual-IMU capture, durable chunks, and exact-UUID finalization/index cleanup on one Android 14 OEM device. It does not yet prove a 30–60 minute locked-screen drive, deep-sleep/device-reboot recovery, battery behavior, vibration quality, or multi-version/OEM reliability.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
+- On the Tecno LH8n formal attempt, Android marked all accelerometer events with unreliable accuracy while gyroscope accuracy remained reliable. Raw accelerometer evidence is retained but cannot support confident vehicle-acceleration claims without later calibration/confidence work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -84,4 +89,4 @@
 
 ## Current step
 
-**M2.8 — First real-drive fixture:** authorized 2026-08-12; export/inspection implementation and recovery diagnosis are complete, the Tecno is reset to an empty/permission-denied baseline, and the clean phase-1 setup/rehearsal is next before the 30–60 minute locked-screen motorcycle drive.
+**M2.8 — First real-drive fixture:** authorized 2026-08-12; the clean rehearsal passed and the first 41-minute field attempt finalized intact, but its 11m20.2s leading GNSS gap fails acceptance. The edge-aware inspector and live readiness hold are validated; prove the positive first-fix transition under exposed sky, then repeat the formal locked-screen motorcycle drive before closing M2.8.

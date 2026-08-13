@@ -36,7 +36,7 @@ The independent host command performs the same structural decode and reports onl
 python tool/inspect_tripdebug.py <private-file.tripdebug>
 ```
 
-Its output includes duration, byte/chunk/sample counts, and maximum observed gaps. It never prints coordinates, vectors, source timestamps, providers, or wall-clock route data. Gap values are evidence for review, not automatic proof of a recorder defect or safety judgment.
+Its output includes duration, byte/chunk/sample counts, and maximum coverage gaps. Per-channel gap calculation includes the interval from the archived timeline's first bound to that channel's first sample, all adjacent-sample intervals, and the interval from its last sample to the final archived bound; a channel with no samples reports the full archived duration. This prevents a delayed channel start or early channel loss from disappearing from aggregate inspection when another channel establishes the archive boundary. It never prints coordinates, vectors, source timestamps, providers, or wall-clock route data. Gap values are evidence for review, not automatic proof of a recorder defect or safety judgment.
 
 ## Compatibility
 
