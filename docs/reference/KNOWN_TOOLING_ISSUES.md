@@ -88,3 +88,13 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 - **Verification:** The underlying executable reports its version, and the direct bounded command completes with a conclusive result for the intended operation.
 - **Do not:** Use this fallback before confirming the wrapper-specific stall, permanently change global environment variables, modify the Flutter SDK/cache, delete lock files, or infer an application-source failure from the wrapper hang.
 - **Last validated / notes:** Validated on 2026-08-11 during M2.7: the SDK executable and direct Flutter tool snapshot completed while the batch wrappers remained stalled. Rediscover `FLUTTER_ROOT` if the SDK moves.
+
+## Unpinned Flutter stable advances and dirties CI checkout
+
+- **Scope:** GitHub Actions or another clean environment that resolves the latest Flutter `stable` release.
+- **Symptom:** `flutter pub get` or `build_runner` is followed by an unrelated `git diff --exit-code` failure in files such as `analysis_options.yaml` or SDK-pinned transitive entries in `pubspec.lock`.
+- **Cause:** The runner's unpinned `stable` channel advanced beyond Traelyx's documented Flutter baseline and performed SDK migration or dependency resolution changes before the intended gate.
+- **Fast safe fix:** Pin `subosito/flutter-action` with both `channel: stable` and the exact Flutter version declared in `docs/technical/TECH_STACK.md`. Upgrade that baseline only as a deliberate toolchain change with regenerated files and full validation.
+- **Verification:** The clean CI setup reports the documented Flutter/Dart versions, generated-source verification leaves the checkout clean, and the remaining workflow gates run.
+- **Do not:** Commit runner-generated migrations or lockfile upgrades as part of an unrelated product change, weaken the generated-source diff gate, or leave CI on a floating channel while claiming a reproducible baseline.
+- **Last validated / notes:** Added after GitHub's stable channel advanced to Flutter 3.47.0 on 2026-08-13 while Traelyx remained validated on Flutter 3.44.9/Dart 3.12.2.

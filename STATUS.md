@@ -16,6 +16,7 @@
 - M1 execution plan completed and archived after all six authorized substeps passed their required gates.
 - Flutter Android repository scaffold created with the canonical application identity and a launchable bootstrap screen.
 - Flutter 3.44.9/Dart 3.12.2, Android SDK 36.1, Gradle 9.1.0, Android Gradle Plugin 9.0.1, Kotlin 2.3.20, and JDK/JVM targets validated as the bootstrap baseline.
+- GitHub Actions pins Flutter 3.44.9 instead of floating on the latest `stable`, preventing unrelated SDK migrations and transitive lockfile drift from violating generated-source reproducibility.
 - Strict Dart analysis, Flutter widget testing, Kotlin unit testing, and repository JSON/YAML/secret validation commands established.
 - GitHub Actions passes generated-source, format, analysis, Flutter/Kotlin tests, repository validation, debug/release builds, size reporting, and artifact upload on `main`.
 - The accountless bootstrap app launches on a physical Android 14 device with Riverpod/`go_router` boundaries, provisional centralized theme tokens, and an honest local-foundation state.
