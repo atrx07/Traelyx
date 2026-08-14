@@ -1,10 +1,10 @@
 # Execution Plan — M2 Native Recording Engine
 
-**Status:** Active
+**Status:** Complete
 **Owner:** agent/maintainer
 **Milestone:** M2 — Native Recording Engine
 **Started:** 2026-08-09
-**Last updated:** 2026-08-09
+**Last updated:** 2026-08-14
 
 ## Context budget / references
 
@@ -140,7 +140,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Discover and reconcile pending finalizations on app reopen/resume and after Drive Stop while keeping native Kotlin authoritative for recorder survival.
   - [x] Add deterministic lifecycle, codec/catalog, bridge/privacy, Drift rollback/idempotence, provider, and UI regression coverage.
   - [x] Run controlled Tecno proofs for background/activity recreation, short screen lock, offline recording, GNSS loss/recovery, process/UI restart recovery, Stop finalization, local index visibility, and complete state restoration.
-- [ ] M2.8 First real-drive fixture — explicitly authorized 2026-08-12.
+- [x] M2.8 First real-drive fixture — explicitly authorized 2026-08-12 and completed 2026-08-14.
   - [x] Define a dependency-free, versioned `.tripdebug` archive containing a minimal privacy-classified manifest and the original verified telemetry chunks without device identity or absolute paths.
   - [x] Add deterministic archive inspection/replay validation for format/version, entry bounds, duplicate/path traversal rejection, chunk checksums/decoding, sequence/timeline ordering, and aggregate channel counts.
   - [x] Add an explicit local Android document export that refuses active/corrupt/incomplete catalogs, self-inspects before success, warns that the private fixture contains a precise route, and performs no network access.
@@ -148,7 +148,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
   - [x] Run a short disposable Tecno rehearsal through UI Start, background/screen lock, Stop/finalize, document export, deterministic inspection, and UUID-scoped cleanup before handoff.
   - [x] Record one normal/legal 30–60 minute motorcycle trip with the phone secured in a pocket, app backgrounded, and screen locked; treat orientation as uncontrolled/body-relative and make no vehicle-frame/scoring claim.
   - [x] After return, verify exact-trip finalization, export and inspect the local-private fixture, record duration/channel/gap/corruption/restart/battery evidence, and keep precise route data out of Git and logs.
-  - [ ] Repeat the formal drive after validating live first-fix readiness; accept M2.8 only if the repeated archive has synchronized channel coverage without an unexplained catastrophic gap.
+  - [x] Repeat the formal drive after validating live first-fix readiness; the repeated archive has synchronized channel coverage without an unexplained catastrophic gap.
     - Treat this Tecno's persistent accelerometer status `0` and independently measured roughly +0.04 g (+0.39 m/s²) positive Z-axis bias as a known fixture-quality limitation, not a sole acceptance blocker. Preserve original values and Android accuracy status exactly; require continuous, ordered, finite/plausible accelerometer evidence and all other M2 integrity gates. Do not add fixture-specific compensation, filtering, counter-bias, or sensor-semantic changes; defer calibration/confidence work to M3.
 
 ## Tests / validation
@@ -192,8 +192,8 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - [x] Confirm M2.7 adds no schema migration, dependency, network/cloud behavior, wake lock, sensor/chunk encoding change, retention default, telemetry decode/analysis, or M2.8 fixture work.
 - [x] M2.8 archive/export unit tests, bridge/Dart/widget tests, external-fixture inspection, local gates, debug/release builds, and controlled Tecno rehearsal.
 - [x] M2.8 device proof for the honest obstructed-position `finding GPS` hold and exposed-sky positive first-fix transition.
-- [ ] M2.8 30–60 minute locked-screen motorcycle proof and privacy-safe real-drive test record.
-- [ ] Confirm M2.8 adds no sensor/chunk encoding change, sample-rate/wake behavior, database migration, third-party dependency, network/cloud behavior, retention default, scoring/event logic, or mounted-orientation claim.
+- [x] M2.8 30–60 minute locked-screen motorcycle proof and privacy-safe real-drive test record.
+- [x] Confirm M2.8 adds no sensor/chunk encoding change, sample-rate/wake behavior, database migration, third-party dependency, network/cloud behavior, retention default, scoring/event logic, or mounted-orientation claim.
 
 ## Acceptance criteria
 
@@ -334,6 +334,7 @@ At milestone completion, a user can record, recover, finalize, and export a loca
 - 2026-08-13: The corrected debug APK update-installed on the Tecno without deleting the formal evidence or Downloads export. A separate stationary UI test immediately showed `Recording started — finding GPS`, retained Stop, and continued that honest state for approximately 47 seconds without a fix at the phone's current obstructed position. Stop finalized and indexed 91 separate chunks, no service/state file remained, and the formal 3,615-chunk trip was still intact. This proved the negative/readiness-hold path on-device; the following exposed-sky rehearsal then addressed the positive-transition requirement.
 - 2026-08-13: The exposed-sky stationary GPS rehearsal proved the positive path: first fix arrived after 54.2 seconds, Drive transitioned to active-with-limited-motion-confidence, Stop finalized/indexed 151 chunks, and the 109.3-second archive independently verified 55 GNSS, 16,413 accelerometer, and 21,961 gyroscope samples with matching device/host hashes. The recorder service stopped cleanly and the formal 3,615-chunk diagnostic attempt remained preserved.
 - 2026-08-14: The maintainer supplied independent six-orientation and Physics Toolbox diagnosis of the Tecno accelerometer. X/Y response is approximately symmetric around ±1 g; the repeatable defect is a roughly +0.04 g (+0.39 m/s²) positive Z-axis bias, while Android persistently reports accelerometer status `0` and gyroscope quality remains high. M2.8 records this as a device-specific fixture limitation rather than a sole acceptance blocker. Raw values/status remain immutable; no Tecno calibration code or M2 processing change is authorized, and calibration/confidence work is deferred to M3.
+- 2026-08-14: The first-fix-confirmed formal repeat passed. The pocket-carried Tecno recorded 39m17.1s and finalized/indexed 3,689 ordered chunks containing 2,322 GNSS, 469,953 accelerometer, and 469,942 gyroscope samples. GNSS began at T+35.2s, well before reported vehicle movement at approximately T+3m12s; the largest subsequent adjacent GNSS gap was 1.312s, and the largest adjacent dual-IMU gap was 14.9ms. The maintainer confirmed the screen remained locked for approximately 99% of the trip except one mid-ride check and the final Stop interaction. Independent inspection verified the 19,960,737-byte `precise_private` archive and exact phone/host SHA-256 equality with no checksum, sequence, count, corruption, or unexplained timeline failure. Persistent accelerometer status `0` remained truthfully preserved and non-blocking under the recorded Tecno fixture condition; gyroscope status remained high. M2.8 and M2 are complete, with M3 awaiting explicit authorization.
 
 ## Completion summary
 
@@ -365,4 +366,6 @@ M2.7 adds a versioned atomic pending-finalization handoff, privacy-safe verified
 
 Validation passed: pending-record/codec/evaluator/catalog/bridge/restart native tests; strict parser, Drift rollback/idempotence/ownership, provider/reconciler, and UI success/failure tests; all native tests; instrumentation compilation; Android lint; Dart formatting; Flutter analysis; all 79 Flutter tests; repository validation; generated-source/schema verification; and debug/release APK builds. Controlled Android 14 Tecno proofs passed real sensor capture, activity/service recovery, backgrounding, short screen-off, full offline recording, GNSS loss/restoration, force-stop/cold-relaunch recovery, UI finalization, and an exact-UUID read-only Drift verification of `completed`/`recovered`/`unassessed` with 577 indexed chunks. UUID-scoped cleanup and a final snapshot confirmed original connectivity, denied temporary permissions, asleep screen state, zero recorder services/test packages, and no proof files/finalization artifact.
 
-Not yet verified or claimed: a 30–60 minute locked-screen drive, IMU delivery during deep sleep, device reboot recovery, battery drain, vibration quality, multi-version/OEM reliability, export/replay of a physical-drive fixture, or a production retention default. Those remain in M2.8 or later, and M2.8 requires explicit authorization.
+M2.8 adds the deterministic local-private `.tripdebug` export and independent aggregate-only inspector, then validates them through a clean rehearsal, diagnostic first attempt, readiness-path tests, and a first-fix-confirmed formal repeat. The accepted repeat spans 39m17.1s with 3,689 ordered chunks, 2,322 GNSS, 469,953 accelerometer, and 469,942 gyroscope samples. Positive GNSS readiness preceded departure, the screen stayed locked for approximately 99% of the trip, Stop finalized/indexed normally, and phone/host archive hashes matched. The 35.2s GNSS coverage gap is the expected leading acquisition interval; subsequent GNSS and dual-IMU delivery remained continuous without an unexplained catastrophic gap. Raw Tecno accelerometer status `0` and its known Z-axis bias were preserved unchanged and reported as a fixture-quality limitation, not normalized into false confidence. No sensor/chunk semantics, sample-rate/wake behavior, schema, dependency, network/cloud behavior, retention default, scoring/event logic, or mounted-orientation claim changed.
+
+Not yet verified or claimed: controlled IMU delivery during deep sleep, device reboot recovery, a controlled battery-drain rate, vibration-to-vehicle-frame quality, multi-version/OEM reliability, production telemetry processing/scoring, or a production retention default. Those are later-milestone concerns; M3 remains unauthorized.

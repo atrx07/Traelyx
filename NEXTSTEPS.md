@@ -4,19 +4,19 @@
 
 ## Current gate
 
-M2.8 was explicitly authorized on 2026-08-12. Implement and validate only the first real-drive fixture/export proof, then stop at the approval gate before M3.
+M2 and M2.8 completed on 2026-08-14. Stop at the milestone approval gate; M3 remains pending explicit maintainer authorization.
 
-## P0 — M2.8 active
+## P0 — Approval gate
 
-1. Await explicit maintainer confirmation before preparing or starting the formal repeat; the exposed-sky first-fix transition and clean rehearsal finalization are already device-validated.
-2. Repeat the normal 30–60 minute locked-screen motorcycle drive only after visible positive GNSS readiness, then inspect its private fixture; do not accept the first 41-minute attempt because GNSS was absent for its first 11m20.2s.
-3. Treat the Tecno's persistent accelerometer status `0` and independently measured roughly +0.04 g Z-axis bias as a known fixture limitation, not a sole acceptance blocker. Preserve raw values/status unchanged and require continuous, ordered, finite/plausible IMU plus all other M2 integrity gates; defer calibration/confidence work to M3.
+1. Await explicit maintainer authorization before activating or preparing M3.
+2. Preserve the accepted private M2.8 fixture locally; do not place its route or raw telemetry in Git or logs.
+3. Preserve raw Tecno accelerometer values/status unchanged; calibration/confidence work belongs to M3.
 
-## P1 — Recorder milestone
+## P1 — M3 pending
 
-1. Record the first acceptance-quality privacy-safe real-device `.tripdebug` fixture after visible first-fix confirmation.
-2. Verify a locked-screen 30–60 minute trip survives intact and remains exportable/replayable.
-3. Document pocket-carried motorcycle placement as uncontrolled/body-relative orientation; do not use this fixture to claim mounted vehicle-frame calibration or scoring validity.
+1. Implement the versioned raw decoder/resampler only after authorization.
+2. Add GNSS sanity filtering and distance accumulation with explicit quality handling.
+3. Add calibration, orientation/frame confidence, and derived channels without rewriting M2 raw evidence.
 
 ## P2 — Analysis foundation
 
