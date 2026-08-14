@@ -42,6 +42,12 @@ confidence propagation
        └── replay display channels
 ```
 
+### M3.1 implemented decode/alignment boundary
+
+Native Kotlin remains the authority for precise raw chunk bytes. The version-1 trip decoder reuses the checksummed chunk decoder, then fails closed on an empty/corrupt input, unknown chunk contract, mixed trip or version, non-contiguous sequence, overlapping chunk bounds, global record reordering, duplicate record keys, or non-increasing per-channel trip time.
+
+The version-1 analysis timebase is deterministic and monotonic. GNSS remains sparse original evidence for the next sanity-filtering stage. Device-frame accelerometer and gyroscope values use bounded linear interpolation only when two valid neighboring samples support it; missingness and exact/interpolated provenance are first-class output. Raw coordinates, vectors, timestamps, status, and flags are not normalized or transferred to Flutter by this stage.
+
 ## 2. Calibration
 
 A calibration procedure may use stationary periods and/or stable-motion segments to estimate bias/orientation.

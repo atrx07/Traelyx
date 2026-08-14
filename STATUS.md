@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M2 complete — awaiting explicit M3 authorization**
+**M3 active — M3.1 complete; awaiting explicit M3.2 authorization**
 
 ## Working
 
@@ -55,16 +55,18 @@
 - M2.8 inspection now includes leading/trailing channel coverage instead of only adjacent-sample gaps. Live Drive status polls aggregate recorder health, waits for actual GPS and both motion streams before claiming readiness, and propagates persistent Android unreliable-motion accuracy without treating one transient sample as a permanent warning.
 - The corrected APK preserves the formal ride during update-install and has device-validated both readiness paths: a separate 47-second obstructed-position test stayed visibly in `finding GPS`, while an exposed-sky 109.3-second rehearsal acquired its first fix after 54.2 seconds and transitioned truthfully to active recording. The latter finalized/indexed 151 chunks and exported a verified archive with 55 GNSS, 16,413 accelerometer, and 21,961 gyroscope samples; device/host hashes matched and no recorder service remained.
 - The accepted M2.8 first-fix-confirmed repeat recorded 39m17.1s of a pocket-carried, approximately 99%-locked motorcycle trip and finalized/indexed 3,689 ordered chunks containing 2,322 GNSS, 469,953 accelerometer, and 469,942 gyroscope samples. GNSS began at T+35.2s, before reported movement at approximately T+3m12s; the largest subsequent adjacent GNSS gap was 1.312s and the largest adjacent dual-IMU gap was 14.9ms. The 19,960,737-byte private archive passed strict independent inspection and exact phone/host SHA-256 equality with no corruption, sequence, count, or unexplained timeline failure.
+- M3.1 adds a pure native-Kotlin raw trip decoder over chunk encoding/schema version 1. It accepts unordered chunk input but reconstructs sequence order and fails closed on empty/corrupt evidence, mixed trip/contracts, sequence gaps, overlapping bounds, record reordering/duplicates, or non-increasing per-channel trip time.
+- M3.1 analysis timeline version 1 defaults to a 10 ms monotonic cadence and a 50 ms maximum IMU interpolation gap. It preserves exact/bracketing trip and source timestamps, status and raw flags; reports explicit missing reasons; refuses extrapolation or interpolation across dropout/clock-discontinuity evidence; keeps GNSS sparse and original for M3.2; and exposes repeatable lazy frame iteration.
 
 ## Partial
 
+- Telemetry processing has its versioned decode/resampling foundation; GNSS filtering, calibration, orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
 
 ## Not implemented
 
-- Telemetry processing pipeline.
 - Event engine.
 - Drive DNA/scoring.
 - Replay.
@@ -90,4 +92,4 @@
 
 ## Current step
 
-**Approval gate:** M2 and M2.8 completed 2026-08-14. M3 — Telemetry Processing Engine is the next planned milestone but remains pending explicit user authorization. Do not implement or substantially prepare M3 before that authorization.
+**Approval gate:** M3.1 completed 2026-08-14. M3.2 — GNSS sanity filtering is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.2 before that authorization.

@@ -192,6 +192,14 @@ Do not make UI replay sampling identical to ML sampling by accident. It is accep
 
 Each should have clear version/derivation.
 
+### M3.1 analysis timeline baseline
+
+Analysis timeline version 1 is a local native-Kotlin contract over verified raw chunk encoding/schema version 1. Its configuration snapshot declares the target interval and maximum IMU interpolation gap. The default interval is 10 ms and the default maximum interpolation gap is 50 ms; changing either value changes the configuration snapshot even when the algorithm version is unchanged.
+
+Frames are anchored to `trip_elapsed_ns`, never wall time. Original GNSS records are assigned once to their monotonic time bucket and are not coordinate-interpolated before M3.2 sanity filtering. Accelerometer and gyroscope axes may be linearly interpolated only between bracketing samples whose elapsed gap is within the configured bound and has no raw dropout/clock-discontinuity evidence. The aligned value retains both bracketing trip/source timestamps, the conservative lower accuracy status, the union of raw quality flags, and an exact/interpolated state.
+
+Missing IMU output remains explicit as channel unavailable, outside source coverage, source discontinuity, or interpolation gap too large. The resampler never extrapolates, never rewrites raw evidence, and exposes repeatable lazy frame iteration so a long trip need not be eagerly duplicated in memory.
+
 ## 12. Unit conventions
 
 Internal canonical units should prefer SI:
