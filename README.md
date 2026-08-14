@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0 and M1 are complete. M2 is active and M2.8 first real-drive fixture work was authorized on 2026-08-12. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history without an account or network. The local-private export path and clean Tecno rehearsal are validated. A first 41-minute field attempt finalized intact but exposed an 11-minute leading GPS gap; live first-fix readiness is being validated before the required repeat.
+Milestones M0 and M1 are complete. M2 is active and M2.8 first real-drive fixture work was authorized on 2026-08-12. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history without an account or network. The local-private export path, clean Tecno rehearsal, and exposed-sky positive first-fix transition are validated. A first 41-minute field attempt finalized intact but exposed an 11-minute leading GPS gap; the required first-fix-confirmed repeat remains pending.
 
 ## Roadmap
 

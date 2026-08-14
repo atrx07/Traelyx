@@ -8,9 +8,9 @@ M2.8 was explicitly authorized on 2026-08-12. Implement and validate only the fi
 
 ## P0 — M2.8 active
 
-1. Place the updated Tecno under exposed sky and rehearse Start until the UI confirms first GPS fix plus both motion streams; the obstructed-position `finding GPS` hold is already device-validated.
-2. Stop/finalize that rehearsal and confirm the separate test evidence does not alter the preserved 3,615-chunk diagnostic field attempt.
-3. Repeat the normal 30–60 minute locked-screen motorcycle drive, then inspect its private fixture; do not accept the first 41-minute attempt because GNSS was absent for its first 11m20.2s.
+1. Await explicit maintainer confirmation before preparing or starting the formal repeat; the exposed-sky first-fix transition and clean rehearsal finalization are already device-validated.
+2. Repeat the normal 30–60 minute locked-screen motorcycle drive only after visible positive GNSS readiness, then inspect its private fixture; do not accept the first 41-minute attempt because GNSS was absent for its first 11m20.2s.
+3. Treat the Tecno's persistent accelerometer status `0` and independently measured roughly +0.04 g Z-axis bias as a known fixture limitation, not a sole acceptance blocker. Preserve raw values/status unchanged and require continuous, ordered, finite/plausible IMU plus all other M2 integrity gates; defer calibration/confidence work to M3.
 
 ## P1 — Recorder milestone
 
