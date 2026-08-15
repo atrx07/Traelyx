@@ -157,6 +157,18 @@ Downstream logic should consume confidence:
 - phone-movement segment → exclude/mark affected frame-derived metrics;
 - severe Guardian state requires higher corroboration.
 
+### M3.6 implemented confidence baseline
+
+Telemetry confidence version 1 emits one repeatable lazy confidence frame for every M3.5 derived frame. It does not manufacture a global percentage. Each frame instead exposes categorical `supported`, `degraded`, `unavailable`, or `invalidated` assessments for GNSS, accelerometer, gyroscope, calibration, orientation, source agreement, device movement, and clock integrity, together with the exact typed reasons and upstream decisions, flags, accuracies, alignments, timestamps, and mount/calibration evidence needed to explain the result.
+
+The GNSS component retains the latest M3.2 fix within the M3.5 two-second source-age limit. Hard low-accuracy, clock-discontinuity, and impossible-jump decisions invalidate GNSS evidence; stale or absent evidence is unavailable. A first anchor, post-gap reset, unresolved/stationary displacement, mock signal, implausible source speed, or accepted horizontal accuracy above the versioned 15 m preferred-quality threshold is degraded rather than presented as precise. The 15 m value is a conservative quality tier inside M3.2's separate acceptance boundary, not an accuracy claim.
+
+Accelerometer and gyroscope confidence remain separate so a GNSS or one-sensor fault cannot erase healthy independent evidence. Exact clean frames are supported; interpolation, unreliable status, and raw non-fatal quality flags degrade the affected source; dropout, source discontinuity, oversized interpolation gaps, and source clock discontinuity invalidate it. Calibration, vehicle orientation, and device-movement assessments preserve M3.3/M3.4 state. An unevaluated or indeterminate movement check is degraded; an invalidated orientation is unusable for dependent vehicle-frame channels. The Tecno rehearsal remains ordinary `SENSOR_UNRELIABLE` evidence—there is no device-specific confidence exception.
+
+Yaw/heading source agreement is assessed only while movement is confirmed, both filtered channels are available, and both source times are within one second of the confidence target. Version 1 treats an absolute rate difference up to 0.5 rad/s as consistent; degraded inputs keep agreement degraded, and a larger difference marks the corroborated-motion aggregate invalidated without deciding which source is correct or declaring an integrity/safety event. Clock integrity separately identifies stable, partially discontinuous, fully discontinuous, and unassessed source sets.
+
+Downstream eligibility is categorical and metric-scoped: `eligible`, `limited`, or `excluded` for filtered speed, acceleration, jerk, yaw rate, heading-change rate, movement state, and corroborated vehicle motion. Missing or invalidated required evidence excludes only dependent metrics; degraded evidence limits their later score/event weight; healthy independent channels remain eligible. Corroborated vehicle motion additionally requires confirmed movement, all supporting channels, source agreement, device stability, and clock integrity. This confidence layer remains native, bounded-memory, local-only, and outside the Flutter bridge.
+
 ## 11. Dynamic sampling / battery
 
 Sampling rate may adapt to trip state if carefully designed, but never change silently without preserving enough detail for event detection.

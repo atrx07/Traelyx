@@ -15,3 +15,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0011-native-drift-finalization-handoff.md`
 - `ADR-0012-tripdebug-native-private-export.md`
 - `ADR-0013-telemetry-coordinate-frames.md`
+- `ADR-0014-categorical-telemetry-confidence.md`

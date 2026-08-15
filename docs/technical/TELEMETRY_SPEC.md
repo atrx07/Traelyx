@@ -160,6 +160,16 @@ Vehicle jerk is in `m/s³` and uses the per-axis median of adjacent slopes acros
 
 Movement state is `unknown`, `stopped`, or `moving`. Version 1 enters moving only after filtered speed is at least 1.5 m/s for at least 1 second across at least two distinct GNSS-derived speed outputs. It enters stopped only after speed is at most 0.5 m/s for at least 2 seconds across at least three distinct outputs. Speeds between those thresholds hold a confirmed state; unavailable/stale speed resets state to unknown. All window sizes, time constants, age/gap limits, thresholds, durations, source counts, and the nested M3.4 course configuration are snapshotted in the versioned configuration.
 
+### M3.6 telemetry-confidence contract
+
+Telemetry confidence version 1 consumes the exact M3.5 timeline and emits one deterministic lazy result at each matching analysis time. Confidence is not a synthetic percentage. Its four evidence states are `supported`, `degraded`, `unavailable`, and `invalidated`; each assessment retains machine-readable reasons and the relevant M3.1–M3.5 timestamps, accuracy/status values, raw flags, decisions, calibration evidence, mount evidence, and missing reason. Accelerometer and gyroscope confidence remain separate within the IMU domain.
+
+The versioned GNSS preferred-quality tier is 15 m horizontal accuracy, inside and independent from M3.2's hard acceptance limit. Accepted evidence above the preferred tier, first-anchor/gap/unresolved evidence, mock state, and implausible source speed are degraded. M3.2 hard low-accuracy, clock-discontinuity, and impossible-jump exclusions are invalidated; missing or evidence older than M3.5's two-second source-age limit is unavailable. IMU interpolation and unreliable status degrade one sensor, while dropout, discontinuity, and oversized interpolation gaps invalidate it. Calibration/orientation/device-movement assessments preserve their upstream state rather than reinterpreting raw values.
+
+Source agreement compares M3.5 yaw rate with GNSS heading-change rate only during confirmed movement, with both channels available and their source times no more than one second from the target. The version-1 tolerance is an absolute 0.5 rad/s. A larger difference invalidates only the corroborated-motion assessment; it is not a crash, fraud, or safety verdict and does not choose a winning sensor. All preferred thresholds and agreement limits are snapshotted in `TelemetryConfidenceConfig`.
+
+Every derived metric receives explainable downstream eligibility: `eligible`, `limited`, or `excluded`, including its required and limiting confidence components. Speed/heading/movement depend on GNSS; acceleration/jerk depend on accelerometer plus calibration, orientation, and device stability; yaw depends on gyroscope plus the same context. Missing or invalidated required evidence excludes that metric, degraded evidence limits it, and unrelated healthy channels remain eligible. A separate corroborated-vehicle-motion aggregate requires confirmed movement, available inertial/GNSS channels, supported or degraded cross-sensor agreement, device stability, and clock integrity. Confidence results are not persisted or sent across the Flutter bridge in M3.6.
+
 ## 8. Missingness
 
 Missing is not zero.

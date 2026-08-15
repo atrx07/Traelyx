@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M2 and M3.1–M3.5 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies GNSS evidence and distance, produces explicit stationary IMU calibration and frame-transform state, and derives filtered vehicle acceleration, jerk, yaw, speed, heading-rate, and movement channels with typed missingness and source provenance. M3 remains active, but M3.6 awaits explicit authorization.
+Milestones M0–M2 and M3.1–M3.6 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies GNSS evidence and distance, calibrates and transforms IMU evidence, derives filtered motion channels, and assigns explainable categorical confidence plus metric-scoped downstream eligibility without a fabricated global percentage. M3 remains active, but M3.7 awaits explicit authorization.
 
 ## Roadmap
 
@@ -21,7 +21,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M3.3 | Telemetry Processing Engine | IMU calibration | ✅ Complete | Done | 2026-08-15 |
 | M3.4 | Telemetry Processing Engine | Orientation/frame transform | ✅ Complete | Done | 2026-08-15 |
 | M3.5 | Telemetry Processing Engine | Derived channels | ✅ Complete | Done | 2026-08-15 |
-| M3.6 | Telemetry Processing Engine | Telemetry confidence v1 | ⚪ Pending | ~1 day | — |
+| M3.6 | Telemetry Processing Engine | Telemetry confidence v1 | ✅ Complete | Done | 2026-08-15 |
 | M3.7 | Telemetry Processing Engine | Replay channel generator | ⚪ Pending | ~1 day | — |
 | M3.8 | Telemetry Processing Engine | Fixture regression corpus | ⚪ Pending | ~1–2 days | — |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |
