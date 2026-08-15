@@ -98,6 +98,14 @@ Filter parameters are versioned/configured, not magic numbers scattered across c
 
 Distance accumulation should reject impossible jumps and account for GNSS accuracy. Do not count obvious noise while stationary as travel.
 
+### M3.2 implemented GNSS sanity/distance baseline
+
+GNSS processing version 1 consumes the original ordered sparse fixes from M3.1 and retains every raw sample unchanged beside an explicit decision/evidence record. Its default configuration accepts at most 50 m horizontal accuracy, breaks a distance chain after a gap greater than 5 s, rejects an accuracy-adjusted minimum plausible speed above 100 m/s, and treats source speed at or below 0.75 m/s as stationary evidence. These are versioned configuration values, not claims that GNSS is exact to those thresholds.
+
+Low-accuracy or clock-discontinuity fixes are excluded and reset the anchor. A long gap accepts the current fix as a new anchor without bridging distance. An impossible jump is excluded while retaining the last valid anchor so one isolated spike does not displace the route. Great-circle distance uses the short Earth path, including across the antimeridian.
+
+For a plausible segment beyond the sum of both horizontal-accuracy radii, full geodesic distance is accumulated as resolved distance. A segment within that envelope is accumulated separately as motion-supported distance only when at least one plausible source-speed estimate exceeds the stationary threshold. When both endpoints support stationary state it is explicit stationary jitter; without motion evidence it is explicit unresolved-within-accuracy evidence. Neither contributes distance. Mock-location and implausible source-speed signals remain visible evidence and never become a sole automatic integrity verdict.
+
 ## 8. Moving/stopped state
 
 Combine speed persistence and confidence rather than toggling on a single sample threshold. Use hysteresis/debounce.

@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M3
 **Started:** 2026-08-14
-**Last updated:** 2026-08-14
+**Last updated:** 2026-08-15
 
 ## Context budget / references
 
@@ -29,7 +29,7 @@ Convert verified local raw GNSS and IMU evidence into deterministic, physically 
 
 ## User-visible result
 
-Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; later authorized substeps add filtering, calibration, frames, derived channels, confidence, replay reduction, and regression coverage.
+Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; M3.2 adds auditable GNSS classification and distance accumulation; later authorized substeps add calibration, frames, derived channels, confidence, replay reduction, and regression coverage.
 
 ## In scope
 
@@ -64,19 +64,19 @@ Finalized trips can be processed locally into explainable analysis and replay in
 ## Data/privacy/security implications
 
 - Processing remains local and accountless.
-- Raw chunk bytes, precise coordinates, vectors, and source timestamps remain under native authority and do not cross the Flutter bridge in M3.1.
+- Raw chunk bytes, precise coordinates, vectors, source timestamps, and M3.2 GNSS decisions remain under native authority and do not cross the Flutter bridge.
 - The accepted private fixture remains local and is not committed or logged.
 
 ## Compatibility/migration implications
 
-- M3.1 reads existing raw chunk encoding/schema version 1 without changing it.
+- M3.1–M3.2 read existing raw chunk encoding/schema version 1 without changing it.
 - Unknown versions, corrupt chunks, mixed trips, sequence gaps, and invalid ordering fail closed.
-- No Drift schema or storage migration is required for M3.1.
+- No Drift schema or storage migration is required for M3.1–M3.2.
 
 ## Implementation steps
 
 - [x] M3.1 Add a versioned raw trip decoder and deterministic aligned analysis timeline with explicit missing/interpolated states.
-- [ ] M3.2 Add GNSS sanity filtering and confidence-aware distance accumulation.
+- [x] M3.2 Add GNSS sanity filtering and confidence-aware distance accumulation.
 - [ ] M3.3 Add stationary/bias calibration with visible quality state.
 - [ ] M3.4 Add device/world/vehicle frame transforms with explicit orientation confidence.
 - [ ] M3.5 Add versioned filtered speed, acceleration, jerk, yaw, and movement channels.
@@ -87,12 +87,12 @@ Finalized trips can be processed locally into explainable analysis and replay in
 ## Tests / validation
 
 - [x] Kotlin static compilation through focused/full Gradle unit tasks.
-- [x] Focused native decoder/resampler unit and golden-fixture tests.
-- [x] Complete native unit suite: 69 passed, 0 failed/skipped.
+- [x] Focused native decoder/resampler and GNSS sanity/distance tests.
+- [x] Complete native unit suite: 79 passed, 0 failed/skipped.
 - [x] Flutter analysis and tests for regression safety: no analysis issues; 93 tests passed.
 - [x] Android debug APK build.
 - [x] Repository formatting, JSON/YAML, secret, and private-fixture validation.
-- [x] Real-device validation not required for M3.1: no acquisition/lifecycle behavior or physical-quality claim changed.
+- [x] Real-device validation not required for M3.1–M3.2: no acquisition/lifecycle behavior or physical-quality claim changed.
 
 ## Acceptance criteria
 
@@ -113,14 +113,19 @@ Finalized trips can be processed locally into explainable analysis and replay in
 
 - Keep M3.1 raw decode/resampling in pure native Kotlin beside the native raw authority. This preserves the established bridge privacy boundary and introduces no dependency.
 - Analysis timeline version 1 is anchored to monotonic trip elapsed time at a configurable, snapshotted cadence. IMU may be linearly interpolated only between bounded bracketing samples; GNSS remains original sparse evidence for M3.2.
+- Keep M3.2 GNSS processing pure and versioned beside the raw decoder. Classify every original fix, break the distance chain at low-accuracy/clock-discontinuous/gapped evidence, retain the prior anchor when isolating one impossible jump, and treat mock-location state as evidence rather than an automatic rejection.
+- Separate distance resolved beyond combined horizontal-accuracy radii from plausible source-speed-supported distance within those radii. Stationary or unresolved within-accuracy movement contributes zero, while every decision retains its thresholds and evidence for auditability.
 
 ## Progress log
 
 - 2026-08-14: Maintainer authorized the intended next step; M3 activated with M3.1 in progress.
 - 2026-08-14: M3.1 implementation and required gates completed. Stopped before M3.2 pending explicit authorization.
+- 2026-08-15: Maintainer authorized M3.2; implementation and required local gates completed. Stopped before M3.3 pending explicit authorization.
 
 ## Completion summary
 
 M3.1 introduced a strict trip-wide decoder over the existing checksummed chunk contract and a versioned, configurable, lazy analysis timeline. GNSS samples remain original sparse evidence; IMU interpolation is bounded, provenance-preserving, confidence-conservative, and explicitly missing across unavailable/out-of-coverage/discontinuous/oversized-gap states.
 
-Validation passed: focused and complete native unit suites (69 tests), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, or new real-device reliability claim was introduced. M3.2 is pending maintainer authorization.
+M3.2 added versioned per-fix GNSS decisions and evidence plus cumulative resolved and source-speed-supported distance. Low accuracy, clock discontinuities, oversized gaps, impossible jumps, stationary jitter, unresolved within-accuracy segments, implausible source speed, and mock-location signals remain explicit; raw fixes are preserved.
+
+Validation passed: focused and complete native unit suites (79 tests), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, bridge expansion, or new real-device reliability claim was introduced. M3.3 is pending maintainer authorization.

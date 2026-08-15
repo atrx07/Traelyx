@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.1 complete; awaiting explicit M3.2 authorization**
+**M3 active — M3.2 complete; awaiting explicit M3.3 authorization**
 
 ## Working
 
@@ -57,10 +57,12 @@
 - The accepted M2.8 first-fix-confirmed repeat recorded 39m17.1s of a pocket-carried, approximately 99%-locked motorcycle trip and finalized/indexed 3,689 ordered chunks containing 2,322 GNSS, 469,953 accelerometer, and 469,942 gyroscope samples. GNSS began at T+35.2s, before reported movement at approximately T+3m12s; the largest subsequent adjacent GNSS gap was 1.312s and the largest adjacent dual-IMU gap was 14.9ms. The 19,960,737-byte private archive passed strict independent inspection and exact phone/host SHA-256 equality with no corruption, sequence, count, or unexplained timeline failure.
 - M3.1 adds a pure native-Kotlin raw trip decoder over chunk encoding/schema version 1. It accepts unordered chunk input but reconstructs sequence order and fails closed on empty/corrupt evidence, mixed trip/contracts, sequence gaps, overlapping bounds, record reordering/duplicates, or non-increasing per-channel trip time.
 - M3.1 analysis timeline version 1 defaults to a 10 ms monotonic cadence and a 50 ms maximum IMU interpolation gap. It preserves exact/bracketing trip and source timestamps, status and raw flags; reports explicit missing reasons; refuses extrapolation or interpolation across dropout/clock-discontinuity evidence; keeps GNSS sparse and original for M3.2; and exposes repeatable lazy frame iteration.
+- M3.2 adds a pure native-Kotlin GNSS sanity filter version 1. Every original fix receives an auditable decision and evidence; low accuracy, clock discontinuity, gaps, impossible jumps, stationary jitter, unresolved within-accuracy motion, and mock-location signals remain explicit instead of being silently discarded.
+- M3.2 distance accumulation separates accuracy-resolved distance from plausible source-speed-supported distance within overlapping accuracy radii. Defaults are snapshotted at 50 m maximum horizontal accuracy, 5 s maximum segment gap, 100 m/s maximum plausible speed, and 0.75 m/s stationary threshold; raw GNSS remains unchanged.
 
 ## Partial
 
-- Telemetry processing has its versioned decode/resampling foundation; GNSS filtering, calibration, orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
+- Telemetry processing has versioned decode/resampling and GNSS filtering/distance foundations; calibration, orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -92,4 +94,4 @@
 
 ## Current step
 
-**Approval gate:** M3.1 completed 2026-08-14. M3.2 — GNSS sanity filtering is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.2 before that authorization.
+**Approval gate:** M3.2 completed 2026-08-15. M3.3 — IMU calibration is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.3 before that authorization.

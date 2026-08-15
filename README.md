@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M2 and M3.1 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. M3.1 now decodes complete raw trips fail-closed and builds a deterministic, versioned local analysis timeline with bounded IMU interpolation, explicit missingness, preserved provenance, and sparse original GNSS evidence. M3 remains active but M3.2 awaits explicit authorization.
+Milestones M0–M2 and M3.1–M3.2 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies every GNSS sample with auditable evidence, and accumulates resolved versus motion-supported distance without counting rejected jumps or stationary noise. M3 remains active but M3.3 awaits explicit authorization.
 
 ## Roadmap
 
@@ -15,9 +15,9 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M0 | Project Bootstrap | Skeleton milestone | ✅ Complete | Done | 2026-08-08 |
 | M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | ✅ Complete | Done | 2026-08-09 |
 | M2 | Native Recording Engine | Reliable recorder, recovery, private export, and real-drive fixture | ✅ Complete | Done | 2026-08-14 |
-| M3 | Telemetry Processing Engine | Trustworthy derived telemetry | 🟡 In progress | ~1–2 weeks | 2026-08-14 |
+| M3 | Telemetry Processing Engine | Trustworthy derived telemetry | 🟡 In progress | ~1–2 weeks | 2026-08-15 |
 | M3.1 | Telemetry Processing Engine | Decoder/resampler | ✅ Complete | Done | 2026-08-14 |
-| M3.2 | Telemetry Processing Engine | GNSS sanity filtering | ⚪ Pending | ~1–2 days | — |
+| M3.2 | Telemetry Processing Engine | GNSS sanity filtering | ✅ Complete | Done | 2026-08-15 |
 | M3.3 | Telemetry Processing Engine | IMU calibration | ⚪ Pending | ~1–2 days | — |
 | M3.4 | Telemetry Processing Engine | Orientation/frame transform | ⚪ Pending | ~1–2 days | — |
 | M3.5 | Telemetry Processing Engine | Derived channels | ⚪ Pending | ~1–2 days | — |

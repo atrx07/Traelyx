@@ -71,6 +71,12 @@ Latitude/longitude storage is required locally for route replay. Cloud sync poli
 
 Do not infer "true" speed from a single noisy location jump if better source/filtered estimates are available.
 
+### M3.2 processed GNSS contract
+
+Processed GNSS version 1 preserves the complete raw sample and adds an auditable per-fix/segment decision, evidence flags, prior anchor time, elapsed time, geodesic displacement, combined horizontal-accuracy envelope, apparent/minimum-plausible speed, distance increment, and cumulative distance split into resolved and source-motion-supported components. Missing segment metrics remain null rather than zero; a zero distance increment means the decision explicitly excluded or reset that segment.
+
+Input time must be strictly increasing. Empty GNSS input is a valid explicit zero-distance result. Low accuracy, clock discontinuity, long gaps, accuracy-adjusted impossible jumps, stationary jitter, and unresolved movement inside the accuracy envelope are distinct outcomes. Precise coordinates and this processed evidence remain local-native in M3.2 and are not added to diagnostics, logs, network payloads, or the Flutter bridge.
+
 ## 5. Raw IMU sample
 
 Minimum candidates:
