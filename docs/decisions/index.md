@@ -14,3 +14,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0010-progressive-agent-context.md`
 - `ADR-0011-native-drift-finalization-handoff.md`
 - `ADR-0012-tripdebug-native-private-export.md`
+- `ADR-0013-telemetry-coordinate-frames.md`

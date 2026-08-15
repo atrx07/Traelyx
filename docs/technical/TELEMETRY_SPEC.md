@@ -110,19 +110,25 @@ One stationary orientation cannot identify a general three-axis accelerometer bi
 At minimum distinguish:
 
 ### Device frame
-Axes fixed to phone hardware.
+Axes fixed to Android's natural/default device orientation: +X right, +Y device-top, and +Z out of the screen. Display rotation never remaps stored raw sensor axes.
 
 ### World/navigation frame
-Axes aligned to a documented Earth/navigation convention chosen during implementation (e.g., ENU/NED style). The exact convention must be fixed in code/schema documentation before production.
+Version 1 uses right-handed ENU: +X east, +Y true north, and +Z up. GNSS bearing is degrees east of true north and describes horizontal travel course, not device orientation.
 
 ### Vehicle-relative frame
-Conceptually:
+Version 1 uses right-handed forward-left-up:
 
-- longitudinal — forward/backward along estimated vehicle heading;
-- lateral — left/right;
-- vertical — up/down.
+- +X longitudinal — forward;
+- +Y lateral — left;
+- +Z vertical — up.
 
 Transform quality depends on orientation/mount/heading confidence and must produce uncertainty flags.
+
+### M3.4 frame-transform contract
+
+Frame-transform version 1 consumes M3.3 calibration and M3.2 GNSS decisions without rewriting either source. Tilt resolution records its calibration bounds, measured device-frame up direction, exact horizontal-reference choice, orthonormal device-to-leveled matrix, and degraded/unavailable evidence. A later stationary gravity-direction change above 10 degrees invalidates the prior tilt assumption; yaw-only change remains unobservable.
+
+Vehicle transformation requires explicit mount-forward evidence. World ENU transformation additionally requires an accepted GNSS course at or before the target monotonic trip time, no more than 2 seconds old, at speed at least 3 m/s, and with bearing accuracy at most 30 degrees. Results retain target/source/calibration times, fixed frame conventions, source decisions/evidence, and resolved/degraded/unavailable state. Matrices rotate vectors only; gravity removal, signal filtering, and derived longitudinal/lateral/vertical channels remain M3.5 work.
 
 ## 7. Derived channels
 

@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.3 complete; awaiting explicit M3.4 authorization**
+**M3 active — M3.4 complete; awaiting explicit M3.5 authorization**
 
 ## Working
 
@@ -61,10 +61,12 @@
 - M3.2 distance accumulation separates accuracy-resolved distance from plausible source-speed-supported distance within overlapping accuracy radii. Defaults are snapshotted at 50 m maximum horizontal accuracy, 5 s maximum segment gap, 100 m/s maximum plausible speed, and 0.75 m/s stationary threshold; raw GNSS remains unchanged.
 - M3.3 adds bounded-memory stationary IMU calibration version 1 over the aligned native timeline. Its versioned defaults select the quietest qualifying two-second window using explicit gravity, angular-rate, and per-axis stability gates; missing, discontinuous, moving, unstable, or too-short evidence produces auditable diagnostics instead of fabricated calibration.
 - M3.3 exposes calibrated, calibrated-degraded, and insufficient-evidence state while preserving Android accuracy, raw quality flags, and interpolation counts. It estimates zero-rate gyroscope bias and only the accelerometer bias component observable parallel to the selected gravity vector; it does not rewrite raw samples or claim a full three-axis accelerometer correction from one orientation.
+- M3.4 fixes version-1 coordinate conventions as unchanged Android device axes, right-handed vehicle forward-left-up, and right-handed world ENU. Orthonormal positive-determinant transforms remain native and versioned, preserve source calibration/course times, and require an explicit device-frame mount-forward hint instead of assuming phone-top-forward.
+- M3.4 keeps observability honest: stationary gravity resolves tilt but not geographic yaw; later non-overlapping gravity-direction change can invalidate the reference; and vehicle-to-world output requires recent, sufficiently fast, bearing-accurate M3.2 GNSS course evidence. Missing, stale, future, implausible, mock, degraded, mismatched, and unsupported states remain explicit.
 
 ## Partial
 
-- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, and stationary IMU calibration foundations; orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
+- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, and orientation/frame-transform foundations; derived channels, confidence, replay reduction, and the regression corpus remain pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -87,8 +89,8 @@
 - Unknown or partial application schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair. Android's standard `android_metadata` table is recognized as platform metadata and ignored by the application-table comparison.
 - Android background/foreground-service behavior across OS versions/OEMs.
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
-- Device mounting/orientation and motorcycle vibration effects on IMU quality.
-- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Independent maintainer six-orientation and Physics Toolbox checks found stable, physically plausible X/Y response with a repeatable positive Z-axis bias of roughly +0.04 g (+0.39 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a known device-fixture limitation, not by itself an M2.8 acceptance blocker: raw values/status remain unchanged. M3.3 classifies selected unreliable evidence as degraded calibration; physical fixture replay/tuning and aggregate confidence remain pending later M3 work.
+- M3.4 fixes and tests the frame conventions mathematically, but mounted vehicle alignment, mid-trip phone movement, and motorcycle vibration effects on IMU quality still require physical fixture validation.
+- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration; physical fixture replay/tuning and aggregate confidence remain pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -96,4 +98,4 @@
 
 ## Current step
 
-**Approval gate:** M3.3 completed 2026-08-15. M3.4 — orientation and device/world/vehicle frame transformation is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.4 before that authorization.
+**Approval gate:** M3.4 completed 2026-08-15. M3.5 — versioned derived speed, acceleration, jerk, yaw/heading-change, and movement channels is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.5 before that authorization.

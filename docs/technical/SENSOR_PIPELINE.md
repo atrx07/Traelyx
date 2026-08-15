@@ -91,6 +91,14 @@ Orientation confidence should degrade when:
 - GNSS quality is poor;
 - sensor gaps occur.
 
+### M3.4 implemented orientation/frame baseline
+
+Orientation/frame transform version 1 follows ADR-0013. Android device axes remain +X right, +Y device-top, +Z screen-out. The navigation frame is right-handed ENU (+X east, +Y north, +Z up), and the vehicle frame is right-handed forward-left-up (+X forward, +Y left, +Z up). Orthonormal positive-determinant matrices map source coordinates into target coordinates without changing vector magnitude.
+
+M3.3 gravity evidence resolves device tilt into a leveled right/forward/up frame, using projected device-top as a deterministic horizontal reference and device-right only when device-top is vertical. This local horizontal reference is not north: geographic yaw remains explicit as unobservable. A later non-overlapping stationary calibration invalidates the tilt assumption when its gravity direction differs by more than the default 10-degree threshold; insufficient, degraded, or unevaluated comparison evidence remains visible, and yaw-only phone rotation cannot be claimed detected.
+
+Device-to-vehicle transformation requires an explicit device-frame forward mount hint and never silently assumes phone-top-forward. Vehicle-to-ENU additionally requires an M3.2-usable GNSS course with default speed at least 3 m/s, bearing accuracy at most 30 degrees, and source age at most 2 seconds. Rejected/implausible/stale/future course is unavailable; mock evidence degrades rather than solely rejects. World output is unavailable when either prerequisite is unavailable, and provenance includes calibration/course times and quality evidence. Version 1 does not remove gravity, filter vectors, or derive M3.5 motion channels.
+
 ## 6. Filters
 
 Initial baseline should favor explainable filters:
