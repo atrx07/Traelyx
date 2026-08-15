@@ -59,6 +59,14 @@ Requirements:
 - phone movement during a trip can invalidate/restart orientation assumptions;
 - do not require one perfect fixed mount for all users, but classify unsupported/unreliable states honestly.
 
+### M3.3 implemented stationary/bias baseline
+
+IMU stationary calibration version 1 scans the aligned native timeline with bounded memory and selects the quietest qualifying two-second window. Missing channels and raw dropout/clock-discontinuity evidence break a candidate. Default instantaneous gates require accelerometer magnitude within 0.75 m/s² of standard gravity (9.80665 m/s²) and gyroscope magnitude at most 0.05 rad/s; a window additionally requires every accelerometer axis at or below 0.15 m/s² standard deviation and every gyroscope axis at or below 0.01 rad/s standard deviation. All thresholds and duration are snapshotted in the versioned configuration.
+
+The result is explicitly `calibrated`, `calibrated_degraded`, or `insufficient_evidence`, with counts and reasons for missing, discontinuous, moving, non-gravity-like, unstable, or too-short evidence. Android accuracy status zero or below and `SENSOR_UNRELIABLE` remain visible and produce degraded calibration rather than rewritten raw samples; exact/interpolated provenance also remains explicit.
+
+A single stationary orientation identifies the zero-rate gyroscope bias and only the accelerometer bias component observable parallel to the measured gravity vector. Version 1 therefore reports the raw mean gravity vector, its unit direction, and the observable radial magnitude bias; it does not claim a fully identifiable three-axis accelerometer bias, remove gravity, apply corrections to raw evidence, or perform the M3.4 device-movement/orientation work.
+
 ## 3. Motorcycle vibration
 
 Motorcycles may produce significant high-frequency vibration. Filters must be validated on actual motorcycle fixtures rather than tuned only on smooth car data.

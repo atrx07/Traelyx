@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.2 complete; awaiting explicit M3.3 authorization**
+**M3 active — M3.3 complete; awaiting explicit M3.4 authorization**
 
 ## Working
 
@@ -59,10 +59,12 @@
 - M3.1 analysis timeline version 1 defaults to a 10 ms monotonic cadence and a 50 ms maximum IMU interpolation gap. It preserves exact/bracketing trip and source timestamps, status and raw flags; reports explicit missing reasons; refuses extrapolation or interpolation across dropout/clock-discontinuity evidence; keeps GNSS sparse and original for M3.2; and exposes repeatable lazy frame iteration.
 - M3.2 adds a pure native-Kotlin GNSS sanity filter version 1. Every original fix receives an auditable decision and evidence; low accuracy, clock discontinuity, gaps, impossible jumps, stationary jitter, unresolved within-accuracy motion, and mock-location signals remain explicit instead of being silently discarded.
 - M3.2 distance accumulation separates accuracy-resolved distance from plausible source-speed-supported distance within overlapping accuracy radii. Defaults are snapshotted at 50 m maximum horizontal accuracy, 5 s maximum segment gap, 100 m/s maximum plausible speed, and 0.75 m/s stationary threshold; raw GNSS remains unchanged.
+- M3.3 adds bounded-memory stationary IMU calibration version 1 over the aligned native timeline. Its versioned defaults select the quietest qualifying two-second window using explicit gravity, angular-rate, and per-axis stability gates; missing, discontinuous, moving, unstable, or too-short evidence produces auditable diagnostics instead of fabricated calibration.
+- M3.3 exposes calibrated, calibrated-degraded, and insufficient-evidence state while preserving Android accuracy, raw quality flags, and interpolation counts. It estimates zero-rate gyroscope bias and only the accelerometer bias component observable parallel to the selected gravity vector; it does not rewrite raw samples or claim a full three-axis accelerometer correction from one orientation.
 
 ## Partial
 
-- Telemetry processing has versioned decode/resampling and GNSS filtering/distance foundations; calibration, orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
+- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, and stationary IMU calibration foundations; orientation/frame transforms, derived channels, confidence, replay reduction, and the regression corpus remain pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -86,7 +88,7 @@
 - Android background/foreground-service behavior across OS versions/OEMs.
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
 - Device mounting/orientation and motorcycle vibration effects on IMU quality.
-- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Independent maintainer six-orientation and Physics Toolbox checks found stable, physically plausible X/Y response with a repeatable positive Z-axis bias of roughly +0.04 g (+0.39 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a known device-fixture limitation, not by itself an M2.8 acceptance blocker: raw values/status must remain unchanged, and the repeat still requires continuous, ordered, finite/plausible evidence plus every other recording-integrity gate. Calibration and confidence handling remain deferred to M3.
+- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Independent maintainer six-orientation and Physics Toolbox checks found stable, physically plausible X/Y response with a repeatable positive Z-axis bias of roughly +0.04 g (+0.39 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a known device-fixture limitation, not by itself an M2.8 acceptance blocker: raw values/status remain unchanged. M3.3 classifies selected unreliable evidence as degraded calibration; physical fixture replay/tuning and aggregate confidence remain pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -94,4 +96,4 @@
 
 ## Current step
 
-**Approval gate:** M3.2 completed 2026-08-15. M3.3 — IMU calibration is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.3 before that authorization.
+**Approval gate:** M3.3 completed 2026-08-15. M3.4 — orientation and device/world/vehicle frame transformation is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.4 before that authorization.

@@ -97,6 +97,14 @@ Gyroscope unit: **rad/s** unless explicitly named otherwise.
 
 Raw axes use the Android/device coordinate frame exactly as documented by platform APIs; do not relabel them as vehicle longitudinal/lateral axes.
 
+### M3.3 stationary calibration contract
+
+Stationary calibration version 1 consumes the M3.1 aligned device-frame accelerometer and gyroscope values at their monotonic analysis cadence. Its configuration snapshot declares standard gravity, minimum duration, instantaneous gravity/angular-rate gates, and per-axis stability gates. Missing or discontinuous evidence is never converted to zero, and raw vectors, timestamps, status, flags, and interpolation provenance remain unchanged.
+
+A successful result records the selected trip-time bounds and sample count; device-frame accelerometer mean and standard deviation; measured gravity direction; the observable accelerometer radial bias parallel to gravity; device-frame zero-rate gyroscope bias and standard deviation; conservative minimum Android accuracy statuses; raw quality flags; and interpolation counts. `calibrated_degraded` is distinct from `calibrated` when the selected source carries unreliable sensor status. Insufficient evidence carries explicit diagnostic reasons and no fabricated calibration.
+
+One stationary orientation cannot identify a general three-axis accelerometer bias independently of gravity and phone orientation. The version-1 result must not be interpreted as a full accelerometer correction, a vehicle-frame transform, or proof that the phone remained fixed after the selected window.
+
 ## 6. Coordinate frames
 
 At minimum distinguish:

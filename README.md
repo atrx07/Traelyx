@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M2 and M3.1–M3.2 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies every GNSS sample with auditable evidence, and accumulates resolved versus motion-supported distance without counting rejected jumps or stationary noise. M3 remains active but M3.3 awaits explicit authorization.
+Milestones M0–M2 and M3.1–M3.3 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies GNSS evidence and distance, and produces explicit calibrated/degraded/insufficient stationary IMU bias state without rewriting raw samples or claiming unobservable accelerometer precision. M3 remains active but M3.4 awaits explicit authorization.
 
 ## Roadmap
 
@@ -18,7 +18,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry | 🟡 In progress | ~1–2 weeks | 2026-08-15 |
 | M3.1 | Telemetry Processing Engine | Decoder/resampler | ✅ Complete | Done | 2026-08-14 |
 | M3.2 | Telemetry Processing Engine | GNSS sanity filtering | ✅ Complete | Done | 2026-08-15 |
-| M3.3 | Telemetry Processing Engine | IMU calibration | ⚪ Pending | ~1–2 days | — |
+| M3.3 | Telemetry Processing Engine | IMU calibration | ✅ Complete | Done | 2026-08-15 |
 | M3.4 | Telemetry Processing Engine | Orientation/frame transform | ⚪ Pending | ~1–2 days | — |
 | M3.5 | Telemetry Processing Engine | Derived channels | ⚪ Pending | ~1–2 days | — |
 | M3.6 | Telemetry Processing Engine | Telemetry confidence v1 | ⚪ Pending | ~1 day | — |

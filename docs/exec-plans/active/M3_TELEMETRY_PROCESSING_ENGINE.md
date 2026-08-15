@@ -29,7 +29,7 @@ Convert verified local raw GNSS and IMU evidence into deterministic, physically 
 
 ## User-visible result
 
-Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; M3.2 adds auditable GNSS classification and distance accumulation; later authorized substeps add calibration, frames, derived channels, confidence, replay reduction, and regression coverage.
+Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; M3.2 adds auditable GNSS classification and distance accumulation; M3.3 adds explicit stationary IMU calibration state; later authorized substeps add frames, derived channels, confidence, replay reduction, and regression coverage.
 
 ## In scope
 
@@ -64,20 +64,20 @@ Finalized trips can be processed locally into explainable analysis and replay in
 ## Data/privacy/security implications
 
 - Processing remains local and accountless.
-- Raw chunk bytes, precise coordinates, vectors, source timestamps, and M3.2 GNSS decisions remain under native authority and do not cross the Flutter bridge.
+- Raw chunk bytes, precise coordinates, vectors, source timestamps, M3.2 GNSS decisions, and M3.3 calibration results remain under native authority and do not cross the Flutter bridge.
 - The accepted private fixture remains local and is not committed or logged.
 
 ## Compatibility/migration implications
 
-- M3.1–M3.2 read existing raw chunk encoding/schema version 1 without changing it.
+- M3.1–M3.3 read existing raw chunk encoding/schema version 1 without changing it.
 - Unknown versions, corrupt chunks, mixed trips, sequence gaps, and invalid ordering fail closed.
-- No Drift schema or storage migration is required for M3.1–M3.2.
+- No Drift schema or storage migration is required for M3.1–M3.3.
 
 ## Implementation steps
 
 - [x] M3.1 Add a versioned raw trip decoder and deterministic aligned analysis timeline with explicit missing/interpolated states.
 - [x] M3.2 Add GNSS sanity filtering and confidence-aware distance accumulation.
-- [ ] M3.3 Add stationary/bias calibration with visible quality state.
+- [x] M3.3 Add stationary/bias calibration with visible quality state.
 - [ ] M3.4 Add device/world/vehicle frame transforms with explicit orientation confidence.
 - [ ] M3.5 Add versioned filtered speed, acceleration, jerk, yaw, and movement channels.
 - [ ] M3.6 Add explainable confidence subcomponents and aggregate eligibility.
@@ -87,12 +87,12 @@ Finalized trips can be processed locally into explainable analysis and replay in
 ## Tests / validation
 
 - [x] Kotlin static compilation through focused/full Gradle unit tasks.
-- [x] Focused native decoder/resampler and GNSS sanity/distance tests.
-- [x] Complete native unit suite: 79 passed, 0 failed/skipped.
+- [x] Focused native decoder/resampler, GNSS sanity/distance, and stationary calibration tests.
+- [x] Complete native unit suite: 92 passed, 0 failed/skipped.
 - [x] Flutter analysis and tests for regression safety: no analysis issues; 93 tests passed.
 - [x] Android debug APK build.
 - [x] Repository formatting, JSON/YAML, secret, and private-fixture validation.
-- [x] Real-device validation not required for M3.1–M3.2: no acquisition/lifecycle behavior or physical-quality claim changed.
+- [x] Real-device validation not required for M3.1–M3.3: no acquisition/lifecycle behavior changed and M3.3 makes no cross-device or physical calibration-quality claim. Private fixture replay/tuning remains later M3 work.
 
 ## Acceptance criteria
 
@@ -100,13 +100,15 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - Chunk input order cannot reorder global raw evidence.
 - Invalid, corrupt, mixed-trip, gapped-sequence, and overlapping evidence fails closed.
 - The versioned analysis timeline uses monotonic trip time, preserves source provenance, never extrapolates IMU values, bounds interpolation across gaps, and does not interpolate GNSS coordinates before sanity filtering.
+- GNSS classification and distance accumulation preserve every original fix, break invalid chains, reject impossible jumps/stationary noise, and expose every exclusion or degradation reason.
+- Stationary IMU calibration is deterministic and bounded-memory; missing, discontinuous, moving, unstable, unreliable, or insufficient evidence stays explicit, and one orientation never becomes a fabricated full accelerometer correction.
 - The same verified input and configuration produce the same timeline.
 - Applicable validation gates pass before each substep is marked complete.
 
 ## Risks
 
 - Long trips can be expensive if callers eagerly materialize the analysis timeline; M3.1 exposes repeatable lazy frame iteration.
-- Device mounting, motorcycle vibration, and the Tecno accelerometer status require later calibration/confidence handling and must not be hidden during decoding.
+- Device mounting, motorcycle vibration, and the Tecno accelerometer status require later orientation, fixture replay/tuning, and confidence handling; M3.3 preserves them as raw/degraded evidence rather than hiding them.
 - Full multi-device, battery, and deep-sleep reliability remain M8 hardening concerns.
 
 ## Decisions made during execution
@@ -115,12 +117,15 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - Analysis timeline version 1 is anchored to monotonic trip elapsed time at a configurable, snapshotted cadence. IMU may be linearly interpolated only between bounded bracketing samples; GNSS remains original sparse evidence for M3.2.
 - Keep M3.2 GNSS processing pure and versioned beside the raw decoder. Classify every original fix, break the distance chain at low-accuracy/clock-discontinuous/gapped evidence, retain the prior anchor when isolating one impossible jump, and treat mock-location state as evidence rather than an automatic rejection.
 - Separate distance resolved beyond combined horizontal-accuracy radii from plausible source-speed-supported distance within those radii. Stationary or unresolved within-accuracy movement contributes zero, while every decision retains its thresholds and evidence for auditability.
+- Keep M3.3 calibration as a bounded-memory scan over the aligned native timeline. Select the quietest qualifying fixed-duration window, break candidates on missing/discontinuous/non-gravity-like/angular-motion evidence, and retain explicit diagnostics when no window qualifies.
+- Treat a single stationary orientation as sufficient for zero-rate gyroscope bias and only the accelerometer bias component observable parallel to gravity. Preserve the raw mean/vector/status/provenance, degrade selected unreliable evidence, and defer full orientation, device-movement invalidation, gravity removal, and correction application to later authorized work.
 
 ## Progress log
 
 - 2026-08-14: Maintainer authorized the intended next step; M3 activated with M3.1 in progress.
 - 2026-08-14: M3.1 implementation and required gates completed. Stopped before M3.2 pending explicit authorization.
 - 2026-08-15: Maintainer authorized M3.2; implementation and required local gates completed. Stopped before M3.3 pending explicit authorization.
+- 2026-08-15: Maintainer authorized M3.3; implementation and required local gates completed. Stopped before M3.4 pending explicit authorization.
 
 ## Completion summary
 
@@ -128,4 +133,6 @@ M3.1 introduced a strict trip-wide decoder over the existing checksummed chunk c
 
 M3.2 added versioned per-fix GNSS decisions and evidence plus cumulative resolved and source-speed-supported distance. Low accuracy, clock discontinuities, oversized gaps, impossible jumps, stationary jitter, unresolved within-accuracy segments, implausible source speed, and mock-location signals remain explicit; raw fixes are preserved.
 
-Validation passed: focused and complete native unit suites (79 tests), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, bridge expansion, or new real-device reliability claim was introduced. M3.3 is pending maintainer authorization.
+M3.3 added a versioned, bounded-memory stationary-window calibrator with calibrated/degraded/insufficient states, explicit diagnostic evidence, conservative raw status/provenance, observable accelerometer radial bias, and zero-rate gyroscope bias. It does not rewrite raw evidence or claim a full accelerometer correction from one orientation.
+
+Validation passed: focused and complete native unit suites (92 tests), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, recorder behavior, bridge expansion, or new real-device reliability claim was introduced. M3.4 is pending maintainer authorization.
