@@ -126,6 +126,14 @@ For a plausible segment beyond the sum of both horizontal-accuracy radii, full g
 
 Combine speed persistence and confidence rather than toggling on a single sample threshold. Use hysteresis/debounce.
 
+### M3.5 implemented derived-channel baseline
+
+Derived telemetry version 1 is a repeatable lazy native pipeline over M3.1–M3.4 evidence. It fails closed if the M3.2 summary does not exactly match the raw trip, and processes long timelines with bounded filter/derivative windows rather than eagerly materializing the trip. Available channels retain structured provenance and resolved/degraded state; missing sources, filter warmup, context gaps, device-moved mount invalidation, rejected GNSS, and stale evidence remain typed unavailable results. Raw evidence and prior-stage results are never rewritten or bridged to Flutter.
+
+The default IMU path removes the selected stationary accelerometer mean, subtracts zero-rate gyro bias, transforms through the active vehicle forward-left-up mount, applies a causal three-sample median prefilter, and then applies one-pole smoothing (200 ms acceleration, 150 ms yaw rate). Jerk is a robust seven-frame median-slope derivative rather than a single noisy difference. Any missing/discontinuous IMU frame, context boundary, or gap over 50 ms resets affected state. The stationary reference naturally captures the observable bias measured for that calibration window; there is no built-in Tecno or phone-model correction, and dynamic tilt/grade precision remains a physical-validation limitation.
+
+Filtered speed uses plausible platform speed or an explicitly degraded M3.2 accuracy-resolved displacement fallback, with a three-source median and 1 s smoothing. GNSS-derived heading rate wraps north-crossing deltas and retains the M3.4 course gates, then uses a three-rate median and 500 ms smoothing. Both become unavailable when their source is more than 2 seconds old; invalid/gapped sources reset state. Moving/stopped classification uses a 1.5/0.5 m/s hysteresis band plus distinct-source and elapsed-time confirmation (moving: two samples and 1 second; stopped: three samples and 2 seconds), so one fix cannot toggle motion state.
+
 ## 9. Confidence model
 
 Telemetry confidence should be composed from interpretable subcomponents such as:

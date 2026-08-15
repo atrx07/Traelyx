@@ -150,6 +150,16 @@ Possible replay/analysis channels:
 
 Derived channels must reference algorithm/version when persisted as authoritative audit data.
 
+### M3.5 derived-channel contract
+
+Derived telemetry version 1 consumes the exact M3.1 analysis timeline, a complete M3.2 GNSS summary that matches the same raw trip, and time-bounded M3.3 calibration/M3.4 mount contexts. It emits one repeatable lazy result per analysis target time. Every available scalar/vector records source trip and native timestamps, source count, relevant IMU alignment/status/flags, GNSS decisions/evidence/flags and accuracy, calibration state/evidence, mount quality/evidence, resolved/degraded quality, and the filter operations applied. Missing context, calibration, mount, IMU, GNSS, warmup, gap, rejection, or staleness remains a typed unavailable result rather than zero.
+
+Vehicle acceleration is expressed in M3.4 forward-left-up coordinates and `m/s²`. Version 1 subtracts the measured stationary device-frame accelerometer mean, which removes the fixed gravity reference plus the M3.3-observable radial bias for that calibration orientation; it does not apply a phone-model offset or claim dynamic pitch/roll compensation. The corrected vector receives a causal three-sample per-axis median prefilter followed by a one-pole low-pass filter with a 200 ms time constant. Vehicle yaw rate is the M3.3 gyro-bias-corrected, device-to-vehicle transformed +Z angular rate in `rad/s`, using the same median prefilter and a 150 ms low-pass time constant. IMU/context discontinuity beyond 50 ms resets dependent filter and derivative state.
+
+Vehicle jerk is in `m/s³` and uses the per-axis median of adjacent slopes across the latest seven consecutive filtered-acceleration frames. Filtered speed prefers plausible platform speed, falling back only to M3.2 accepted accuracy-resolved displacement speed when platform speed is absent. It uses a three-source median prefilter and 1 s low-pass time constant; hard-rejected/implausible/gapped evidence resets it, and output becomes unavailable more than 2 seconds after its source. GNSS heading-change rate wraps course deltas through ±π, requires the M3.4 usable-course gates, and uses a three-rate median plus 500 ms low-pass filter; course gaps over 2 seconds reset it.
+
+Movement state is `unknown`, `stopped`, or `moving`. Version 1 enters moving only after filtered speed is at least 1.5 m/s for at least 1 second across at least two distinct GNSS-derived speed outputs. It enters stopped only after speed is at most 0.5 m/s for at least 2 seconds across at least three distinct outputs. Speeds between those thresholds hold a confirmed state; unavailable/stale speed resets state to unknown. All window sizes, time constants, age/gap limits, thresholds, durations, source counts, and the nested M3.4 course configuration are snapshotted in the versioned configuration.
+
 ## 8. Missingness
 
 Missing is not zero.

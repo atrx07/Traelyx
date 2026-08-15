@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.4 complete; awaiting explicit M3.5 authorization**
+**M3 active — M3.5 complete; awaiting explicit M3.6 authorization**
 
 ## Working
 
@@ -63,10 +63,12 @@
 - M3.3 exposes calibrated, calibrated-degraded, and insufficient-evidence state while preserving Android accuracy, raw quality flags, and interpolation counts. It estimates zero-rate gyroscope bias and only the accelerometer bias component observable parallel to the selected gravity vector; it does not rewrite raw samples or claim a full three-axis accelerometer correction from one orientation.
 - M3.4 fixes version-1 coordinate conventions as unchanged Android device axes, right-handed vehicle forward-left-up, and right-handed world ENU. Orthonormal positive-determinant transforms remain native and versioned, preserve source calibration/course times, and require an explicit device-frame mount-forward hint instead of assuming phone-top-forward.
 - M3.4 keeps observability honest: stationary gravity resolves tilt but not geographic yaw; later non-overlapping gravity-direction change can invalidate the reference; and vehicle-to-world output requires recent, sufficiently fast, bearing-accurate M3.2 GNSS course evidence. Missing, stale, future, implausible, mock, degraded, mismatched, and unsupported states remain explicit.
+- M3.5 adds a pure native-Kotlin derived-channel pipeline version 1 over matching M3.1–M3.4 evidence. It produces lazy, repeatable filtered vehicle acceleration, jerk, yaw, speed, heading-rate, and hysteretic movement state while resetting dependent filters across gaps, rejected GNSS evidence, and context changes.
+- M3.5 retains typed missing reasons and structured source, GNSS, calibration, mount, and filter provenance for every channel. Platform speed is preferred; geodesic apparent speed is a degraded fallback only for accuracy-resolved M3.2 distance, and incomplete or mismatched upstream summaries fail closed.
 
 ## Partial
 
-- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, and orientation/frame-transform foundations; derived channels, confidence, replay reduction, and the regression corpus remain pending.
+- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, orientation/frame transforms, and derived channels; confidence, replay reduction, and the regression corpus remain pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -89,8 +91,8 @@
 - Unknown or partial application schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair. Android's standard `android_metadata` table is recognized as platform metadata and ignored by the application-table comparison.
 - Android background/foreground-service behavior across OS versions/OEMs.
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
-- M3.4 fixes and tests the frame conventions mathematically, but mounted vehicle alignment, mid-trip phone movement, and motorcycle vibration effects on IMU quality still require physical fixture validation.
-- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration; physical fixture replay/tuning and aggregate confidence remain pending later M3 work.
+- M3.4 frame conventions and M3.5 filter/sign/hysteresis behavior are covered by deterministic synthetic tests, but mounted vehicle alignment, mid-trip phone movement, motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require physical fixture validation.
+- On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, and M3.5 subtracts the measured stationary reference without introducing a phone-specific constant; physical fixture replay/tuning and aggregate confidence remain pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -98,4 +100,4 @@
 
 ## Current step
 
-**Approval gate:** M3.4 completed 2026-08-15. M3.5 — versioned derived speed, acceleration, jerk, yaw/heading-change, and movement channels is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.5 before that authorization.
+**Approval gate:** M3.5 completed 2026-08-15. M3.6 — telemetry confidence v1 is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.6 before that authorization.
