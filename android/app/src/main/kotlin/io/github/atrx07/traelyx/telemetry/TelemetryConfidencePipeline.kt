@@ -12,7 +12,11 @@ class TelemetryConfidenceTimeline internal constructor(
         get() = sourceTimeline.frameCount
 
     /** Returns a fresh bounded-memory confidence processor on every call. */
-    fun frames(): Sequence<TelemetryConfidenceFrame> = sequence {
+    fun frames(): Sequence<TelemetryConfidenceFrame> =
+        synchronizedFrames().map { it.confidence }
+
+    /** Keeps downstream reducers synchronized without recomputing the derived timeline. */
+    internal fun synchronizedFrames(): Sequence<ConfidenceTelemetryFramePair> = sequence {
         val sourceFrames = sourceTimeline.sourceTimeline.frames().iterator()
         val derivedFrames = sourceTimeline.frames().iterator()
         val processor =
@@ -27,9 +31,23 @@ class TelemetryConfidenceTimeline internal constructor(
             val source = sourceFrames.next()
             val derived = derivedFrames.next()
             check(source.tripElapsedNanos == derived.tripElapsedNanos)
-            yield(processor.process(source, derived))
+            yield(
+                ConfidenceTelemetryFramePair(
+                    derived = derived,
+                    confidence = processor.process(source, derived),
+                ),
+            )
         }
         check(!sourceFrames.hasNext() && !derivedFrames.hasNext())
+    }
+}
+
+internal data class ConfidenceTelemetryFramePair(
+    val derived: DerivedTelemetryFrame,
+    val confidence: TelemetryConfidenceFrame,
+) {
+    init {
+        require(derived.tripElapsedNanos == confidence.tripElapsedNanos)
     }
 }
 

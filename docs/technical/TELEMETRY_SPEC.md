@@ -170,6 +170,18 @@ Source agreement compares M3.5 yaw rate with GNSS heading-change rate only durin
 
 Every derived metric receives explainable downstream eligibility: `eligible`, `limited`, or `excluded`, including its required and limiting confidence components. Speed/heading/movement depend on GNSS; acceleration/jerk depend on accelerometer plus calibration, orientation, and device stability; yaw depends on gyroscope plus the same context. Missing or invalidated required evidence excludes that metric, degraded evidence limits it, and unrelated healthy channels remain eligible. A separate corroborated-vehicle-motion aggregate requires confirmed movement, available inertial/GNSS channels, supported or degraded cross-sensor agreement, device stability, and clock integrity. Confidence results are not persisted or sent across the Flutter bridge in M3.6.
 
+### M3.7 replay-channel contract
+
+Replay telemetry version 1 is a display-only reduction over the exact synchronized M3.5 derived and M3.6 confidence frames. Its default interval is 100 ms (10 Hz), independently configured from acquisition and the 10 ms analysis baseline. The replay interval must be at least the analysis interval and an exact multiple of it; incompatible cadence fails closed rather than silently resampling onto fabricated times.
+
+The reducer emits the exact first analysis frame, then trailing windows `(previous replay time, replay time]` at the configured cadence. When the trip ends between replay boundaries, it emits one partial terminal window at the exact final analysis timestamp. Every replay frame records its actual source bounds and source-frame count. It does not interpolate across a window, smooth through a gap, or invent a timestamp.
+
+Each scalar and vehicle-frame vector channel retains the final source value as its representative, including the original M3.5 provenance or typed missing reason. A window additionally retains exact source samples for scalar minima/maxima and each vector-axis minimum/maximum, available/missing counts, all missing reasons, and observed quality states. Movement retains the representative and every observed state. This envelope preserves short display-relevant extrema and state/missingness transitions that simple point decimation could erase.
+
+Metric eligibility retains the representative assessment, every observed state/reason, and the most restrictive state in the window (`excluded` before `limited` before `eligible`). Confidence retains equivalent per-component summaries, using explicit display severity `invalidated`, `unavailable`, `degraded`, then `supported`, plus the complete representative confidence frame. These summaries are not probabilities or new scoring evidence. Events, scoring, integrity, and ML continue to consume their governed analysis/confidence inputs rather than replay-reduced values.
+
+Replay generation is repeatable, lazy, and bounded-memory: only the active reduction window and constant-size per-channel extrema/state accumulators are retained. M3.7 does not persist replay output, expose precise telemetry across the Flutter bridge, alter route coordinates, or change raw/derived evidence. The product replay clock, map interpolation, graph rendering, and animation remain M5 work.
+
 ## 8. Missingness
 
 Missing is not zero.

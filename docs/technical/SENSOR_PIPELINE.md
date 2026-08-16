@@ -169,6 +169,14 @@ Yaw/heading source agreement is assessed only while movement is confirmed, both 
 
 Downstream eligibility is categorical and metric-scoped: `eligible`, `limited`, or `excluded` for filtered speed, acceleration, jerk, yaw rate, heading-change rate, movement state, and corroborated vehicle motion. Missing or invalidated required evidence excludes only dependent metrics; degraded evidence limits their later score/event weight; healthy independent channels remain eligible. Corroborated vehicle motion additionally requires confirmed movement, all supporting channels, source agreement, device stability, and clock integrity. This confidence layer remains native, bounded-memory, local-only, and outside the Flutter bridge.
 
+### M3.7 implemented replay-reduction baseline
+
+Replay telemetry version 1 reduces synchronized M3.5/M3.6 frames onto an independently versioned 100 ms default display cadence. It emits the exact first source time, complete trailing cadence windows, and an exact partial terminal time when necessary. Cadence must be an integer multiple of the analysis interval, so the reducer never invents alignment or extrapolates beyond source coverage.
+
+Each display frame retains the final source value and provenance plus source-window bounds/count. Scalar and per-axis vector extrema retain their exact source samples; available/missing counts, typed missing reasons, movement transitions, observed quality, confidence, and eligibility states remain explicit. Conservative summaries expose the most restrictive eligibility and most severe confidence seen in the window, so a brief invalid or missing interval cannot be hidden by a later healthy representative.
+
+The reducer is repeatable and bounded-memory, holding only one active window with constant-size channel accumulators. It is display-only: it does not smooth through gaps, persist a second authority, cross the Flutter bridge, alter precise routes, or feed scoring/events/ML. Product replay clock and rendering are deferred to M5.
+
 ## 11. Dynamic sampling / battery
 
 Sampling rate may adapt to trip state if carefully designed, but never change silently without preserving enough detail for event detection.

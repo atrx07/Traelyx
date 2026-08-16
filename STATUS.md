@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.6 complete; awaiting explicit M3.7 authorization**
+**M3 active — M3.7 complete; awaiting explicit M3.8 authorization**
 
 ## Working
 
@@ -67,10 +67,12 @@
 - M3.5 retains typed missing reasons and structured source, GNSS, calibration, mount, and filter provenance for every channel. Platform speed is preferred; geodesic apparent speed is a degraded fallback only for accuracy-resolved M3.2 distance, and incomplete or mismatched upstream summaries fail closed.
 - M3.6 adds a lazy native telemetry-confidence pipeline version 1 with categorical supported/degraded/unavailable/invalidated GNSS, accelerometer, gyroscope, calibration, orientation, source-agreement, device-movement, and clock assessments. It retains typed upstream decisions, flags, accuracies, timestamps, and context evidence rather than emitting a false global percentage.
 - M3.6 aggregates explainable eligible/limited/excluded state per derived metric plus a stricter corroborated-vehicle-motion gate. Missing or invalid evidence excludes only dependent metrics, degraded evidence limits them, healthy independent channels remain usable, and yaw/heading disagreement is evidence rather than a safety or integrity verdict.
+- M3.7 adds replay telemetry version 1 as a lazy, bounded-memory reduction over exactly synchronized M3.5/M3.6 frames. Its independent 100 ms default display cadence emits exact first/fixed/terminal timestamps and fails closed when cadence is not an integer multiple of analysis time.
+- M3.7 preserves each window's representative source provenance, scalar and per-axis vector extrema, available/missing counts and reasons, movement transitions, confidence states, and metric eligibility. Conservative summaries keep brief invalidated, unavailable, limited, or excluded evidence visible instead of smoothing it away.
 
 ## Partial
 
-- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, orientation/frame transforms, derived channels, and confidence/eligibility; replay reduction and the regression corpus remain pending.
+- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, orientation/frame transforms, derived channels, confidence/eligibility, and replay reduction; the governed fixture regression corpus remains pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -79,7 +81,7 @@
 
 - Event engine.
 - Drive DNA/scoring.
-- Replay.
+- Product replay clock, map/graph rendering, and animation.
 - Auth/cloud/social.
 - Guardian Connect.
 - ML models.
@@ -95,6 +97,7 @@
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
 - M3.4 frame conventions and M3.5 filter/sign/hysteresis behavior are covered by deterministic synthetic tests, but mounted vehicle alignment, mid-trip phone movement, motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require physical fixture validation.
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
+- M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Smooth M5 rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -103,4 +106,4 @@
 
 ## Current step
 
-**Approval gate:** M3.6 completed 2026-08-15. M3.7 — reduced synchronized replay channel generation is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.7 before that authorization.
+**Approval gate:** M3.7 completed 2026-08-16. M3.8 — governed deterministic fixture regression corpus is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.8 before that authorization.

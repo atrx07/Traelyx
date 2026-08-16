@@ -4,23 +4,23 @@
 
 ## Current gate
 
-M3.6 completed on 2026-08-15. Stop at the substep approval gate; M3.7 remains pending explicit maintainer authorization.
+M3.7 completed on 2026-08-16. Stop at the substep approval gate; M3.8 remains pending explicit maintainer authorization.
 
 ## P0 — Approval gate
 
-1. Await explicit maintainer authorization before activating or preparing M3.7.
+1. Await explicit maintainer authorization before activating or preparing M3.8.
 2. Preserve the accepted private M2.8 fixture locally; do not place its route or raw telemetry in Git or logs.
-3. Preserve raw evidence, M3.5 provenance, and M3.6 eligibility unchanged; replay reduction must retain gaps, missingness, and confidence rather than visually smoothing unsupported data.
+3. Keep the Tecno LH8n +0.03 g Z-axis bias as fixture calibration context only; do not add a production phone-specific offset.
 
-## P1 — M3.7 pending
+## P1 — M3.8 pending
 
-1. Add a reduced synchronized display timeline over the versioned derived/confidence frames.
-2. Preserve exact replay timestamps, missing intervals, source provenance, and metric eligibility while reducing display density deterministically.
-3. Keep replay sampling separate from raw acquisition and analysis sampling; do not rewrite or persist precise source evidence in M3.7.
+1. Add the governed deterministic fixture regression corpus for straight, corner, brake, pothole, phone-move, and GNSS-loss cases.
+2. Exercise the M3.1–M3.7 pipeline with explicit expected channels, missingness, confidence, eligibility, and replay outcomes.
+3. Keep private route/raw fixture evidence out of Git and logs; commit only governed synthetic or anonymized fixtures permitted by repository policy.
 
 ## P2 — Analysis foundation
 
-1. Implement replay reduction and fixture regression through separately authorized M3 substeps.
+1. Implement fixture regression in the separately authorized M3.8 substep.
 2. Implement deterministic baseline events in M4.
 3. Feed versioned confidence and eligibility into M4 event/scoring logic when those milestones activate.
 
