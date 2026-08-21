@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 active — M3.7 complete; awaiting explicit M3.8 authorization**
+**M3 complete — awaiting explicit M4 authorization**
 
 ## Working
 
@@ -69,10 +69,11 @@
 - M3.6 aggregates explainable eligible/limited/excluded state per derived metric plus a stricter corroborated-vehicle-motion gate. Missing or invalid evidence excludes only dependent metrics, degraded evidence limits them, healthy independent channels remain usable, and yaw/heading disagreement is evidence rather than a safety or integrity verdict.
 - M3.7 adds replay telemetry version 1 as a lazy, bounded-memory reduction over exactly synchronized M3.5/M3.6 frames. Its independent 100 ms default display cadence emits exact first/fixed/terminal timestamps and fails closed when cadence is not an integer multiple of analysis time.
 - M3.7 preserves each window's representative source provenance, scalar and per-axis vector extrema, available/missing counts and reasons, movement transitions, confidence states, and metric eligibility. Conservative summaries keep brief invalidated, unavailable, limited, or excluded evidence visible instead of smoothing it away.
+- M3.8 adds a code-generated telemetry regression corpus version 1 covering stationary, smooth straight, acceleration, braking, left/right corner, pothole, phone-move, GNSS-loss/recovery, and motorcycle-vibration evidence through the complete native raw-to-replay pipeline.
+- M3.8 fixture generation is byte-repeatable, uses fixed synthetic timestamps and a non-real coordinate origin, and asserts physical ranges plus typed missingness/confidence/eligibility/replay outcomes. The private Tecno route remains outside Git and logs, and no phone-specific production offset was introduced.
 
 ## Partial
 
-- Telemetry processing has versioned decode/resampling, GNSS filtering/distance, stationary IMU calibration, orientation/frame transforms, derived channels, confidence/eligibility, and replay reduction; the governed fixture regression corpus remains pending.
 - Trips, DNA, and Social are navigation skeletons only. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
 - Map rendering, tiles, cache implementation, and provider selection remain unimplemented.
@@ -95,7 +96,7 @@
 - Unknown or partial application schema-version-1 shapes deliberately fail closed instead of receiving an unaudited implicit repair. Android's standard `android_metadata` table is recognized as platform metadata and ignored by the application-table comparison.
 - Android background/foreground-service behavior across OS versions/OEMs.
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
-- M3.4 frame conventions and M3.5 filter/sign/hysteresis behavior are covered by deterministic synthetic tests, but mounted vehicle alignment, mid-trip phone movement, motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require physical fixture validation.
+- M3.4–M3.8 frame, filter/sign/hysteresis, mid-trip phone-move, GNSS-loss, impact, and synthetic-vibration behavior is covered deterministically, but mounted vehicle alignment, real motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require controlled physical fixture validation.
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
 - M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Smooth M5 rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
@@ -106,4 +107,4 @@
 
 ## Current step
 
-**Approval gate:** M3.7 completed 2026-08-16. M3.8 — governed deterministic fixture regression corpus is the next planned substep but remains pending explicit user authorization. Do not implement or substantially prepare M3.8 before that authorization.
+**Approval gate:** M3 completed 2026-08-21. M4 — Deterministic Intelligence v1, beginning with M4.1 event taxonomy implementation, remains pending explicit user authorization. Do not implement or substantially prepare M4 before that authorization.

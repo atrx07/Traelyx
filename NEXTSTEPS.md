@@ -4,25 +4,25 @@
 
 ## Current gate
 
-M3.7 completed on 2026-08-16. Stop at the substep approval gate; M3.8 remains pending explicit maintainer authorization.
+M3 completed on 2026-08-21. Stop at the milestone approval gate; M4 remains pending explicit maintainer authorization.
 
 ## P0 — Approval gate
 
-1. Await explicit maintainer authorization before activating or preparing M3.8.
+1. Await explicit maintainer authorization before activating or preparing M4 and M4.1.
 2. Preserve the accepted private M2.8 fixture locally; do not place its route or raw telemetry in Git or logs.
 3. Keep the Tecno LH8n +0.03 g Z-axis bias as fixture calibration context only; do not add a production phone-specific offset.
 
-## P1 — M3.8 pending
+## P1 — M4 pending
 
-1. Add the governed deterministic fixture regression corpus for straight, corner, brake, pothole, phone-move, and GNSS-loss cases.
-2. Exercise the M3.1–M3.7 pipeline with explicit expected channels, missingness, confidence, eligibility, and replay outcomes.
-3. Keep private route/raw fixture evidence out of Git and logs; commit only governed synthetic or anonymized fixtures permitted by repository policy.
+1. Implement the M4.1 deterministic event taxonomy for strong acceleration/braking, lateral load, abrupt transitions, road impact, and phone movement.
+2. Consume versioned M3 confidence and eligibility without allowing missing or invalid evidence to become an event claim.
+3. Keep event logic deterministic, auditable, local-first, and independent of ML or mandatory network services.
 
 ## P2 — Analysis foundation
 
-1. Implement fixture regression in the separately authorized M3.8 substep.
-2. Implement deterministic baseline events in M4.
-3. Feed versioned confidence and eligibility into M4 event/scoring logic when those milestones activate.
+1. Implement deterministic baseline events in the separately authorized M4 milestone.
+2. Add merge/debounce, integrity, scoring, Drive DNA, baseline lifecycle, and explanation data only in their canonical authorized M4 substeps.
+3. Preserve M3 raw/derived version provenance through later event and scoring outputs.
 
 ## Blocked / deferred
 

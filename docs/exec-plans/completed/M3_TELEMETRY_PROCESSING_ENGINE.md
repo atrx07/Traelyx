@@ -1,10 +1,11 @@
 # Execution Plan — M3 Telemetry Processing Engine
 
-**Status:** Active
+**Status:** Complete
 **Owner:** agent/maintainer
 **Milestone:** M3
 **Started:** 2026-08-14
-**Last updated:** 2026-08-16
+**Completed:** 2026-08-21
+**Last updated:** 2026-08-21
 
 ## Context budget / references
 
@@ -29,7 +30,7 @@ Convert verified local raw GNSS and IMU evidence into deterministic, physically 
 
 ## User-visible result
 
-Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; M3.2 adds auditable GNSS classification and distance accumulation; M3.3 adds explicit stationary IMU calibration state; M3.4 adds documented device/vehicle/world frame transforms; M3.5 adds filtered, provenance-preserving motion channels; M3.6 adds categorical confidence and metric-scoped eligibility; M3.7 adds evidence-preserving replay reduction; the later authorized M3.8 substep adds regression coverage.
+Finalized trips can be processed locally into explainable analysis and replay inputs. M3.1 establishes the fail-closed decoder and aligned analysis timebase; M3.2 adds auditable GNSS classification and distance accumulation; M3.3 adds explicit stationary IMU calibration state; M3.4 adds documented device/vehicle/world frame transforms; M3.5 adds filtered, provenance-preserving motion channels; M3.6 adds categorical confidence and metric-scoped eligibility; M3.7 adds evidence-preserving replay reduction; M3.8 locks those contracts into a governed deterministic synthetic regression corpus.
 
 ## In scope
 
@@ -65,13 +66,14 @@ Finalized trips can be processed locally into explainable analysis and replay in
 
 - Processing remains local and accountless.
 - Raw chunk bytes, precise coordinates, vectors, source timestamps, M3.2 GNSS decisions, M3.3 calibration results, M3.4 transforms, M3.5 derived channels, M3.6 confidence/eligibility, and M3.7 replay frames remain under native authority and do not cross the Flutter bridge.
+- M3.8 commits only generated synthetic telemetry at a non-real coordinate origin; it does not ingest or reproduce a private route.
 - The accepted private fixture remains local and is not committed or logged.
 
 ## Compatibility/migration implications
 
-- M3.1–M3.7 read existing raw chunk encoding/schema version 1 without changing it.
+- M3.1–M3.8 read existing raw chunk encoding/schema version 1 without changing it.
 - Unknown versions, corrupt chunks, mixed trips, sequence gaps, and invalid ordering fail closed.
-- No Drift schema or storage migration is required for M3.1–M3.7.
+- No Drift schema or storage migration is required for M3.1–M3.8.
 
 ## Implementation steps
 
@@ -82,17 +84,17 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - [x] M3.5 Add versioned filtered speed, acceleration, jerk, yaw, and movement channels.
 - [x] M3.6 Add explainable confidence subcomponents and aggregate eligibility.
 - [x] M3.7 Add a reduced synchronized replay stream.
-- [ ] M3.8 Add the governed deterministic fixture regression corpus.
+- [x] M3.8 Add the governed deterministic fixture regression corpus.
 
 ## Tests / validation
 
 - [x] Kotlin static compilation through focused/full Gradle unit tasks.
-- [x] Focused native decoder/resampler, GNSS sanity/distance, stationary calibration, orientation/frame-transform, derived-channel, confidence/eligibility, and replay-reduction tests.
-- [x] Complete native unit suite: 140 passed, 0 failed/skipped.
+- [x] Focused native decoder/resampler, GNSS sanity/distance, stationary calibration, orientation/frame-transform, derived-channel, confidence/eligibility, replay-reduction, and complete-pipeline fixture tests.
+- [x] Complete native unit suite: 149 passed, 0 failed/skipped across 23 suites.
 - [x] Flutter analysis and tests for regression safety: no analysis issues; 93 tests passed.
 - [x] Android debug APK build.
 - [x] Repository formatting, JSON/YAML, secret, and private-fixture validation.
-- [x] Real-device validation not required for M3.1–M3.7: no acquisition/lifecycle behavior changed, and M3.4–M3.7 validate deterministic frame/channel/confidence/reduction behavior without claiming physical mount, filter, calibrated probability, or UI rendering quality. Private fixture replay/tuning remains later M3 work.
+- [x] Real-device validation not required for M3.1–M3.8: no acquisition/lifecycle behavior changed. Synthetic fixtures validate deterministic frame/channel/confidence/reduction behavior without claiming mounted physical tuning, calibrated probabilities, or UI rendering quality; the accepted private route remains outside Git and logs.
 
 ## Acceptance criteria
 
@@ -106,13 +108,14 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - Versioned derived channels remain lazy, bounded-memory, deterministic, and source-provenanced; causal filters reset at invalid evidence boundaries, GNSS fallback speed remains explicitly degraded, movement uses hysteresis, and missing upstream evidence produces typed missing output instead of fabricated values.
 - Versioned confidence remains categorical, lazy, deterministic, and explainable; component state retains typed reasons and source evidence, per-metric eligibility scopes faults to dependent channels, and cross-sensor disagreement cannot become a safety/integrity verdict or false global probability.
 - Versioned replay reduction remains lazy, bounded-memory, deterministic, display-only, and independently sampled; exact first/terminal timestamps, representative provenance, extrema, missingness, movement transitions, confidence, and metric eligibility survive reduction without becoming scoring evidence.
+- The versioned synthetic corpus covers stationary, straight, acceleration, braking, left/right corner, pothole, phone-move, GNSS-loss/recovery, and motorcycle-vibration evidence through the complete M3 pipeline, with byte-repeatable generation and physically meaningful expected ranges.
 - The same verified input and configuration produce the same timeline.
 - Applicable validation gates pass before each substep is marked complete.
 
 ## Risks
 
 - Long trips can be expensive if callers eagerly materialize the analysis timeline; M3.1 exposes repeatable lazy frame iteration.
-- Device mounting, motorcycle vibration, dynamic tilt/grade coupling, filter/confidence threshold tuning, and the Tecno accelerometer status require physical fixture replay; M3.4–M3.7 preserve unsupported/degraded states rather than claiming synthetic transform/channel/confidence/reduction tests prove mounted, probabilistically calibrated, or rendered quality.
+- Device mounting, real motorcycle vibration, dynamic tilt/grade coupling, filter/confidence threshold tuning, and the Tecno accelerometer status still require controlled physical fixture replay; M3.4–M3.8 preserve unsupported/degraded states rather than claiming synthetic coverage proves mounted, probabilistically calibrated, or rendered quality.
 - Full multi-device, battery, and deep-sleep reliability remain M8 hardening concerns.
 
 ## Decisions made during execution
@@ -127,6 +130,7 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - Keep M3.5 pure, native, lazy, and versioned. Use a causal three-sample median before one-pole low-pass filters; subtract the measured stationary accelerometer mean and gyroscope bias before device-to-vehicle transformation; prefer platform speed, permit only accuracy-resolved geodesic speed as a degraded fallback, wrap course deltas through ±π, and reset dependent state across gaps, rejections, staleness, or context changes. Movement uses explicit speed/duration/sample-count hysteresis, and no device-specific bias constant is embedded.
 - Keep M3.6 pure, native, lazy, categorical, and versioned. Expose GNSS, separate accelerometer/gyroscope, calibration, orientation, device-movement, source-agreement, and clock assessments; aggregate eligible/limited/excluded state per metric plus corroborated motion; use a 15 m preferred GNSS tier and compare recent moving yaw/heading rates within 0.5 rad/s without producing a global percentage or deciding safety/integrity outcomes.
 - Keep M3.7 pure, native, lazy, bounded-memory, and versioned. Reduce synchronized M3.5/M3.6 frames on an independent 100 ms default trailing-window cadence; emit exact first and terminal timestamps; retain representative provenance, scalar/per-axis extrema, typed missingness, state transitions, and conservative confidence/eligibility summaries; keep replay output ephemeral and display-only.
+- Keep M3.8 synthetic, code-generated, and explicitly versioned. Use fixed timestamps and a non-real coordinate origin, pass each case through the production raw-to-replay stages, assert physical ranges and typed evidence instead of brittle float dumps, and keep the accepted precise-private `.tripdebug` archive outside Git and logs.
 
 ## Progress log
 
@@ -138,6 +142,7 @@ Finalized trips can be processed locally into explainable analysis and replay in
 - 2026-08-15: Maintainer authorized M3.5; implementation and required local gates completed. Stopped before M3.6 pending explicit authorization.
 - 2026-08-15: Maintainer authorized M3.6; implementation and required local gates completed. Stopped before M3.7 pending explicit authorization.
 - 2026-08-16: Maintainer authorized M3.7; implementation and required local gates completed. Stopped before M3.8 pending explicit authorization.
+- 2026-08-21: Maintainer authorized M3.8; the governed deterministic corpus and complete-pipeline regression harness passed required local gates. M3 completed and stopped before M4 pending explicit authorization.
 
 ## Completion summary
 
@@ -155,4 +160,6 @@ M3.6 added versioned categorical confidence for GNSS, separate IMU sensors, cali
 
 M3.7 added a versioned, independently sampled replay timeline that reduces synchronized derived/confidence frames with bounded memory. Exact first/fixed/terminal timestamps, representative provenance, scalar/per-axis extrema, typed gaps, movement changes, categorical confidence, and metric eligibility remain explicit; the result stays display-only and cannot become scoring evidence.
 
-Validation passed: focused and complete native unit suites (140 tests), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, recorder behavior, bridge expansion, or new real-device/UI reliability claim was introduced. M3.8 is pending maintainer authorization.
+M3.8 added a versioned code-generated synthetic corpus for stationary, straight, acceleration, braking, left/right corner, pothole, phone-move, GNSS-loss/recovery, and motorcycle-vibration evidence. A shared harness exercises chunk encoding/decoding, alignment, GNSS processing, stationary calibration, orientation/mount handling, derived channels, confidence/eligibility, and replay. Generation and repeated iteration are deterministic; expectations use physical tolerances and typed state/reason evidence; no private route or Tecno-specific production offset is included.
+
+Validation passed: focused fixture tests and the complete native unit suite (149 tests across 23 suites), Flutter analysis, all 93 Flutter tests, debug APK build, Dart formatting check, repository privacy/secret validation, and diff whitespace checks. No dependency, schema migration, network flow, raw-storage change, recorder behavior, bridge expansion, or new real-device/UI reliability claim was introduced. M3 is complete; M4 remains pending explicit maintainer authorization.

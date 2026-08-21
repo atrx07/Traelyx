@@ -2,4 +2,4 @@
 
 Place current non-trivial execution plans here. Keep only genuinely active work in this directory so agents can inspect it cheaply.
 
-- [`M3_TELEMETRY_PROCESSING_ENGINE.md`](M3_TELEMETRY_PROCESSING_ENGINE.md) — M3 active; M3.6 complete and M3.7 awaiting explicit maintainer authorization.
+No execution plan is active. M3 is complete, and M4 remains behind the explicit maintainer authorization gate.

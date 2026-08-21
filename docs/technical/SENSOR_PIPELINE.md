@@ -177,6 +177,22 @@ Each display frame retains the final source value and provenance plus source-win
 
 The reducer is repeatable and bounded-memory, holding only one active window with constant-size channel accumulators. It is display-only: it does not smooth through gaps, persist a second authority, cross the Flutter bridge, alter precise routes, or feed scoring/events/ML. Product replay clock and rendering are deferred to M5.
 
+### M3.8 governed regression corpus
+
+Telemetry regression corpus version 1 is generated entirely from deterministic synthetic evidence
+at a non-real coordinate origin. It covers stationary, smooth-straight, acceleration, braking,
+left/right corner, pothole, phone-move, GNSS-loss/recovery, and motorcycle-vibration scenarios. The
+shared native harness passes every case through chunk encoding/decoding, 10 ms alignment, GNSS
+sanity processing, stationary calibration, orientation and mount handling, M3.5 derived channels,
+M3.6 confidence/eligibility, and M3.7 replay reduction.
+
+Assertions use physically meaningful time windows and tolerances plus typed missingness,
+confidence, eligibility, movement, device-invalidation, and gap-recovery evidence. Repeated fixture
+generation must be byte-identical, and repeated timeline iteration must be value-identical. No
+`.tripdebug` archive, real route, Tecno-specific constant, production dependency, or scoring/event
+behavior is introduced. The motorcycle case establishes a deterministic vibration regression
+boundary; it does not replace mounted physical tuning across vehicles and devices.
+
 ## 11. Dynamic sampling / battery
 
 Sampling rate may adapt to trip state if carefully designed, but never change silently without preserving enough detail for event detection.

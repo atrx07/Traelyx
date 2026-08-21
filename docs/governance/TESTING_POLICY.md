@@ -22,7 +22,9 @@ Use heavily for:
 
 ### Fixture replay tests
 
-Extremely important. Feed recorded/synthetic `.tripdebug` data through the pipeline and assert events/scores/quality outcomes.
+Extremely important. Feed governed recorded archives or versioned synthetic telemetry through the
+same production decoder-to-output stages and assert events/scores/quality outcomes. Generated
+fixtures are preferred when a real archive would expose precise routes or personal telemetry.
 
 ### Integration tests
 
@@ -75,6 +77,13 @@ Do not overfit tests to incidental floating-point noise. Use physically meaningf
 Any production/field false event that is reproducible and privacy-safe should become a regression fixture.
 
 Example: a pothole repeatedly classified as a crash-like event → anonymized fixture + expected non-crash outcome.
+
+The M3 corpus is a versioned, code-generated synthetic suite covering stationary, smooth straight,
+acceleration, braking, left/right corner, pothole, phone-move, GNSS-loss, and motorcycle-vibration
+evidence. Its shared harness exercises raw chunk encoding/decoding, alignment, GNSS processing,
+stationary calibration, orientation/mount handling, derived channels, confidence/eligibility, and
+replay reduction. Expected outcomes use physical ranges and typed state/reason assertions rather
+than exact floating-point dumps. Private `.tripdebug` routes are not test inputs.
 
 ## 5. CI gates
 
