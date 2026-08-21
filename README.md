@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M3 and M4.1 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline decodes complete raw trips fail-closed, builds deterministic derived/confidence/replay evidence, and now classifies versioned per-window strong acceleration/braking, lateral load, abrupt transitions, road impact, and explicit phone movement without ML, scoring, or a fabricated confidence percentage. Governed synthetic fixtures lock the complete raw-to-event contract and its missing/degraded-evidence behavior. M4 remains active, but M4.2 awaits explicit authorization.
+Milestones M0–M3 and M4.1–M4.2 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline decodes complete raw trips fail-closed, builds deterministic derived/confidence/replay evidence, classifies ten versioned maneuver evidence types, and merges repeated windows into coherent deterministic events while retaining limited/debounced evidence for audit. It uses no ML, scoring, or fabricated confidence percentage. Governed synthetic fixtures lock the complete raw-to-merged-event contract. M4 remains active, but M4.3 awaits explicit authorization.
 
 ## Roadmap
 
@@ -18,7 +18,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry and governed regression corpus | ✅ Complete | Done | 2026-08-21 |
 | M4 | Deterministic Intelligence v1 | Driver intelligence milestone | 🟡 In progress | ~1–1.5 weeks | 2026-08-21 |
 | M4.1 | Deterministic Intelligence v1 | Event taxonomy implementation | ✅ Complete | Done | 2026-08-21 |
-| M4.2 | Deterministic Intelligence v1 | Event merge/debounce | ⚪ Pending | ~1 day | — |
+| M4.2 | Deterministic Intelligence v1 | Event merge/debounce | ✅ Complete | Done | 2026-08-21 |
 | M4.3 | Deterministic Intelligence v1 | Integrity rules v1 | ⚪ Pending | ~1–2 days | — |
 | M4.4 | Deterministic Intelligence v1 | Scoring v1 | ⚪ Pending | ~1–2 days | — |
 | M4.5 | Deterministic Intelligence v1 | Drive DNA baseline | ⚪ Pending | ~1 day | — |

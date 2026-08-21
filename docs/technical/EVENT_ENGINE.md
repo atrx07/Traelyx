@@ -124,4 +124,16 @@ Maneuver and impact candidates require confirmed movement plus usable required m
 
 Every numeric candidate retains physical value/unit, M3 channel provenance, its config snapshot, threshold-relative severity evidence, rule evidence, metric eligibility, component confidence/reasons, source versions, and analysis-window time bounds. Phone movement carries explicit unavailable numeric severity because M3 does not expose a calibrated movement angle at each confidence frame; no magnitude is fabricated.
 
-The version-1 activation values are synthetic-fixture-reviewed deterministic baselines, not population-calibrated probabilities or moral/legal boundaries. Any field-tuning change that alters historical classification requires a new version. M4.1 does not merge adjacent windows, assign final event IDs, persist events, score behavior, infer a crash, or produce integrity verdicts; those remain separate authorized substeps.
+The version-1 activation values are synthetic-fixture-reviewed deterministic baselines, not population-calibrated probabilities or moral/legal boundaries. Any field-tuning change that alters historical classification requires a new version. The M4.1 layer does not merge adjacent windows, assign final event IDs, persist events, score behavior, infer a crash, or produce integrity verdicts.
+
+## 12. M4.2 implemented merge/debounce contract
+
+Event-merge version 1 consumes M4.1 windows ordered by peak trip time and keeps at most one bounded accumulator per stable machine ID. Adjacent windows of the same type merge while consecutive peaks are no more than 250 ms apart. Different event types never absorb one another. Input time regression fails closed.
+
+Strong acceleration, strong braking, and high lateral-load left/right are sustained evidence and require at least three source windows. Abrupt longitudinal/corner transitions, road impact, and phone movement are transient evidence and require one window so a short severe or quality signal is not hidden. A sub-threshold sustained group becomes an explicit `INSUFFICIENT_SOURCE_WINDOWS` debounce decision with its full summary; it is not exposed as an accepted event and is not silently discarded.
+
+An accepted event spans the earliest source start through the latest source end. Its peak is the source window with the greatest threshold-relative activation ratio, retaining the earliest source window on an exact tie; phone movement retains the first explicit invalidation. The event receives a deterministic SHA-256 identifier over trip ID, taxonomy/merge versions, machine ID, and start/peak/end times. Decisions are lazy and repeatable in deterministic group-finalization order, which is not a promise of global peak-time ordering.
+
+Every decision retains source-window counts, the full peak window and physical provenance, unioned rule/quality evidence, observed metric eligibility and reasons, component confidence states/reasons, missing-source reasons, and both config snapshots. Merged confidence is conservatively `limited` if any contributing window is limited. Version 1 remains a synthetic-fixture-reviewed baseline; changing gap, debounce, grouping, peak, confidence-reduction, or identity semantics requires a new merge version.
+
+M4.2 adds no persistence/schema, network, permission, recorder, Flutter bridge, replay/UI, scoring, integrity, ML, or crash-decision behavior.
