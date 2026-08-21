@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M3 complete — awaiting explicit M4 authorization**
+**M4 active — M4.1 complete, awaiting explicit M4.2 authorization**
 
 ## Working
 
@@ -71,6 +71,9 @@
 - M3.7 preserves each window's representative source provenance, scalar and per-axis vector extrema, available/missing counts and reasons, movement transitions, confidence states, and metric eligibility. Conservative summaries keep brief invalidated, unavailable, limited, or excluded evidence visible instead of smoothing it away.
 - M3.8 adds a code-generated telemetry regression corpus version 1 covering stationary, smooth straight, acceleration, braking, left/right corner, pothole, phone-move, GNSS-loss/recovery, and motorcycle-vibration evidence through the complete native raw-to-replay pipeline.
 - M3.8 fixture generation is byte-repeatable, uses fixed synthetic timestamps and a non-real coordinate origin, and asserts physical ranges plus typed missingness/confidence/eligibility/replay outcomes. The private Tecno route remains outside Git and logs, and no phone-specific production offset was introduced.
+- M4.1 adds a lazy, repeatable native event-taxonomy pipeline version 1 over exact synchronized M3.5/M3.6 analysis evidence. Its ten stable machine IDs cover strong acceleration/braking, abrupt longitudinal transitions, high lateral load left/right, abrupt corner entry/exit, road impact or bump, and explicit phone movement.
+- M4.1 snapshots every activation threshold and retains physical measurements/units, source times/provenance, threshold-relative severity, rule evidence, M3 eligibility/component reasons, and M3/M4 versions. Excluded evidence cannot produce a maneuver claim; degraded usable evidence remains explicitly limited, and phone movement requires M3 orientation invalidation rather than an acceleration spike.
+- Governed stationary, smooth-straight, motorcycle-vibration, acceleration, braking, left/right corner, pothole, phone-move, and GNSS-loss evidence plus focused synthetic transitions validate intended and non-intended M4.1 classifications through the complete raw-to-event pipeline.
 
 ## Partial
 
@@ -80,7 +83,7 @@
 
 ## Not implemented
 
-- Event engine.
+- Event merge/debounce, integrity verdicts, and final event persistence.
 - Drive DNA/scoring.
 - Product replay clock, map/graph rendering, and animation.
 - Auth/cloud/social.
@@ -99,6 +102,7 @@
 - M3.4–M3.8 frame, filter/sign/hysteresis, mid-trip phone-move, GNSS-loss, impact, and synthetic-vibration behavior is covered deterministically, but mounted vehicle alignment, real motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require controlled physical fixture validation.
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
 - M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Smooth M5 rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
+- M4.1 activation thresholds are deterministic synthetic baselines, not population-calibrated probabilities or scoring/legal boundaries. Mounted multi-device fixtures and later field regressions may require a new versioned tuning change; M4.2 merging is not yet implemented, so M4.1 intentionally emits verbose per-window evidence.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -107,4 +111,4 @@
 
 ## Current step
 
-**Approval gate:** M3 completed 2026-08-21. M4 — Deterministic Intelligence v1, beginning with M4.1 event taxonomy implementation, remains pending explicit user authorization. Do not implement or substantially prepare M4 before that authorization.
+**Approval gate:** M4.1 completed 2026-08-21. M4.2 event merge/debounce remains pending explicit user authorization. Do not implement or substantially prepare M4.2 before that authorization.

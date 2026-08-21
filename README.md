@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M3 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline now decodes complete raw trips fail-closed, builds a deterministic analysis timeline, classifies GNSS evidence and distance, calibrates and transforms IMU evidence, derives filtered motion channels, assigns explainable categorical confidence plus metric-scoped downstream eligibility, and generates a bounded evidence-preserving display timeline without a fabricated global percentage. A governed versioned synthetic corpus locks the complete raw-to-replay contract across normal motion, impacts, phone movement, vibration, and GNSS loss/recovery. M4 remains pending explicit authorization.
+Milestones M0–M3 and M4.1 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local telemetry pipeline decodes complete raw trips fail-closed, builds deterministic derived/confidence/replay evidence, and now classifies versioned per-window strong acceleration/braking, lateral load, abrupt transitions, road impact, and explicit phone movement without ML, scoring, or a fabricated confidence percentage. Governed synthetic fixtures lock the complete raw-to-event contract and its missing/degraded-evidence behavior. M4 remains active, but M4.2 awaits explicit authorization.
 
 ## Roadmap
 
@@ -16,7 +16,14 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M1 | Application Foundation | Theme, navigation, settings, schema migrations, diagnostics | ✅ Complete | Done | 2026-08-09 |
 | M2 | Native Recording Engine | Reliable recorder, recovery, private export, and real-drive fixture | ✅ Complete | Done | 2026-08-14 |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry and governed regression corpus | ✅ Complete | Done | 2026-08-21 |
-| M4 | Deterministic Intelligence v1 | Driver intelligence milestone | ⚪ Pending | ~1–1.5 weeks | — |
+| M4 | Deterministic Intelligence v1 | Driver intelligence milestone | 🟡 In progress | ~1–1.5 weeks | 2026-08-21 |
+| M4.1 | Deterministic Intelligence v1 | Event taxonomy implementation | ✅ Complete | Done | 2026-08-21 |
+| M4.2 | Deterministic Intelligence v1 | Event merge/debounce | ⚪ Pending | ~1 day | — |
+| M4.3 | Deterministic Intelligence v1 | Integrity rules v1 | ⚪ Pending | ~1–2 days | — |
+| M4.4 | Deterministic Intelligence v1 | Scoring v1 | ⚪ Pending | ~1–2 days | — |
+| M4.5 | Deterministic Intelligence v1 | Drive DNA baseline | ⚪ Pending | ~1 day | — |
+| M4.6 | Deterministic Intelligence v1 | Personal/vehicle baseline lifecycle | ⚪ Pending | ~1 day | — |
+| M4.7 | Deterministic Intelligence v1 | Explanation data | ⚪ Pending | ~0.5–1 day | — |
 | M5 | Experience & Replay | Product experience milestone | ⚪ Pending | ~1.5–2 weeks | — |
 | M6 | Connected / Social Layer | Optional connected milestone | ⚪ Pending | ~1–1.5 weeks | — |
 | M7 | ML & Advanced Commentary | Auditable intelligence milestone | ⚪ Pending | ~2–3 weeks plus data collection | — |

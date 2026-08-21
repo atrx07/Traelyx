@@ -1,78 +1,99 @@
 schema_version: 1
-status: draft
+algorithm_version: 1
+status: implemented_m4_1
 notes:
-  - Event IDs become stable once v0.1 data contracts are released.
+  - The ten M4.1 machine IDs are locked for event-taxonomy version 1.
   - Detection is evidence, not moral judgment or final scoring.
-  - Thresholds are intentionally not defined here until empirically calibrated.
+  - M4.1 emits per-analysis-window evidence; maneuver merging and debounce belong to M4.2.
+  - Thresholds are deterministic synthetic baselines, not claims of empirical population calibration.
+  - Missing or invalidated required metric evidence emits no maneuver candidate; degraded usable evidence is limited.
+
+activation_defaults:
+  strong_acceleration_mps2: 1.5
+  strong_braking_mps2: 2.5
+  high_lateral_load_mps2: 2.0
+  abrupt_longitudinal_jerk_mps3: 3.5
+  abrupt_longitudinal_minimum_acceleration_mps2: 0.75
+  abrupt_lateral_jerk_mps3: 3.5
+  abrupt_corner_minimum_lateral_load_mps2: 0.75
+  road_impact_vertical_acceleration_mps2: 1.0
+  road_impact_vertical_jerk_mps3: 5.0
+
+confidence_states: [supported, limited]
+severity_evidence:
+  measured: physical_magnitude_and_activation_ratio
+  phone_moved: unavailable_without_exposed_angle
 
 events:
   EVT_ACCEL_STRONG:
+    implementation_status: implemented_m4_1
     category: longitudinal
     display_name: Strong acceleration
     polarity: neutral
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [longitudinal_acceleration, jerk, speed_change, telemetry_confidence]
+    expected_evidence: [longitudinal_acceleration, confirmed_movement, metric_eligibility]
   EVT_ACCEL_ABRUPT_TRANSITION:
+    implementation_status: implemented_m4_1
     category: longitudinal
     display_name: Abrupt acceleration transition
     polarity: negative_candidate
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [jerk, longitudinal_acceleration, context]
+    expected_evidence: [positive_longitudinal_jerk, positive_longitudinal_acceleration, confirmed_movement, metric_eligibility]
   EVT_BRAKE_STRONG:
+    implementation_status: implemented_m4_1
     category: longitudinal
     display_name: Strong braking
     polarity: neutral
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [longitudinal_acceleration, jerk, speed_change, telemetry_confidence]
+    expected_evidence: [negative_longitudinal_acceleration, confirmed_movement, metric_eligibility]
   EVT_BRAKE_ABRUPT_TRANSITION:
+    implementation_status: implemented_m4_1
     category: longitudinal
     display_name: Abrupt braking transition
     polarity: negative_candidate
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [jerk, longitudinal_acceleration, context]
+    expected_evidence: [negative_longitudinal_jerk, negative_longitudinal_acceleration, confirmed_movement, metric_eligibility]
   EVT_CORNER_HIGH_LOAD_LEFT:
+    implementation_status: implemented_m4_1
     category: lateral
     display_name: High lateral-load left corner
     polarity: neutral
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [lateral_acceleration, yaw_rate, speed, orientation_confidence]
+    expected_evidence: [positive_lateral_acceleration, confirmed_movement, metric_eligibility]
   EVT_CORNER_HIGH_LOAD_RIGHT:
+    implementation_status: implemented_m4_1
     category: lateral
     display_name: High lateral-load right corner
     polarity: neutral
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [lateral_acceleration, yaw_rate, speed, orientation_confidence]
+    expected_evidence: [negative_lateral_acceleration, confirmed_movement, metric_eligibility]
   EVT_CORNER_ABRUPT_ENTRY:
+    implementation_status: implemented_m4_1
     category: lateral
     display_name: Abrupt corner entry
     polarity: negative_candidate
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [lateral_jerk, yaw_rate_change, context]
+    expected_evidence: [lateral_jerk, increasing_lateral_load, confirmed_movement, metric_eligibility]
   EVT_CORNER_ABRUPT_EXIT:
+    implementation_status: implemented_m4_1
     category: lateral
     display_name: Abrupt corner exit
     polarity: negative_candidate
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [lateral_jerk, yaw_rate_change, context]
+    expected_evidence: [lateral_jerk, decreasing_lateral_load, confirmed_movement, metric_eligibility]
   EVT_ROAD_IMPACT:
+    implementation_status: implemented_m4_1
     category: road_device
     display_name: Road impact or bump
     polarity: neutral
-    severity_levels: [mild, moderate, severe]
-    expected_evidence: [vertical_acceleration, impulse_shape, speed, context]
+    expected_evidence: [vertical_acceleration, vertical_jerk, confirmed_movement, metric_eligibility]
   EVT_PHONE_MOVED:
+    implementation_status: implemented_m4_1
     category: road_device
     display_name: Device moved during trip
     polarity: quality
-    severity_levels: [notice, significant]
-    expected_evidence: [orientation_discontinuity, gravity_vector_change]
+    expected_evidence: [explicit_device_movement_invalidation, orientation_invalidated]
   EVT_GNSS_QUALITY_LOSS:
+    implementation_status: pending_later_substep
     category: quality
     display_name: GNSS quality degraded
     polarity: quality
     severity_levels: [notice, significant, unusable]
     expected_evidence: [horizontal_accuracy, gap_duration, source_health]
   EVT_CRASH_LIKE_EVIDENCE:
+    implementation_status: pending_later_substep
     category: safety
     display_name: Crash-like impact evidence
     polarity: safety
@@ -82,6 +103,7 @@ events:
       - Must never be decided by an LLM.
       - Must require high-confidence corroboration before Guardian Possible Crash state.
   EVT_TELEMETRY_INCONSISTENCY:
+    implementation_status: pending_m4_3
     category: integrity
     display_name: Telemetry inconsistency
     polarity: integrity

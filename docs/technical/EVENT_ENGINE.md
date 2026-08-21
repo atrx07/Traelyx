@@ -115,3 +115,13 @@ EventNet may output per-window class probabilities. Deterministic signals corrob
 ## 10. Versioning
 
 Event definitions/merging/confidence logic must be versioned. Persist version with events if historical replay/audit depends on it.
+
+## 11. M4.1 implemented taxonomy-window contract
+
+Event-taxonomy version 1 consumes the exact synchronized M3.5 derived frames and M3.6 confidence/eligibility frames at the analysis cadence. It emits lazy, repeatable, bounded-memory evidence windows for the ten M4.1 machine IDs defined in `docs/reference/event-taxonomy.yaml`: strong acceleration/braking, abrupt acceleration/braking transitions, high lateral load left/right, abrupt corner entry/exit, road impact or bump, and phone moved. These IDs are stable within version 1.
+
+Maneuver and impact candidates require confirmed movement plus usable required metric eligibility. `excluded` metric evidence emits no claim; `limited` evidence emits an explicitly limited candidate with the exact limiting components and reasons. Strong longitudinal/lateral candidates use signed vehicle-frame acceleration. Abrupt transitions use signed vehicle-frame jerk plus a same-direction minimum acceleration/load. Road impact requires both vertical acceleration and vertical jerk. Phone movement is emitted only from M3's explicit `DEVICE_MOVEMENT_INVALIDATED` state with `ORIENTATION_INVALIDATED`; it is not inferred from an arbitrary acceleration spike.
+
+Every numeric candidate retains physical value/unit, M3 channel provenance, its config snapshot, threshold-relative severity evidence, rule evidence, metric eligibility, component confidence/reasons, source versions, and analysis-window time bounds. Phone movement carries explicit unavailable numeric severity because M3 does not expose a calibrated movement angle at each confidence frame; no magnitude is fabricated.
+
+The version-1 activation values are synthetic-fixture-reviewed deterministic baselines, not population-calibrated probabilities or moral/legal boundaries. Any field-tuning change that alters historical classification requires a new version. M4.1 does not merge adjacent windows, assign final event IDs, persist events, score behavior, infer a crash, or produce integrity verdicts; those remain separate authorized substeps.
