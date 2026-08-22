@@ -141,3 +141,7 @@ M4.2 adds no persistence/schema, network, permission, recorder, Flutter bridge, 
 ## 13. M4.3 integrity finding boundary
 
 Integrity-rules version 1 is governed by `INTEGRITY_ENGINE.md`. It does not add integrity conditions to the ten M4.1 maneuver types or reinterpret their severity. Only findings explicitly typed as `inconsistency` carry the `EVT_TELEMETRY_INCONSISTENCY` umbrella machine ID; quality limitations, known platform signals, and raw-data corruption remain distinct finding kinds. Integrity results are trip/dimension audit evidence, not merged driving maneuvers, scores, crash claims, or accusations of intent.
+
+## 14. M4.4 scoring boundary
+
+Scoring version 1 is governed by `SCORING_SPEC.md` and `docs/reference/scoring-v1.yaml`. It consumes accepted M4.2 events without changing their type, severity, confidence, identity, or physical meaning. A strong maneuver is not itself a penalty: scoring applies only explicit abrupt/repetition contribution rules and preserves the supporting event ID and confidence weight. Score outcomes remain a separate judgment layer and never feed back into event detection, integrity, crash decisions, or raw evidence.

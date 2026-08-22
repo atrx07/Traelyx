@@ -1,73 +1,144 @@
-scoring_version: "1.0-draft"
-status: draft_unvalidated
+scoring_version: 1
+status: implemented_m4_4_synthetic_baseline
 production_ready: false
+calibration_status: governed_synthetic_fixture_reviewed
 warning: >-
-  This file defines the shape of scoring configuration, not validated weights.
-  Null weights/thresholds MUST be calibrated from fixtures/data before production.
+  These deterministic values implement M4.4 but are not population-calibrated probabilities.
+  Controlled field evidence may justify a new scoring version; version 1 history must not change.
+
 scale:
-  minimum: 0
-  maximum: 100
+  minimum_points: 0
+  maximum_points: 100
+  internal_milli_points_per_point: 1000
+  display_rounding: nearest_integer_half_up
 
 eligibility:
-  minimum_trip_duration_s: null
-  minimum_moving_duration_s: null
-  minimum_telemetry_confidence: null
-  integrity_states_allowed_for_ranking: [verified]
+  minimum_moving_duration_s: 3
+  minimum_control_opportunity_duration_ms: 500
+  minimum_usable_evidence_coverage_permille: 800
+  minimum_full_evidence_coverage_permille: 800
+  insufficient_evidence_behavior: dimension_unavailable
+  absence_of_event_is_positive_evidence: false
+
+opportunity_thresholds:
+  acceleration_control_mps2: 0.5
+  braking_control_mps2: -0.5
+  cornering_lateral_mps2_absolute: 0.5
+  cornering_yaw_rate_radps_absolute: 0.05
 
 confidence_policy:
   mode: contribution_weighting_and_dimension_eligibility
-  low_confidence_behavior: reduce_or_exclude_evidence
-  missing_is_zero: false
+  supported_event_weight_permille: 1000
+  limited_event_weight_permille: 500
+  excluded_event_weight_permille: 0
+  limited_or_questionable_integrity_behavior: provisional_and_not_rankable
+  unranked_integrity_behavior: no_overall_score_partial_dimension_audit_allowed
+  confidence_percentage_emitted: false
+
+severity_policy:
+  source: event_activation_ratio
+  minimum_multiplier_permille: 1000
+  maximum_multiplier_permille: 2000
+  conversion: nearest_integer_then_clamp
 
 dimensions:
   smoothness:
-    display_name: Smoothness
-    weight_in_overall: null
-    required_evidence: [jerk_distribution, transition_smoothness]
+    machine_id: SCORE_SMOOTHNESS
+    weight_basis_points: 3000
+    evidence: moving_vehicle_jerk
     contributions:
-      excessive_jerk_penalty: null
-      smooth_streak_bonus: null
-      abrupt_transition_penalty: null
+      SC_SMOOTH_ABRUPT_LONGITUDINAL:
+        kind: penalty
+        base_points: 6
+        event_types: [EVT_ACCEL_ABRUPT_TRANSITION, EVT_BRAKE_ABRUPT_TRANSITION]
+      SC_SMOOTH_ABRUPT_CORNER:
+        kind: penalty
+        base_points: 5
+        event_types: [EVT_CORNER_ABRUPT_ENTRY, EVT_CORNER_ABRUPT_EXIT]
   braking_control:
-    display_name: Braking Control
-    weight_in_overall: null
-    required_evidence: [braking_events, longitudinal_jerk, recovery_stability]
+    machine_id: SCORE_BRAKING_CONTROL
+    weight_basis_points: 2000
+    evidence: longitudinal_deceleration_opportunity
     contributions:
-      abrupt_transition_penalty: null
-      repeated_event_penalty: null
-      progressive_braking_bonus: null
-      stable_recovery_bonus: null
+      SC_BRAKE_ABRUPT_TRANSITION:
+        kind: penalty
+        base_points: 12
+        event_types: [EVT_BRAKE_ABRUPT_TRANSITION]
+      SC_BRAKE_REPEATED_STRONG:
+        kind: penalty
+        base_points: 4
+        event_types: [EVT_BRAKE_STRONG]
+        application: each_event_after_first
   acceleration_control:
-    display_name: Acceleration Control
-    weight_in_overall: null
-    required_evidence: [acceleration_events, longitudinal_jerk]
+    machine_id: SCORE_ACCELERATION_CONTROL
+    weight_basis_points: 1500
+    evidence: longitudinal_acceleration_opportunity
     contributions:
-      abrupt_transition_penalty: null
-      repeated_event_penalty: null
-      progressive_acceleration_bonus: null
+      SC_ACCEL_ABRUPT_TRANSITION:
+        kind: penalty
+        base_points: 10
+        event_types: [EVT_ACCEL_ABRUPT_TRANSITION]
+      SC_ACCEL_REPEATED_STRONG:
+        kind: penalty
+        base_points: 3
+        event_types: [EVT_ACCEL_STRONG]
+        application: each_event_after_first
   cornering_control:
-    display_name: Cornering Control
-    weight_in_overall: null
-    required_evidence: [corner_events, lateral_jerk, yaw_behavior, orientation_confidence]
+    machine_id: SCORE_CORNERING_CONTROL
+    weight_basis_points: 2000
+    evidence: lateral_acceleration_or_yaw_opportunity_with_both_sources_usable
     contributions:
-      abrupt_entry_penalty: null
-      abrupt_exit_penalty: null
-      stable_load_bonus: null
-      consistent_recovery_bonus: null
+      SC_CORNER_ABRUPT_ENTRY:
+        kind: penalty
+        base_points: 10
+        event_types: [EVT_CORNER_ABRUPT_ENTRY]
+      SC_CORNER_ABRUPT_EXIT:
+        kind: penalty
+        base_points: 8
+        event_types: [EVT_CORNER_ABRUPT_EXIT]
+      SC_CORNER_REPEATED_HIGH_LOAD:
+        kind: penalty
+        base_points: 3
+        event_types: [EVT_CORNER_HIGH_LOAD_LEFT, EVT_CORNER_HIGH_LOAD_RIGHT]
+        application: each_combined_event_after_first
   consistency:
-    display_name: Consistency
-    weight_in_overall: null
-    required_evidence: [segment_variance, valid_personal_baseline]
-    contributions:
-      high_variance_penalty: null
-      stable_segment_bonus: null
+    machine_id: SCORE_CONSISTENCY
+    weight_basis_points: 1500
+    status: unavailable_until_m4_5_baseline
+    unavailable_reason: CONSISTENCY_BASELINE_NOT_AVAILABLE
+
+contribution_formula: >-
+  applied_milli_points = round_half_up(
+    base_points * clamped_severity_multiplier_permille * confidence_weight_permille / 1000
+  )
+dimension_formula: >-
+  score_milli_points = clamp(100000 - sum(applied_penalty_milli_points), 0, 100000)
+positive_terms:
+  status: absent_in_v1
+  reason: no_governed_positive_event_evidence_yet
+
+overall:
+  minimum_available_dimension_count: 2
+  full_score_required_dimensions:
+    - SCORE_SMOOTHNESS
+    - SCORE_BRAKING_CONTROL
+    - SCORE_ACCELERATION_CONTROL
+    - SCORE_CORNERING_CONTROL
+  missing_dimension_handling: renormalize_available_weights
+  consistency_included_before_m4_5: false
+  risk_guardrail: overall_not_above_lowest_available_dimension_plus_15_points
+  provisional_when_dimension_set_is_partial: true
+
+ranking_policy:
+  integrity_states_allowed: [verified]
+  trip_score_states_allowed: [full]
+  maximum_speed_input_or_category_allowed: false
+  reward_extreme_lateral_g: false
+  server_validation_required_before_connected_rankings: true
 
 historical_policy:
   preserve_original_score_version: true
   auto_recalculate_old_trips: false
-  personal_baseline_scope: same_vehicle_profile_preferred
-
-ranking_policy:
-  max_speed_category_allowed: false
-  reward_extreme_lateral_g: false
-  server_validation_required: true
+  config_snapshot_required: true
+  source_algorithm_versions_required: true
+  contribution_audit_required: true

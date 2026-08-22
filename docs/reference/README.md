@@ -8,7 +8,7 @@ These files are intended to be consumed by tests, generators, validators, and ag
 
 Important:
 
-- `scoring-v1.yaml` is a **draft shape with intentionally null calibration values**. Do not treat it as a production formula.
+- `scoring-v1.yaml` is the implemented deterministic M4.4 synthetic baseline. It contains no null weights, remains `production_ready: false` pending controlled field calibration, and any semantic or weight change requires a new scoring version rather than rewriting version-1 history.
 - Provider/model catalogs are dynamic; registry expresses capabilities/policy rather than permanent model names.
 - JSON schemas describe logical debug/test representations even if production telemetry is encoded compactly.
 - Update machine-readable files and tests in the same change when a contract changes.
