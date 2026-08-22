@@ -1,0 +1,88 @@
+drive_dna_version: 1
+status: implemented_m4_5_synthetic_baseline
+production_ready: false
+calibration_status: governed_synthetic_fixture_reviewed
+warning: >-
+  This deterministic profile reducer implements M4.5 but is not a population-calibrated
+  assessment. The caller must supply one comparable local cohort. Personal/vehicle partitioning,
+  lifecycle transitions, persistence, and automatic history selection remain M4.6+ work.
+
+input:
+  source: compact_trip_score_observations
+  required_scoring_version: 1
+  duplicate_trip_ids: rejected
+  input_order_affects_result: false
+  maximum_speed_input_allowed: false
+  ml_input_required: false
+  network_required: false
+
+dimension_eligibility:
+  mode: per_dimension
+  required_trip_integrity_state: verified
+  required_score_dimension_state: full
+  minimum_eligible_observations_per_dimension: 5
+  unavailable_behavior: explicit_insufficient_data
+  provisional_or_non_verified_observations: excluded_from_baseline_value
+  missing_dimension_is_perfect_score: false
+
+direct_dimensions:
+  - SCORE_SMOOTHNESS
+  - SCORE_BRAKING_CONTROL
+  - SCORE_ACCELERATION_CONTROL
+  - SCORE_CORNERING_CONTROL
+
+aggregation:
+  direct_dimension_value: median_of_eligible_trip_dimension_milli_points
+  direct_dimension_dispersion: mean_absolute_deviation_from_dimension_median
+  arithmetic: deterministic_integer_fixed_point
+  rounding: nearest_integer_half_up
+  source_trip_ids_retained: true
+  source_versions_retained:
+    - scoring
+    - integrity
+    - raw_decoder
+    - chunk_encoding
+    - telemetry_schema
+    - gnss_processing
+    - derived_telemetry
+    - telemetry_confidence
+    - event_taxonomy
+    - event_merge
+
+consistency:
+  machine_id: SCORE_CONSISTENCY
+  scope: comparable_eligible_trip_dimensions_in_supplied_cohort
+  minimum_available_direct_dimensions: 3
+  source_dispersion: rounded_mean_of_available_direct_dimension_mean_absolute_deviations
+  penalty_permille_per_deviation_point: 2000
+  formula: >-
+    consistency_milli_points = clamp(
+      100000 - round_half_up(source_dispersion_milli_points * 2000 / 1000),
+      0,
+      100000
+    )
+  modifies_trip_score_v1: false
+  included_in_trip_score_v1_overall: false
+
+profile_states:
+  complete: all_four_direct_dimensions_and_consistency_available
+  partial: at_least_one_dimension_available_but_not_all_five
+  unavailable: no_dimension_available
+  lifecycle_meaning: none
+
+scope_boundaries:
+  caller_supplies_comparable_cohort: true
+  personal_baseline_lifecycle_applied: false
+  vehicle_profile_partitioning_applied: false
+  emerging_established_recalibrating_states_applied: false
+  persistence_or_schema_change: false
+  historical_scores_recomputed: false
+  flutter_bridge_or_ui_added: false
+  user_facing_explanation_text_added: false
+
+historical_policy:
+  preserve_drive_dna_version: true
+  preserve_source_scoring_version: true
+  preserve_source_trip_ids_and_values: true
+  preserve_config_snapshot: true
+  auto_recalculate_old_profiles: false

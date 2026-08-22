@@ -104,8 +104,9 @@ dimensions:
   consistency:
     machine_id: SCORE_CONSISTENCY
     weight_basis_points: 1500
-    status: unavailable_until_m4_5_baseline
+    status: unavailable_in_trip_score_v1_profile_consistency_available_in_drive_dna_v1
     unavailable_reason: CONSISTENCY_BASELINE_NOT_AVAILABLE
+    drive_dna_profile_contract: drive-dna-v1.yaml
 
 contribution_formula: >-
   applied_milli_points = round_half_up(
@@ -125,7 +126,7 @@ overall:
     - SCORE_ACCELERATION_CONTROL
     - SCORE_CORNERING_CONTROL
   missing_dimension_handling: renormalize_available_weights
-  consistency_included_before_m4_5: false
+  consistency_included_in_trip_score_v1: false
   risk_guardrail: overall_not_above_lowest_available_dimension_plus_15_points
   provisional_when_dimension_set_is_partial: true
 

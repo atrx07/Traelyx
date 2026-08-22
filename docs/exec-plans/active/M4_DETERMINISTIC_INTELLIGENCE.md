@@ -12,12 +12,12 @@ Read only:
 
 - `AGENTS.md` and `android/AGENTS.md`
 - `docs/technical/EVENT_ENGINE.md`
-- `docs/technical/INTEGRITY_ENGINE.md`, `SCORING_SPEC.md`, and `docs/reference/scoring-v1.yaml`
+- `docs/technical/INTEGRITY_ENGINE.md`, `SCORING_SPEC.md`, `docs/product/DRIVE_DNA_SPEC.md`, and the relevant M4 machine-readable references
 - M3.5–M3.7 contracts in `docs/technical/TELEMETRY_SPEC.md` and `SENSOR_PIPELINE.md`
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization rules in `DOCUMENTATION_POLICY.md`
 - affected native telemetry/intelligence code and tests
 
-Do not read Drive DNA, personal-baseline, UI, ML, cloud, or unrelated documentation until its canonical substep is explicitly authorized.
+Do not read personal-baseline, UI, ML, cloud, or unrelated documentation until its canonical substep is explicitly authorized.
 
 ## Goal
 
@@ -25,7 +25,7 @@ Deliver a deterministic, versioned, auditable local intelligence pipeline over t
 
 ## User-visible result
 
-Completed trips can now produce coherent typed maneuver evidence, categorical integrity/rank-trust audits, and evidence-eligible fixed-point score audits entirely on-device; later authorized M4 substeps add Drive DNA aggregation and explanation data. Product presentation remains M5 scope.
+Completed trips can now produce coherent typed maneuver evidence, categorical integrity/rank-trust audits, evidence-eligible fixed-point score audits, and a versioned multi-trip Drive DNA profile entirely on-device; later authorized M4 substeps add personal/vehicle lifecycle and explanation data. Product presentation remains M5 scope.
 
 ## In scope
 
@@ -59,11 +59,11 @@ Completed trips can now produce coherent typed maneuver evidence, categorical in
 
 ## Data/privacy/security implications
 
-M4 remains local-native and consumes local raw/derived/aggregate evidence. M4.1–M4.4 add no network flow, permission, secret, raw route logging, or Flutter bridge payload.
+M4 remains local-native and consumes local raw/derived/aggregate evidence. M4.1–M4.5 add no network flow, permission, secret, raw route logging, or Flutter bridge payload.
 
 ## Compatibility/migration implications
 
-M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-rules version 1, and M4.4 scoring version 1 without changing Drift, raw telemetry, M3 contracts, or historical stored results. Later persistence must retain every producing algorithm/config version and must not silently recompute old scores.
+M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-rules version 1, M4.4 scoring version 1, and M4.5 Drive DNA version 1 without changing Drift, raw telemetry, M3 contracts, or historical stored results. Later persistence must retain every producing algorithm/config version and must not silently recompute old scores or profiles.
 
 ## Implementation steps
 
@@ -72,7 +72,7 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - [x] M4.2: Merge/debounce candidate windows into coherent maneuver events with versioned gap/debounce policy, deterministic IDs, conservative confidence, and explicit rejected-group decisions.
 - [x] M4.3: Add deterministic integrity rules v1 over raw validity, GNSS decisions, sensor flags, cross-sensor confidence, and merged phone-movement evidence.
 - [x] M4.4: Add explicit confidence-weighted scoring v1 with physical opportunity eligibility, fixed-point audit contributions, missing-dimension synthesis, integrity gating, and a low-dimension overall guardrail.
-- [ ] M4.5: Add the Drive DNA baseline. Pending authorization.
+- [x] M4.5: Add a versioned Drive DNA baseline over comparable, fully eligible trip dimensions with robust aggregation, explicit evidence states, and cross-trip consistency.
 - [ ] M4.6: Add personal/vehicle baseline lifecycle states. Pending authorization.
 - [ ] M4.7: Add complete user-facing explanation data. Pending authorization.
 
@@ -83,11 +83,12 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - [x] focused merge/debounce, separation, transient, limited-evidence, repeatability, and fail-closed ordering tests
 - [x] focused integrity state/kind/dimension, mock, jump, speed, clock, dropout, disagreement, missing-corroboration, phone-movement, and corruption tests
 - [x] focused scoring config/fixed-point, opportunity, unavailable/provisional/full, confidence weighting, contribution audit, integrity gating, guardrail, and rank-state tests
+- [x] focused Drive DNA config/version, raw-score capture, early-history, robust median, dispersion/consistency, partial-profile, eligibility-filter, snapshot, duplicate, and repeatability tests
 - [x] complete native unit-test suite
-- [x] governed synthetic fixture replay through M4.4
+- [x] governed synthetic fixture replay through M4.5
 - [x] affected debug and release builds
 - [x] repository validation and secret/privacy review
-- [x] real-device validation not required because M4.1–M4.4 make no new physical acquisition/reliability claim
+- [x] real-device validation not required because M4.1–M4.5 make no new physical acquisition/reliability claim
 
 ## Acceptance criteria
 
@@ -104,7 +105,9 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - Scores require explicit opportunity and usable evidence; absent evidence is unavailable, limited evidence is provisional, and every numerical penalty retains exact event/confidence provenance.
 - Strong sustained maneuvers are not automatically penalized, road impacts/phone movement are excluded from driver-control penalties, and maximum speed is never an input or ranking category.
 - Overall synthesis defines missing dimensions and prevents one low dimension from being hidden; verified/full output is locally rank-eligible while questionable/unranked integrity remains review/ineligible.
-- M4.5+ Drive DNA aggregation, baseline lifecycle, full explanation presentation, crash decisions, moderation, server enforcement, and persistence remain absent.
+- Drive DNA v1 accepts a caller-supplied comparable cohort, aggregates only fully eligible verified dimensions, retains source trip/value/state/version evidence, and refuses to form direct baselines before five eligible observations.
+- Drive DNA direct dimensions use a robust median, profile consistency uses cross-trip mean-absolute-deviation evidence from at least three available direct dimensions, and scoring-v1 trip/overall meaning remains unchanged.
+- M4.6+ personal/vehicle cohort selection and lifecycle, full explanation presentation, crash decisions, moderation, server enforcement, and persistence remain absent.
 
 ## Risks
 
@@ -113,6 +116,7 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - M4.2 gap and minimum-window settings are synthetic baselines and require a new merge version if controlled field evidence changes their historical meaning.
 - M4.3 integrity thresholds and rank-state reduction are synthetic policy baselines; controlled field false positives require sanitized fixtures and a new integrity version.
 - M4.4 eligibility floors, weights, penalties, confidence reduction, and guardrail are synthetic baselines; controlled field calibration requires a new scoring version.
+- M4.5 observation floors, median aggregation, and consistency conversion are synthetic baselines; controlled cohort evidence requires a new Drive DNA version.
 
 ## Decisions made during execution
 
@@ -124,7 +128,9 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - Only inconsistency-kind findings carry `EVT_TELEMETRY_INCONSISTENCY`; quality, platform-signal, and corruption findings remain semantically distinct.
 - M4.4 uses deterministic integer milli-points, half-up display rounding, 0.5 limited-event weighting, explicit opportunity/coverage gates, and full/provisional/unavailable/unranked states rather than a confidence percentage.
 - A single sustained strong event creates scoring opportunity but no automatic penalty; only abrupt evidence and repeated strong/high-load events after the first contribute in version 1. No positive bonus exists without governed positive-event evidence.
-- Overall scoring renormalizes available direct-dimension weights, requires at least two dimensions, and is capped at the lowest available dimension plus 15 points. Consistency remains unavailable for M4.5.
+- Overall scoring renormalizes available direct-dimension weights, requires at least two dimensions, and is capped at the lowest available dimension plus 15 points. Consistency remains unavailable inside scoring-v1 and is derived separately by Drive DNA v1.
+- M4.5 keeps scoring-v1 immutable and derives a separate profile-level consistency value from cross-trip dispersion. Five full/verified observations are required per direct dimension and three available direct dimensions are required for consistency.
+- M4.5 profile `complete`/`partial`/`unavailable` states describe evidence coverage only. Personal `uncalibrated`/`emerging`/`established`/`recalibrating` lifecycle and vehicle-aware partitioning remain M4.6.
 
 ## Progress log
 
@@ -133,7 +139,8 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - 2026-08-21: M4.2 authorized and implemented with bounded merge/debounce, deterministic identity, complete merged provenance, and governed raw-to-event regressions. M4.3 returned to the explicit approval gate after all required gates passed.
 - 2026-08-22: M4.3 authorized and implemented with versioned categorical integrity/rank states, fixed-dimension evidence, corrupted-input failure, and governed raw-to-integrity regressions. M4.4 returned to the explicit approval gate after all required gates passed.
 - 2026-08-22: M4.4 authorized and implemented with fixed-point opportunity-gated dimensions, event/confidence contribution audits, integrity/ranking reduction, governed raw-to-score regressions, and an exact machine-readable configuration. M4.5 returned to the explicit approval gate after all required gates passed.
+- 2026-08-22: M4.5 authorized and implemented with versioned compact score observations, per-dimension verified/full eligibility, robust cross-trip profile medians, dispersion-derived consistency, and complete provenance/config snapshots. M4.6 returned to the explicit approval gate after all required gates passed.
 
 ## Completion summary
 
-M4.4 complete. Scoring version 1 now produces deterministic smoothness/braking/acceleration/cornering dimension audits only when physical opportunity and usable evidence exist, preserves every confidence-weighted fixed-point contribution, and synthesizes guarded overall/ranking states under the matching integrity audit. Consistency remains explicitly unavailable for M4.5. No schema/persistence, historical recomputation, network, permission, recorder, Flutter bridge, replay/UI, Drive DNA aggregation, personal baseline, ML, moderation, server enforcement, or crash behavior changed. Scoring settings remain synthetic baselines and `production_ready: false`. M4 stays active behind the M4.5 approval gate.
+M4.5 complete. Drive DNA version 1 now builds deterministic complete/partial/unavailable profiles from caller-supplied comparable scoring-v1 observations, requires five full verified observations per direct dimension, retains exact trip/value/state/version provenance, and derives profile consistency from robust cross-trip dispersion only when at least three direct dimensions are available. Scoring-v1 remains unchanged and its per-trip consistency slot remains unavailable. No schema/persistence, historical recomputation, network, permission, recorder, Flutter bridge, replay/UI, personal/vehicle lifecycle, automatic cohort selection, ML, moderation, server enforcement, or crash behavior changed. Drive DNA settings remain synthetic baselines and `production_ready: false`. M4 stays active behind the M4.6 approval gate.
