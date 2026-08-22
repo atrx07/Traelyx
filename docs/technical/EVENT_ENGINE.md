@@ -137,3 +137,7 @@ An accepted event spans the earliest source start through the latest source end.
 Every decision retains source-window counts, the full peak window and physical provenance, unioned rule/quality evidence, observed metric eligibility and reasons, component confidence states/reasons, missing-source reasons, and both config snapshots. Merged confidence is conservatively `limited` if any contributing window is limited. Version 1 remains a synthetic-fixture-reviewed baseline; changing gap, debounce, grouping, peak, confidence-reduction, or identity semantics requires a new merge version.
 
 M4.2 adds no persistence/schema, network, permission, recorder, Flutter bridge, replay/UI, scoring, integrity, ML, or crash-decision behavior.
+
+## 13. M4.3 integrity finding boundary
+
+Integrity-rules version 1 is governed by `INTEGRITY_ENGINE.md`. It does not add integrity conditions to the ten M4.1 maneuver types or reinterpret their severity. Only findings explicitly typed as `inconsistency` carry the `EVT_TELEMETRY_INCONSISTENCY` umbrella machine ID; quality limitations, known platform signals, and raw-data corruption remain distinct finding kinds. Integrity results are trip/dimension audit evidence, not merged driving maneuvers, scores, crash claims, or accusations of intent.

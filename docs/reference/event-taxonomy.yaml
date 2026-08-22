@@ -1,11 +1,12 @@
 schema_version: 1
 algorithm_version: 1
-status: implemented_m4_2
+status: implemented_m4_3
 notes:
   - The ten M4.1 machine IDs are locked for event-taxonomy version 1.
   - Detection is evidence, not moral judgment or final scoring.
   - M4.1 emits per-analysis-window evidence; M4.2 deterministically merges it into maneuver events.
   - Debounced groups remain available as explicit audit decisions instead of disappearing silently.
+  - M4.3 emits categorical integrity findings; only inconsistency-kind findings use EVT_TELEMETRY_INCONSISTENCY.
   - Thresholds are deterministic synthetic baselines, not claims of empirical population calibration.
   - Missing or invalidated required metric evidence emits no maneuver candidate; degraded usable evidence is limited.
 
@@ -40,6 +41,31 @@ merge_defaults:
   confidence_reduction: limited_if_any_source_window_is_limited
   peak_selection: maximum_activation_ratio_with_earliest_tie
   decision_order: group_finalization_order
+
+integrity_defaults:
+  integrity_version: 1
+  repeated_impossible_jump_unranked_count: 2
+  questionable_source_conflict_duration_ms: 1000
+  questionable_motion_without_imu_duration_ms: 2000
+  states: [verified, limited_confidence, questionable, unranked]
+  rank_eligibility:
+    verified: eligible
+    limited_confidence: eligible_with_limitations
+    questionable: review_required
+    unranked: ineligible
+  finding_kinds: [quality_limitation, platform_signal, inconsistency, data_corruption]
+  rules:
+    INT_RAW_TRIP_INVALID: data_corruption
+    INT_GNSS_MOCK_SIGNAL: platform_signal
+    INT_GNSS_IMPOSSIBLE_JUMP: inconsistency
+    INT_GNSS_SOURCE_SPEED_IMPLAUSIBLE: inconsistency
+    INT_GNSS_SOURCE_GAP: quality_limitation
+    INT_CLOCK_DISCONTINUITY: inconsistency
+    INT_IMU_SOURCE_DROPOUT: quality_limitation
+    INT_IMU_SENSOR_UNRELIABLE: quality_limitation
+    INT_CROSS_SENSOR_DISAGREEMENT: inconsistency
+    INT_PHONE_MOVEMENT_INVALIDATION: quality_limitation
+    INT_MOTION_WITHOUT_IMU: inconsistency
 
 confidence_states: [supported, limited]
 severity_evidence:
@@ -125,9 +151,13 @@ events:
       - Must never be decided by an LLM.
       - Must require high-confidence corroboration before Guardian Possible Crash state.
   EVT_TELEMETRY_INCONSISTENCY:
-    implementation_status: pending_m4_3
+    implementation_status: implemented_m4_3
     category: integrity
     display_name: Telemetry inconsistency
     polarity: integrity
-    severity_levels: [notice, significant, severe]
-    expected_evidence: [gnss_imu_disagreement, impossible_motion, temporal_integrity]
+    severity_levels: [limited_confidence, questionable, unranked]
+    expected_evidence: [gnss_imu_disagreement, impossible_motion, temporal_integrity, missing_inertial_corroboration]
+    rules:
+      - Umbrella ID applies only to inconsistency-kind integrity findings.
+      - Quality limitations, platform mock signals, and data corruption retain distinct finding kinds.
+      - Findings classify evidence and ranking eligibility, never malicious intent.

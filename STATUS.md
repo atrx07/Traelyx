@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M4 active — M4.2 complete, awaiting explicit M4.3 authorization**
+**M4 active — M4.3 complete, awaiting explicit M4.4 authorization**
 
 ## Working
 
@@ -77,6 +77,9 @@
 - M4.2 adds lazy, repeatable event-merge version 1 with at most one active accumulator per stable machine ID. Same-type windows at most 250 ms apart merge; sustained acceleration/braking/lateral-load groups require three windows, while transient transitions, impacts, and phone movement remain eligible from one window.
 - Accepted events receive deterministic trip/type/version/time-derived IDs and retain earliest start, latest end, strongest threshold-relative peak, physical provenance, unioned rule/quality evidence, and observed metric/component confidence reasons. Any limited source window makes merged confidence limited.
 - Sub-threshold sustained groups remain explicit debounced audit decisions rather than silently disappearing. Governed raw-to-merged regressions verify one coherent event for intended positive fixtures and no event for stationary, smooth, GNSS-loss, or motorcycle-vibration baselines.
+- M4.3 adds deterministic integrity-rules version 1 over M3.1 decoder validity, M3.2 GNSS decisions, raw GNSS/IMU flags, synchronized M3.5/M3.6 confidence, and accepted M4.2 phone movement. It keeps fixed categorical source, GNSS, IMU, cross-sensor, temporal, trip, and rank-eligibility states rather than a false percentage.
+- Integrity findings explicitly distinguish quality limitation, platform signal, inconsistency, and data corruption. A platform mock signal is reviewable but never solely unranked; isolated impossible motion is questionable, repeated impossible jumps and invalid raw input are unranked, and corrupted input never supplies a trusted trip identity.
+- Governed clean maneuver/vibration fixtures remain verified; GNSS loss and phone movement remain limited; focused mock, implausible speed, clock, dropout, unreliable-sensor, disagreement, missing-corroboration, impossible-jump, and corrupted-chunk cases preserve exact typed reasons and versions.
 
 ## Partial
 
@@ -86,7 +89,7 @@
 
 ## Not implemented
 
-- Integrity verdicts and final event persistence.
+- Final event/integrity persistence and server-side ranking enforcement.
 - Drive DNA/scoring.
 - Product replay clock, map/graph rendering, and animation.
 - Auth/cloud/social.
@@ -106,6 +109,7 @@
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
 - M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Smooth M5 rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
 - M4.1 activation thresholds and M4.2 merge/debounce settings are deterministic synthetic baselines, not population-calibrated probabilities or scoring/legal boundaries. Mounted multi-device fixtures and later field regressions may require new versioned tuning changes.
+- M4.3 integrity thresholds and rank-state reduction are synthetic policy baselines, not proof of manipulation. Mounted multi-device false-positive evidence requires sanitized regression fixtures and a new integrity version.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -114,4 +118,4 @@
 
 ## Current step
 
-**Approval gate:** M4.2 completed 2026-08-21. M4.3 integrity rules v1 remains pending explicit user authorization. Do not implement or substantially prepare M4.3 before that authorization.
+**Approval gate:** M4.3 completed 2026-08-22. M4.4 scoring v1 remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M4.4 before that authorization.
