@@ -1,0 +1,101 @@
+drive_dna_lifecycle_version: 1
+status: implemented_m4_6_synthetic_baseline
+production_ready: false
+calibration_status: governed_synthetic_fixture_reviewed
+warning: >-
+  This deterministic personal-baseline lifecycle implements M4.6 but is not a
+  population-calibrated assessment. Its observation counts, rolling window, and inactivity
+  boundary require controlled field validation under a new lifecycle version.
+
+input:
+  source: compact_drive_dna_trip_observations
+  required_drive_dna_version: 1
+  required_scoring_version: 1
+  duplicate_trip_ids: rejected
+  future_observations: rejected
+  input_order_affects_result: false
+  maximum_speed_input_allowed: false
+  ml_input_required: false
+  network_required: false
+
+partitioning:
+  personal_scope: required_opaque_local_key
+  vehicle_profile: exact_vehicle_profile_id
+  vehicle_class: exact_vehicle_class_key
+  mount_context: exact_opaque_local_context_key
+  sensor_context: exact_opaque_local_context_key
+  cross_partition_mixing: forbidden
+  personal_scope_is_hardware_or_advertising_identifier: false
+  account_required: false
+
+observation_eligibility:
+  minimum_full_verified_direct_dimensions: 1
+  eligible_dimensions:
+    - SCORE_SMOOTHNESS
+    - SCORE_BRAKING_CONTROL
+    - SCORE_ACCELERATION_CONTROL
+    - SCORE_CORNERING_CONTROL
+  fully_provisional_or_non_verified_evidence: excluded
+  partial_dimension_evidence: retained_without_fabricating_missing_dimensions
+
+cohort:
+  ordering: completed_at_utc_epoch_micros_then_trip_id
+  maximum_current_epoch_observations: 30
+  selected_window: latest_valid_observations
+  long_inactivity_gap_micros: 7776000000000
+  long_inactivity_gap_days: 90
+  observations_before_latest_long_gap: excluded_from_current_epoch
+  direct_dimension_aggregation: drive-dna-v1.yaml
+
+lifecycle_states:
+  uncalibrated:
+    selected_observation_count: 0
+    active_recalibration_reason_required: false
+  emerging:
+    minimum_selected_observations: 1
+    condition: selected_count_below_10_or_profile_not_complete
+    active_recalibration_reason_required: false
+  established:
+    minimum_selected_observations: 10
+    required_profile_state: complete
+    active_recalibration_reasons_cleared: true
+  recalibrating:
+    trigger_required: true
+    remains_until_established: true
+
+recalibration_triggers:
+  - vehicle_profile_changed
+  - vehicle_class_changed
+  - mount_context_changed
+  - sensor_context_changed
+  - long_inactivity_gap
+
+audit:
+  retains_candidate_observation_snapshots: true
+  retains_per_candidate_inclusion_decision: true
+  retains_exclusion_reasons: true
+  retains_selected_trip_ids: true
+  retains_window_bounds: true
+  retains_active_recalibration_reasons: true
+  retains_scope_and_context: true
+  retains_previous_active_scope: true
+  retains_source_versions: true
+  retains_config_snapshot: true
+
+scope_boundaries:
+  local_deterministic_reducer_only: true
+  persistence_or_schema_change: false
+  historical_profiles_recomputed: false
+  trip_scores_changed: false
+  ranking_eligibility_changed: false
+  flutter_bridge_or_ui_added: false
+  user_facing_comparison_or_explanation_added: false
+  recorder_or_sensor_acquisition_changed: false
+
+historical_policy:
+  preserve_lifecycle_version: true
+  preserve_drive_dna_version: true
+  preserve_source_scoring_and_integrity_versions: true
+  preserve_selected_and_excluded_trip_evidence: true
+  preserve_scope_context_and_config_snapshot: true
+  auto_recalculate_old_baselines: false

@@ -4,8 +4,8 @@ production_ready: false
 calibration_status: governed_synthetic_fixture_reviewed
 warning: >-
   This deterministic profile reducer implements M4.5 but is not a population-calibrated
-  assessment. The caller must supply one comparable local cohort. Personal/vehicle partitioning,
-  lifecycle transitions, persistence, and automatic history selection remain M4.6+ work.
+  assessment. A caller may supply one comparable local cohort directly, or the separately
+  versioned M4.6 lifecycle reducer may select one. Persistence remains later work.
 
 input:
   source: compact_trip_score_observations
@@ -75,6 +75,7 @@ scope_boundaries:
   personal_baseline_lifecycle_applied: false
   vehicle_profile_partitioning_applied: false
   emerging_established_recalibrating_states_applied: false
+  lifecycle_contract: drive-dna-lifecycle-v1.yaml
   persistence_or_schema_change: false
   historical_scores_recomputed: false
   flutter_bridge_or_ui_added: false

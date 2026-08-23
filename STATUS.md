@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M4 active — M4.5 complete, awaiting explicit M4.6 authorization**
+**M4 active — M4.6 complete, awaiting explicit M4.7 authorization**
 
 ## Working
 
@@ -85,7 +85,10 @@
 - Overall scoring requires at least two available dimensions, renormalizes fixed weights, cannot exceed the lowest dimension by more than 15 points, and is full/rankable only with all four direct dimensions plus verified integrity. Consistency remains explicitly unavailable inside trip scoring v1; M4.5 derives it separately at profile level, and no historical scores are persisted or recomputed.
 - M4.5 adds deterministic Drive DNA version 1 over compact scoring-v1 observations. Each direct profile dimension requires five fully eligible, integrity-verified observations and uses a robust median; early, provisional, questionable, unranked, or missing evidence remains explicitly insufficient.
 - Profile consistency is derived separately from scoring-v1 by averaging direct-dimension mean absolute deviations and subtracting twice that dispersion from 100. It requires at least three available direct dimensions, retains exact source trip/value/state/version evidence, and never changes trip overall/ranking results.
-- Drive DNA profiles expose complete/partial/unavailable evidence states and immutable configuration/source snapshots. They require a caller-supplied comparable cohort; automatic history selection, vehicle partitioning, and personalization lifecycle remain M4.6.
+- Drive DNA profiles expose complete/partial/unavailable evidence states and immutable configuration/source snapshots. The M4.5 reducer still accepts a caller-supplied comparable cohort, while M4.6 now selects the governed local cohort before invoking it.
+- M4.6 adds deterministic Drive DNA lifecycle version 1 with explicit uncalibrated, emerging, established, and recalibrating states. Establishment requires ten current eligible observations plus a complete M4.5 profile; one current observation begins emerging, and no evidence remains honestly uncalibrated.
+- Candidate history is partitioned by opaque local personal scope, vehicle profile/class, and mount/sensor context. Vehicle, class, mount, sensor, and longer-than-90-day inactivity changes remain explicit recalibration reasons; only the latest 30 valid observations in the current epoch can contribute.
+- Every lifecycle audit snapshots all candidates, per-trip inclusion/exclusion reasons, selected IDs/window bounds, scope/context, previous vehicle scope, recalibration reasons, config, and source versions. M4.6 adds no schema, persistence, account/network, permission, recorder, Flutter bridge/UI, score/ranking, or historical-recomputation change.
 
 ## Partial
 
@@ -96,7 +99,7 @@
 ## Not implemented
 
 - Final event/integrity/scoring persistence and server-side ranking enforcement.
-- Personal/vehicle Drive DNA cohort selection, comparison, and baseline lifecycle.
+- Personal-baseline persistence plus user-facing comparison and explanation paths.
 - Product replay clock, map/graph rendering, and animation.
 - Auth/cloud/social.
 - Guardian Connect.
@@ -118,6 +121,7 @@
 - M4.3 integrity thresholds and rank-state reduction are synthetic policy baselines, not proof of manipulation. Mounted multi-device false-positive evidence requires sanitized regression fixtures and a new integrity version.
 - M4.4 eligibility floors, weights, penalties, confidence factor, and overall guardrail are governed synthetic baselines, not population calibration or production-readiness claims. Controlled multi-device field evidence must promote a new scoring version rather than rewriting version-1 history.
 - M4.5's five-observation eligibility floor, robust-median aggregation, and twice-dispersion consistency conversion are governed synthetic baselines, not population calibration or a universal competence claim. Controlled comparable-cohort evidence must promote a new Drive DNA version rather than rewriting version-1 history.
+- M4.6's one/ten/thirty-observation gates and 90-day inactivity boundary are governed synthetic lifecycle defaults, not population calibration. Controlled field evidence must promote a new lifecycle version rather than rewriting historical baselines.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -126,4 +130,4 @@
 
 ## Current step
 
-**Approval gate:** M4.5 completed 2026-08-22. M4.6 personal/vehicle baseline lifecycle remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M4.6 before that authorization.
+**Approval gate:** M4.6 completed 2026-08-23. M4.7 explanation data remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M4.7 before that authorization.
