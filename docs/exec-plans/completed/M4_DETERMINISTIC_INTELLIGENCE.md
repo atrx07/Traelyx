@@ -1,6 +1,6 @@
 # Execution Plan — M4 Deterministic Intelligence v1
 
-**Status:** Active
+**Status:** Completed
 **Owner:** agent/maintainer
 **Milestone:** M4
 **Started:** 2026-08-21
@@ -17,7 +17,7 @@ Read only:
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization rules in `DOCUMENTATION_POLICY.md`
 - affected native telemetry/intelligence code and tests
 
-Do not read M4.7 explanation/presentation, UI, ML, cloud, or unrelated documentation until its canonical substep is explicitly authorized.
+M4.7 was loaded only after its explicit authorization. UI, ML, cloud, and unrelated documentation remained outside the substep.
 
 ## Goal
 
@@ -25,7 +25,7 @@ Deliver a deterministic, versioned, auditable local intelligence pipeline over t
 
 ## User-visible result
 
-Completed trips can now produce coherent typed maneuver evidence, categorical integrity/rank-trust audits, evidence-eligible fixed-point score audits, a versioned multi-trip Drive DNA profile, and an auditable personal/vehicle/context lifecycle entirely on-device; the later authorized M4.7 substep adds explanation data. Product presentation remains M5 scope.
+Completed trips can now produce coherent typed maneuver evidence, categorical integrity/rank-trust audits, evidence-eligible fixed-point score audits, a versioned multi-trip Drive DNA profile, an auditable personal/vehicle/context lifecycle, and complete typed reason paths entirely on-device. Product presentation remains M5 scope.
 
 ## In scope
 
@@ -59,11 +59,11 @@ Completed trips can now produce coherent typed maneuver evidence, categorical in
 
 ## Data/privacy/security implications
 
-M4 remains local-native and consumes local raw/derived/aggregate evidence. M4.1–M4.6 add no network flow, permission, secret, raw route logging, or Flutter bridge payload. M4.6's personal and mount/sensor context values are opaque application-local keys, not hardware, advertising, route-derived, or mandatory account identifiers.
+M4 remains local-native and consumes local raw/derived/aggregate evidence. M4.1–M4.7 add no network flow, permission, secret, raw route logging, or Flutter bridge payload. M4.6's personal and mount/sensor context values are opaque application-local keys, not hardware, advertising, route-derived, or mandatory account identifiers. M4.7 adds stable localization keys and typed values but no user prose or commentary evidence.
 
 ## Compatibility/migration implications
 
-M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-rules version 1, M4.4 scoring version 1, M4.5 Drive DNA version 1, and M4.6 Drive DNA lifecycle version 1 without changing Drift, raw telemetry, M3 contracts, or historical stored results. Schema-v1 already has a compatible future baseline snapshot boundary, so M4.6 requires no migration. Later persistence must retain every producing algorithm/config version and must not silently recompute old scores or profiles.
+M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-rules version 1, M4.4 scoring version 1, M4.5 Drive DNA version 1, M4.6 Drive DNA lifecycle version 1, and M4.7 explanation version 1 without changing Drift, raw telemetry, M3 contracts, or historical stored results. Schema-v1 already has compatible future event/score/baseline boundaries, so M4 requires no migration. Later persistence must retain every producing algorithm/config version and must not silently recompute old scores, profiles, or explanations.
 
 ## Implementation steps
 
@@ -74,7 +74,7 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - [x] M4.4: Add explicit confidence-weighted scoring v1 with physical opportunity eligibility, fixed-point audit contributions, missing-dimension synthesis, integrity gating, and a low-dimension overall guardrail.
 - [x] M4.5: Add a versioned Drive DNA baseline over comparable, fully eligible trip dimensions with robust aggregation, explicit evidence states, and cross-trip consistency.
 - [x] M4.6: Add personal/vehicle/context cohort selection with explicit uncalibrated, emerging, established, and recalibrating lifecycle states.
-- [ ] M4.7: Add complete user-facing explanation data. Pending authorization.
+- [x] M4.7: Add complete user-facing explanation data with typed arguments, exact source references, and full version provenance.
 
 ## Tests / validation
 
@@ -85,11 +85,12 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - [x] focused scoring config/fixed-point, opportunity, unavailable/provisional/full, confidence weighting, contribution audit, integrity gating, guardrail, and rank-state tests
 - [x] focused Drive DNA config/version, raw-score capture, early-history, robust median, dispersion/consistency, partial-profile, eligibility-filter, snapshot, duplicate, and repeatability tests
 - [x] focused lifecycle config/state, vehicle/class/context isolation, inactivity epoch, rolling-window, evidence-filter, snapshot, invalid-timeline, provenance, and repeatability tests
+- [x] focused explanation schema, event-layer coverage, typed measurement limitation, score contribution/reason, integrity wording, Drive DNA lifecycle, provenance, immutability, and repeatability tests
 - [x] complete native unit-test suite
-- [x] governed synthetic fixture replay through M4.6
+- [x] governed synthetic fixture replay through M4.7
 - [x] affected debug and release builds
 - [x] repository validation and secret/privacy review
-- [x] real-device validation not required because M4.1–M4.6 make no new physical acquisition/reliability claim
+- [x] real-device validation not required because M4.1–M4.7 make no new physical acquisition/reliability claim
 
 ## Acceptance criteria
 
@@ -111,7 +112,9 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - Lifecycle selection rejects ambiguous time/identity input, partitions history by exact personal/vehicle/class/mount/sensor scope, and retains per-candidate inclusion decisions without requiring an account or network.
 - Empty/current/established evidence maps deterministically to uncalibrated/emerging/established; vehicle, class, context, and long-inactivity changes remain recalibrating until ten current observations produce a complete M4.5 profile.
 - Only the latest 30 eligible observations after the most recent greater-than-90-day inactivity gap can contribute, while excluded and pre-epoch evidence remains auditable and scoring-v1 history remains unchanged.
-- M4.7 full explanation paths, crash decisions, moderation, server enforcement, and persistence remain absent.
+- Every accepted event has measurement, detection, confidence, and scoring-consequence steps; uncalibrated phone-movement magnitude and no-direct-penalty cases remain explicit.
+- Every integrity result, score dimension/contribution, overall score, Drive DNA dimension, and lifecycle result has a deterministic path with all governed reasons and complete source/version coverage.
+- Explanation data uses stable localization keys, typed unit-bearing arguments, exact source references, and immutable snapshots while commentary, localized prose, UI, persistence, crash decisions, moderation, and server enforcement remain absent.
 
 ## Risks
 
@@ -122,6 +125,7 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - M4.4 eligibility floors, weights, penalties, confidence reduction, and guardrail are synthetic baselines; controlled field calibration requires a new scoring version.
 - M4.5 observation floors, median aggregation, and consistency conversion are synthetic baselines; controlled cohort evidence requires a new Drive DNA version.
 - M4.6 observation/state/window/inactivity settings are synthetic lifecycle baselines; controlled field evidence requires a new lifecycle version.
+- M4.7 projects existing evidence exactly; later localization or visual rendering can still misstate units, uncertainty, shared contribution semantics, or evidence/judgment separation unless M5 tests those presentation contracts.
 
 ## Decisions made during execution
 
@@ -139,6 +143,8 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - M4.6 uses a separately versioned local reducer so M4.5 aggregation and scoring-v1 history stay immutable. Personal lifecycle starts emerging at one eligible observation but requires ten plus a complete profile for established.
 - The current cohort is exact-scope only and bounded to the latest 30 valid observations after the latest greater-than-90-day gap. Vehicle/class/context changes stay explicit recalibration reasons until fresh evidence becomes established.
 - Opaque local personal/mount/sensor keys are partition labels only; they do not introduce a cloud identity, device fingerprint, permission, or upload path.
+- M4.7 uses one immutable audit tree with stable localization keys and typed parameters rather than generated prose. Event, score, integrity, and Drive DNA paths retain exact source references; complete accepted-event/contribution/candidate coverage is enforced by constructors.
+- Commentary remains a separate optional presentation layer and can never become event, integrity, score, or baseline evidence. M5 may render the reason paths but must not reinterpret or sum a shared contribution once per supporting event.
 
 ## Progress log
 
@@ -149,7 +155,8 @@ M4.1 adds event-taxonomy version 1, M4.2 event-merge version 1, M4.3 integrity-r
 - 2026-08-22: M4.4 authorized and implemented with fixed-point opportunity-gated dimensions, event/confidence contribution audits, integrity/ranking reduction, governed raw-to-score regressions, and an exact machine-readable configuration. M4.5 returned to the explicit approval gate after all required gates passed.
 - 2026-08-22: M4.5 authorized and implemented with versioned compact score observations, per-dimension verified/full eligibility, robust cross-trip profile medians, dispersion-derived consistency, and complete provenance/config snapshots. M4.6 returned to the explicit approval gate after all required gates passed.
 - 2026-08-23: M4.6 authorized and implemented with versioned personal/vehicle/context isolation, current-epoch rolling cohort selection, explicit lifecycle/recalibration states, and complete candidate/config/source audit. M4.7 returned to the explicit approval gate after all required gates passed.
+- 2026-08-23: M4.7 authorized and implemented with versioned typed reason paths for every governed event, integrity result, score result, and Drive DNA lifecycle result. All required gates passed; M4 completed and M5 returned to the explicit milestone-authorization gate.
 
 ## Completion summary
 
-M4.6 complete. Drive DNA lifecycle version 1 now selects an immutable comparable cohort by exact local personal scope, vehicle profile/class, and opaque mount/sensor context; excludes unusable and stale-epoch evidence; bounds the baseline to the latest 30 valid trips; and exposes deterministic uncalibrated, emerging, established, or recalibrating state. Establishment requires ten current observations plus a complete unchanged M4.5 profile. Every candidate decision, selected ID, window, trigger, configuration, and upstream version remains auditable. No schema/persistence, historical recomputation, account/network, permission, recorder, Flutter bridge, replay/UI, comparison/explanation text, scoring/ranking, ML, moderation, server enforcement, or crash behavior changed. Lifecycle settings remain synthetic baselines and `production_ready: false`. M4 stays active behind the M4.7 approval gate.
+M4 complete. Explanation version 1 now deterministically maps every accepted event, integrity state/finding, score dimension/contribution, overall score, Drive DNA dimension, and lifecycle state into stable localization keys, typed unit-bearing arguments, categorical reason roles, exact source references, and complete upstream version provenance. It explicitly represents limited or absent evidence, prevents commentary from becoming evidence, and leaves all M4.1–M4.6 semantics unchanged. No schema/persistence, historical recomputation, account/network, permission, recorder, Flutter bridge, localized copy/UI, ML, moderation, server enforcement, or crash behavior changed. Governed synthetic M4 settings remain `production_ready: false`; M5 is behind a new explicit authorization gate.

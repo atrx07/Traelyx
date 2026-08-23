@@ -1,0 +1,152 @@
+explanation_version: 1
+message_catalog_version: 1
+status: implemented_m4_7_contract
+production_ready: false
+warning: >-
+  This contract supplies complete deterministic reason-path data for the governed M4
+  evidence. It does not provide localized copy, Flutter presentation, persistence, or a
+  population-calibration claim; those boundaries remain unchanged.
+
+input:
+  trip:
+    accepted_event_timeline: event_merge_version_1
+    score_audit: scoring_version_1
+    matching_trip_identity_required: true
+    matching_taxonomy_and_merge_versions_required: true
+    referenced_event_ids_must_exist: true
+  drive_dna:
+    lifecycle_audit: drive_dna_lifecycle_version_1
+  raw_or_replay_reduced_display_values_allowed: false
+  ml_required: false
+  network_required: false
+
+semantic_separation:
+  ordered_layers:
+    - MEASUREMENT
+    - DETECTED_EVENT
+    - CONFIDENCE
+    - SCORING_CONSEQUENCE
+    - INTEGRITY
+    - BASELINE
+  commentary_is_evidence: false
+  event_implies_driver_fault: false
+  integrity_finding_implies_malicious_intent: false
+  verified_means_no_version_1_rule_fired: true
+
+subject_kinds:
+  - DRIVING_EVENT
+  - INTEGRITY_STATUS
+  - SCORE_DIMENSION
+  - SCORE_OVERALL
+  - DRIVE_DNA_DIMENSION
+  - DRIVE_DNA_LIFECYCLE
+
+reason_roles:
+  - SUPPORTING
+  - CONTRIBUTING
+  - LIMITING
+  - EXCLUDING
+  - INFORMATIONAL
+
+step_contract:
+  stable_localization_key_required: true
+  generated_user_prose_allowed: false
+  arguments_sorted_by_key: true
+  duplicate_argument_keys_allowed: false
+  source_references_sorted_and_unique: true
+  path_headline_key_required: true
+  path_has_at_least_one_step: true
+
+argument_types:
+  machine_code:
+    value_pattern: "^[A-Z][A-Z0-9_]*$"
+  machine_code_list:
+    values_sorted_and_unique: true
+  integer_value:
+    minimum: 0
+    units:
+      - COUNT
+      - NANOSECONDS
+      - UTC_EPOCH_MICROSECONDS
+      - SCORE_MILLI_POINTS
+      - PERMILLE
+      - BASIS_POINTS
+  decimal_value:
+    finite_required: true
+    units:
+      - METRES_PER_SECOND_SQUARED
+      - METRES_PER_SECOND_CUBED
+  boolean_value: {}
+  id_list:
+    values_sorted_and_unique: true
+
+source_reference_kinds:
+  - MERGED_EVENT
+  - SCORE_CONTRIBUTION
+  - INTEGRITY_FINDING
+  - DRIVE_DNA_TRIP
+
+trip_reason_paths:
+  every_accepted_event_has_path: true
+  event_path_layers:
+    - DETECTED_EVENT
+    - MEASUREMENT
+    - CONFIDENCE
+    - SCORING_CONSEQUENCE
+  every_primary_measurement_retained_with_unit: true
+  measured_severity_retains_magnitude_threshold_and_activation_ratio: true
+  phone_movement_numeric_magnitude_fabricated: false
+  phone_movement_limitation_explicit: true
+  no_direct_scoring_consequence_explicit: true
+  contribution_source_ids_and_raw_and_applied_amounts_retained: true
+  contribution_shared_by_multiple_events_is_one_contribution_not_per_event_penalty: true
+  every_score_dimension_has_path: true
+  score_dimension_path_retains_evidence_coverage: true
+  score_dimension_path_retains_every_contribution: true
+  score_dimension_path_retains_all_provisional_and_unavailable_reasons: true
+  overall_path_retains_dimension_composition_and_weights: true
+  overall_path_retains_guardrail_integrity_and_ranking_state: true
+  integrity_path_retains_every_typed_finding: true
+  integrity_finding_references_representative_event_when_available: true
+  empty_integrity_findings_explained_as_no_version_1_rule_fired: true
+
+drive_dna_reason_paths:
+  every_profile_dimension_has_path: true
+  retains_value_state_candidate_and_eligible_counts: true
+  retains_contributing_trip_ids: true
+  retains_dispersion_and_consistency_inputs: true
+  retains_all_unavailable_reasons: true
+  lifecycle_path_retains_state_counts_selected_ids_and_window: true
+  lifecycle_path_retains_every_recalibration_trigger: true
+  lifecycle_path_retains_per_reason_excluded_trip_ids: true
+  every_candidate_trip_has_source_reference: true
+
+version_provenance:
+  trip:
+    explanation_version: retained
+    integrity_version: retained
+    complete_scoring_source_versions: retained
+  drive_dna:
+    explanation_version: retained
+    lifecycle_version: retained
+    drive_dna_version: retained
+    complete_candidate_source_version_sets: retained
+
+determinism_and_immutability:
+  same_input_and_config_produces_equal_output: true
+  event_order: start_trip_elapsed_nanos_then_event_id
+  contribution_order: contribution_id
+  maps_and_lists_exposed_as_unmodifiable_snapshots: true
+  config_snapshot_retained: true
+
+scope_boundaries:
+  local_deterministic_reducer_only: true
+  flutter_bridge_or_ui_added: false
+  localization_copy_added: false
+  persistence_or_schema_change: false
+  event_scoring_integrity_or_drive_dna_semantics_changed: false
+  historical_results_recomputed: false
+  recorder_or_sensor_acquisition_changed: false
+  account_permission_or_network_added: false
+  commentary_or_llm_used_as_evidence: false
+  crash_decision_added: false

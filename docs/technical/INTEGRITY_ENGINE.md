@@ -93,3 +93,9 @@ An isolated M3.2 impossible-jump decision is questionable; two or more make the 
 Any M3.1 raw-trip decoder rejection—including corrupt, truncated, mixed-contract, sequence, checksum, or record-order failure—is unranked and does not trust or expose a trip identity. The exact decoder error/index/sequence remains audit evidence. A successful audit is repeatable and bounded-memory: it keeps one constant-size accumulator per fixed rule ID, not per-frame findings.
 
 These values are synthetic-fixture-reviewed policy, not population-calibrated probabilities. Changes to rule meaning, thresholds, state reduction, rank mapping, or finding identity require a new integrity-rules version. M4.3 adds no persistence/schema, network, permission, recorder, Flutter bridge, UI, scoring, ML/anomaly model, moderation accusation, server ranking enforcement, or crash decision.
+
+## 10. M4.7 explanation-data boundary
+
+Explanation version 1 gives every trip integrity state a deterministic reason path. It retains the state/rank mapping and every typed finding's rule, kind, affected dimensions, occurrence count, evidence reasons, duration when available, and exact finding source reference. Phone-movement findings also reference their representative merged event. A verified audit explicitly means no version-1 integrity rule fired; it does not claim perfect telemetry, driver identity, or universal precision.
+
+Every finding is limiting evidence for its non-verified state, but its existing kind remains intact. The explanation layer never rewrites quality limitations, platform signals, inconsistencies, or corruption into a claim of cheating or malicious intent, and it does not publish new exploit-sensitive thresholds. Stable localization keys and typed arguments provide presentation data only. Integrity policy, ranking reduction, persistence, moderation, and server enforcement remain unchanged. See `docs/reference/explanation-v1.yaml`.

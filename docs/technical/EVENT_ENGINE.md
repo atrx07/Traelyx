@@ -145,3 +145,9 @@ Integrity-rules version 1 is governed by `INTEGRITY_ENGINE.md`. It does not add 
 ## 14. M4.4 scoring boundary
 
 Scoring version 1 is governed by `SCORING_SPEC.md` and `docs/reference/scoring-v1.yaml`. It consumes accepted M4.2 events without changing their type, severity, confidence, identity, or physical meaning. A strong maneuver is not itself a penalty: scoring applies only explicit abrupt/repetition contribution rules and preserves the supporting event ID and confidence weight. Score outcomes remain a separate judgment layer and never feed back into event detection, integrity, crash decisions, or raw evidence.
+
+## 15. M4.7 explanation-data boundary
+
+Explanation version 1 maps every accepted M4.2 event to a deterministic reason path without changing event detection or meaning. Each path exposes the detected machine type and time window, every primary physical measurement with its unit, threshold-relative severity evidence, categorical confidence and limiting reasons, and each exact M4.4 contribution reference. When an event has no direct scoring consequence in scoring version 1, that absence is explicit rather than inferred from an empty list. A contribution supported by multiple events remains one contribution; its amount must not be summed once per event path.
+
+Phone movement continues to expose an explicit uncalibrated-magnitude limitation instead of invented numeric severity. Event explanation paths never call a maneuver reckless, a collision, a driver error, or a legal violation. Message keys and typed arguments are presentation-ready data, not localized copy, and commentary remains outside the evidence path. The exact schema and coverage invariants are `docs/reference/explanation-v1.yaml`.

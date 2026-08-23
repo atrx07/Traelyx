@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M4 active — M4.6 complete, awaiting explicit M4.7 authorization**
+**M4 complete — awaiting explicit M5 authorization**
 
 ## Working
 
@@ -89,6 +89,8 @@
 - M4.6 adds deterministic Drive DNA lifecycle version 1 with explicit uncalibrated, emerging, established, and recalibrating states. Establishment requires ten current eligible observations plus a complete M4.5 profile; one current observation begins emerging, and no evidence remains honestly uncalibrated.
 - Candidate history is partitioned by opaque local personal scope, vehicle profile/class, and mount/sensor context. Vehicle, class, mount, sensor, and longer-than-90-day inactivity changes remain explicit recalibration reasons; only the latest 30 valid observations in the current epoch can contribute.
 - Every lifecycle audit snapshots all candidates, per-trip inclusion/exclusion reasons, selected IDs/window bounds, scope/context, previous vehicle scope, recalibration reasons, config, and source versions. M4.6 adds no schema, persistence, account/network, permission, recorder, Flutter bridge/UI, score/ranking, or historical-recomputation change.
+- M4.7 adds deterministic explanation version 1 over the unchanged M4 event, integrity, scoring, Drive DNA, and lifecycle audits. Every accepted event, integrity state/finding, score dimension/contribution, overall score, Drive DNA dimension, and lifecycle state now has a complete typed reason path with exact source references and full upstream version provenance.
+- Explanation output uses stable localization keys, typed unit-bearing parameters, categorical roles, immutable snapshots, and explicit absent/limited-evidence reasons. It adds no generated prose, Flutter UI, persistence/schema, account/network, permission, recorder, historical recomputation, crash decision, or commentary-as-evidence path.
 
 ## Partial
 
@@ -99,7 +101,7 @@
 ## Not implemented
 
 - Final event/integrity/scoring persistence and server-side ranking enforcement.
-- Personal-baseline persistence plus user-facing comparison and explanation paths.
+- Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
 - Product replay clock, map/graph rendering, and animation.
 - Auth/cloud/social.
 - Guardian Connect.
@@ -122,6 +124,7 @@
 - M4.4 eligibility floors, weights, penalties, confidence factor, and overall guardrail are governed synthetic baselines, not population calibration or production-readiness claims. Controlled multi-device field evidence must promote a new scoring version rather than rewriting version-1 history.
 - M4.5's five-observation eligibility floor, robust-median aggregation, and twice-dispersion consistency conversion are governed synthetic baselines, not population calibration or a universal competence claim. Controlled comparable-cohort evidence must promote a new Drive DNA version rather than rewriting version-1 history.
 - M4.6's one/ten/thirty-observation gates and 90-day inactivity boundary are governed synthetic lifecycle defaults, not population calibration. Controlled field evidence must promote a new lifecycle version rather than rewriting historical baselines.
+- M4.7 reason paths faithfully project those governed synthetic M4 inputs but do not validate localized wording or visual hierarchy. M5 rendering must preserve typed units, categorical uncertainty, source multiplicity, and the distinction between evidence, judgment, and commentary.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -130,4 +133,4 @@
 
 ## Current step
 
-**Approval gate:** M4.6 completed 2026-08-23. M4.7 explanation data remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M4.7 before that authorization.
+**Approval gate:** M4 completed 2026-08-23. M5 Experience & Replay remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5 before that authorization.
