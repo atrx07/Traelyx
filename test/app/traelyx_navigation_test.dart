@@ -11,6 +11,9 @@ import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
+import 'package:traelyx/features/drive_dna/application/drive_dna_providers.dart';
+import 'package:traelyx/features/drive_dna/data/drive_dna_repository.dart';
+import 'package:traelyx/features/drive_dna/domain/drive_dna_models.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
 import 'package:traelyx/features/trips/data/trip_history_repository.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
@@ -233,6 +236,9 @@ Future<void> _pumpApp(
         ),
         latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
         tripHistoryRepositoryProvider.overrideWithValue(tripRepository),
+        driveDnaRepositoryProvider.overrideWithValue(
+          const _FakeDriveDnaRepository(),
+        ),
         if (recorderStatus != null)
           recorderStatusProvider.overrideWith((ref) async => recorderStatus),
         if (permissionStatus != null)
@@ -244,6 +250,13 @@ Future<void> _pumpApp(
     ),
   );
   await tester.pumpAndSettle();
+}
+
+class _FakeDriveDnaRepository implements DriveDnaRepository {
+  const _FakeDriveDnaRepository();
+
+  @override
+  Stream<DriveDnaSnapshot?> watchLatest() => Stream.value(null);
 }
 
 class _DeepLinkCase {

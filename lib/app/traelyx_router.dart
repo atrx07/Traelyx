@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
+import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
@@ -59,14 +60,7 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
             routes: [
               GoRoute(
                 path: TraelyxRoutes.dna,
-                builder: (context, state) => const FoundationDestinationScreen(
-                  icon: Icons.hub_outlined,
-                  eyebrow: 'LONG-TERM PATTERNS',
-                  title: 'DNA',
-                  description:
-                      'Auditable driving patterns and trends will appear here '
-                      'after the telemetry and scoring foundations exist.',
-                ),
+                builder: (context, state) => const DriveDnaScreen(),
               ),
             ],
           ),
