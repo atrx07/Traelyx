@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M4 complete — awaiting explicit M5 authorization**
+**M5 active — M5.1 complete, awaiting explicit M5.2 authorization**
 
 ## Working
 
@@ -25,7 +25,7 @@
 - The stable Flutter/Kotlin recorder bridge v1 reports `bridge_ready`, exposes typed pull-based lifecycle/GNSS/IMU/buffer status and idempotent start/stop/recover commands, and reports `recordingAvailable=true` only when precise location and GPS are ready.
 - A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
-- Drive, Trips, DNA, Social, and You have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states validated locally and in CI.
+- Trips, DNA, and Social have directly routable, responsive navigation skeletons with isolated branch stacks and honest placeholder states; You exposes diagnostics, while Drive now owns the M5.1 ready/live recorder experience.
 - Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries, validated locally and in CI.
 - Secret storage is separated behind a replaceable interface whose default implementation fails closed instead of falling back to insecure persistence or logs, validated locally and in CI.
 - A deep-link-safe Developer / Diagnostics screen reports allowlisted app/build metadata, schema version, recorder capability state, and aggregate storage bytes without exposing routes, raw samples, filenames, device identifiers, credentials, or API keys, validated locally, on-device, and in CI.
@@ -91,6 +91,9 @@
 - Every lifecycle audit snapshots all candidates, per-trip inclusion/exclusion reasons, selected IDs/window bounds, scope/context, previous vehicle scope, recalibration reasons, config, and source versions. M4.6 adds no schema, persistence, account/network, permission, recorder, Flutter bridge/UI, score/ranking, or historical-recomputation change.
 - M4.7 adds deterministic explanation version 1 over the unchanged M4 event, integrity, scoring, Drive DNA, and lifecycle audits. Every accepted event, integrity state/finding, score dimension/contribution, overall score, Drive DNA dimension, and lifecycle state now has a complete typed reason path with exact source references and full upstream version provenance.
 - Explanation output uses stable localization keys, typed unit-bearing parameters, categorical roles, immutable snapshots, and explicit absent/limited-evidence reasons. It adds no generated prose, Flutter UI, persistence/schema, account/network, permission, recorder, historical recomputation, crash decision, or commentary-as-evidence path.
+- M5.1 replaces the recorder-control bootstrap with a glanceable Ready/Drive experience over the unchanged versioned permission and recorder aggregates. The primary action precedes optional private export, prerequisites fail closed, and labels do not invent live speed, distance, duration, calibration, or confidence.
+- Active recording now has a dedicated distraction-minimized mode with navigation suppressed from the shared recorder provider, compact GPS/motion/local-save health, persistent limitation warnings, a fixed End drive control, and explicit end-and-save confirmation. Large text, disabled animation, actionable semantics, loading/error, recovery, finalization, and export states are covered by Flutter tests.
+- The final debug and release APKs launch on the Android 14 Tecno LH8n with the Start action above fold and exposed as an actionable 64 px semantics node. A full debug recording survived backgrounding and relaunch, exposed the device's persistent unreliable motion status without overstating GPS readiness, finalized locally, and left no service or QA trip after scoped cleanup; the original database hash and four pre-existing trip roots were preserved.
 
 ## Partial
 
@@ -118,13 +121,14 @@
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
 - M3.4–M3.8 frame, filter/sign/hysteresis, mid-trip phone-move, GNSS-loss, impact, and synthetic-vibration behavior is covered deterministically, but mounted vehicle alignment, real motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require controlled physical fixture validation.
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
-- M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Smooth M5 rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
+- M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Later M5 replay rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
 - M4.1 activation thresholds and M4.2 merge/debounce settings are deterministic synthetic baselines, not population-calibrated probabilities or scoring/legal boundaries. Mounted multi-device fixtures and later field regressions may require new versioned tuning changes.
 - M4.3 integrity thresholds and rank-state reduction are synthetic policy baselines, not proof of manipulation. Mounted multi-device false-positive evidence requires sanitized regression fixtures and a new integrity version.
 - M4.4 eligibility floors, weights, penalties, confidence factor, and overall guardrail are governed synthetic baselines, not population calibration or production-readiness claims. Controlled multi-device field evidence must promote a new scoring version rather than rewriting version-1 history.
 - M4.5's five-observation eligibility floor, robust-median aggregation, and twice-dispersion consistency conversion are governed synthetic baselines, not population calibration or a universal competence claim. Controlled comparable-cohort evidence must promote a new Drive DNA version rather than rewriting version-1 history.
 - M4.6's one/ten/thirty-observation gates and 90-day inactivity boundary are governed synthetic lifecycle defaults, not population calibration. Controlled field evidence must promote a new lifecycle version rather than rewriting historical baselines.
 - M4.7 reason paths faithfully project those governed synthetic M4 inputs but do not validate localized wording or visual hierarchy. M5 rendering must preserve typed units, categorical uncertainty, source multiplicity, and the distinction between evidence, judgment, and commentary.
+- M5.1 physical QA covers one Android 14 Tecno at its current viewport and an indoor finding-GPS state. It does not establish multi-device/OEM layout reliability, a new GPS-acquisition claim, controlled deep-sleep behavior, or later trip-result/replay performance.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Map tile/provider policy and offline/cache strategy.
 - Availability/diversity of labeled telemetry for ML.
@@ -133,4 +137,4 @@
 
 ## Current step
 
-**Approval gate:** M4 completed 2026-08-23. M5 Experience & Replay remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5 before that authorization.
+**Approval gate:** M5.1 completed 2026-08-25. M5.2 Trip history/result remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.2 before that authorization.

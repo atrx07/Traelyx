@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 
-class AppNavigationShell extends StatelessWidget {
+class AppNavigationShell extends ConsumerWidget {
   const AppNavigationShell({required this.navigationShell, super.key});
 
   static const _railBreakpoint = 720.0;
@@ -17,13 +19,17 @@ class AppNavigationShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final driveIsActive =
+        navigationShell.currentIndex == 0 &&
+        (ref.watch(recorderStatusProvider).valueOrNull?.lifecycle.active ??
+            false);
     return LayoutBuilder(
       builder: (context, constraints) {
         final useRail = constraints.maxWidth >= _railBreakpoint;
 
         return Scaffold(
-          body: useRail
+          body: useRail && !driveIsActive
               ? Row(
                   children: [
                     SafeArea(
@@ -62,7 +68,7 @@ class AppNavigationShell extends StatelessWidget {
                   ],
                 )
               : navigationShell,
-          bottomNavigationBar: useRail
+          bottomNavigationBar: useRail || driveIsActive
               ? null
               : SafeArea(
                   top: false,

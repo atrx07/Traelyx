@@ -60,6 +60,20 @@ void main() {
 
     expect(model.action, DrivePrimaryAction.startTrip);
     expect(model.actionLabel, 'Start drive');
+    expect(model.mode, DrivePresentationMode.ready);
+    expect(model.eyebrow, 'READY TO DRIVE');
+    expect(
+      model.health
+          .singleWhere((item) => item.kind == DriveHealthKind.location)
+          .value,
+      'Precise',
+    );
+    expect(
+      model.health
+          .singleWhere((item) => item.kind == DriveHealthKind.motion)
+          .value,
+      'On Start',
+    );
   });
 
   test('notification denial does not block a ready recorder', () {
@@ -89,6 +103,7 @@ void main() {
 
     expect(model.action, DrivePrimaryAction.stopTrip);
     expect(model.actionLabel, 'Stop drive');
+    expect(model.isLive, isTrue);
   });
 
   test(
@@ -103,6 +118,12 @@ void main() {
 
       expect(model.title, 'Recording started — finding GPS');
       expect(model.action, DrivePrimaryAction.stopTrip);
+      expect(
+        model.health
+            .singleWhere((item) => item.kind == DriveHealthKind.gps)
+            .value,
+        'Finding fix',
+      );
     },
   );
 
@@ -134,6 +155,12 @@ void main() {
 
     expect(model.title, 'Recording active with limited motion confidence');
     expect(model.action, DrivePrimaryAction.stopTrip);
+    expect(
+      model.health
+          .singleWhere((item) => item.kind == DriveHealthKind.motion)
+          .tone,
+      DriveStatusTone.caution,
+    );
   });
 
   test('a transient unreliable sample does not become a permanent warning', () {
@@ -147,6 +174,12 @@ void main() {
     );
 
     expect(model.title, 'Drive recording is active');
+    expect(
+      model.health
+          .singleWhere((item) => item.kind == DriveHealthKind.motion)
+          .value,
+      'Recording',
+    );
   });
 
   test('a recorder error can finalize only verified preserved evidence', () {
@@ -179,6 +212,46 @@ void main() {
 
     expect(model.action, DrivePrimaryAction.none);
     expect(model.actionLabel, 'Stopping…');
+    expect(model.mode, DrivePresentationMode.stopping);
+  });
+
+  test('active storage failures remain visible in compact health', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(
+        locationState: RecorderPermissionState.granted,
+        fine: true,
+        coarse: true,
+        gps: true,
+        recordingReady: true,
+      ),
+      recorder: _recorder(active: true, state: 'recording', writeFailures: 1),
+    );
+
+    final storage = model.health.singleWhere(
+      (item) => item.kind == DriveHealthKind.storage,
+    );
+    expect(storage.value, 'Needs attention');
+    expect(storage.tone, DriveStatusTone.critical);
+  });
+
+  test('live local-save health pluralizes one completed chunk', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(
+        locationState: RecorderPermissionState.granted,
+        fine: true,
+        coarse: true,
+        gps: true,
+        recordingReady: true,
+      ),
+      recorder: _recorder(active: true, state: 'recording', completedChunks: 1),
+    );
+
+    expect(
+      model.health
+          .singleWhere((item) => item.kind == DriveHealthKind.storage)
+          .detail,
+      '1 chunk completed',
+    );
   });
 }
 
@@ -214,6 +287,8 @@ RecorderStatus _recorder({
   int accelerometerSamples = 20,
   int gyroscopeSamples = 19,
   int unreliableSamples = 0,
+  int writeFailures = 0,
+  int completedChunks = 2,
 }) {
   return RecorderStatus.fromMap(<Object?, Object?>{
     ...statusMap,
@@ -233,6 +308,11 @@ RecorderStatus _recorder({
       'accelerometerAcceptedSampleCount': accelerometerSamples,
       'gyroscopeAcceptedSampleCount': gyroscopeSamples,
       'unreliableAccuracySampleCount': unreliableSamples,
+    },
+    'buffer': <Object?, Object?>{
+      ...statusMap['buffer']! as Map<Object?, Object?>,
+      'writeFailureCount': writeFailures,
+      'completedChunkCount': completedChunks,
     },
   });
 }

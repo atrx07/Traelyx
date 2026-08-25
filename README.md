@@ -4,7 +4,7 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-Milestones M0–M4 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. The local pipeline decodes raw trips fail-closed, builds deterministic derived/confidence/replay evidence, merges ten maneuver types, audits integrity/rank trust, produces versioned evidence-eligible trip scores, aggregates verified trip dimensions into a versioned Drive DNA profile, selects an auditable personal/vehicle/context cohort, and emits complete typed reason paths for every governed event, integrity state, score, and baseline result. Early, cross-vehicle, changed-context, or stale history cannot silently become the current baseline; scoring-v1 history is unchanged. It uses no ML, maximum-speed reward, accusation of intent, fabricated confidence percentage, or commentary as evidence. Governed synthetic fixtures lock the raw-to-explanation contract. M5 awaits explicit authorization.
+Milestones M0–M4 and M5.1 are complete. A ready Android device can record through lifecycle, network, and GNSS interruptions, then finalize verified native chunks into local Drift history and export a strictly verified local-private fixture without an account or network. Drive now presents truthful ready, permission-recovery, degraded-live, stopping, and finalization states with the primary action above secondary tools, navigation suppressed during recording, and protected end-and-save confirmation. The local pipeline decodes raw trips fail-closed, builds deterministic derived/confidence/replay evidence, merges ten maneuver types, audits integrity/rank trust, produces versioned evidence-eligible trip scores, aggregates verified trip dimensions into a versioned Drive DNA profile, selects an auditable personal/vehicle/context cohort, and emits complete typed reason paths for every governed event, integrity state, score, and baseline result. It uses no ML, maximum-speed reward, accusation of intent, fabricated confidence percentage, or commentary as evidence. Governed synthetic fixtures lock the raw-to-explanation contract. M5 remains active at the explicit M5.2 approval gate.
 
 ## Roadmap
 
@@ -17,7 +17,16 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M2 | Native Recording Engine | Reliable recorder, recovery, private export, and real-drive fixture | ✅ Complete | Done | 2026-08-14 |
 | M3 | Telemetry Processing Engine | Trustworthy derived telemetry and governed regression corpus | ✅ Complete | Done | 2026-08-21 |
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
-| M5 | Experience & Replay | Product experience milestone | ⚪ Pending | ~1.5–2 weeks | — |
+| M5 | Experience & Replay | Product experience milestone | 🔵 Active | ~1.5–2 weeks | 2026-08-25 |
+| M5.1 |  | Ready/Drive screen — glanceable recorder health and safe minimal live mode | ✅ Complete | Done | 2026-08-25 |
+| M5.2 |  | Trip history/result — rich result hierarchy with confidence and integrity | ⚪ Pending | — | — |
+| M5.3 |  | Drive DNA visual — original signature treatment, trends, and insufficient-data states | ⚪ Pending | — | — |
+| M5.4 |  | Map abstraction and route rendering — provider-neutral map and cache controls | ⚪ Pending | — | — |
+| M5.5 |  | Synchronized replay clock — map, graphs, and events on one timeline | ⚪ Pending | — | — |
+| M5.6 |  | Replay animations — camera, marker/path, events, pause, scrub, and speed | ⚪ Pending | — | — |
+| M5.7 |  | Procedural road commentary — governed tone, context, cooldown, and anchored bubbles | ⚪ Pending | — | — |
+| M5.8 |  | Reduced motion and accessibility — alternative transitions and accessible metrics | ⚪ Pending | — | — |
+| M5.9 |  | Storage manager/export — retention, map cache, debug export, and anonymization | ⚪ Pending | — | — |
 | M6 | Connected / Social Layer | Optional connected milestone | ⚪ Pending | ~1–1.5 weeks | — |
 | M7 | ML & Advanced Commentary | Auditable intelligence milestone | ⚪ Pending | ~2–3 weeks plus data collection | — |
 | M8 | Hardening & Public Release | Release candidate to v0.1.0 | ⚪ Pending | ~1–1.5 weeks | — |

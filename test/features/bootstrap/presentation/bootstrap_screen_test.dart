@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,8 +24,10 @@ void main() {
     expect(find.text('Allow precise location'), findsWidgets);
     expect(permissions.calls, isEmpty);
 
-    await _revealPrimaryButton(tester);
-    await tester.tap(find.byKey(const ValueKey('drive-primary-action')));
+    final primaryAction = find.byKey(const ValueKey('drive-primary-action'));
+    expect(primaryAction, findsOneWidget);
+    expect(primaryAction.hitTestable(), findsOneWidget);
+    await tester.tap(primaryAction);
     await tester.pumpAndSettle();
 
     expect(permissions.calls, ['requestLocation']);
@@ -53,8 +56,23 @@ void main() {
 
     expect(find.text('Ready to record'), findsOneWidget);
     expect(find.text('Keep the recording notice visible'), findsOneWidget);
-    await _revealPrimaryButton(tester);
     expect(find.text('Start drive'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('drive-primary-action')).hitTestable(),
+      findsOneWidget,
+    );
+    final semantics = tester.ensureSemantics();
+    try {
+      expect(
+        tester
+            .getSemantics(find.bySemanticsLabel('Start drive'))
+            .getSemanticsData()
+            .hasAction(ui.SemanticsAction.tap),
+        isTrue,
+      );
+    } finally {
+      semantics.dispose();
+    }
 
     await tester.tap(find.byKey(const ValueKey('drive-primary-action')));
     await tester.pumpAndSettle();
@@ -62,7 +80,62 @@ void main() {
     expect(commands.calls, ['startTrip']);
   });
 
-  testWidgets('active Drive prioritizes a large stop action', (tester) async {
+  testWidgets('ready action is visible before precise-private local tools', (
+    tester,
+  ) async {
+    await _pumpDrive(
+      tester,
+      permissionStatus: _permissionStatus(
+        locationState: RecorderPermissionState.granted,
+        fine: true,
+        coarse: true,
+        recordingReady: true,
+        canRequestLocation: false,
+      ),
+      latestExportTripId: 'd181f268-f3ef-4a43-a142-8bf0671dcd49',
+    );
+
+    expect(find.text('READY TO DRIVE'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('drive-primary-action')).hitTestable(),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('tripdebug-export-action')).hitTestable(),
+      findsNothing,
+    );
+  });
+
+  testWidgets('ready Start fails closed when local foundation fails', (
+    tester,
+  ) async {
+    await _pumpDrive(
+      tester,
+      permissionStatus: _permissionStatus(
+        locationState: RecorderPermissionState.granted,
+        fine: true,
+        coarse: true,
+        recordingReady: true,
+        canRequestLocation: false,
+      ),
+      readinessFuture: () async => throw StateError('database unavailable'),
+    );
+
+    expect(find.text('Local foundation check failed'), findsOneWidget);
+    expect(find.text('Start unavailable'), findsOneWidget);
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey('drive-primary-action')),
+          )
+          .onPressed,
+      isNull,
+    );
+  });
+
+  testWidgets('active Drive requires confirmation before ending', (
+    tester,
+  ) async {
     final commands = _FakeRecorderCommands(
       _recorderStatus(active: true, state: 'recording'),
     );
@@ -73,10 +146,28 @@ void main() {
     );
 
     expect(find.text('Drive recording is active'), findsOneWidget);
-    await _revealPrimaryButton(tester);
-    expect(find.text('Stop drive'), findsOneWidget);
+    expect(find.byKey(const ValueKey('live-drive-view')), findsOneWidget);
+    expect(find.text('End drive'), findsOneWidget);
+    expect(find.text('GPS'), findsOneWidget);
+    expect(find.text('MOTION'), findsOneWidget);
+    expect(find.text('LOCAL SAVE'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('drive-primary-action')));
+    await tester.tap(find.byKey(const ValueKey('drive-end-action')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('end-drive-confirm-dialog')),
+      findsOneWidget,
+    );
+    expect(commands.calls, isEmpty);
+
+    await tester.tap(find.byKey(const ValueKey('continue-recording-action')));
+    await tester.pumpAndSettle();
+    expect(commands.calls, isEmpty);
+
+    await tester.tap(find.byKey(const ValueKey('drive-end-action')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('confirm-end-drive-action')));
     await tester.pumpAndSettle();
 
     expect(commands.calls, ['stopTrip']);
@@ -93,17 +184,69 @@ void main() {
     );
 
     expect(find.text('Stopping drive'), findsOneWidget);
-    await _revealPrimaryButton(tester);
-    expect(find.text('Stopping…'), findsOneWidget);
+    expect(find.text('Saving drive…'), findsOneWidget);
     expect(
       tester
-          .widget<FilledButton>(
-            find.byKey(const ValueKey('drive-primary-action')),
+          .widget<OutlinedButton>(
+            find.byKey(const ValueKey('drive-end-action')),
           )
           .onPressed,
       isNull,
     );
   });
+
+  testWidgets('live Drive exposes persistent motion limitations', (
+    tester,
+  ) async {
+    await _pumpDrive(
+      tester,
+      recorderStatus: _recorderStatus(
+        active: true,
+        state: 'recording',
+        unreliableSamples: 100,
+      ),
+    );
+
+    expect(
+      find.text('Recording active with limited motion confidence'),
+      findsOneWidget,
+    );
+    expect(find.text('Limited'), findsOneWidget);
+    expect(find.text('Android accuracy unreliable'), findsOneWidget);
+  });
+
+  testWidgets('large text keeps critical Drive controls reachable', (
+    tester,
+  ) async {
+    await _pumpDrive(tester, textScale: 2);
+
+    expect(tester.takeException(), isNull);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('drive-primary-action')),
+      240,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('drive-primary-action')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('drive-primary-action')).hitTestable(),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'Drive transition duration is zero when animations are disabled',
+    (tester) async {
+      await _pumpDrive(tester, disableAnimations: true);
+
+      expect(
+        tester.widget<AnimatedSwitcher>(find.byType(AnimatedSwitcher)).duration,
+        Duration.zero,
+      );
+    },
+  );
 
   for (final stateCase
       in <({String expected, RecorderPermissionStatus permissions})>[
@@ -145,7 +288,6 @@ void main() {
     await _pumpDriveWithPermissionFuture(tester, () => pending.future);
 
     expect(find.text('Checking recording access'), findsOneWidget);
-    await _revealPrimaryButton(tester);
     final button = tester.widget<FilledButton>(
       find.byKey(const ValueKey('drive-primary-action')),
     );
@@ -161,8 +303,7 @@ void main() {
       settle: true,
     );
 
-    expect(find.text('Could not check recording access'), findsOneWidget);
-    await _revealPrimaryButton(tester);
+    expect(find.text('Could not check recorder state'), findsOneWidget);
     final button = tester.widget<FilledButton>(
       find.byKey(const ValueKey('drive-primary-action')),
     );
@@ -233,19 +374,30 @@ Future<void> _pumpDrive(
   String? latestExportTripId,
   _FakeTripDebugExporter? exporter,
   Future<RecorderFinalizationSyncResult> Function()? finalizationFuture,
+  Future<BootstrapReadiness> Function()? readinessFuture,
+  double textScale = 1,
+  bool disableAnimations = false,
 }) async {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
   final effectivePermissionStatus = permissionStatus ?? _permissionStatus();
   final effectiveRecorderStatus = recorderStatus ?? _recorderStatus();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         bootstrapReadinessProvider.overrideWith(
-          (ref) async => const BootstrapReadiness(
-            databaseReady: true,
-            bridgeVersion: 1,
-            recorderState: 'bridge_ready',
-            recordingAvailable: false,
-          ),
+          (ref) =>
+              readinessFuture?.call() ??
+              Future.value(
+                const BootstrapReadiness(
+                  databaseReady: true,
+                  bridgeVersion: 1,
+                  recorderState: 'bridge_ready',
+                  recordingAvailable: false,
+                ),
+              ),
         ),
         recorderPermissionStatusProvider.overrideWith(
           (ref) async => effectivePermissionStatus,
@@ -278,6 +430,13 @@ Future<void> _pumpDrive(
       ],
       child: MaterialApp(
         theme: TraelyxTheme.dark,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+            disableAnimations: disableAnimations,
+          ),
+          child: child!,
+        ),
         home: const Scaffold(body: BootstrapScreen()),
       ),
     ),
@@ -290,6 +449,10 @@ Future<void> _pumpDriveWithPermissionFuture(
   Future<RecorderPermissionStatus> Function() permissionFuture, {
   bool settle = false,
 }) async {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
   final recorderStatus = _recorderStatus();
   await tester.pumpWidget(
     ProviderScope(
@@ -336,15 +499,6 @@ Future<void> _pumpDriveWithPermissionFuture(
   }
 }
 
-Future<void> _revealPrimaryButton(WidgetTester tester) async {
-  await tester.scrollUntilVisible(
-    find.byKey(const ValueKey('drive-primary-action')),
-    240,
-    scrollable: find.byType(Scrollable).first,
-  );
-  await tester.pumpAndSettle();
-}
-
 RecorderPermissionStatus _permissionStatus({
   RecorderPermissionState locationState = RecorderPermissionState.requestable,
   RecorderPermissionState notificationState = RecorderPermissionState.granted,
@@ -368,7 +522,11 @@ RecorderPermissionStatus _permissionStatus({
   });
 }
 
-RecorderStatus _recorderStatus({bool active = false, String state = 'idle'}) {
+RecorderStatus _recorderStatus({
+  bool active = false,
+  String state = 'idle',
+  int unreliableSamples = 0,
+}) {
   return RecorderStatus.fromMap(<Object?, Object?>{
     ...statusMap,
     'lifecycle': <Object?, Object?>{
@@ -377,6 +535,10 @@ RecorderStatus _recorderStatus({bool active = false, String state = 'idle'}) {
       'active': active,
       'tripId': active ? 'd181f268-f3ef-4a43-a142-8bf0671dcd49' : null,
       'errorCode': null,
+    },
+    'imu': <Object?, Object?>{
+      ...statusMap['imu']! as Map<Object?, Object?>,
+      'unreliableAccuracySampleCount': unreliableSamples,
     },
   });
 }

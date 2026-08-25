@@ -46,15 +46,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('TRAELYX'), findsOneWidget);
-    expect(find.text('Your drives.\nYour evidence.'), findsOneWidget);
-    expect(find.text('Local foundation ready'), findsOneWidget);
+    expect(find.byKey(const ValueKey('live-drive-view')), findsOneWidget);
     expect(find.text('Drive recording is active'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.textContaining('No telemetry uploaded'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.textContaining('No telemetry uploaded'), findsOneWidget);
+    expect(find.text('GPS'), findsOneWidget);
+    expect(find.text('MOTION'), findsOneWidget);
+    expect(find.text('LOCAL SAVE'), findsOneWidget);
+    expect(find.text('End drive'), findsOneWidget);
   });
 }

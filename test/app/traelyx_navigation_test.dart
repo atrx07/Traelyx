@@ -12,6 +12,9 @@ import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 
+import '../core/platform/recorder_bridge_test.dart'
+    show permissionStatusMap, statusMap;
+
 void main() {
   testWidgets('root redirects to Drive and exposes five primary destinations', (
     tester,
@@ -28,7 +31,43 @@ void main() {
     expect(find.text('DNA'), findsOneWidget);
     expect(find.text('Social'), findsOneWidget);
     expect(find.text('You'), findsOneWidget);
-    expect(find.text('Your drives.\nYour evidence.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('ready-drive-view')), findsOneWidget);
+  });
+
+  testWidgets('active Drive suppresses primary navigation distractions', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter();
+    addTearDown(router.dispose);
+    final activeRecorder = RecorderStatus.fromMap(<Object?, Object?>{
+      ...statusMap,
+      'lifecycle': <Object?, Object?>{
+        ...statusMap['lifecycle']! as Map<Object?, Object?>,
+        'state': 'recording',
+        'active': true,
+      },
+    });
+    final grantedPermissions =
+        RecorderPermissionStatus.fromMap(<Object?, Object?>{
+          ...permissionStatusMap,
+          'locationState': RecorderPermissionState.granted.wireName,
+          'fineLocationGranted': true,
+          'coarseLocationGranted': true,
+          'gpsProviderEnabled': true,
+          'recordingReady': true,
+        });
+
+    await _pumpApp(
+      tester,
+      router,
+      recorderStatus: activeRecorder,
+      permissionStatus: grantedPermissions,
+    );
+
+    expect(find.byKey(const ValueKey('live-drive-view')), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
+    expect(find.byType(NavigationRail), findsNothing);
+    expect(find.byKey(const ValueKey('drive-end-action')), findsOneWidget);
   });
 
   testWidgets('selecting a destination updates content and route location', (
@@ -127,6 +166,8 @@ Future<void> _pumpApp(
   WidgetTester tester,
   GoRouter router, {
   Size size = const Size(390, 844),
+  RecorderStatus? recorderStatus,
+  RecorderPermissionStatus? permissionStatus,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -152,6 +193,12 @@ Future<void> _pumpApp(
           ),
         ),
         latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
+        if (recorderStatus != null)
+          recorderStatusProvider.overrideWith((ref) async => recorderStatus),
+        if (permissionStatus != null)
+          recorderPermissionStatusProvider.overrideWith(
+            (ref) async => permissionStatus,
+          ),
       ],
       child: TraelyxApp(router: router),
     ),
