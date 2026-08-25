@@ -6,6 +6,8 @@ import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dar
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
+import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
+import 'package:traelyx/features/trips/presentation/trips_screen.dart';
 
 GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
   return GoRouter(
@@ -41,14 +43,15 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
             routes: [
               GoRoute(
                 path: TraelyxRoutes.trips,
-                builder: (context, state) => const FoundationDestinationScreen(
-                  icon: Icons.route_outlined,
-                  eyebrow: 'LOCAL HISTORY',
-                  title: 'Trips',
-                  description:
-                      'Recorded drives and their details will live here. '
-                      'Local history will not require a cloud account.',
-                ),
+                builder: (context, state) => const TripsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':tripId',
+                    builder: (context, state) => TripResultScreen(
+                      tripId: state.pathParameters['tripId'] ?? '',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

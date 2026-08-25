@@ -11,6 +11,9 @@ import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
+import 'package:traelyx/features/trips/application/trip_history_providers.dart';
+import 'package:traelyx/features/trips/data/trip_history_repository.dart';
+import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 
 import '../core/platform/recorder_bridge_test.dart'
     show permissionStatusMap, statusMap;
@@ -81,7 +84,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.trips);
-    expect(find.byKey(const ValueKey('destination-Trips')), findsOneWidget);
+    expect(find.byKey(const ValueKey('trips-history-screen')), findsOneWidget);
+    expect(find.text('No drives yet'), findsOneWidget);
     expect(
       tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
       1,
@@ -116,6 +120,40 @@ void main() {
 
     expect(find.text('Page not found'), findsOneWidget);
     expect(find.textContaining('/not-a-route'), findsOneWidget);
+  });
+
+  testWidgets('trip result deep link stays inside the Trips branch', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter(
+      initialLocation: TraelyxRoutes.tripResult('trip-one'),
+    );
+    addTearDown(router.dispose);
+
+    await _pumpApp(
+      tester,
+      router,
+      tripRepository: _FakeTripRepository(
+        history: [_routeTrip],
+        result: _routeResult,
+      ),
+    );
+
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.tripResult('trip-one'),
+    );
+    expect(find.byKey(const ValueKey('trip-result-screen')), findsOneWidget);
+    expect(find.text('Analysis not available'), findsOneWidget);
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      1,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('trip-result-back')));
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.trips);
+    expect(find.byKey(const ValueKey('trips-history-screen')), findsOneWidget);
   });
 
   testWidgets('wide layouts use a navigation rail with deep-link selection', (
@@ -168,6 +206,7 @@ Future<void> _pumpApp(
   Size size = const Size(390, 844),
   RecorderStatus? recorderStatus,
   RecorderPermissionStatus? permissionStatus,
+  TripHistoryRepository tripRepository = const _FakeTripRepository(),
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -193,6 +232,7 @@ Future<void> _pumpApp(
           ),
         ),
         latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
+        tripHistoryRepositoryProvider.overrideWithValue(tripRepository),
         if (recorderStatus != null)
           recorderStatusProvider.overrideWith((ref) async => recorderStatus),
         if (permissionStatus != null)
@@ -231,7 +271,7 @@ const _deepLinks = [
     path: TraelyxRoutes.trips,
     label: 'Trips',
     index: 1,
-    contentKey: 'destination-Trips',
+    contentKey: 'trips-history-screen',
   ),
   _DeepLinkCase(
     path: TraelyxRoutes.dna,
@@ -275,4 +315,44 @@ const _report = DiagnosticsReport(
     recordingAvailable: false,
     serviceRegistered: true,
   ),
+);
+
+class _FakeTripRepository implements TripHistoryRepository {
+  const _FakeTripRepository({this.history = const [], this.result});
+
+  final List<TripHistoryItem> history;
+  final TripResult? result;
+
+  @override
+  Future<TripResult?> loadResult(String tripId) async => result;
+
+  @override
+  Stream<List<TripHistoryItem>> watchHistory() => Stream.value(history);
+}
+
+final _routeTrip = TripHistoryItem(
+  id: 'trip-one',
+  vehicleName: 'Local vehicle',
+  startedAtUtc: DateTime.utc(2026, 8, 25),
+  duration: const Duration(minutes: 1),
+  distanceMeters: null,
+  completionState: TripEvidenceState.verified,
+  recoveryState: TripEvidenceState.verified,
+  integrityState: TripEvidenceState.notAssessed,
+);
+
+final _routeResult = TripResult(
+  trip: _routeTrip,
+  telemetrySchemaVersion: 1,
+  telemetryConfidenceRecorded: false,
+  evidence: const TripEvidenceSummary(
+    chunkCount: 1,
+    byteCount: 100,
+    gnssSampleCount: 1,
+    accelerometerSampleCount: 2,
+    gyroscopeSampleCount: 2,
+  ),
+  finalization: null,
+  events: const [],
+  score: null,
 );
