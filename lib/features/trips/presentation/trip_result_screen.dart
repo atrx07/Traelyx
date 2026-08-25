@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/core/maps/map_contract.dart';
@@ -614,13 +615,21 @@ class _ReplayWorkspace extends StatefulWidget {
   State<_ReplayWorkspace> createState() => _ReplayWorkspaceState();
 }
 
-class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
+enum _ReplayCameraMode { overview, follow }
+
+class _ReplayWorkspaceState extends State<_ReplayWorkspace>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late ReplayClockController _clock;
+  late final Ticker _ticker;
+  Duration _lastTickerElapsed = Duration.zero;
+  _ReplayCameraMode _cameraMode = _ReplayCameraMode.overview;
 
   @override
   void initState() {
     super.initState();
     _clock = ReplayClockController(widget.timeline);
+    _ticker = createTicker(_handleTick);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -628,15 +637,61 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.timeline != widget.timeline) {
       final position = _clock.snapshot.position;
+      final speed = _clock.speed;
+      _pausePlayback();
       _clock.dispose();
-      _clock = ReplayClockController(widget.timeline)..seek(position);
+      _clock = ReplayClockController(widget.timeline)
+        ..setSpeed(speed)
+        ..seek(position);
     }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _ticker.dispose();
     _clock.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) _pausePlayback();
+  }
+
+  void _handleTick(Duration elapsed) {
+    final delta = elapsed - _lastTickerElapsed;
+    _lastTickerElapsed = elapsed;
+    _clock.advance(delta);
+    if (!_clock.isPlaying) {
+      _ticker.stop();
+      _lastTickerElapsed = Duration.zero;
+    }
+  }
+
+  void _startPlayback() {
+    if (_clock.isPlaying) return;
+    setState(() => _cameraMode = _ReplayCameraMode.follow);
+    _clock.play();
+    _lastTickerElapsed = Duration.zero;
+    _ticker.start();
+  }
+
+  void _pausePlayback() {
+    if (_ticker.isActive) _ticker.stop();
+    _lastTickerElapsed = Duration.zero;
+    _clock.pause();
+  }
+
+  void _seekFraction(double fraction) {
+    _pausePlayback();
+    _clock.seekFraction(fraction);
+  }
+
+  void _seekToEvent(int index) {
+    _pausePlayback();
+    setState(() => _cameraMode = _ReplayCameraMode.follow);
+    _clock.seekToEvent(index);
   }
 
   @override
@@ -647,18 +702,53 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
         final timeline = _clock.timeline;
         final snapshot = _clock.snapshot;
         final geometry = timeline.route;
+        final animationsDisabled = MediaQuery.disableAnimationsOf(context);
+        if (animationsDisabled && _clock.isPlaying) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _pausePlayback();
+          });
+        }
+        final activeEventMarkers = <RouteReplayPoint>[
+          for (final index in snapshot.activeEventIndexes)
+            if (timeline.at(timeline.events[index].midpoint).routeMarker
+                case final marker?)
+              RouteReplayPoint(
+                coordinate: marker.coordinate,
+                afterPointIndex: marker.afterPointIndex,
+              ),
+        ];
+        final pulsePhase = animationsDisabled || activeEventMarkers.isEmpty
+            ? 0.0
+            : snapshot.position.inMilliseconds.remainder(1400) / 1400;
+        final cameraTarget =
+            _cameraMode == _ReplayCameraMode.follow &&
+                snapshot.routeMarker != null &&
+                !_clock.isAtEnd
+            ? 1.0
+            : 0.0;
         return Column(
           key: const ValueKey('trip-replay-workspace'),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (geometry != null) ...[
-              OfflineRouteMap(
-                key: const ValueKey('trip-route-available'),
-                geometry: geometry,
-                replayMarker: snapshot.routeMarker?.coordinate,
-                replayMarkerAfterPointIndex:
-                    snapshot.routeMarker?.afterPointIndex,
-                replayPosition: snapshot.position,
+              TweenAnimationBuilder<double>(
+                tween: Tween(end: cameraTarget),
+                duration: TraelyxMotion.effectiveDuration(
+                  context,
+                  TraelyxMotion.emphasized,
+                ),
+                curve: TraelyxMotion.emphasizedCurve,
+                builder: (context, cameraFollow, child) => OfflineRouteMap(
+                  key: const ValueKey('trip-route-available'),
+                  geometry: geometry,
+                  replayMarker: snapshot.routeMarker?.coordinate,
+                  replayMarkerAfterPointIndex:
+                      snapshot.routeMarker?.afterPointIndex,
+                  replayPosition: snapshot.position,
+                  cameraFollow: cameraFollow,
+                  activeEventMarkers: activeEventMarkers,
+                  eventPulsePhase: pulsePhase,
+                ),
               ),
               const SizedBox(height: TraelyxSpacing.sm),
               Wrap(
@@ -691,14 +781,109 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
             _Panel(
               children: [
                 Text(
-                  'Manual replay timeline',
+                  'Replay playback',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: TraelyxSpacing.xxs),
                 Text(
-                  'One cursor controls the verified map position, evidence graph, and persisted events. Playback and speed controls arrive in a later step.',
+                  'One clock controls verified path progress, map position, evidence, and persisted events. Manual scrub always pauses playback.',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
+                const SizedBox(height: TraelyxSpacing.sm),
+                Text(
+                  _clock.isPlaying
+                      ? 'Playing at ${_clock.speed.label}'
+                      : _clock.isAtEnd
+                      ? 'Replay complete · ${_clock.speed.label}'
+                      : 'Paused · ${_clock.speed.label}',
+                  key: const ValueKey('replay-playback-state'),
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: TraelyxSpacing.sm),
+                Wrap(
+                  spacing: TraelyxSpacing.xs,
+                  runSpacing: TraelyxSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    FilledButton.icon(
+                      key: const ValueKey('replay-playback-toggle'),
+                      onPressed: animationsDisabled
+                          ? null
+                          : _clock.isPlaying
+                          ? _pausePlayback
+                          : _startPlayback,
+                      icon: Icon(
+                        _clock.isPlaying
+                            ? Icons.pause_rounded
+                            : _clock.isAtEnd
+                            ? Icons.replay_rounded
+                            : Icons.play_arrow_rounded,
+                      ),
+                      label: Text(
+                        _clock.isPlaying
+                            ? 'Pause'
+                            : _clock.isAtEnd
+                            ? 'Replay'
+                            : 'Play',
+                      ),
+                    ),
+                    ChoiceChip(
+                      key: const ValueKey('replay-camera-overview'),
+                      label: const Text('Overview'),
+                      selected: _cameraMode == _ReplayCameraMode.overview,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(
+                            () => _cameraMode = _ReplayCameraMode.overview,
+                          );
+                        }
+                      },
+                    ),
+                    ChoiceChip(
+                      key: const ValueKey('replay-camera-follow'),
+                      label: const Text('Follow marker'),
+                      selected: _cameraMode == _ReplayCameraMode.follow,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(
+                            () => _cameraMode = _ReplayCameraMode.follow,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: TraelyxSpacing.sm),
+                Text(
+                  'Playback speed',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                const SizedBox(height: TraelyxSpacing.xxs),
+                Wrap(
+                  spacing: TraelyxSpacing.xs,
+                  runSpacing: TraelyxSpacing.xs,
+                  children: [
+                    for (final speed in ReplayPlaybackSpeed.values)
+                      ChoiceChip(
+                        key: ValueKey('replay-speed-${speed.name}'),
+                        label: Text(speed.label),
+                        selected: _clock.speed == speed,
+                        onSelected: animationsDisabled
+                            ? null
+                            : (selected) {
+                                if (selected) _clock.setSpeed(speed);
+                              },
+                      ),
+                  ],
+                ),
+                if (animationsDisabled) ...[
+                  const SizedBox(height: TraelyxSpacing.xs),
+                  Text(
+                    'Reduced motion is on. Playback and pulsing are disabled; scrub manually or choose a camera view.',
+                    key: const ValueKey('replay-reduced-motion-note'),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
                 const SizedBox(height: TraelyxSpacing.md),
                 Row(
                   children: [
@@ -743,13 +928,14 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
                               .round(),
                     ),
                   ),
-                  onIncrease: () => _clock.seekFraction(_clock.fraction + 0.01),
-                  onDecrease: () => _clock.seekFraction(_clock.fraction - 0.01),
+                  onIncrease: () => _seekFraction(_clock.fraction + 0.01),
+                  onDecrease: () => _seekFraction(_clock.fraction - 0.01),
                   child: ExcludeSemantics(
                     child: Slider(
                       key: const ValueKey('replay-timeline-slider'),
                       value: _clock.fraction,
-                      onChanged: _clock.seekFraction,
+                      onChangeStart: (_) => _pausePlayback(),
+                      onChanged: _seekFraction,
                     ),
                   ),
                 ),
@@ -781,7 +967,7 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
                       )
                         OutlinedButton(
                           key: ValueKey('replay-event-$index'),
-                          onPressed: () => _clock.seekToEvent(index),
+                          onPressed: () => _seekToEvent(index),
                           style: snapshot.activeEventIndexes.contains(index)
                               ? OutlinedButton.styleFrom(
                                   foregroundColor:

@@ -75,6 +75,29 @@ void main() {
     );
   });
 
+  test('follow framing keeps overview stable and centers verified focus', () {
+    const points = [Offset(30, 40), Offset(120, 80), Offset(260, 140)];
+    const size = Size(300, 180);
+
+    expect(
+      RouteProjector.frameForFollow(
+        points,
+        size,
+        focus: points[1],
+        progress: 0,
+      ),
+      points,
+    );
+    final followed = RouteProjector.frameForFollow(
+      points,
+      size,
+      focus: points[1],
+      progress: 1,
+    );
+    expect(followed[1], const Offset(150, 90));
+    expect(followed.first.dx, lessThan(points.first.dx));
+  });
+
   testWidgets('offline route semantics describe shape without coordinates', (
     tester,
   ) async {
@@ -94,7 +117,7 @@ void main() {
     );
     expect(
       find.bySemanticsLabel(
-        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. No verified replay position at the selected time.',
+        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. No verified replay position at the selected time. Route overview is shown.',
       ),
       findsOneWidget,
     );
@@ -114,6 +137,17 @@ void main() {
             replayMarker: MapCoordinate(latitude: 12.9718, longitude: 77.5948),
             replayMarkerAfterPointIndex: 0,
             replayPosition: const Duration(seconds: 1),
+            cameraFollow: 1,
+            activeEventMarkers: [
+              RouteReplayPoint(
+                coordinate: MapCoordinate(
+                  latitude: 12.9718,
+                  longitude: 77.5948,
+                ),
+                afterPointIndex: 0,
+              ),
+            ],
+            eventPulsePhase: 0.5,
           ),
         ),
       ),
@@ -121,7 +155,7 @@ void main() {
 
     expect(
       find.bySemanticsLabel(
-        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. Replay marker shown at 0 minutes 01 seconds.',
+        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. Replay marker shown at 0 minutes 01 seconds. Camera follows the verified marker. 1 active event point is emphasized.',
       ),
       findsOneWidget,
     );

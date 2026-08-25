@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
@@ -10,13 +11,21 @@ class OfflineRouteMap extends StatelessWidget {
     this.replayMarker,
     this.replayMarkerAfterPointIndex,
     this.replayPosition,
+    this.cameraFollow = 0,
+    this.activeEventMarkers = const [],
+    this.eventPulsePhase = 0,
     super.key,
-  }) : assert((replayMarker == null) == (replayMarkerAfterPointIndex == null));
+  }) : assert((replayMarker == null) == (replayMarkerAfterPointIndex == null)),
+       assert(cameraFollow >= 0 && cameraFollow <= 1),
+       assert(eventPulsePhase >= 0 && eventPulsePhase <= 1);
 
   final MapRouteGeometry geometry;
   final MapCoordinate? replayMarker;
   final int? replayMarkerAfterPointIndex;
   final Duration? replayPosition;
+  final double cameraFollow;
+  final List<RouteReplayPoint> activeEventMarkers;
+  final double eventPulsePhase;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +34,7 @@ class OfflineRouteMap extends StatelessWidget {
       container: true,
       image: true,
       label:
-          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.${replayMarker == null || replayPosition == null ? ' No verified replay position at the selected time.' : ' Replay marker shown at ${_formatMapOffset(replayPosition!)}.'}',
+          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.${replayMarker == null || replayPosition == null ? ' No verified replay position at the selected time.' : ' Replay marker shown at ${_formatMapOffset(replayPosition!)}.'}${cameraFollow > 0 && replayMarker != null ? ' Camera follows the verified marker.' : ' Route overview is shown.'}${activeEventMarkers.isEmpty ? '' : ' ${activeEventMarkers.length} active ${activeEventMarkers.length == 1 ? 'event point is' : 'event points are'} emphasized.'}',
       child: ExcludeSemantics(
         child: RepaintBoundary(
           child: AspectRatio(
@@ -45,6 +54,10 @@ class OfflineRouteMap extends StatelessWidget {
                     colors: context.traelyxColors,
                     replayMarker: replayMarker,
                     replayMarkerAfterPointIndex: replayMarkerAfterPointIndex,
+                    replayPosition: replayPosition,
+                    cameraFollow: cameraFollow,
+                    activeEventMarkers: activeEventMarkers,
+                    eventPulsePhase: eventPulsePhase,
                   ),
                 ),
               ),
@@ -54,6 +67,16 @@ class OfflineRouteMap extends StatelessWidget {
       ),
     );
   }
+}
+
+class RouteReplayPoint {
+  const RouteReplayPoint({
+    required this.coordinate,
+    required this.afterPointIndex,
+  });
+
+  final MapCoordinate coordinate;
+  final int afterPointIndex;
 }
 
 @visibleForTesting
@@ -108,6 +131,23 @@ abstract final class RouteProjector {
       );
     });
   }
+
+  static List<Offset> frameForFollow(
+    List<Offset> points,
+    Size size, {
+    required Offset focus,
+    required double progress,
+    double followScale = 2.35,
+  }) {
+    if (points.isEmpty || progress <= 0) return points;
+    final boundedProgress = progress.clamp(0.0, 1.0);
+    final scale = 1 + (followScale - 1) * boundedProgress;
+    final center = Offset(size.width / 2, size.height / 2);
+    final translation = (center - focus) * boundedProgress;
+    return [
+      for (final point in points) focus + (point - focus) * scale + translation,
+    ];
+  }
 }
 
 class OfflineRoutePainter extends CustomPainter {
@@ -116,41 +156,83 @@ class OfflineRoutePainter extends CustomPainter {
     required this.colors,
     this.replayMarker,
     this.replayMarkerAfterPointIndex,
+    this.replayPosition,
+    this.cameraFollow = 0,
+    this.activeEventMarkers = const [],
+    this.eventPulsePhase = 0,
   });
 
   final MapRouteGeometry geometry;
   final TraelyxSemanticColors colors;
   final MapCoordinate? replayMarker;
   final int? replayMarkerAfterPointIndex;
+  final Duration? replayPosition;
+  final double cameraFollow;
+  final List<RouteReplayPoint> activeEventMarkers;
+  final double eventPulsePhase;
 
   @override
   void paint(Canvas canvas, Size size) {
     _paintGrid(canvas, size);
-    final projected = RouteProjector.project(geometry.points, size);
-    if (projected.length < 2) return;
+    final overviewRoute = RouteProjector.project(geometry.points, size);
+    if (overviewRoute.length < 2) return;
+    final markerPoint =
+        replayMarker == null || replayMarkerAfterPointIndex == null
+        ? null
+        : RouteReplayPoint(
+            coordinate: replayMarker!,
+            afterPointIndex: replayMarkerAfterPointIndex!,
+          );
+    final overviewMarker = markerPoint == null
+        ? null
+        : _projectReplayPoint(markerPoint, size);
+    final overviewEvents = [
+      for (final event in activeEventMarkers) _projectReplayPoint(event, size),
+    ];
+    final combined = <Offset>[
+      ...overviewRoute,
+      ?overviewMarker,
+      ...overviewEvents,
+    ];
+    final framed = overviewMarker == null
+        ? combined
+        : RouteProjector.frameForFollow(
+            combined,
+            size,
+            focus: overviewMarker,
+            progress: cameraFollow,
+          );
+    final projected = framed.sublist(0, overviewRoute.length);
+    var nextOffsetIndex = overviewRoute.length;
+    final markerOffset = overviewMarker == null
+        ? null
+        : framed[nextOffsetIndex++];
+    final eventOffsets = framed.sublist(nextOffsetIndex);
+
     final casing = Paint()
       ..color = colors.canvas
       ..strokeWidth = 8
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
-    final route = Paint()
-      ..color = colors.accent
-      ..strokeWidth = 4
+    final futureRoute = Paint()
+      ..color = colors.textSecondary.withValues(alpha: 0.66)
+      ..strokeWidth = 3.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
-    for (final paint in [casing, route]) {
-      Path? path;
-      for (var index = 0; index < projected.length; index++) {
-        if (index == 0 || geometry.points[index].startsNewSegment) {
-          if (path != null) canvas.drawPath(path, paint);
-          path = Path()..moveTo(projected[index].dx, projected[index].dy);
-        } else {
-          path!.lineTo(projected[index].dx, projected[index].dy);
-        }
-      }
-      if (path != null) canvas.drawPath(path, paint);
+    _paintRoutePaths(canvas, projected, casing);
+    _paintRoutePaths(canvas, projected, futureRoute);
+    final selectedPosition = replayPosition;
+    if (selectedPosition == null) {
+      _paintRoutePaths(canvas, projected, _completedRoutePaint());
+    } else {
+      _paintCompletedRoute(
+        canvas,
+        projected,
+        markerOffset: markerOffset,
+        selectedPosition: selectedPosition,
+      );
     }
     for (var index = 1; index < projected.length; index++) {
       if (geometry.points[index].startsNewSegment) {
@@ -159,25 +241,73 @@ class OfflineRoutePainter extends CustomPainter {
     }
     _paintStart(canvas, projected.first);
     _paintEnd(canvas, projected.last);
-    final marker = replayMarker;
-    final markerAfterIndex = replayMarkerAfterPointIndex;
-    if (marker != null && markerAfterIndex != null) {
-      final markerPoints = geometry.points.toList()
-        ..insert(
-          markerAfterIndex + 1,
-          MapRoutePoint(
-            coordinate: marker,
-            tripOffset: Duration.zero,
-            startsNewSegment: false,
-          ),
-        );
-      final markerOffset = RouteProjector.project(
-        markerPoints,
-        size,
-      )[markerAfterIndex + 1];
-      _paintReplayMarker(canvas, markerOffset);
+    for (final eventOffset in eventOffsets) {
+      _paintEventPulse(canvas, eventOffset);
     }
+    if (markerOffset != null) _paintReplayMarker(canvas, markerOffset);
     _paintNorth(canvas, size);
+  }
+
+  Offset _projectReplayPoint(RouteReplayPoint point, Size size) {
+    final points = geometry.points.toList()
+      ..insert(
+        point.afterPointIndex + 1,
+        MapRoutePoint(
+          coordinate: point.coordinate,
+          tripOffset: Duration.zero,
+          startsNewSegment: false,
+        ),
+      );
+    return RouteProjector.project(points, size)[point.afterPointIndex + 1];
+  }
+
+  void _paintRoutePaths(Canvas canvas, List<Offset> projected, Paint paint) {
+    Path? path;
+    for (var index = 0; index < projected.length; index++) {
+      if (index == 0 || geometry.points[index].startsNewSegment) {
+        if (path != null) canvas.drawPath(path, paint);
+        path = Path()..moveTo(projected[index].dx, projected[index].dy);
+      } else {
+        path!.lineTo(projected[index].dx, projected[index].dy);
+      }
+    }
+    if (path != null) canvas.drawPath(path, paint);
+  }
+
+  Paint _completedRoutePaint() => Paint()
+    ..color = colors.accent
+    ..strokeWidth = 4.5
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round;
+
+  void _paintCompletedRoute(
+    Canvas canvas,
+    List<Offset> projected, {
+    required Offset? markerOffset,
+    required Duration selectedPosition,
+  }) {
+    final paint = _completedRoutePaint();
+    Path? path;
+    for (var index = 0; index < projected.length; index++) {
+      final point = geometry.points[index];
+      if (point.tripOffset > selectedPosition) {
+        if (path != null &&
+            markerOffset != null &&
+            replayMarkerAfterPointIndex == index - 1) {
+          path.lineTo(markerOffset.dx, markerOffset.dy);
+        }
+        if (path != null) canvas.drawPath(path, paint);
+        return;
+      }
+      if (index == 0 || point.startsNewSegment) {
+        if (path != null) canvas.drawPath(path, paint);
+        path = Path()..moveTo(projected[index].dx, projected[index].dy);
+      } else {
+        path!.lineTo(projected[index].dx, projected[index].dy);
+      }
+    }
+    if (path != null) canvas.drawPath(path, paint);
   }
 
   void _paintGrid(Canvas canvas, Size size) {
@@ -251,6 +381,19 @@ class OfflineRoutePainter extends CustomPainter {
     canvas.drawCircle(point, 2.5, Paint()..color = colors.canvas);
   }
 
+  void _paintEventPulse(Canvas canvas, Offset point) {
+    final phase = eventPulsePhase.clamp(0.0, 1.0);
+    canvas.drawCircle(point, 5, Paint()..color = colors.caution);
+    canvas.drawCircle(
+      point,
+      10 + phase * 9,
+      Paint()
+        ..color = colors.caution.withValues(alpha: 0.72 * (1 - phase))
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5,
+    );
+  }
+
   void _paintNorth(Canvas canvas, Size size) {
     final textPainter = TextPainter(
       text: TextSpan(
@@ -278,7 +421,12 @@ class OfflineRoutePainter extends CustomPainter {
     return oldDelegate.geometry != geometry ||
         oldDelegate.colors != colors ||
         oldDelegate.replayMarker != replayMarker ||
-        oldDelegate.replayMarkerAfterPointIndex != replayMarkerAfterPointIndex;
+        oldDelegate.replayMarkerAfterPointIndex !=
+            replayMarkerAfterPointIndex ||
+        oldDelegate.replayPosition != replayPosition ||
+        oldDelegate.cameraFollow != cameraFollow ||
+        !listEquals(oldDelegate.activeEventMarkers, activeEventMarkers) ||
+        oldDelegate.eventPulsePhase != eventPulsePhase;
   }
 }
 

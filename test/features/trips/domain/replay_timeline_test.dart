@@ -98,6 +98,48 @@ void main() {
     expect(() => clock.seekToEvent(2), throwsRangeError);
   });
 
+  test('playback advances one clock at governed speeds and stops at end', () {
+    final timeline =
+        (ReplayTimeline.build(
+                  recordedDuration: const Duration(seconds: 10),
+                  route: null,
+                  events: const [],
+                )
+                as ReplayTimelineAvailable)
+            .timeline;
+    final clock = ReplayClockController(timeline);
+    addTearDown(clock.dispose);
+
+    clock.play();
+    expect(clock.isPlaying, isTrue);
+    clock.advance(const Duration(seconds: 2));
+    expect(clock.snapshot.position, const Duration(seconds: 2));
+
+    clock.setSpeed(ReplayPlaybackSpeed.half);
+    clock.advance(const Duration(seconds: 2));
+    expect(clock.snapshot.position, const Duration(seconds: 3));
+    clock.setSpeed(ReplayPlaybackSpeed.doubleSpeed);
+    clock.advance(const Duration(seconds: 3));
+    expect(clock.snapshot.position, const Duration(seconds: 9));
+
+    clock.pause();
+    clock.advance(const Duration(seconds: 1));
+    expect(clock.snapshot.position, const Duration(seconds: 9));
+    clock.play();
+    clock.advance(const Duration(seconds: 1));
+    expect(clock.snapshot.position, const Duration(seconds: 10));
+    expect(clock.isPlaying, isFalse);
+    expect(clock.isAtEnd, isTrue);
+
+    clock.play();
+    expect(clock.snapshot.position, Duration.zero);
+    expect(clock.isPlaying, isTrue);
+    expect(
+      () => clock.advance(const Duration(microseconds: -1)),
+      throwsArgumentError,
+    );
+  });
+
   test(
     'timeline remains available without a map and fails only with no extent',
     () {

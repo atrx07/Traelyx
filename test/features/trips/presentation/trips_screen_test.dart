@@ -163,7 +163,7 @@ void main() {
     expect(find.text('Strong Braking'), findsOneWidget);
   });
 
-  testWidgets('one manual clock synchronizes marker graph and event seeking', (
+  testWidgets('one replay clock synchronizes marker graph and event seeking', (
     tester,
   ) async {
     final replayResult = TripResult(
@@ -187,7 +187,7 @@ void main() {
       routeRepository: _FakeRouteRepository(result: _availableRoute),
     );
     await tester.scrollUntilVisible(
-      find.text('Manual replay timeline'),
+      find.text('Replay playback'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
@@ -227,8 +227,127 @@ void main() {
     final event = find.byKey(const ValueKey('replay-event-0'));
     await tester.ensureVisible(event);
     await tester.tap(event);
+    await tester.pumpAndSettle();
+    expect(find.text('0:45'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(
+        RegExp(
+          r'Camera follows the verified marker\. 1 active event point is emphasized\.',
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('play pause speed end and lifecycle use the same clock', (
+    tester,
+  ) async {
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(
+        history: [_trip],
+        result: _replayResultWithEvent(),
+      ),
+      routeRepository: _FakeRouteRepository(result: _availableRoute),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Replay playback'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+
+    final speedControl = find.byKey(const ValueKey('replay-speed-doubleSpeed'));
+    final playbackToggle = find.byKey(const ValueKey('replay-playback-toggle'));
+    await tester.ensureVisible(speedControl);
+    await tester.pumpAndSettle();
+    await tester.tap(speedControl);
+    await tester.ensureVisible(playbackToggle);
+    await tester.pumpAndSettle();
+    await tester.tap(playbackToggle);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text('Playing at 2×'), findsOneWidget);
+    expect(find.text('0:04'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'Camera follows the verified marker\.')),
+      findsOneWidget,
+    );
+
+    await tester.tap(playbackToggle);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text('Paused · 2×'), findsOneWidget);
+    expect(find.text('0:04'), findsOneWidget);
+
+    await tester.tap(playbackToggle);
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text('Paused · 2×'), findsOneWidget);
+    expect(find.text('0:04'), findsOneWidget);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+
+    final sliderFinder = find.byKey(const ValueKey('replay-timeline-slider'));
+    await tester.ensureVisible(sliderFinder);
+    await tester.pumpAndSettle();
+    tester.widget<Slider>(sliderFinder).onChanged!(0.99);
+    await tester.pump();
+    await tester.ensureVisible(playbackToggle);
+    await tester.pumpAndSettle();
+    await tester.tap(playbackToggle);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('Replay complete · 2×'), findsOneWidget);
+    expect(find.text('1:30'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('disabled animations preserve manual replay without autoplay', (
+    tester,
+  ) async {
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(
+        history: [_trip],
+        result: _replayResultWithEvent(),
+      ),
+      routeRepository: _FakeRouteRepository(result: _availableRoute),
+      disableAnimations: true,
+    );
+    await tester.scrollUntilVisible(
+      find.text('Replay playback'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey('replay-playback-toggle')),
+          )
+          .onPressed,
+      isNull,
+    );
+    expect(
+      tester
+          .widget<ChoiceChip>(
+            find.byKey(const ValueKey('replay-speed-doubleSpeed')),
+          )
+          .onSelected,
+      isNull,
+    );
+    expect(
+      find.byKey(const ValueKey('replay-reduced-motion-note')),
+      findsOneWidget,
+    );
+
+    tester
+        .widget<Slider>(find.byKey(const ValueKey('replay-timeline-slider')))
+        .onChanged!(0.5);
     await tester.pump();
     expect(find.text('0:45'), findsOneWidget);
+    expect(find.text('Paused · 1×'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -395,6 +514,7 @@ Future<void> _pumpResult(
   required TripHistoryRepository repository,
   TripRouteRepository routeRepository = const _FakeRouteRepository(),
   double textScale = 1,
+  bool disableAnimations = false,
   bool settle = true,
 }) async {
   await _pump(
@@ -403,6 +523,7 @@ Future<void> _pumpResult(
     routeRepository: routeRepository,
     home: const TripResultScreen(tripId: 'trip-one'),
     textScale: textScale,
+    disableAnimations: disableAnimations,
     settle: settle,
   );
 }
@@ -414,6 +535,7 @@ Future<void> _pump(
   required Widget home,
   bool settle = true,
   double textScale = 1,
+  bool disableAnimations = false,
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
@@ -429,9 +551,10 @@ Future<void> _pump(
       child: MaterialApp(
         theme: TraelyxTheme.dark,
         builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+            disableAnimations: disableAnimations,
+          ),
           child: child!,
         ),
         home: Scaffold(body: home),
@@ -520,6 +643,22 @@ final _result = TripResult(
     qualityFlags: ['recorder_recovered'],
   ),
   events: const [],
+  score: null,
+);
+
+TripResult _replayResultWithEvent() => TripResult(
+  trip: _result.trip,
+  telemetrySchemaVersion: _result.telemetrySchemaVersion,
+  telemetryConfidenceRecorded: false,
+  evidence: _result.evidence,
+  finalization: _result.finalization,
+  events: const [
+    TripEventSummary(
+      type: 'strong_braking',
+      startElapsedNanos: 40_000_000_000,
+      endElapsedNanos: 50_000_000_000,
+    ),
+  ],
   score: null,
 );
 

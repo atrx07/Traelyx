@@ -57,11 +57,19 @@ Marker interpolation is valid only between adjacent points in the same governed 
 
 The M5.5 evidence graph is intentionally coordinate-free and represents verified route-coverage spans plus persisted event ranges. It is not a substitute for the native-only M3.7 speed, acceleration, yaw, or confidence display channels. Later animation must consume this same clock instead of creating a second time source.
 
+### 4.2 M5.6 deterministic playback and framing
+
+M5.6 extends that same application-owned controller with play, pause, replay, lifecycle pause, and deterministic 0.5×/1×/2× advancement. A presentation ticker supplies elapsed deltas but owns no evidence time: the controller remains the sole replay clock, clamps at the recorded boundary, and stops at the end. Manual scrub and persisted-event selection pause playback before seeking.
+
+The local canvas draws verified completed-path progress over muted future-route context without joining governed segment gaps. Overview fits the full route; follow framing interpolates toward a bounded marker-centered viewport only when a verified marker exists. A time inside a governed gap falls back to the truthful overview and exposes no marker. Active persisted events may pulse from the same selected time, so route position, path progress, evidence cursor, event state, and visual phase cannot drift onto independent clocks.
+
+When system animations are disabled, autonomous playback and event pulsing are disabled while manual seeking and explicit overview/follow framing remain available. M5.6 adds no native bridge, M3.7 telemetry exposure, schema, dependency, provider, or network behavior.
+
 ## 5. Privacy
 
 Fetching map tiles can expose approximate viewed areas to tile providers. Document this in privacy behavior and avoid adding analytics trackers.
 
-The M5.4 local-canvas provider fetches no tiles and emits no network request. Precise route geometry remains local and transient: exclude it from logs, diagnostics, analytics, semantics/accessibility labels, cache metadata, and unrelated application state. Accessibility describes only the verified display-point count, segment count, start/end/gap cues, selected replay time, and whether a verified marker exists. M5.5 evidence semantics may expose only duration, cursor time, route-span count, and persisted-event count; they never expose coordinates, trip identifiers, or raw samples.
+The M5.4 local-canvas provider fetches no tiles and emits no network request. Precise route geometry remains local and transient: exclude it from logs, diagnostics, analytics, semantics/accessibility labels, cache metadata, and unrelated application state. Accessibility describes only the verified display-point count, segment count, start/end/gap cues, selected replay time, camera mode, playback state/speed, and whether a verified marker or active persisted event exists. Replay evidence semantics may expose only duration, cursor time, route-span count, and persisted-event count; they never expose coordinates, trip identifiers, or raw samples.
 
 ## 6. Cache
 
