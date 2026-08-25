@@ -163,6 +163,75 @@ void main() {
     expect(find.text('Strong Braking'), findsOneWidget);
   });
 
+  testWidgets('one manual clock synchronizes marker graph and event seeking', (
+    tester,
+  ) async {
+    final replayResult = TripResult(
+      trip: _result.trip,
+      telemetrySchemaVersion: _result.telemetrySchemaVersion,
+      telemetryConfidenceRecorded: false,
+      evidence: _result.evidence,
+      finalization: _result.finalization,
+      events: const [
+        TripEventSummary(
+          type: 'strong_braking',
+          startElapsedNanos: 40_000_000_000,
+          endElapsedNanos: 50_000_000_000,
+        ),
+      ],
+      score: null,
+    );
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(history: [_trip], result: replayResult),
+      routeRepository: _FakeRouteRepository(result: _availableRoute),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Manual replay timeline'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+
+    final slider = tester.widget<Slider>(
+      find.byKey(const ValueKey('replay-timeline-slider')),
+    );
+    final semantics = tester.ensureSemantics();
+    try {
+      final sliderSemantics = tester
+          .getSemantics(find.byKey(const ValueKey('replay-timeline-semantics')))
+          .getSemanticsData();
+      expect(sliderSemantics.hasAction(ui.SemanticsAction.increase), isTrue);
+      expect(sliderSemantics.hasAction(ui.SemanticsAction.decrease), isTrue);
+      expect(sliderSemantics.label, contains('Replay timeline position'));
+      expect(sliderSemantics.value, contains('0:00 of 1:30'));
+    } finally {
+      semantics.dispose();
+    }
+    slider.onChanged!(0.5);
+    await tester.pump();
+
+    expect(find.text('0:45'), findsOneWidget);
+    expect(find.byKey(const ValueKey('replay-evidence-graph')), findsOneWidget);
+    expect(
+      find.text('Verified route position available at this time.'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(
+        'Replay evidence timeline. 1 verified route span and 1 persisted event. Cursor at 0:45 of 1:30.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('12.97'), findsNothing);
+
+    final event = find.byKey(const ValueKey('replay-event-0'));
+    await tester.ensureVisible(event);
+    await tester.tap(event);
+    await tester.pump();
+    expect(find.text('0:45'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('missing and malformed results fail clearly', (tester) async {
     await _pumpResult(
       tester,
@@ -466,7 +535,7 @@ final _availableRoute = TripRouteResult.available(
       ),
       MapRoutePoint(
         coordinate: MapCoordinate(latitude: 12.9720, longitude: 77.5950),
-        tripOffset: const Duration(seconds: 1),
+        tripOffset: const Duration(seconds: 90),
         startsNewSegment: false,
       ),
     ],

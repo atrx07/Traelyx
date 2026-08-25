@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/maps/offline_route_map.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
+import 'package:traelyx/features/trips/application/replay_clock_controller.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
 import 'package:traelyx/features/trips/application/trip_route_providers.dart';
 import 'package:traelyx/features/trips/data/trip_route_repository.dart';
+import 'package:traelyx/features/trips/domain/replay_timeline.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
+import 'package:traelyx/features/trips/presentation/replay_evidence_timeline.dart';
 
 class TripResultScreen extends ConsumerWidget {
   const TripResultScreen({required this.tripId, super.key});
@@ -126,7 +129,11 @@ class _ResultContent extends StatelessWidget {
                   const SizedBox(height: TraelyxSpacing.xxl),
                   _SectionLabel(label: 'OFFLINE ROUTE'),
                   const SizedBox(height: TraelyxSpacing.sm),
-                  _TripRouteSection(tripId: result.trip.id),
+                  _TripRouteSection(
+                    tripId: result.trip.id,
+                    recordedDuration: result.trip.duration,
+                    events: result.events,
+                  ),
                   const SizedBox(height: TraelyxSpacing.xxl),
                   _SectionLabel(label: 'CONFIDENCE & INTEGRITY'),
                   const SizedBox(height: TraelyxSpacing.sm),
@@ -501,14 +508,29 @@ class _EvidencePanel extends StatelessWidget {
 }
 
 class _TripRouteSection extends ConsumerWidget {
-  const _TripRouteSection({required this.tripId});
+  const _TripRouteSection({
+    required this.tripId,
+    required this.recordedDuration,
+    required this.events,
+  });
 
   final String tripId;
+  final Duration? recordedDuration;
+  final List<TripEventSummary> events;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final route = ref.watch(tripRouteProvider(tripId));
     final cache = ref.watch(tripMapCacheStatusProvider);
+    final routeResult = route.valueOrNull;
+    final geometry = routeResult?.state == TripRouteState.available
+        ? routeResult?.geometry
+        : null;
+    final timelineResult = ReplayTimeline.build(
+      recordedDuration: recordedDuration,
+      route: geometry,
+      events: events,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -532,9 +554,7 @@ class _TripRouteSection extends ConsumerWidget {
             ),
           ),
           data: (result) => switch (result.state) {
-            TripRouteState.available => _AvailableRoute(
-              geometry: result.geometry!,
-            ),
+            TripRouteState.available => const SizedBox.shrink(),
             TripRouteState.unavailable => const _RouteStatePanel(
               key: ValueKey('trip-route-unavailable'),
               icon: Icons.route_outlined,
@@ -551,6 +571,20 @@ class _TripRouteSection extends ConsumerWidget {
             ),
           },
         ),
+        if (timelineResult case ReplayTimelineAvailable(:final timeline)) ...[
+          if (routeResult?.state != TripRouteState.available)
+            const SizedBox(height: TraelyxSpacing.sm),
+          _ReplayWorkspace(timeline: timeline),
+        ] else ...[
+          const SizedBox(height: TraelyxSpacing.sm),
+          const _RouteStatePanel(
+            key: ValueKey('replay-timeline-unavailable'),
+            icon: Icons.av_timer_outlined,
+            title: 'Replay timeline not available',
+            detail:
+                'This drive has no positive recorded duration, verified route timing, or persisted event range.',
+          ),
+        ],
         const SizedBox(height: TraelyxSpacing.sm),
         _MapCachePanel(
           status: cache.valueOrNull,
@@ -571,42 +605,210 @@ class _TripRouteSection extends ConsumerWidget {
   }
 }
 
-class _AvailableRoute extends StatelessWidget {
-  const _AvailableRoute({required this.geometry});
+class _ReplayWorkspace extends StatefulWidget {
+  const _ReplayWorkspace({required this.timeline});
 
-  final MapRouteGeometry geometry;
+  final ReplayTimeline timeline;
+
+  @override
+  State<_ReplayWorkspace> createState() => _ReplayWorkspaceState();
+}
+
+class _ReplayWorkspaceState extends State<_ReplayWorkspace> {
+  late ReplayClockController _clock;
+
+  @override
+  void initState() {
+    super.initState();
+    _clock = ReplayClockController(widget.timeline);
+  }
+
+  @override
+  void didUpdateWidget(covariant _ReplayWorkspace oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.timeline != widget.timeline) {
+      final position = _clock.snapshot.position;
+      _clock.dispose();
+      _clock = ReplayClockController(widget.timeline)..seek(position);
+    }
+  }
+
+  @override
+  void dispose() {
+    _clock.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      key: const ValueKey('trip-route-available'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        OfflineRouteMap(geometry: geometry),
-        const SizedBox(height: TraelyxSpacing.sm),
-        Wrap(
-          spacing: TraelyxSpacing.lg,
-          runSpacing: TraelyxSpacing.xs,
+    return AnimatedBuilder(
+      animation: _clock,
+      builder: (context, child) {
+        final timeline = _clock.timeline;
+        final snapshot = _clock.snapshot;
+        final geometry = timeline.route;
+        return Column(
+          key: const ValueKey('trip-replay-workspace'),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const _RouteLegend(
-              icon: Icons.radio_button_checked,
-              label: 'Start',
-            ),
-            const _RouteLegend(icon: Icons.diamond_outlined, label: 'End'),
-            if (geometry.segmentCount > 1)
-              _RouteLegend(
-                icon: Icons.space_bar,
-                label:
-                    '${geometry.segmentCount - 1} ${geometry.segmentCount == 2 ? 'gap' : 'gaps'}',
+            if (geometry != null) ...[
+              OfflineRouteMap(
+                key: const ValueKey('trip-route-available'),
+                geometry: geometry,
+                replayMarker: snapshot.routeMarker?.coordinate,
+                replayMarkerAfterPointIndex:
+                    snapshot.routeMarker?.afterPointIndex,
+                replayPosition: snapshot.position,
               ),
+              const SizedBox(height: TraelyxSpacing.sm),
+              Wrap(
+                spacing: TraelyxSpacing.lg,
+                runSpacing: TraelyxSpacing.xs,
+                children: [
+                  const _RouteLegend(
+                    icon: Icons.radio_button_checked,
+                    label: 'Start',
+                  ),
+                  const _RouteLegend(
+                    icon: Icons.diamond_outlined,
+                    label: 'End',
+                  ),
+                  if (geometry.segmentCount > 1)
+                    _RouteLegend(
+                      icon: Icons.space_bar,
+                      label:
+                          '${geometry.segmentCount - 1} ${geometry.segmentCount == 2 ? 'gap' : 'gaps'}',
+                    ),
+                ],
+              ),
+              const SizedBox(height: TraelyxSpacing.xs),
+              Text(
+                '${geometry.points.length} display points · GNSS processing v${geometry.processingVersion}${geometry.reduced ? ' · reduced for display' : ''}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
+            ],
+            _Panel(
+              children: [
+                Text(
+                  'Manual replay timeline',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: TraelyxSpacing.xxs),
+                Text(
+                  'One cursor controls the verified map position, evidence graph, and persisted events. Playback and speed controls arrive in a later step.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: TraelyxSpacing.md),
+                Row(
+                  children: [
+                    Text(
+                      formatReplayOffset(snapshot.position),
+                      key: const ValueKey('replay-current-time'),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      formatReplayOffset(timeline.duration),
+                      key: const ValueKey('replay-total-time'),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ],
+                ),
+                Semantics(
+                  key: const ValueKey('replay-timeline-semantics'),
+                  container: true,
+                  explicitChildNodes: true,
+                  label: 'Replay timeline position',
+                  value:
+                      '${formatReplayOffset(snapshot.position)} of ${formatReplayOffset(timeline.duration)}',
+                  hint: 'Adjust to inspect recorded evidence at another time.',
+                  increasedValue: formatReplayOffset(
+                    Duration(
+                      microseconds:
+                          (timeline.duration.inMicroseconds *
+                                  (_clock.fraction + 0.01).clamp(0.0, 1.0))
+                              .round(),
+                    ),
+                  ),
+                  decreasedValue: formatReplayOffset(
+                    Duration(
+                      microseconds:
+                          (timeline.duration.inMicroseconds *
+                                  (_clock.fraction - 0.01).clamp(0.0, 1.0))
+                              .round(),
+                    ),
+                  ),
+                  onIncrease: () => _clock.seekFraction(_clock.fraction + 0.01),
+                  onDecrease: () => _clock.seekFraction(_clock.fraction - 0.01),
+                  child: ExcludeSemantics(
+                    child: Slider(
+                      key: const ValueKey('replay-timeline-slider'),
+                      value: _clock.fraction,
+                      onChanged: _clock.seekFraction,
+                    ),
+                  ),
+                ),
+                ReplayEvidenceTimeline(timeline: timeline, snapshot: snapshot),
+                const SizedBox(height: TraelyxSpacing.sm),
+                Text(
+                  snapshot.routeMarker == null
+                      ? 'No verified route position at this time.'
+                      : 'Verified route position available at this time.',
+                  key: const ValueKey('replay-marker-state'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (timeline.events.isEmpty) ...[
+                  const SizedBox(height: TraelyxSpacing.xs),
+                  Text(
+                    'No governed event ranges are persisted for this drive.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ] else ...[
+                  const SizedBox(height: TraelyxSpacing.sm),
+                  Wrap(
+                    spacing: TraelyxSpacing.xs,
+                    runSpacing: TraelyxSpacing.xs,
+                    children: [
+                      for (
+                        var index = 0;
+                        index < timeline.events.length;
+                        index++
+                      )
+                        OutlinedButton(
+                          key: ValueKey('replay-event-$index'),
+                          onPressed: () => _clock.seekToEvent(index),
+                          style: snapshot.activeEventIndexes.contains(index)
+                              ? OutlinedButton.styleFrom(
+                                  foregroundColor:
+                                      context.traelyxColors.caution,
+                                )
+                              : null,
+                          child: Text(
+                            '${_eventLabel(timeline.events[index].type)} · ${formatReplayOffset(timeline.events[index].start)}',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+                if (timeline.discardedEventCount > 0) ...[
+                  const SizedBox(height: TraelyxSpacing.xs),
+                  Text(
+                    '${timeline.discardedEventCount} contradictory event ${timeline.discardedEventCount == 1 ? 'range was' : 'ranges were'} excluded from replay.',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: context.traelyxColors.caution,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ],
-        ),
-        const SizedBox(height: TraelyxSpacing.xs),
-        Text(
-          '${geometry.points.length} display points · GNSS processing v${geometry.processingVersion}${geometry.reduced ? ' · reduced for display' : ''}',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
+        );
+      },
     );
   }
 }

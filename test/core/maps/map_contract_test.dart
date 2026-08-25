@@ -94,11 +94,38 @@ void main() {
     );
     expect(
       find.bySemanticsLabel(
-        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap.',
+        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. No verified replay position at the selected time.',
       ),
       findsOneWidget,
     );
     expect(find.textContaining('12.97'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('offline route marker semantics expose time but no coordinates', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TraelyxTheme.dark,
+        home: Scaffold(
+          body: OfflineRouteMap(
+            geometry: _geometry(),
+            replayMarker: MapCoordinate(latitude: 12.9718, longitude: 77.5948),
+            replayMarkerAfterPointIndex: 0,
+            replayPosition: const Duration(seconds: 1),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.bySemanticsLabel(
+        'Offline route view. 3 verified display points across 2 segments. Start and end are marked, with 1 gap. Replay marker shown at 0 minutes 01 seconds.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('77.5948'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }

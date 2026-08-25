@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M5 active — M5.4 complete, awaiting explicit M5.5 authorization**
+**M5 active — M5.5 complete, awaiting explicit M5.6 authorization**
 
 ## Working
 
@@ -104,6 +104,10 @@
 - Trip results now render a dependency-free offline route canvas with fit-to-route geometry, distinct start/end markers, non-color gap cues, coordinate-free semantics, explicit loading/unavailable/error states, and truthful zero-byte unavailable tile-cache controls. No schema, dependency, network endpoint, account, recorder, analysis, or upload behavior changed.
 - Physical profiling caught and fixed a first-build route decoder that retained roughly 940,000 irrelevant motion records. Complete chunk validation now retains only GNSS for display, reducing observed Java heap from about 239 MiB to about 17 MiB on the genuine 39-minute Tecno trip; optimized debug and release both rendered 2,122 points across 10 segments with 9 gaps while the phone remained fully offline.
 - Final M5.4 Tecno QA preserved the exact database hash and all four trips, left no recorder service or fatal app logs, restored the debug APK, and removed all phone-side QA artifacts. Host gates passed with 138 Flutter tests, 214 native Kotlin tests, three trip-debug tests, and repository validation.
+- M5.5 adds one immutable replay timeline and timer-free manual clock over existing recorded duration, verified route offsets, and allowlisted persisted event ranges. The same selected time drives labels, adjustable scrub semantics, gap-safe/dateline-safe route marker interpolation, a coordinate-free route/event evidence cursor, active-event state, and event-to-time seeking.
+- Route and event evidence now fail independently. Times inside governed GNSS gaps have no marker; malformed or independently out-of-range persisted events are excluded rather than extending recorded evidence. M3.7 replay channels remain native-only, and M5.5 adds no autoplay, speed control, camera/path animation, dependency, platform bridge, schema, permission, account, or network behavior.
+- Physical accessibility QA caught and fixed OEM semantics merging after widget gates had already passed. The Tecno now exposes separate coordinate-free route-image, adjustable-slider, and evidence-graph nodes; debug and release both scrubbed the genuine 39m17s route to 31:00 with synchronized marker/cursor while fully offline.
+- Final M5.5 QA preserved the exact database hash and all four trips, left no recorder service or fatal app logs, restored the debug APK, and removed all phone-side QA artifacts. Host gates passed with 145 Flutter tests, 214 native Kotlin tests, three trip-debug tests, and repository validation.
 
 ## Partial
 
@@ -117,7 +121,7 @@
 
 - Final event/integrity/scoring persistence and server-side ranking enforcement.
 - Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
-- Product replay clock, map/graph rendering, and animation.
+- M3.7 replay-channel exposure plus autonomous replay camera/path/event animation, pause, and speed controls.
 - Auth/cloud/social.
 - Guardian Connect.
 - ML models.
@@ -133,7 +137,7 @@
 - M2 physical validation proves contextual permission/UI orchestration, lifecycle/process recovery, offline and GNSS-loss survival, real-GPS/dual-IMU capture, durable chunks, finalization/indexing, private export, and a 39-minute approximately 99%-locked motorcycle drive on one Android 14 OEM device. It does not prove controlled deep-sleep behavior, device-reboot recovery, battery-drain rate, mounted vehicle-frame vibration quality, or multi-version/OEM reliability.
 - M3.4–M3.8 frame, filter/sign/hysteresis, mid-trip phone-move, GNSS-loss, impact, and synthetic-vibration behavior is covered deterministically, but mounted vehicle alignment, real motorcycle vibration, dynamic tilt/grade coupling, and filter tuning still require controlled physical fixture validation.
 - M3.6 categorical tiers and the 15 m preferred-GNSS / one-second agreement-age / 0.5 rad/s agreement thresholds are deterministic synthetic baselines, not calibrated probabilities; multi-device physical fixture evidence may require a later versioned tuning change.
-- M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. Later M5 replay rendering and device performance remain unmeasured, and replay-reduced values are deliberately not authoritative event/scoring inputs.
+- M3.7's 100 ms display cadence and confidence severity ordering are deterministic synthetic baselines. M5.5 does not expose those native-only channels; its physical QA covers the application clock, verified route offsets, and persisted event ranges only. Replay-reduced values remain deliberately non-authoritative event/scoring inputs.
 - M4.1 activation thresholds and M4.2 merge/debounce settings are deterministic synthetic baselines, not population-calibrated probabilities or scoring/legal boundaries. Mounted multi-device fixtures and later field regressions may require new versioned tuning changes.
 - M4.3 integrity thresholds and rank-state reduction are synthetic policy baselines, not proof of manipulation. Mounted multi-device false-positive evidence requires sanitized regression fixtures and a new integrity version.
 - M4.4 eligibility floors, weights, penalties, confidence factor, and overall guardrail are governed synthetic baselines, not population calibration or production-readiness claims. Controlled multi-device field evidence must promote a new scoring version rather than rewriting version-1 history.
@@ -144,6 +148,7 @@
 - M5.2 physical QA covers the same Android 14 Tecno and its four retained local trips. It does not establish multi-device/OEM layout reliability or validate production score/event presentation with physically persisted M4 analysis because that integration does not yet exist.
 - M5.3 physical QA covers the same Android 14 Tecno and validates only the genuine no-baseline state. Complete, partial, emerging, established, recalibrating, trend, provenance, reduced-motion, wide, and 2× text states are covered by Flutter tests but cannot be claimed as physical persisted-baseline evidence yet.
 - M5.4 physical QA covers one Android 14 Tecno and one genuine retained route. The conservative UI-Automator readiness observation includes polling overhead and is not a precise app-runtime benchmark; multi-device/OEM performance and very large/fragmented-route field diversity remain unproven.
+- M5.5 physical QA covers the same Tecno and one genuine route with no persisted governed events. Event activation/seeking, contradictory ranges, antimeridian interpolation, 2× text, and zero-duration events are deterministic tests rather than physical persisted-event or multi-OEM evidence.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Online tile/provider selection and downloaded-region policy remain deferred; core route rendering and its zero-byte local-canvas cache behavior are established offline.
 - Availability/diversity of labeled telemetry for ML.
@@ -152,4 +157,4 @@
 
 ## Current step
 
-**Approval gate:** M5.4 completed 2026-08-25. M5.5 Synchronized replay clock remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.5 before that authorization.
+**Approval gate:** M5.5 completed 2026-08-25. M5.6 Replay animations remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.6 before that authorization.

@@ -5,17 +5,27 @@ import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 
 class OfflineRouteMap extends StatelessWidget {
-  const OfflineRouteMap({required this.geometry, super.key});
+  const OfflineRouteMap({
+    required this.geometry,
+    this.replayMarker,
+    this.replayMarkerAfterPointIndex,
+    this.replayPosition,
+    super.key,
+  }) : assert((replayMarker == null) == (replayMarkerAfterPointIndex == null));
 
   final MapRouteGeometry geometry;
+  final MapCoordinate? replayMarker;
+  final int? replayMarkerAfterPointIndex;
+  final Duration? replayPosition;
 
   @override
   Widget build(BuildContext context) {
     final gaps = geometry.segmentCount - 1;
     return Semantics(
+      container: true,
       image: true,
       label:
-          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.',
+          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.${replayMarker == null || replayPosition == null ? ' No verified replay position at the selected time.' : ' Replay marker shown at ${_formatMapOffset(replayPosition!)}.'}',
       child: ExcludeSemantics(
         child: RepaintBoundary(
           child: AspectRatio(
@@ -33,6 +43,8 @@ class OfflineRouteMap extends StatelessWidget {
                   painter: OfflineRoutePainter(
                     geometry: geometry,
                     colors: context.traelyxColors,
+                    replayMarker: replayMarker,
+                    replayMarkerAfterPointIndex: replayMarkerAfterPointIndex,
                   ),
                 ),
               ),
@@ -99,10 +111,17 @@ abstract final class RouteProjector {
 }
 
 class OfflineRoutePainter extends CustomPainter {
-  OfflineRoutePainter({required this.geometry, required this.colors});
+  OfflineRoutePainter({
+    required this.geometry,
+    required this.colors,
+    this.replayMarker,
+    this.replayMarkerAfterPointIndex,
+  });
 
   final MapRouteGeometry geometry;
   final TraelyxSemanticColors colors;
+  final MapCoordinate? replayMarker;
+  final int? replayMarkerAfterPointIndex;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -140,6 +159,24 @@ class OfflineRoutePainter extends CustomPainter {
     }
     _paintStart(canvas, projected.first);
     _paintEnd(canvas, projected.last);
+    final marker = replayMarker;
+    final markerAfterIndex = replayMarkerAfterPointIndex;
+    if (marker != null && markerAfterIndex != null) {
+      final markerPoints = geometry.points.toList()
+        ..insert(
+          markerAfterIndex + 1,
+          MapRoutePoint(
+            coordinate: marker,
+            tripOffset: Duration.zero,
+            startsNewSegment: false,
+          ),
+        );
+      final markerOffset = RouteProjector.project(
+        markerPoints,
+        size,
+      )[markerAfterIndex + 1];
+      _paintReplayMarker(canvas, markerOffset);
+    }
     _paintNorth(canvas, size);
   }
 
@@ -208,6 +245,12 @@ class OfflineRoutePainter extends CustomPainter {
     );
   }
 
+  void _paintReplayMarker(Canvas canvas, Offset point) {
+    canvas.drawCircle(point, 10, Paint()..color = colors.textPrimary);
+    canvas.drawCircle(point, 7, Paint()..color = colors.accent);
+    canvas.drawCircle(point, 2.5, Paint()..color = colors.canvas);
+  }
+
   void _paintNorth(Canvas canvas, Size size) {
     final textPainter = TextPainter(
       text: TextSpan(
@@ -232,6 +275,15 @@ class OfflineRoutePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant OfflineRoutePainter oldDelegate) {
-    return oldDelegate.geometry != geometry || oldDelegate.colors != colors;
+    return oldDelegate.geometry != geometry ||
+        oldDelegate.colors != colors ||
+        oldDelegate.replayMarker != replayMarker ||
+        oldDelegate.replayMarkerAfterPointIndex != replayMarkerAfterPointIndex;
   }
+}
+
+String _formatMapOffset(Duration value) {
+  final minutes = value.inMinutes;
+  final seconds = value.inSeconds.remainder(60).toString().padLeft(2, '0');
+  return '$minutes minutes $seconds seconds';
 }

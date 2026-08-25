@@ -11,37 +11,37 @@
 Read only:
 
 - `AGENTS.md` and `app/AGENTS.md`
-- `docs/product/UX_SPEC.md` sections 9 and 17–18
-- `docs/technical/MAP_ARCHITECTURE.md`, the local-route requirements in `TELEMETRY_SPEC.md`, and the map-cache section of `STORAGE_SPEC.md`
+- `docs/product/UX_SPEC.md` sections 9–10 and 17–18
+- `docs/technical/MAP_ARCHITECTURE.md`, the M3.7 replay-channel contract in `TELEMETRY_SPEC.md`, the replay-marker rules in `EVENT_ENGINE.md`, and the map-cache section of `STORAGE_SPEC.md`
 - `android/AGENTS.md` and only the native chunk/bridge sections needed for a read-only local route boundary
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization/approval sections of `DOCUMENTATION_POLICY.md`
 - `docs/exec-plans/ROADMAP.md` M5 and `docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md`
 - affected Flutter trip-result/map code, native read-only route bridge, and tests
 
-Do not inspect M5.5 or later implementation until its approval gate. Replay clocks/animation, commentary, ML, cloud, online tile-provider selection, and unrelated technical specifications remain outside M5.4.
+Do not inspect M5.6 or later implementation until its approval gate. Autonomous playback, replay animation, commentary, ML, cloud, online tile-provider selection, and unrelated technical specifications remain outside M5.5.
 
 ## Goal
 
-Add a provider-neutral, offline-first route map to local trip results without changing recorder acquisition, analysis meaning, or requiring a network/tile service.
+Add one deterministic manual replay clock that synchronizes the existing verified route, a coordinate-free evidence graph, and persisted governed event ranges without changing recorder acquisition, analysis meaning, or requiring a network service.
 
 ## User-visible result
 
-Completed Drive, Trips, and DNA experiences remain intact. A trip result can render its verified local GNSS route on an honest offline canvas with start/end and gap cues, while missing/corrupt route evidence remains explicit and tile-cache status is visible and controllable through provider-neutral contracts.
+Completed Drive, Trips, DNA, and offline route experiences remain intact. A trip result exposes one scrub control and time cursor shared by its map marker, route/event evidence graph, and persisted event selection. Missing route or event evidence remains explicit and cannot fabricate telemetry, while the timeline stays useful when one visual layer is unavailable.
 
 ## In scope
 
-- Completed M5.1–M5.3 experiences.
-- M5.4 provider-neutral map abstraction and local route rendering only.
-- A bounded, versioned, read-only native route bridge over verified private chunks; no storage references cross the bridge.
-- Offline canvas rendering, fit-to-route, start/end and discontinuity cues, truthful missing/invalid states, and visible cache status/clear action.
-- Widget, bridge, privacy, accessibility, text-scale, and physical offline Tecno QA.
+- Completed M5.1–M5.4 experiences.
+- M5.5 synchronized manual replay clock only.
+- Deterministic route-marker interpolation that never crosses a governed route gap and handles the antimeridian by the shortest longitude path.
+- One coordinate-free evidence graph and cursor over verified route-coverage spans and persisted event ranges, with event-to-time seeking.
+- Explicit absent/invalid layer behavior, accessible scrub semantics, text-scale/reduced-motion compatibility, and physical offline Tecno QA.
 
 ## Out of scope
 
-- M5.5 replay-clock work and every later M5 substep.
-- Live-drive maps, marker playback, event selection, graph synchronization, camera animation, or commentary.
+- M5.6 replay animation and every later M5 substep.
+- Autonomous playback/timers, play/pause/speed controls, camera or path animation, event pulses, or commentary.
 - Online tiles, geocoding, provider credentials, downloaded regions, or a third-party map dependency/provider choice.
-- New score/event/baseline persistence or analysis execution.
+- New replay-telemetry/native bridge, score/event/baseline persistence, or analysis execution; M3.7 display channels remain native-only until separately governed exposure exists.
 - Native acquisition/service/recorder semantics, database schema, permissions, export format, account, share transport, or network behavior changes.
 - New dependencies or provider choices.
 
@@ -52,25 +52,27 @@ Completed Drive, Trips, and DNA experiences remain intact. A trip result can ren
 - Maintainer authorized M5.2 on 2026-08-25 after M5.1 completed at `8cf95902803fc227e5a26749a178c583c70c69ab`.
 - Maintainer authorized M5.3 on 2026-08-25 after M5.2 completed at `c233cc5f2a300defaa804ed75de0508f1c09d12d`.
 - Maintainer authorized M5.4 on 2026-08-25 after M5.3 completed at `5829c13107456ce394c6779040fa337e84893b17`.
-- Local `main` was clean and synchronized with `origin/main` at `5829c13107456ce394c6779040fa337e84893b17` before M5.4 began.
+- Maintainer authorized M5.5 on 2026-08-25 after M5.4 completed at `f2c1f147269051e70427d3a61c9f9a2305c8e9fd`.
+- Local `main` was clean and synchronized with `origin/main` at `f2c1f147269051e70427d3a61c9f9a2305c8e9fd` before M5.5 began.
 - A Tecno LH8n is connected through ADB for physical validation.
-- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. The active SIM data flag, Wi-Fi flag, and active default network were confirmed off/off/none at M5.4 start.
+- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. The active SIM data flag, Wi-Fi flag, and active default network were confirmed off/off/none at M5.5 start.
 
 ## Affected components
 
-- `lib/core/maps/` provider-neutral route/cache contracts and offline renderer
-- new Flutter trip-route domain/data/application boundaries and the trip-result map section
-- a separate versioned native read-only map-data channel using verified local chunk/processing contracts
-- related Flutter/native bridge, renderer, widget, and navigation tests
+- `lib/features/trips/domain/` immutable replay timeline/interpolation state
+- `lib/features/trips/application/` deterministic manual clock controller
+- `lib/core/maps/` offline route marker rendering
+- the trip-result replay section and coordinate-free evidence timeline graph
+- related domain/controller/renderer/widget/navigation tests
 - roadmap/status documentation
 
 ## Data/privacy/security implications
 
-No new collection, persistence, permission, secret, share transport, analytics, tile request, or network flow. Precise coordinates already stored in app-private verified chunks cross a dedicated in-process platform channel only for the selected local trip, are reduced to bounded display geometry, and remain transient. Coordinates, trip IDs, chunk paths/checksums, provider names, raw quality fields, and device identifiers are excluded from semantics, logs, diagnostics, cache metadata, and network payloads.
+No new collection, persistence, permission, secret, share transport, analytics, tile request, or network flow. The clock consumes only the already-transient bounded route geometry and allowlisted persisted event ranges. Coordinates remain excluded from timeline graph data, semantics, logs, diagnostics, analytics, cache metadata, and network payloads.
 
 ## Compatibility/migration implications
 
-No schema or data migration. A new isolated map-data contract v1 is additive; recorder bridge v1, raw chunk/schema versions, scoring, and historical results remain unchanged.
+No schema, platform-channel, or data migration. Map-data/recorder bridge v1, raw chunk/schema versions, M3.7 replay telemetry, scoring, and historical results remain unchanged.
 
 ## Implementation steps
 
@@ -92,6 +94,10 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - [x] 16. Activate the provider-neutral map/cache contract with an offline canvas and integrate truthful available/unavailable/error route states into local trip results.
 - [x] 17. Cover native reduction/invalid evidence, strict Dart parsing, renderer geometry, cache controls, privacy semantics, reduced motion, large text, and navigation compatibility.
 - [x] 18. Run all M5.4 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.5.
+- [x] 19. Add immutable replay timeline/snapshot models and one deterministic manual clock with bounded seeking, gap-safe/dateline-safe route interpolation, and persisted-event activation.
+- [x] 20. Synchronize the offline map marker, coordinate-free route/event evidence graph, scrub control, time labels, and event seeking without autonomous animation.
+- [x] 21. Cover clock boundaries, gaps, antimeridian, unavailable/invalid layers, event ranges, semantics/privacy, reduced motion, text scale, and navigation compatibility.
+- [x] 22. Run all M5.5 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.6.
 
 ## Tests / validation
 
@@ -117,6 +123,10 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - [x] M5.4 missing/corrupt/gapped/oversized route and cache-state checks
 - [x] M5.4 reduced-motion, semantics/privacy, text-scale, and narrow/wide layout checks
 - [x] M5.4 Tecno debug/release route rendering and explicit offline cold-launch QA with database preserved
+- [x] focused M5.5 timeline, controller, map-marker, evidence-graph, widget, and navigation tests
+- [x] M5.5 clock bounds, gaps, antimeridian, route/event layer independence, contradictory-event, and event-seek checks
+- [x] M5.5 coordinate-free semantics, adjustable actions, 2× text, zero-duration event, and no-autoplay checks
+- [x] M5.5 Tecno debug/release genuine-route scrub QA with synchronized marker/graph, database preserved, and phone fully offline
 
 ## Acceptance criteria
 
@@ -142,6 +152,11 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - Feature code consumes only Traelyx map coordinates/intents/cache state; no provider SDK type or endpoint leaks into domain or presentation code.
 - The offline renderer fits route bounds, avoids connecting across governed GNSS gaps, remains usable at 2× text, and exposes a coordinate-free semantic summary.
 - Cache bytes/availability are visible and clearable; the local-canvas provider truthfully reports zero unavailable tile cache and performs no network request.
+- One deterministic manual clock drives the time labels, scrub control, verified route marker, coordinate-free evidence cursor, and persisted event activation/seeking.
+- Route-marker interpolation never crosses a governed gap and follows the shortest longitude path at the antimeridian; times without verified position remain explicitly unavailable.
+- Missing route geometry does not remove valid persisted event timing, missing events do not remove route replay, and malformed or out-of-range event ranges are excluded rather than extending independent recorded evidence.
+- Replay semantics expose only duration, time, verified span/event counts, and marker availability; no coordinate, trip ID, raw sample, storage path, or provider metadata is announced.
+- M5.5 remains manual and deterministic: it introduces no timer, autoplay, camera/path animation, event pulse, playback-speed control, or new native replay-telemetry bridge.
 
 ## Risks
 
@@ -156,6 +171,8 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - Returning precise geometry across an in-process bridge expands transient location exposure; strict result parsing, bounded points, no semantics/logging, and an isolated contract must prevent it from leaking into diagnostics or unrelated UI state.
 - Loading thousands of native chunks can block UI or overgrow a method-channel payload; route decoding must run off the UI thread and display reduction must have a deterministic hard bound.
 - A route-only canvas lacks street context by design; copy must call it an offline route view rather than implying that basemap tiles are present.
+- The genuine Tecno trips have no persisted governed events, so event-button and active-range behavior is deterministic widget/domain evidence rather than a physical persisted-event claim.
+- M3.7 replay telemetry remains native-only; the M5.5 evidence graph represents verified route coverage and persisted event ranges, not speed/acceleration/yaw display channels.
 
 ## Decisions made during execution
 
@@ -172,6 +189,10 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - Use the governed M3.2 sanity decisions for route inclusion and segment breaks; do not draw every raw fix or reimplement telemetry validity in Flutter.
 - Ship a dependency-free local canvas as the M5.4 provider so core route rendering is useful offline and no tile endpoint, credential, policy dependency, or mandatory cost is introduced.
 - Decode and validate one chunk at a time while retaining only GNSS records for display. The first physical build exposed unacceptable heap pressure from materializing roughly 940,000 motion samples for a route-only read; the streaming path preserves the same strict envelope validation without retaining IMU objects.
+- Use one application-owned manual clock over already available recorded duration, verified route offsets, and persisted event ranges. Do not add a timer or expose M3.7 native replay channels during M5.5.
+- Let recorded duration and verified route extent establish the independent clock boundary; accept event-only timing when it is the sole evidence, but exclude persisted events that contradict an independently established extent.
+- Interpolate only within one verified route segment, use the shortest antimeridian longitude delta, and report no marker inside governed gaps.
+- Give the route image, adjustable clock, and evidence graph isolated coordinate-free semantics nodes; physical UI-Automator hierarchy is part of the accessibility gate because widget semantics alone did not expose OEM node merging.
 
 ## Progress log
 
@@ -192,7 +213,12 @@ No schema or data migration. A new isolated map-data contract v1 is additive; re
 - 2026-08-25: First-device profiling caught route-only decoding materializing 939,895 motion samples and peaking near the Tecno's 256 MiB Java heap. Replacing that path with complete per-chunk validation that retains only GNSS reduced the observed Java heap to about 17 MiB while preserving the genuine 2,322-sample route result; the optimized route rendered 2,122 bounded points across 10 segments with 9 gaps.
 - 2026-08-25: Final formatting and analysis passed; 138 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository JSON/YAML/secret validation passed with zero failures. Debug and release APKs measured 166.28 MiB and 54.23 MiB.
 - 2026-08-25: Tecno optimized-debug/release QA verified the genuine 39-minute route, start/end and non-color gap cues, scroll/layout, coordinate-free semantics, cache no-op feedback, clean fatal logs, recorder-service inactivity, and explicit offline operation. Wi-Fi/data/default network remained off/off/none throughout, the exact database hash and four existing trips were preserved, final debug was restored, and all phone-side M5.4 artifacts were removed.
+- 2026-08-25: M5.5 authorized after synchronized `main` at `f2c1f147269051e70427d3a61c9f9a2305c8e9fd`. Scoped replay/map/event contracts and the Tecno baseline confirmed that M5.5 could reuse existing route offsets and persisted event ranges without phone internet, a dependency, schema change, or native bridge expansion.
+- 2026-08-25: Implemented immutable replay timeline/snapshot state, a timer-free manual clock, bounded event activation/seeking, gap-safe/dateline-safe marker interpolation, a coordinate-free route/event evidence graph, and synchronized trip-result controls. Invalid layers fail independently and no coordinate enters graph data or semantics.
+- 2026-08-25: Focused QA caught and fixed a 2×-text legend overflow and missing screen-reader adjustment actions. Physical debug QA then caught OEM semantics-node merging; route, slider, and graph semantics were isolated and verified as compact coordinate-free nodes on the rebuilt APK.
+- 2026-08-25: Final formatting and analysis passed; 145 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository JSON/YAML/secret validation passed with zero failures. Debug and release APKs measured 166.30 MiB and 54.68 MiB.
+- 2026-08-25: Tecno debug/release QA loaded the genuine 39m17s route with 2,122 display points, 10 spans, and 9 gaps, then scrubbed to 31:00 with synchronized route marker and evidence cursor. Wi-Fi/data/default network stayed off/off/none, no fatal app log or recorder service appeared, the exact database hash and four trips were preserved, final debug was restored, and all phone-side M5.5 artifacts were removed.
 
 ## Completion summary
 
-M5.1 through M5.4 are complete. M5.4 remains bounded to provider-neutral offline route rendering; M5.5 is not authorized.
+M5.1 through M5.5 are complete. M5.5 adds only a deterministic manual application clock over existing verified route offsets and persisted event ranges; M5.6 replay animation is not authorized.

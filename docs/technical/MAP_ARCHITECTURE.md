@@ -49,11 +49,19 @@ Do not silently introduce a paid mandatory tile API.
 
 Route geometry should be drawn from local trip data. The replay clock drives marker position independent of network tile availability; missing tiles should degrade the basemap, not destroy telemetry replay.
 
+### 4.1 M5.5 synchronized manual clock
+
+M5.5 introduces one deterministic application-owned manual clock over existing recorded duration, verified M5.4 route-point offsets, and allowlisted persisted event ranges. The same selected time drives the visible labels, scrub control, route marker, route/event evidence cursor, active-event state, and event-to-time seeking. There is no timer, autoplay, speed control, camera/path animation, or new native replay-telemetry bridge in this step.
+
+Marker interpolation is valid only between adjacent points in the same governed route segment. A selected time inside a GNSS gap has no verified marker, and longitude interpolation follows the shortest path across the antimeridian. Route and event layers degrade independently: valid event timing remains usable without route geometry, while route replay remains usable without persisted events. When recorded duration or route extent establishes the independent clock boundary, contradictory events outside it are excluded rather than extending the replay.
+
+The M5.5 evidence graph is intentionally coordinate-free and represents verified route-coverage spans plus persisted event ranges. It is not a substitute for the native-only M3.7 speed, acceleration, yaw, or confidence display channels. Later animation must consume this same clock instead of creating a second time source.
+
 ## 5. Privacy
 
 Fetching map tiles can expose approximate viewed areas to tile providers. Document this in privacy behavior and avoid adding analytics trackers.
 
-The M5.4 local-canvas provider fetches no tiles and emits no network request. Precise route geometry remains local and transient: exclude it from logs, diagnostics, analytics, semantics/accessibility labels, cache metadata, and unrelated application state. Accessibility describes only the verified display-point count, segment count, and start/end/gap cues.
+The M5.4 local-canvas provider fetches no tiles and emits no network request. Precise route geometry remains local and transient: exclude it from logs, diagnostics, analytics, semantics/accessibility labels, cache metadata, and unrelated application state. Accessibility describes only the verified display-point count, segment count, start/end/gap cues, selected replay time, and whether a verified marker exists. M5.5 evidence semantics may expose only duration, cursor time, route-span count, and persisted-event count; they never expose coordinates, trip identifiers, or raw samples.
 
 ## 6. Cache
 
