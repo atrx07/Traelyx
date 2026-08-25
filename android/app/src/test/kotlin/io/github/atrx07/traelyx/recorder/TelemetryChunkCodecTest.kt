@@ -48,9 +48,22 @@ class TelemetryChunkCodecTest {
                 createdAtUtcEpochMillis = 1_777_777_777_500L,
             )
         val decoded = (TelemetryChunkCodec.decode(encoded.bytes) as TelemetryChunkDecodeResult.Success).chunk
+        val decodedGnss =
+            (TelemetryChunkCodec.decodeGnss(encoded.bytes) as TelemetryChunkGnssDecodeResult.Success)
+                .chunk
 
         assertEquals(encoded.metadata, decoded.metadata)
         assertEquals(records, decoded.records)
+        assertEquals(encoded.metadata, decodedGnss.metadata)
+        assertEquals(listOf(gnss), decodedGnss.samples)
+        assertEquals(
+            mapOf(
+                TelemetryChannel.GNSS to 100_000_000L..100_000_000L,
+                TelemetryChannel.ACCELEROMETER to 110_000_000L..110_000_000L,
+                TelemetryChannel.GYROSCOPE to 120_000_000L..120_000_000L,
+            ),
+            decodedGnss.channelElapsedRanges,
+        )
         assertEquals(
             mapOf("gnss" to 1, "accelerometer" to 1, "gyroscope" to 1),
             decoded.metadata.channelSampleCounts(),
@@ -82,14 +95,19 @@ class TelemetryChunkCodecTest {
             ).bytes
         val truncated = encoded.copyOf(encoded.size - 4)
         assertInvalid(truncated, "chunk_truncated")
+        assertGnssInvalid(truncated, "chunk_truncated")
 
         val damaged = encoded.copyOf()
         damaged[damaged.size / 2] = (damaged[damaged.size / 2].toInt() xor 0x01).toByte()
         assertTrue(TelemetryChunkCodec.decode(damaged) is TelemetryChunkDecodeResult.Invalid)
+        assertTrue(
+            TelemetryChunkCodec.decodeGnss(damaged) is TelemetryChunkGnssDecodeResult.Invalid,
+        )
 
         val unknownVersion = encoded.copyOf()
         unknownVersion[7] = 2
         assertInvalid(unknownVersion, "chunk_unknown_version")
+        assertGnssInvalid(unknownVersion, "chunk_unknown_version")
     }
 
     @Test
@@ -197,6 +215,11 @@ class TelemetryChunkCodecTest {
 
     private fun assertInvalid(bytes: ByteArray, expectedError: String) {
         val result = TelemetryChunkCodec.decode(bytes) as TelemetryChunkDecodeResult.Invalid
+        assertEquals(expectedError, result.errorCode)
+    }
+
+    private fun assertGnssInvalid(bytes: ByteArray, expectedError: String) {
+        val result = TelemetryChunkCodec.decodeGnss(bytes) as TelemetryChunkGnssDecodeResult.Invalid
         assertEquals(expectedError, result.errorCode)
     }
 }

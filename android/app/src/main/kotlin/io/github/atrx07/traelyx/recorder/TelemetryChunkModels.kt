@@ -127,10 +127,22 @@ data class DecodedTelemetryChunk(
     val records: List<TelemetrySampleRecord>,
 )
 
+data class DecodedGnssTelemetryChunk(
+    val metadata: TelemetryChunkMetadata,
+    val samples: List<RawGnssSample>,
+    val channelElapsedRanges: Map<TelemetryChannel, LongRange>,
+)
+
 sealed interface TelemetryChunkDecodeResult {
     data class Success(val chunk: DecodedTelemetryChunk) : TelemetryChunkDecodeResult
 
     data class Invalid(val errorCode: String) : TelemetryChunkDecodeResult
+}
+
+sealed interface TelemetryChunkGnssDecodeResult {
+    data class Success(val chunk: DecodedGnssTelemetryChunk) : TelemetryChunkGnssDecodeResult
+
+    data class Invalid(val errorCode: String) : TelemetryChunkGnssDecodeResult
 }
 
 data class TelemetryChunkCandidate(
@@ -148,6 +160,19 @@ data class TelemetryChunkCatalogSnapshot(
 ) {
     val lastVerifiedEndElapsedNanos: Long?
         get() = validChunks.lastOrNull()?.metadata?.endElapsedNanos
+}
+
+data class TelemetryChunkSequenceSnapshot(
+    val sequences: List<Long>,
+    val orphanedWriteCount: Int,
+    val invalidCandidateCount: Int,
+) {
+    init {
+        require(sequences == sequences.distinct().sorted())
+        require(sequences.all { it >= 0 })
+        require(orphanedWriteCount >= 0)
+        require(invalidCandidateCount >= 0)
+    }
 }
 
 enum class TelemetryBufferState(val wireName: String) {

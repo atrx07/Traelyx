@@ -11,37 +11,38 @@
 Read only:
 
 - `AGENTS.md` and `app/AGENTS.md`
-- `docs/product/UX_SPEC.md` sections 7–8 and 17–18
-- `docs/product/DRIVE_DNA_SPEC.md`, plus the baseline shape in `docs/technical/DATA_MODEL.md`
+- `docs/product/UX_SPEC.md` sections 9 and 17–18
+- `docs/technical/MAP_ARCHITECTURE.md`, the local-route requirements in `TELEMETRY_SPEC.md`, and the map-cache section of `STORAGE_SPEC.md`
+- `android/AGENTS.md` and only the native chunk/bridge sections needed for a read-only local route boundary
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization/approval sections of `DOCUMENTATION_POLICY.md`
 - `docs/exec-plans/ROADMAP.md` M5 and `docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md`
-- affected Flutter DNA/navigation/database-access code and tests
+- affected Flutter trip-result/map code, native read-only route bridge, and tests
 
-Do not inspect M5.4 or later implementation until its approval gate. Map, replay, commentary, ML, cloud, and unrelated technical specifications remain outside M5.3.
+Do not inspect M5.5 or later implementation until its approval gate. Replay clocks/animation, commentary, ML, cloud, online tile-provider selection, and unrelated technical specifications remain outside M5.4.
 
 ## Goal
 
-Turn the existing recorder controls, local trip index, and governed Drive DNA lifecycle into a calm accountless experience with a truthful original signature visual, without changing native recorder or analysis semantics.
+Add a provider-neutral, offline-first route map to local trip results without changing recorder acquisition, analysis meaning, or requiring a network/tile service.
 
 ## User-visible result
 
-Drive and Trips retain their completed local-first experiences. DNA presents a fingerprint-like ring signature with individually understandable dimensions, lifecycle/evidence state, recent direction only when persisted, version provenance, and an honest insufficient-history state when no governed baseline exists.
+Completed Drive, Trips, and DNA experiences remain intact. A trip result can render its verified local GNSS route on an honest offline canvas with start/end and gap cues, while missing/corrupt route evidence remains explicit and tile-cache status is visible and controllable through provider-neutral contracts.
 
 ## In scope
 
-- Completed M5.1 Ready/Drive and M5.2 Trip history/result experiences.
-- M5.3 Drive DNA visual only.
-- Widget, navigation, accessibility, text-scale, and physical Tecno QA.
-- Read-only local `driver_baselines` snapshots from schema version 1.
-- Original ring/signature, dimension legend, lifecycle, trend, provenance, and complete/partial/unavailable states.
-- Loading/error/malformed-evidence and truthful no-persisted-baseline states.
+- Completed M5.1–M5.3 experiences.
+- M5.4 provider-neutral map abstraction and local route rendering only.
+- A bounded, versioned, read-only native route bridge over verified private chunks; no storage references cross the bridge.
+- Offline canvas rendering, fit-to-route, start/end and discontinuity cues, truthful missing/invalid states, and visible cache status/clear action.
+- Widget, bridge, privacy, accessibility, text-scale, and physical offline Tecno QA.
 
 ## Out of scope
 
-- M5.4 map work and every later M5 substep.
-- New baseline/score/event persistence or production execution of the M4 analysis engine.
-- New comparison, percentile, trend, or confidence claims not already present in a governed persisted snapshot.
-- Native recorder, bridge, telemetry, database schema, permissions, export format, account, share transport, or network behavior changes.
+- M5.5 replay-clock work and every later M5 substep.
+- Live-drive maps, marker playback, event selection, graph synchronization, camera animation, or commentary.
+- Online tiles, geocoding, provider credentials, downloaded regions, or a third-party map dependency/provider choice.
+- New score/event/baseline persistence or analysis execution.
+- Native acquisition/service/recorder semantics, database schema, permissions, export format, account, share transport, or network behavior changes.
 - New dependencies or provider choices.
 
 ## Preconditions
@@ -50,23 +51,26 @@ Drive and Trips retain their completed local-first experiences. DNA presents a f
 - Maintainer authorized M5 and M5.1 on 2026-08-25.
 - Maintainer authorized M5.2 on 2026-08-25 after M5.1 completed at `8cf95902803fc227e5a26749a178c583c70c69ab`.
 - Maintainer authorized M5.3 on 2026-08-25 after M5.2 completed at `c233cc5f2a300defaa804ed75de0508f1c09d12d`.
-- Local `main` was clean and synchronized with refreshed `origin/main` at `c233cc5f2a300defaa804ed75de0508f1c09d12d` before M5.3 began.
+- Maintainer authorized M5.4 on 2026-08-25 after M5.3 completed at `5829c13107456ce394c6779040fa337e84893b17`.
+- Local `main` was clean and synchronized with `origin/main` at `5829c13107456ce394c6779040fa337e84893b17` before M5.4 began.
 - A Tecno LH8n is connected through ADB for physical validation.
+- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. The active SIM data flag, Wi-Fi flag, and active default network were confirmed off/off/none at M5.4 start.
 
 ## Affected components
 
-- new `lib/features/drive_dna/` domain, read-only data, application-provider, painter, and presentation boundaries
-- `lib/app/traelyx_router.dart`
-- related Flutter widget/application/navigation tests
+- `lib/core/maps/` provider-neutral route/cache contracts and offline renderer
+- new Flutter trip-route domain/data/application boundaries and the trip-result map section
+- a separate versioned native read-only map-data channel using verified local chunk/processing contracts
+- related Flutter/native bridge, renderer, widget, and navigation tests
 - roadmap/status documentation
 
 ## Data/privacy/security implications
 
-No new data collection, storage, permission, identifier, secret, raw route display, share transport, or network flow. DNA reads only the latest existing local baseline snapshot; owner namespace, baseline ID, trip IDs, raw telemetry, route data, and device/context identifiers never enter presentation state. No baseline is synthesized from the Tecno's existing trips.
+No new collection, persistence, permission, secret, share transport, analytics, tile request, or network flow. Precise coordinates already stored in app-private verified chunks cross a dedicated in-process platform channel only for the selected local trip, are reduced to bounded display geometry, and remain transient. Coordinates, trip IDs, chunk paths/checksums, provider names, raw quality fields, and device identifiers are excluded from semantics, logs, diagnostics, cache metadata, and network payloads.
 
 ## Compatibility/migration implications
 
-None. Existing bridge/schema/algorithm versions and historical results remain unchanged.
+No schema or data migration. A new isolated map-data contract v1 is additive; recorder bridge v1, raw chunk/schema versions, scoring, and historical results remain unchanged.
 
 ## Implementation steps
 
@@ -84,6 +88,10 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - [x] 12. Replace the DNA placeholder with the original accessible ring signature, lifecycle/progress, dimension, trend, and provenance hierarchy.
 - [x] 13. Cover complete, partial, unavailable, emerging, recalibrating, malformed, loading/error, reduced-motion, semantics, and large-text behavior.
 - [x] 14. Run all M5.3 host/device gates, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.4.
+- [x] 15. Add an isolated versioned native route bridge that verifies complete local chunk evidence, applies governed GNSS sanity decisions, and returns bounded transient display geometry without storage metadata.
+- [x] 16. Activate the provider-neutral map/cache contract with an offline canvas and integrate truthful available/unavailable/error route states into local trip results.
+- [x] 17. Cover native reduction/invalid evidence, strict Dart parsing, renderer geometry, cache controls, privacy semantics, reduced motion, large text, and navigation compatibility.
+- [x] 18. Run all M5.4 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.5.
 
 ## Tests / validation
 
@@ -105,6 +113,10 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - [x] M5.3 complete/partial/unavailable/loading/error/malformed-evidence checks
 - [x] M5.3 reduced-motion, semantics, text-scale, and narrow/wide layout checks
 - [x] M5.3 Tecno debug/release local-only DNA smoke with database preserved
+- [x] focused M5.4 native route bridge, Dart parser, map controller/renderer, widget, and navigation tests
+- [x] M5.4 missing/corrupt/gapped/oversized route and cache-state checks
+- [x] M5.4 reduced-motion, semantics/privacy, text-scale, and narrow/wide layout checks
+- [x] M5.4 Tecno debug/release route rendering and explicit offline cold-launch QA with database preserved
 
 ## Acceptance criteria
 
@@ -118,13 +130,18 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - Existing native recording, finalization, precise-private export, accountless/local-only, and fail-closed contracts remain intact.
 - Trips are ordered newest first and remain usable without an account or network.
 - Result hierarchy shows only persisted duration, distance, completion/recovery, integrity, score/event, and aggregate chunk evidence; absent or malformed evidence never becomes a positive claim.
-- Raw routes, coordinates, chunk paths, checksums, and device identifiers never enter the UI model or semantics tree.
+- M5.2 summary/result models continue to exclude raw routes, chunk paths, checksums, and device identifiers; M5.4 precise geometry is isolated to a bounded transient route model and never enters semantics or logs.
 - Direct `/trips/:tripId` navigation is safe, missing records fail clearly, and large text keeps back/navigation and result content reachable.
 - DNA uses an original ring/fingerprint signature rather than a generic radar chart, while every dimension remains understandable without the graphic or color.
 - Complete, partial, and unavailable profile evidence remain distinct from uncalibrated, emerging, established, and recalibrating lifecycle state.
 - Values and recent direction render only from a strict persisted snapshot; missing or malformed evidence never becomes a score, trend, percentile, or confidence claim.
 - Reduced motion removes signature interpolation, large text remains scrollable, and screen readers receive a complete textual profile summary.
 - No baseline owner key, baseline/trip ID, route, raw sample, vehicle/context identifier, or storage path enters UI models or semantics.
+- A selected local trip renders verified GNSS geometry without an account, tile service, or network; start, end, and discontinuities are distinguishable without color.
+- Missing, incomplete, corrupt, mixed-version, or contradictory native evidence fails closed to an explicit route-unavailable state rather than a partial or synthetic path.
+- Feature code consumes only Traelyx map coordinates/intents/cache state; no provider SDK type or endpoint leaks into domain or presentation code.
+- The offline renderer fits route bounds, avoids connecting across governed GNSS gaps, remains usable at 2× text, and exposes a coordinate-free semantic summary.
+- Cache bytes/availability are visible and clearable; the local-canvas provider truthfully reports zero unavailable tile cache and performs no network request.
 
 ## Risks
 
@@ -136,6 +153,9 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - Schema-v1 text states and aggregate JSON must be reduced through explicit allowlisted parsing before presentation.
 - Production currently persists no governed M4.5/M4.6 baseline snapshot, so physical M5.3 QA can validate only the truthful unavailable state rather than a real established profile.
 - The baseline table's JSON payload predates an application presentation contract; the adapter must accept only an explicit allowlisted snapshot shape and fail visibly for anything else.
+- Returning precise geometry across an in-process bridge expands transient location exposure; strict result parsing, bounded points, no semantics/logging, and an isolated contract must prevent it from leaking into diagnostics or unrelated UI state.
+- Loading thousands of native chunks can block UI or overgrow a method-channel payload; route decoding must run off the UI thread and display reduction must have a deterministic hard bound.
+- A route-only canvas lacks street context by design; copy must call it an offline route view rather than implying that basemap tiles are present.
 
 ## Decisions made during execution
 
@@ -148,6 +168,10 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - Treat the result as shareable visual hierarchy, not authorization to add OS sharing or expose route/raw telemetry.
 - Keep M5.3 read-only and schema-neutral; an empty baseline table is a valid uncalibrated product state, not permission to derive a profile in Flutter.
 - Render recent direction only when the persisted snapshot contains an explicit bounded delta; do not infer a trend from timestamps or trip counts.
+- Keep recorder bridge v1 coordinate-free. Introduce a separate map-data contract so precise selected-trip geometry cannot leak into recorder health/diagnostics consumers.
+- Use the governed M3.2 sanity decisions for route inclusion and segment breaks; do not draw every raw fix or reimplement telemetry validity in Flutter.
+- Ship a dependency-free local canvas as the M5.4 provider so core route rendering is useful offline and no tile endpoint, credential, policy dependency, or mandatory cost is introduced.
+- Decode and validate one chunk at a time while retaining only GNSS records for display. The first physical build exposed unacceptable heap pressure from materializing roughly 940,000 motion samples for a route-only read; the streaming path preserves the same strict envelope validation without retaining IMU objects.
 
 ## Progress log
 
@@ -163,7 +187,12 @@ None. Existing bridge/schema/algorithm versions and historical results remain un
 - 2026-08-25: Implemented immutable Drive DNA presentation state, a strict read-only Drift adapter, original custom-painted ring signature, textual dimensions/trends, lifecycle/progress, provenance, claim-free empty/error states, reduced motion, and responsive accessibility without schema, dependency, analysis, recorder, account, or network changes.
 - 2026-08-25: Final formatting and analysis passed; 127 Flutter tests and 211 native Kotlin tests passed with zero failures; repository JSON/YAML and secret validation passed. Debug and release APKs measured 166.25 MiB and 54.07 MiB.
 - 2026-08-25: Tecno debug/release and explicit offline QA verified the truthful uncalibrated ring screen, full semantics, scrolling, lower explanations, release parity, clean fatal logs, and recorder-service inactivity. Connectivity was restored exactly, the database remained `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, final debug was restored, and all phone-side M5.3 dumps were removed.
+- 2026-08-25: M5.4 authorized. Clean synchronized main, scoped map/UX/storage/native contracts, and the physical Tecno were checked. The active SIM data flag and Wi-Fi are off with no active default network; phone-side internet is neither required nor authorized implicitly.
+- 2026-08-25: Implemented the separate map-data bridge, strict bounded Dart adapter, dependency-free offline canvas, fit/start/end/gap rendering, coordinate-free semantics, truthful unavailable/error states, and zero-byte unavailable cache control. No dependency, endpoint, credential, schema, recorder, account, or upload behavior changed.
+- 2026-08-25: First-device profiling caught route-only decoding materializing 939,895 motion samples and peaking near the Tecno's 256 MiB Java heap. Replacing that path with complete per-chunk validation that retains only GNSS reduced the observed Java heap to about 17 MiB while preserving the genuine 2,322-sample route result; the optimized route rendered 2,122 bounded points across 10 segments with 9 gaps.
+- 2026-08-25: Final formatting and analysis passed; 138 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository JSON/YAML/secret validation passed with zero failures. Debug and release APKs measured 166.28 MiB and 54.23 MiB.
+- 2026-08-25: Tecno optimized-debug/release QA verified the genuine 39-minute route, start/end and non-color gap cues, scroll/layout, coordinate-free semantics, cache no-op feedback, clean fatal logs, recorder-service inactivity, and explicit offline operation. Wi-Fi/data/default network remained off/off/none throughout, the exact database hash and four existing trips were preserved, final debug was restored, and all phone-side M5.4 artifacts were removed.
 
 ## Completion summary
 
-M5.1 through M5.3 are complete. The active M5 plan remains here for continuity and is stopped at the explicit M5.4 approval gate.
+M5.1 through M5.4 are complete. M5.4 remains bounded to provider-neutral offline route rendering; M5.5 is not authorized.

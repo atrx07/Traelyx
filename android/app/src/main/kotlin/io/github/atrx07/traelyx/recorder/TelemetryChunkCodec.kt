@@ -188,6 +188,116 @@ object TelemetryChunkCodec {
             invalid("chunk_invalid")
         }
 
+    /**
+     * Verifies the complete chunk contract while retaining only GNSS records.
+     * IMU fields are parsed and validated in-place without allocating samples.
+     */
+    fun decodeGnss(bytes: ByteArray): TelemetryChunkGnssDecodeResult =
+        try {
+            val input = ByteArrayInputStream(bytes)
+            val data = DataInputStream(input)
+            if (data.readInt() != ENVELOPE_MAGIC) return invalidGnss("chunk_invalid_magic")
+            val encodingVersion = data.readInt()
+            val telemetrySchemaVersion = data.readInt()
+            if (
+                encodingVersion != TELEMETRY_CHUNK_ENCODING_VERSION ||
+                telemetrySchemaVersion != RAW_GNSS_SCHEMA_VERSION
+            ) {
+                return invalidGnss("chunk_unknown_version")
+            }
+            val tripId = data.readUTF()
+            if (runCatching { UUID.fromString(tripId) }.isFailure) {
+                return invalidGnss("chunk_invalid_trip_id")
+            }
+            val sequence = data.readLong()
+            val startElapsedNanos = data.readLong()
+            val endElapsedNanos = data.readLong()
+            val gnssCount = data.readInt()
+            val accelerometerCount = data.readInt()
+            val gyroscopeCount = data.readInt()
+            val compression = data.readUTF()
+            val checksumAlgorithm = data.readUTF()
+            val createdAtUtcEpochMillis = data.readLong()
+            if (
+                sequence < 0 || startElapsedNanos < 0 || endElapsedNanos < startElapsedNanos ||
+                gnssCount < 0 || accelerometerCount < 0 || gyroscopeCount < 0 ||
+                gnssCount + accelerometerCount + gyroscopeCount !in
+                1..TELEMETRY_CHUNK_MAX_SAMPLES ||
+                compression != TELEMETRY_CHUNK_COMPRESSION ||
+                checksumAlgorithm != TELEMETRY_CHUNK_CHECKSUM_ALGORITHM ||
+                createdAtUtcEpochMillis <= 0
+            ) {
+                return invalidGnss("chunk_invalid_metadata")
+            }
+            val storedPayloadLength = data.readInt()
+            if (storedPayloadLength !in 1..MAX_COMPRESSED_PAYLOAD_BYTES) {
+                return invalidGnss("chunk_invalid_payload_length")
+            }
+            val storedPayload = ByteArray(storedPayloadLength)
+            data.readFully(storedPayload)
+            val checksumLength = data.readInt()
+            if (checksumLength != SHA256_LENGTH_BYTES) {
+                return invalidGnss("chunk_invalid_checksum")
+            }
+            val expectedChecksum = ByteArray(checksumLength)
+            data.readFully(expectedChecksum)
+            if (!MessageDigest.isEqual(expectedChecksum, sha256(storedPayload))) {
+                return invalidGnss("chunk_checksum_mismatch")
+            }
+            if (data.readInt() != COMPLETION_MAGIC) return invalidGnss("chunk_incomplete")
+            if (data.read() != -1) return invalidGnss("chunk_trailing_bytes")
+
+            val decoded = decodeGnssRecords(inflate(storedPayload))
+            if (
+                decoded.totalCount != gnssCount + accelerometerCount + gyroscopeCount ||
+                decoded.gnssCount != gnssCount ||
+                decoded.accelerometerCount != accelerometerCount ||
+                decoded.gyroscopeCount != gyroscopeCount
+            ) {
+                return invalidGnss("chunk_count_mismatch")
+            }
+            if (
+                decoded.firstElapsedNanos != startElapsedNanos ||
+                decoded.lastElapsedNanos != endElapsedNanos
+            ) {
+                return invalidGnss("chunk_metadata_mismatch")
+            }
+            val metadata =
+                TelemetryChunkMetadata(
+                    encodingVersion = encodingVersion,
+                    telemetrySchemaVersion = telemetrySchemaVersion,
+                    tripId = tripId,
+                    sequence = sequence,
+                    startElapsedNanos = startElapsedNanos,
+                    endElapsedNanos = endElapsedNanos,
+                    gnssSampleCount = gnssCount,
+                    accelerometerSampleCount = accelerometerCount,
+                    gyroscopeSampleCount = gyroscopeCount,
+                    compression = compression,
+                    checksumAlgorithm = checksumAlgorithm,
+                    checksumHex = expectedChecksum.toHex(),
+                    byteLength = bytes.size,
+                    createdAtUtcEpochMillis = createdAtUtcEpochMillis,
+                )
+            TelemetryChunkGnssDecodeResult.Success(
+                DecodedGnssTelemetryChunk(
+                    metadata = metadata,
+                    samples = decoded.samples,
+                    channelElapsedRanges = decoded.channelElapsedRanges,
+                ),
+            )
+        } catch (_: EOFException) {
+            invalidGnss("chunk_truncated")
+        } catch (_: DataFormatException) {
+            invalidGnss("chunk_decompression_failed")
+        } catch (_: IOException) {
+            invalidGnss("chunk_io_invalid")
+        } catch (_: IllegalArgumentException) {
+            invalidGnss("chunk_invalid")
+        } catch (_: RuntimeException) {
+            invalidGnss("chunk_invalid")
+        }
+
     private fun encodeRecords(records: List<TelemetrySampleRecord>): ByteArray {
         val output = ByteArrayOutputStream()
         DataOutputStream(output).use { data ->
@@ -236,6 +346,100 @@ object TelemetryChunkCodec {
         }
         require(data.read() == -1)
         return records
+    }
+
+    private fun decodeGnssRecords(bytes: ByteArray): GnssOnlyRecordSummary {
+        val data = DataInputStream(ByteArrayInputStream(bytes))
+        val count = data.readInt()
+        require(count in 1..TELEMETRY_CHUNK_MAX_SAMPLES)
+        val samples = mutableListOf<RawGnssSample>()
+        var gnssCount = 0
+        var accelerometerCount = 0
+        var gyroscopeCount = 0
+        var firstElapsedNanos: Long? = null
+        var lastElapsedNanos: Long? = null
+        var previousElapsedNanos: Long? = null
+        var previousChannelWireId: Int? = null
+        var previousSourceTimestampNanos: Long? = null
+        val firstChannelElapsedNanos = mutableMapOf<TelemetryChannel, Long>()
+        val lastChannelElapsedNanos = mutableMapOf<TelemetryChannel, Long>()
+        repeat(count) {
+            val channel =
+                TelemetryChannel.fromWireId(data.readUnsignedByte())
+                    ?: throw IllegalArgumentException("Unknown telemetry channel")
+            val tripElapsedNanos = data.readLong()
+            val sourceTimestampNanos = data.readLong()
+            require(tripElapsedNanos >= 0 && sourceTimestampNanos >= 0)
+            val lastChannelElapsed = lastChannelElapsedNanos[channel]
+            require(lastChannelElapsed == null || tripElapsedNanos > lastChannelElapsed)
+            firstChannelElapsedNanos.putIfAbsent(channel, tripElapsedNanos)
+            lastChannelElapsedNanos[channel] = tripElapsedNanos
+            val priorElapsed = previousElapsedNanos
+            if (priorElapsed != null) {
+                require(
+                    tripElapsedNanos > priorElapsed ||
+                        tripElapsedNanos == priorElapsed &&
+                        (
+                            channel.wireId > requireNotNull(previousChannelWireId) ||
+                                channel.wireId == previousChannelWireId &&
+                                sourceTimestampNanos >= requireNotNull(previousSourceTimestampNanos)
+                        ),
+                )
+            }
+            firstElapsedNanos = firstElapsedNanos ?: tripElapsedNanos
+            lastElapsedNanos = tripElapsedNanos
+            previousElapsedNanos = tripElapsedNanos
+            previousChannelWireId = channel.wireId
+            previousSourceTimestampNanos = sourceTimestampNanos
+            when (channel) {
+                TelemetryChannel.GNSS -> {
+                    samples += data.readGnss(tripElapsedNanos, sourceTimestampNanos)
+                    gnssCount += 1
+                }
+
+                TelemetryChannel.ACCELEROMETER -> {
+                    data.validateAndSkipImu()
+                    accelerometerCount += 1
+                }
+
+                TelemetryChannel.GYROSCOPE -> {
+                    data.validateAndSkipImu()
+                    gyroscopeCount += 1
+                }
+            }
+        }
+        require(data.read() == -1)
+        return GnssOnlyRecordSummary(
+            samples = samples,
+            totalCount = count,
+            gnssCount = gnssCount,
+            accelerometerCount = accelerometerCount,
+            gyroscopeCount = gyroscopeCount,
+            firstElapsedNanos = requireNotNull(firstElapsedNanos),
+            lastElapsedNanos = requireNotNull(lastElapsedNanos),
+            channelElapsedRanges =
+                firstChannelElapsedNanos.mapValues { (channel, first) ->
+                    first..requireNotNull(lastChannelElapsedNanos[channel])
+                },
+        )
+    }
+
+    private fun DataInputStream.validateAndSkipImu() {
+        require(readInt() == RAW_IMU_SCHEMA_VERSION)
+        val x = readFloat()
+        val y = readFloat()
+        val z = readFloat()
+        val accuracyStatus = readInt()
+        val flags = decodeImuFlags(readInt())
+        require(x.isFinite() && y.isFinite() && z.isFinite())
+        require(
+            accuracyStatus in
+                RawImuSample.MIN_SENSOR_ACCURACY_STATUS..RawImuSample.MAX_SENSOR_ACCURACY_STATUS,
+        )
+        require(
+            (ImuQualityFlag.SENSOR_UNRELIABLE in flags) ==
+                (accuracyStatus <= RawImuSample.SENSOR_STATUS_UNRELIABLE),
+        )
     }
 
     private fun DataOutputStream.writeGnss(sample: RawGnssSample) {
@@ -414,6 +618,20 @@ object TelemetryChunkCodec {
 
     private fun invalid(errorCode: String): TelemetryChunkDecodeResult =
         TelemetryChunkDecodeResult.Invalid(errorCode)
+
+    private fun invalidGnss(errorCode: String): TelemetryChunkGnssDecodeResult =
+        TelemetryChunkGnssDecodeResult.Invalid(errorCode)
+
+    private data class GnssOnlyRecordSummary(
+        val samples: List<RawGnssSample>,
+        val totalCount: Int,
+        val gnssCount: Int,
+        val accelerometerCount: Int,
+        val gyroscopeCount: Int,
+        val firstElapsedNanos: Long,
+        val lastElapsedNanos: Long,
+        val channelElapsedRanges: Map<TelemetryChannel, LongRange>,
+    )
 
     private const val GNSS_FLAG_MASK = 0b111
     private const val IMU_FLAG_MASK = 0b111

@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
+import 'package:traelyx/features/trips/application/trip_route_providers.dart';
 import 'package:traelyx/features/trips/data/trip_history_repository.dart';
+import 'package:traelyx/features/trips/data/trip_route_repository.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
 import 'package:traelyx/features/trips/presentation/trips_screen.dart';
@@ -60,11 +64,24 @@ void main() {
     await _pumpResult(
       tester,
       repository: _FakeRepository(history: [_trip], result: _result),
+      routeRepository: _FakeRouteRepository(result: _availableRoute),
     );
 
     expect(find.byKey(const ValueKey('trip-result-screen')), findsOneWidget);
     expect(find.text('LOCAL DRIVE RESULT'), findsOneWidget);
     expect(find.text('Analysis not available'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('OFFLINE ROUTE'),
+      280,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const ValueKey('trip-route-available')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('offline-route-map-canvas')),
+      findsOneWidget,
+    );
+    expect(find.text('2 display points · GNSS processing v1'), findsOneWidget);
+    expect(find.text('Tile cache unavailable · 0 B'), findsOneWidget);
     expect(
       tester.getTopLeft(find.text('Completed')).dy,
       greaterThan(tester.getBottomLeft(find.text('1m 30s')).dy),
@@ -91,12 +108,12 @@ void main() {
     );
     expect(find.text('Not available'), findsWidgets);
     await tester.scrollUntilVisible(
-      find.textContaining('Routes and raw samples are not shown'),
+      find.textContaining('Route geometry stays on this phone'),
       280,
       scrollable: find.byType(Scrollable).first,
     );
     expect(
-      find.textContaining('Routes and raw samples are not shown'),
+      find.textContaining('Route geometry stays on this phone'),
       findsOneWidget,
     );
     expect(find.textContaining('recorder/trips'), findsNothing);
@@ -164,6 +181,110 @@ void main() {
     expect(find.textContaining('No trip data was changed'), findsOneWidget);
   });
 
+  testWidgets('route states fail closed and cache clear is an honest no-op', (
+    tester,
+  ) async {
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(history: [_trip], result: _result),
+      routeRepository: const _FakeRouteRepository(
+        result: TripRouteResult.invalid(),
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Route could not be verified'),
+      280,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const ValueKey('trip-route-invalid')), findsOneWidget);
+    expect(find.textContaining('no partial path is shown'), findsOneWidget);
+
+    final clearCache = find.byKey(const ValueKey('clear-map-cache'));
+    await tester.ensureVisible(clearCache);
+    await tester.pumpAndSettle();
+    await tester.tap(clearCache);
+    await tester.pumpAndSettle();
+    expect(find.text('No offline map tiles were stored.'), findsOneWidget);
+
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(history: [_trip], result: _result),
+      routeRepository: const _FakeRouteRepository(
+        result: TripRouteResult.unavailable(),
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Route not available'),
+      280,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(
+      find.byKey(const ValueKey('trip-route-unavailable')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('route read errors remain retryable and claim-free', (
+    tester,
+  ) async {
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(history: [_trip], result: _result),
+      routeRepository: const _FakeRouteRepository(
+        error: FormatException('channel payload'),
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Route could not be read'),
+      280,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const ValueKey('trip-route-error')), findsOneWidget);
+    expect(find.textContaining('No partial route is shown'), findsOneWidget);
+    expect(find.text('Retry route'), findsOneWidget);
+    final semantics = tester.ensureSemantics();
+    try {
+      expect(
+        tester
+            .getSemantics(find.text('Retry route'))
+            .getSemanticsData()
+            .hasAction(ui.SemanticsAction.tap),
+        isTrue,
+      );
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets(
+    'route loading remains explicit while local decoding is pending',
+    (tester) async {
+      final pending = Completer<TripRouteResult>();
+      await _pumpResult(
+        tester,
+        repository: _FakeRepository(history: [_trip], result: _result),
+        routeRepository: _FakeRouteRepository(pending: pending),
+        settle: false,
+      );
+      for (var frame = 0; frame < 5; frame++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await tester.scrollUntilVisible(
+        find.text('OFFLINE ROUTE'),
+        220,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -240));
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('trip-route-loading')), findsOneWidget);
+      expect(find.text('Reading verified route'), findsOneWidget);
+
+      pending.complete(const TripRouteResult.unavailable());
+      await tester.pumpAndSettle();
+    },
+  );
+
   testWidgets('large text keeps the result scrollable without overflow', (
     tester,
   ) async {
@@ -175,12 +296,12 @@ void main() {
 
     expect(tester.takeException(), isNull);
     await tester.scrollUntilVisible(
-      find.textContaining('Routes and raw samples are not shown'),
+      find.textContaining('Route geometry stays on this phone'),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     expect(
-      find.textContaining('Routes and raw samples are not shown').hitTestable(),
+      find.textContaining('Route geometry stays on this phone'),
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
@@ -203,19 +324,24 @@ Future<void> _pumpHistory(
 Future<void> _pumpResult(
   WidgetTester tester, {
   required TripHistoryRepository repository,
+  TripRouteRepository routeRepository = const _FakeRouteRepository(),
   double textScale = 1,
+  bool settle = true,
 }) async {
   await _pump(
     tester,
     repository: repository,
+    routeRepository: routeRepository,
     home: const TripResultScreen(tripId: 'trip-one'),
     textScale: textScale,
+    settle: settle,
   );
 }
 
 Future<void> _pump(
   WidgetTester tester, {
   required TripHistoryRepository repository,
+  TripRouteRepository routeRepository = const _FakeRouteRepository(),
   required Widget home,
   bool settle = true,
   double textScale = 1,
@@ -227,7 +353,10 @@ Future<void> _pump(
 
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [tripHistoryRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        tripHistoryRepositoryProvider.overrideWithValue(repository),
+        tripRouteRepositoryProvider.overrideWithValue(routeRepository),
+      ],
       child: MaterialApp(
         theme: TraelyxTheme.dark,
         builder: (context, child) => MediaQuery(
@@ -272,6 +401,25 @@ class _FakeRepository implements TripHistoryRepository {
   }
 }
 
+class _FakeRouteRepository implements TripRouteRepository {
+  const _FakeRouteRepository({
+    this.result = const TripRouteResult.unavailable(),
+    this.error,
+    this.pending,
+  });
+
+  final TripRouteResult result;
+  final Object? error;
+  final Completer<TripRouteResult>? pending;
+
+  @override
+  Future<TripRouteResult> load(String tripId) async {
+    if (error != null) throw error!;
+    if (pending != null) return pending!.future;
+    return result;
+  }
+}
+
 final _trip = TripHistoryItem(
   id: 'trip-one',
   vehicleName: 'Local bike',
@@ -304,4 +452,24 @@ final _result = TripResult(
   ),
   events: const [],
   score: null,
+);
+
+final _availableRoute = TripRouteResult.available(
+  MapRouteGeometry(
+    processingVersion: 1,
+    sourceGnssCount: 2,
+    points: [
+      MapRoutePoint(
+        coordinate: MapCoordinate(latitude: 12.9716, longitude: 77.5946),
+        tripOffset: Duration.zero,
+        startsNewSegment: true,
+      ),
+      MapRoutePoint(
+        coordinate: MapCoordinate(latitude: 12.9720, longitude: 77.5950),
+        tripOffset: const Duration(seconds: 1),
+        startsNewSegment: false,
+      ),
+    ],
+    reduced: false,
+  ),
 );

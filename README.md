@@ -21,7 +21,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M5.1 |  | Ready/Drive screen — glanceable recorder health and safe minimal live mode | ✅ Complete | Done | 2026-08-25 |
 | M5.2 |  | Trip history/result — rich result hierarchy with confidence and integrity | ✅ Complete | Done | 2026-08-25 |
 | M5.3 |  | Drive DNA visual — original signature treatment, trends, and insufficient-data states | ✅ Complete | Done | 2026-08-25 |
-| M5.4 |  | Map abstraction and route rendering — provider-neutral map and cache controls | ⚪ Pending | — | — |
+| M5.4 |  | Map abstraction and route rendering — provider-neutral map and cache controls | ✅ Complete | Done | 2026-08-25 |
 | M5.5 |  | Synchronized replay clock — map, graphs, and events on one timeline | ⚪ Pending | — | — |
 | M5.6 |  | Replay animations — camera, marker/path, events, pause, scrub, and speed | ⚪ Pending | — | — |
 | M5.7 |  | Procedural road commentary — governed tone, context, cooldown, and anchored bubbles | ⚪ Pending | — | — |

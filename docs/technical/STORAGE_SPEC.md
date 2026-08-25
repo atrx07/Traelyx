@@ -80,6 +80,8 @@ Downloaded local AI models
 Total
 ```
 
+The M5.4 local-canvas provider stores no tiles, reports map cache as unavailable at `0 B`, and implements clear as a visible safe no-op. Any future tile-backed provider must report real bytes and implement deletion through the same provider-neutral control before it can be enabled.
+
 Actions:
 
 - clear map cache;

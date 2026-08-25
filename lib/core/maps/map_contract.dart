@@ -20,10 +20,67 @@ class MapCoordinate {
   final double longitude;
 }
 
+class MapRoutePoint {
+  MapRoutePoint({
+    required this.coordinate,
+    required this.tripOffset,
+    required this.startsNewSegment,
+  }) {
+    if (tripOffset.isNegative) {
+      throw ArgumentError.value(
+        tripOffset,
+        'tripOffset',
+        'Must not be negative.',
+      );
+    }
+  }
+
+  final MapCoordinate coordinate;
+  final Duration tripOffset;
+  final bool startsNewSegment;
+}
+
+class MapRouteGeometry {
+  MapRouteGeometry({
+    required this.processingVersion,
+    required this.sourceGnssCount,
+    required this.points,
+    required this.reduced,
+  }) {
+    if (processingVersion <= 0) {
+      throw ArgumentError.value(processingVersion, 'processingVersion');
+    }
+    if (sourceGnssCount < points.length || points.length < 2) {
+      throw ArgumentError.value(sourceGnssCount, 'sourceGnssCount');
+    }
+    if (!points.first.startsNewSegment) {
+      throw ArgumentError.value(
+        points,
+        'points',
+        'First point must start a segment.',
+      );
+    }
+    for (var index = 1; index < points.length; index++) {
+      if (points[index].tripOffset <= points[index - 1].tripOffset) {
+        throw ArgumentError.value(points, 'points', 'Offsets must increase.');
+      }
+    }
+  }
+
+  final int processingVersion;
+  final int sourceGnssCount;
+  final List<MapRoutePoint> points;
+  final bool reduced;
+
+  int get segmentCount =>
+      points.where((point) => point.startsNewSegment).length;
+}
+
 enum MapCameraIntent { followCurrentMarker, fitRoute }
 
 class MapCacheStatus {
-  const MapCacheStatus({required this.bytesUsed, required this.isAvailable});
+  const MapCacheStatus({required this.bytesUsed, required this.isAvailable})
+    : assert(bytesUsed >= 0);
 
   final int bytesUsed;
   final bool isAvailable;

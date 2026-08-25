@@ -75,7 +75,7 @@ Do not infer "true" speed from a single noisy location jump if better source/fil
 
 Processed GNSS version 1 preserves the complete raw sample and adds an auditable per-fix/segment decision, evidence flags, prior anchor time, elapsed time, geodesic displacement, combined horizontal-accuracy envelope, apparent/minimum-plausible speed, distance increment, and cumulative distance split into resolved and source-motion-supported components. Missing segment metrics remain null rather than zero; a zero distance increment means the decision explicitly excluded or reset that segment.
 
-Input time must be strictly increasing. Empty GNSS input is a valid explicit zero-distance result. Low accuracy, clock discontinuity, long gaps, accuracy-adjusted impossible jumps, stationary jitter, and unresolved movement inside the accuracy envelope are distinct outcomes. Precise coordinates and this processed evidence remain local-native in M3.2 and are not added to diagnostics, logs, network payloads, or the Flutter bridge.
+Input time must be strictly increasing. Empty GNSS input is a valid explicit zero-distance result. Low accuracy, clock discontinuity, long gaps, accuracy-adjusted impossible jumps, stationary jitter, and unresolved movement inside the accuracy envelope are distinct outcomes. Precise coordinates and this processed evidence remain local-native in M3.2 and are not added to diagnostics, logs, or network payloads. M5.4 later adds only bounded accepted display geometry across a separate versioned map-data bridge; it does not add coordinates to the recorder/health bridge or expose raw processing evidence.
 
 ## 5. Raw IMU sample
 
@@ -268,6 +268,8 @@ UI may display km, km/h, g, degrees, etc. Conversion belongs at boundaries.
 ## 13. Privacy
 
 Precise coordinates/raw streams are local-private by default. See `PRIVACY_MODEL.md` and `SYNC_SPEC.md` before adding network serialization.
+
+For a user-selected local trip, M5.4 may decode verified private chunks and pass at most 4,096 transient accepted route points to Flutter through map-data contract v1. This display boundary reuses M3.2 decisions, preserves segment breaks, fails closed on incomplete/corrupt evidence, and excludes source provider, quality/accuracy evidence, wall time, storage metadata, and identifiers from its response. Coordinates must remain absent from logs, diagnostics, analytics, semantic labels, cache metadata, and network payloads.
 
 ## 14. Golden fixture requirement
 

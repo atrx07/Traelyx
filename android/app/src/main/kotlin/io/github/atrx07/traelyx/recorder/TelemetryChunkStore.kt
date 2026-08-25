@@ -15,6 +15,15 @@ sealed interface TelemetryChunkWriteResult {
 interface TelemetryChunkStore {
     fun scan(tripId: String): TelemetryChunkCatalogSnapshot
 
+    fun listSequences(tripId: String): TelemetryChunkSequenceSnapshot {
+        val catalog = scan(tripId)
+        return TelemetryChunkSequenceSnapshot(
+            sequences = catalog.validChunks.map { it.metadata.sequence }.distinct().sorted(),
+            orphanedWriteCount = catalog.orphanedWriteCount,
+            invalidCandidateCount = catalog.corruptChunkCount + catalog.orderingViolationCount,
+        )
+    }
+
     fun write(chunk: EncodedTelemetryChunk): TelemetryChunkWriteResult
 
     fun read(tripId: String, sequence: Long): ByteArray? = null
@@ -111,6 +120,37 @@ class AtomicFileTelemetryChunkStore(context: Context) : TelemetryChunkStore {
         } else {
             TelemetryChunkWriteResult.Failure("chunk_postwrite_verification_failed")
         }
+    }
+
+    override fun listSequences(tripId: String): TelemetryChunkSequenceSnapshot {
+        if (!isValidTripId(tripId)) {
+            return TelemetryChunkSequenceSnapshot(
+                sequences = emptyList(),
+                orphanedWriteCount = 0,
+                invalidCandidateCount = 1,
+            )
+        }
+        val files = chunkDirectory(tripId).listFiles()?.toList().orEmpty()
+        val observed = files.mapNotNull { file ->
+            val match = CHUNK_FILE_PATTERN.matchEntire(file.name) ?: return@mapNotNull null
+            val sequence = match.groupValues[1].toLongOrNull() ?: return@mapNotNull null
+            sequence to match.groupValues[2]
+        }
+        val grouped = observed.groupBy({ it.first }, { it.second })
+        val sequences = mutableListOf<Long>()
+        var orphanedWriteCount = 0
+        for ((sequence, suffixes) in grouped) {
+            if (suffixes.any { it.isEmpty() || it == ".bak" }) {
+                sequences += sequence
+            } else {
+                orphanedWriteCount += 1
+            }
+        }
+        return TelemetryChunkSequenceSnapshot(
+            sequences = sequences.distinct().sorted(),
+            orphanedWriteCount = orphanedWriteCount,
+            invalidCandidateCount = 0,
+        )
     }
 
     override fun read(tripId: String, sequence: Long): ByteArray? {

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:traelyx/core/maps/map_contract.dart';
+import 'package:traelyx/core/maps/offline_route_map.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
+import 'package:traelyx/features/trips/application/trip_route_providers.dart';
+import 'package:traelyx/features/trips/data/trip_route_repository.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 
 class TripResultScreen extends ConsumerWidget {
@@ -119,6 +123,10 @@ class _ResultContent extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: TraelyxSpacing.xxl),
+                  _SectionLabel(label: 'OFFLINE ROUTE'),
+                  const SizedBox(height: TraelyxSpacing.sm),
+                  _TripRouteSection(tripId: result.trip.id),
                   const SizedBox(height: TraelyxSpacing.xxl),
                   _SectionLabel(label: 'CONFIDENCE & INTEGRITY'),
                   const SizedBox(height: TraelyxSpacing.sm),
@@ -450,7 +458,7 @@ class _EvidencePanel extends StatelessWidget {
           icon: Icons.satellite_alt_outlined,
           label: 'GNSS samples',
           value: '${evidence.gnssSampleCount}',
-          detail: 'Aggregate count only; coordinates stay private.',
+          detail: 'Aggregate count; route geometry is read locally on demand.',
           state: evidence.gnssSampleCount > 0
               ? TripEvidenceState.verified
               : TripEvidenceState.unavailable,
@@ -488,6 +496,242 @@ class _EvidencePanel extends StatelessWidget {
               : TripEvidenceState.verified,
         ),
       ],
+    );
+  }
+}
+
+class _TripRouteSection extends ConsumerWidget {
+  const _TripRouteSection({required this.tripId});
+
+  final String tripId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final route = ref.watch(tripRouteProvider(tripId));
+    final cache = ref.watch(tripMapCacheStatusProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        route.when(
+          loading: () => const _RouteStatePanel(
+            key: ValueKey('trip-route-loading'),
+            icon: Icons.route_outlined,
+            title: 'Reading verified route',
+            detail: 'Processing local evidence on this phone.',
+            loading: true,
+          ),
+          error: (error, stackTrace) => _RouteStatePanel(
+            key: const ValueKey('trip-route-error'),
+            icon: Icons.warning_amber_outlined,
+            title: 'Route could not be read',
+            detail: 'No partial route is shown and no trip data was changed.',
+            action: TextButton.icon(
+              onPressed: () => ref.invalidate(tripRouteProvider(tripId)),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry route'),
+            ),
+          ),
+          data: (result) => switch (result.state) {
+            TripRouteState.available => _AvailableRoute(
+              geometry: result.geometry!,
+            ),
+            TripRouteState.unavailable => const _RouteStatePanel(
+              key: ValueKey('trip-route-unavailable'),
+              icon: Icons.route_outlined,
+              title: 'Route not available',
+              detail:
+                  'This drive does not contain enough verified GNSS points for a route.',
+            ),
+            TripRouteState.invalid => const _RouteStatePanel(
+              key: ValueKey('trip-route-invalid'),
+              icon: Icons.gpp_maybe_outlined,
+              title: 'Route could not be verified',
+              detail:
+                  'Local route evidence is incomplete or contradictory, so no partial path is shown.',
+            ),
+          },
+        ),
+        const SizedBox(height: TraelyxSpacing.sm),
+        _MapCachePanel(
+          status: cache.valueOrNull,
+          onClear: () async {
+            final controller = await ref.read(tripMapControllerProvider.future);
+            await controller.clearCache();
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No offline map tiles were stored.'),
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _AvailableRoute extends StatelessWidget {
+  const _AvailableRoute({required this.geometry});
+
+  final MapRouteGeometry geometry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: const ValueKey('trip-route-available'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        OfflineRouteMap(geometry: geometry),
+        const SizedBox(height: TraelyxSpacing.sm),
+        Wrap(
+          spacing: TraelyxSpacing.lg,
+          runSpacing: TraelyxSpacing.xs,
+          children: [
+            const _RouteLegend(
+              icon: Icons.radio_button_checked,
+              label: 'Start',
+            ),
+            const _RouteLegend(icon: Icons.diamond_outlined, label: 'End'),
+            if (geometry.segmentCount > 1)
+              _RouteLegend(
+                icon: Icons.space_bar,
+                label:
+                    '${geometry.segmentCount - 1} ${geometry.segmentCount == 2 ? 'gap' : 'gaps'}',
+              ),
+          ],
+        ),
+        const SizedBox(height: TraelyxSpacing.xs),
+        Text(
+          '${geometry.points.length} display points · GNSS processing v${geometry.processingVersion}${geometry.reduced ? ' · reduced for display' : ''}',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+}
+
+class _RouteLegend extends StatelessWidget {
+  const _RouteLegend({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 17, color: context.traelyxColors.textSecondary),
+        const SizedBox(width: TraelyxSpacing.xxs),
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
+  }
+}
+
+class _RouteStatePanel extends StatelessWidget {
+  const _RouteStatePanel({
+    required this.icon,
+    required this.title,
+    required this.detail,
+    this.loading = false,
+    this.action,
+    super.key,
+  });
+
+  final IconData icon;
+  final String title;
+  final String detail;
+  final bool loading;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Panel(
+      children: [
+        Semantics(
+          liveRegion: loading,
+          label: '$title. $detail',
+          child: ExcludeSemantics(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (loading)
+                  const SizedBox.square(
+                    dimension: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  Icon(icon, color: context.traelyxColors.textSecondary),
+                const SizedBox(width: TraelyxSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: TraelyxSpacing.xxs),
+                      Text(
+                        detail,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (action != null) ...[
+          const SizedBox(height: TraelyxSpacing.xs),
+          Align(alignment: Alignment.centerLeft, child: action!),
+        ],
+      ],
+    );
+  }
+}
+
+class _MapCachePanel extends StatelessWidget {
+  const _MapCachePanel({required this.status, required this.onClear});
+
+  final MapCacheStatus? status;
+  final Future<void> Function() onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final bytes = status?.bytesUsed ?? 0;
+    final available = status?.isAvailable == true;
+    return Container(
+      key: const ValueKey('map-cache-status'),
+      padding: const EdgeInsets.all(TraelyxSpacing.md),
+      decoration: BoxDecoration(
+        color: context.traelyxColors.surface,
+        borderRadius: BorderRadius.circular(TraelyxRadii.control),
+        border: Border.all(color: context.traelyxColors.outline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Offline canvas · no network required'),
+          const SizedBox(height: TraelyxSpacing.xxs),
+          Text(
+            available
+                ? 'Tile cache · ${_formatBytes(bytes)}'
+                : 'Tile cache unavailable · 0 B',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: TraelyxSpacing.xs),
+          OutlinedButton.icon(
+            key: const ValueKey('clear-map-cache'),
+            onPressed: onClear,
+            icon: const Icon(Icons.delete_sweep_outlined),
+            label: const Text('Clear tile cache'),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -611,7 +855,7 @@ class _PrivacyFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       label:
-          'Local-only result. Telemetry schema version $schemaVersion. Routes and raw samples are not shown.',
+          'Local-only result. Telemetry schema version $schemaVersion. Route geometry is read transiently on this phone. Raw samples and storage details are not shown.',
       child: ExcludeSemantics(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -624,7 +868,7 @@ class _PrivacyFooter extends StatelessWidget {
             const SizedBox(width: TraelyxSpacing.sm),
             Expanded(
               child: Text(
-                'Local-only result · Telemetry schema v$schemaVersion · Routes and raw samples are not shown',
+                'Local-only result · Telemetry schema v$schemaVersion · Route geometry stays on this phone · Raw samples and storage details are not shown',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),

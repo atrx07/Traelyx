@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M5 active — M5.3 complete, awaiting explicit M5.4 authorization**
+**M5 active — M5.4 complete, awaiting explicit M5.5 authorization**
 
 ## Working
 
@@ -23,7 +23,7 @@
 - Drift schema version 1 defines vehicles, trips, chunk indexes, events, scores, driver baselines, sync queue, and non-secret settings with relational constraints validated locally and in CI.
 - A committed Drift schema-v1 snapshot, generated verifier, and file-backed upgrade fixtures validate fresh/current databases and the exact settings-only development bootstrap shape locally and in CI. Unknown version-1 shapes fail visibly instead of being repaired implicitly.
 - The stable Flutter/Kotlin recorder bridge v1 reports `bridge_ready`, exposes typed pull-based lifecycle/GNSS/IMU/buffer status and idempotent start/stop/recover commands, and reports `recordingAvailable=true` only when precise location and GPS are ready.
-- A provider-neutral map contract exists without selecting a tile SDK, endpoint, or network dependency.
+- A provider-neutral map contract and dependency-free offline route canvas exist without selecting a tile SDK, endpoint, or network dependency.
 - Dark-first semantic color, typography, spacing, radii, and reduced-motion-aware timing primitives are centralized and validated locally and in CI.
 - Trips owns the M5.2 newest-first local history/result experience, DNA owns the M5.3 local profile/signature experience, Social retains a directly routable responsive skeleton, You exposes diagnostics, and Drive owns the M5.1 ready/live recorder experience.
 - Typed non-secret settings persist through the existing Drift schema with defaults, reactive reads, explicit corruption failures, and Riverpod injection boundaries, validated locally and in CI.
@@ -100,6 +100,10 @@
 - M5.3 adds immutable Drive DNA presentation models and a strict read-only latest-baseline adapter. Only an allowlisted versioned five-dimension snapshot can render values or recent deltas; unknown fields, lifecycle states, out-of-range values, inconsistent history windows, and evidence/count contradictions fail closed.
 - DNA now uses an original custom-painted fingerprint/ring signature with textual dimension rows, complete/partial/unavailable profile state, distinct uncalibrated/emerging/established/recalibrating lifecycle state, eligible-history progress, version provenance, categorical confidence copy, and bounded persisted trend markers. Reduced motion removes interpolation, 2× text switches dense rows to vertical layouts, and semantics fully describe the graph without relying on color.
 - Debug/release and explicit offline Tecno QA render the truthful uncalibrated state because production baseline persistence is not integrated. The exact database hash and existing trip data were preserved, connectivity was restored, logs were clean, no recorder service remained, and temporary phone-side M5.3 artifacts were removed.
+- M5.4 adds a separate versioned map-data bridge that verifies complete app-private chunk evidence off the UI thread, applies governed GNSS sanity/gap decisions, and returns at most 4,096 transient display points without paths, checksums, device identifiers, or provider metadata. Strict Dart parsing fails closed for malformed, partial, contradictory, or unknown-version results.
+- Trip results now render a dependency-free offline route canvas with fit-to-route geometry, distinct start/end markers, non-color gap cues, coordinate-free semantics, explicit loading/unavailable/error states, and truthful zero-byte unavailable tile-cache controls. No schema, dependency, network endpoint, account, recorder, analysis, or upload behavior changed.
+- Physical profiling caught and fixed a first-build route decoder that retained roughly 940,000 irrelevant motion records. Complete chunk validation now retains only GNSS for display, reducing observed Java heap from about 239 MiB to about 17 MiB on the genuine 39-minute Tecno trip; optimized debug and release both rendered 2,122 points across 10 segments with 9 gaps while the phone remained fully offline.
+- Final M5.4 Tecno QA preserved the exact database hash and all four trips, left no recorder service or fatal app logs, restored the debug APK, and removed all phone-side QA artifacts. Host gates passed with 138 Flutter tests, 214 native Kotlin tests, three trip-debug tests, and repository validation.
 
 ## Partial
 
@@ -139,12 +143,13 @@
 - M5.1 physical QA covers one Android 14 Tecno at its current viewport and an indoor finding-GPS state. It does not establish multi-device/OEM layout reliability, a new GPS-acquisition claim, controlled deep-sleep behavior, or later trip-result/replay performance.
 - M5.2 physical QA covers the same Android 14 Tecno and its four retained local trips. It does not establish multi-device/OEM layout reliability or validate production score/event presentation with physically persisted M4 analysis because that integration does not yet exist.
 - M5.3 physical QA covers the same Android 14 Tecno and validates only the genuine no-baseline state. Complete, partial, emerging, established, recalibrating, trend, provenance, reduced-motion, wide, and 2× text states are covered by Flutter tests but cannot be claimed as physical persisted-baseline evidence yet.
+- M5.4 physical QA covers one Android 14 Tecno and one genuine retained route. The conservative UI-Automator readiness observation includes polling overhead and is not a precise app-runtime benchmark; multi-device/OEM performance and very large/fragmented-route field diversity remain unproven.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
-- Map tile/provider policy and offline/cache strategy.
+- Online tile/provider selection and downloaded-region policy remain deferred; core route rendering and its zero-byte local-canvas cache behavior are established offline.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
 - APK/app-data growth if raw telemetry retention is unmanaged.
 
 ## Current step
 
-**Approval gate:** M5.3 completed 2026-08-25. M5.4 Map abstraction and route rendering remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.4 before that authorization.
+**Approval gate:** M5.4 completed 2026-08-25. M5.5 Synchronized replay clock remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.5 before that authorization.

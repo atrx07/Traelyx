@@ -15,7 +15,9 @@ import 'package:traelyx/features/drive_dna/application/drive_dna_providers.dart'
 import 'package:traelyx/features/drive_dna/data/drive_dna_repository.dart';
 import 'package:traelyx/features/drive_dna/domain/drive_dna_models.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
+import 'package:traelyx/features/trips/application/trip_route_providers.dart';
 import 'package:traelyx/features/trips/data/trip_history_repository.dart';
+import 'package:traelyx/features/trips/data/trip_route_repository.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 
 import '../core/platform/recorder_bridge_test.dart'
@@ -236,6 +238,9 @@ Future<void> _pumpApp(
         ),
         latestTripDebugExportTripIdProvider.overrideWith((ref) async => null),
         tripHistoryRepositoryProvider.overrideWithValue(tripRepository),
+        tripRouteRepositoryProvider.overrideWithValue(
+          const _FakeTripRouteRepository(),
+        ),
         driveDnaRepositoryProvider.overrideWithValue(
           const _FakeDriveDnaRepository(),
         ),
@@ -341,6 +346,15 @@ class _FakeTripRepository implements TripHistoryRepository {
 
   @override
   Stream<List<TripHistoryItem>> watchHistory() => Stream.value(history);
+}
+
+class _FakeTripRouteRepository implements TripRouteRepository {
+  const _FakeTripRouteRepository();
+
+  @override
+  Future<TripRouteResult> load(String tripId) async {
+    return const TripRouteResult.unavailable();
+  }
 }
 
 final _routeTrip = TripHistoryItem(

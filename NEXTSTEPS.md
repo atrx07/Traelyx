@@ -4,19 +4,19 @@
 
 ## Current gate
 
-M5.3 completed on 2026-08-25. Stop at the numbered-substep approval gate; M5.4 remains pending explicit maintainer authorization.
+M5.4 completed on 2026-08-25. Stop at the numbered-substep approval gate; M5.5 remains pending explicit maintainer authorization.
 
 ## P0 — Approval gate
 
-1. Await explicit maintainer authorization before inspecting, implementing, or substantially preparing M5.4.
+1. Await explicit maintainer authorization before inspecting, implementing, or substantially preparing M5.5.
 2. Preserve the accepted private M2.8 fixture locally; do not place its route or raw telemetry in Git or logs.
 3. Keep the Tecno LH8n +0.03 g Z-axis bias as fixture calibration context only; do not add a production phone-specific offset.
 
-## P1 — M5.4 pending
+## P1 — M5.5 pending
 
-1. Build provider-neutral map abstraction and route rendering only after authorization, following the governed map/cache/privacy contracts without selecting a paid or mandatory-network provider for core operation.
-2. Preserve M5.3's strict read-only baseline adapter, original accessible signature, lifecycle/profile distinction, persisted-trend-only rule, reduced motion, and honest no-baseline state.
-3. Preserve M5.2's local history/result boundary, fail-closed aggregate parsing, deep-link safety, and exclusion of raw route/sample/storage identifiers.
+1. Build the synchronized replay clock only after authorization, keeping map, graphs, and governed event evidence on one auditable timeline.
+2. Preserve M5.4's bounded native route boundary, offline local canvas, gap semantics, coordinate privacy, fail-closed parsing, and no-network core behavior.
+3. Preserve M5.3's strict read-only baseline adapter and M5.2's local history/result boundary without inventing unpersisted analysis.
 
 ## P2 — Analysis foundation
 

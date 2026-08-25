@@ -9,9 +9,13 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsContract
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsSnapshotCollector
+import io.github.atrx07.traelyx.maps.MapDataContract
+import io.github.atrx07.traelyx.maps.TripRouteReader
+import io.github.atrx07.traelyx.maps.toBridgeMap
 import io.github.atrx07.traelyx.recorder.AndroidRecorderBridgeGateway
 import io.github.atrx07.traelyx.recorder.AndroidRecorderPermissionGateway
 import io.github.atrx07.traelyx.recorder.AtomicRecorderFinalizationStore
+import io.github.atrx07.traelyx.recorder.AtomicFileTelemetryChunkStore
 import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatchResult
 import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatcher
 import io.github.atrx07.traelyx.recorder.RecorderContract
@@ -32,6 +36,7 @@ class MainActivity : FlutterActivity() {
     private var pendingTripDebugTripId: String? = null
     private var preparedTripDebugExport: PreparedTripDebugExport? = null
     private val tripDebugExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val routeExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onPostResume() {
         super.onPostResume()
@@ -90,6 +95,25 @@ class MainActivity : FlutterActivity() {
                 DiagnosticsContract.GET_SNAPSHOT -> result.success(
                     DiagnosticsSnapshotCollector(applicationContext).collect(),
                 )
+                else -> result.notImplemented()
+            }
+        }
+
+        val routeReader = TripRouteReader(AtomicFileTelemetryChunkStore(applicationContext))
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            MapDataContract.CHANNEL_NAME,
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                MapDataContract.LOAD_TRIP_ROUTE -> {
+                    val tripId = call.argument<String>("tripId")
+                    routeExecutor.execute {
+                        val payload = routeReader.read(tripId).toBridgeMap()
+                        runOnUiThread {
+                            if (!isDestroyed) result.success(payload)
+                        }
+                    }
+                }
                 else -> result.notImplemented()
             }
         }
@@ -215,6 +239,7 @@ class MainActivity : FlutterActivity() {
         preparedTripDebugExport?.deleteTemporaryFile()
         preparedTripDebugExport = null
         tripDebugExecutor.shutdownNow()
+        routeExecutor.shutdownNow()
         super.onDestroy()
     }
 
