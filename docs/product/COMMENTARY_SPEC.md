@@ -197,3 +197,11 @@ Evaluate:
 - output-length compliance.
 
 Maintain a fixed commentary evaluation set across event/tone combinations.
+
+## 11. M5.7 procedural baseline
+
+M5.7 ships commentary version 1 as bundled deterministic presentation logic only. It has no LLM, model runtime, provider, API key, account, endpoint, dependency, or network fallback. Analyst, Chill, Supportive, Roast, and Unhinged select safe short-form copy; Silent emits no moments. Tone is session-only and defaults to Chill.
+
+Only ten explicitly allowlisted persisted event types are eligible. Unknown types fail closed and their values are never echoed. Version 1 ranks candidates using event-type interestingness and category novelty, applies a ten-second spacing cooldown, uses a sixty-second recent-category window for repetition context, and displays at most six moments. Seeded variation may change copy but not event selection. Severity, control quality, confidence, or personal-baseline deviation may inform a future version only when those values are authoritatively persisted and governed; M5.7 never infers or fabricates them.
+
+Visibility and reveal progress derive from the existing replay clock. A moment may draw on the route only when the persisted event midpoint resolves to a verified marker; otherwise it remains timeline-only. Bubble/evidence taps pause playback and reveal only the persisted event label and recorder-relative time range. Commentary never alters events, integrity, scores, safety transitions, or historical evidence, and it never exposes coordinates, trip identifiers, raw telemetry, paths, or provider metadata in copy, semantics, or logs.

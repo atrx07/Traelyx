@@ -162,6 +162,43 @@ void main() {
     expect(find.textContaining('77.5948'), findsNothing);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('anchored commentary is tappable and remains coordinate-free', (
+    tester,
+  ) async {
+    var opened = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TraelyxTheme.dark,
+        home: Scaffold(
+          body: OfflineRouteMap(
+            geometry: _geometry(),
+            replayMarker: MapCoordinate(latitude: 12.9718, longitude: 77.5948),
+            replayMarkerAfterPointIndex: 0,
+            replayPosition: const Duration(seconds: 1),
+            commentary: RouteReplayCommentary(
+              coordinate: MapCoordinate(latitude: 12.9718, longitude: 77.5948),
+              afterPointIndex: 0,
+              text: 'The brake pedal called a very serious meeting.',
+            ),
+            commentaryRevealProgress: 1,
+            onCommentaryTap: () => opened = true,
+          ),
+        ),
+      ),
+    );
+
+    final commentaryMap = find.bySemanticsLabel(
+      RegExp(
+        r'Commentary: The brake pedal called a very serious meeting\. Anchored to a verified persisted event point\.',
+      ),
+    );
+    expect(commentaryMap, findsOneWidget);
+    expect(find.textContaining('12.9718'), findsNothing);
+    await tester.tap(commentaryMap);
+    expect(opened, isTrue);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 MapRouteGeometry _geometry() => MapRouteGeometry(

@@ -303,6 +303,161 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'procedural commentary tone anchor and evidence use persisted replay state',
+    (tester) async {
+      await _pumpResult(
+        tester,
+        repository: _FakeRepository(
+          history: [_trip],
+          result: _replayResultWithEvent(),
+        ),
+        routeRepository: _FakeRouteRepository(result: _availableRoute),
+      );
+      await tester.scrollUntilVisible(
+        find.text('Road commentary'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      expect(
+        tester
+            .widget<ChoiceChip>(
+              find.byKey(const ValueKey('commentary-tone-chill')),
+            )
+            .selected,
+        isTrue,
+      );
+      expect(
+        find.byKey(const ValueKey('commentary-ready-state')),
+        findsOneWidget,
+      );
+
+      final event = find.byKey(const ValueKey('replay-event-0'));
+      await tester.scrollUntilVisible(
+        event,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(event);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('commentary-active-bubble')),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel(
+          RegExp(
+            r'Chill road commentary\..*Anchored to a verified persisted event point\.',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel(
+          RegExp(
+            r'Commentary: .*Anchored to a verified persisted event point\.',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('12.97'), findsNothing);
+
+      final evidenceToggle = find.byKey(
+        const ValueKey('commentary-evidence-toggle'),
+      );
+      await tester.scrollUntilVisible(
+        evidenceToggle,
+        -300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(evidenceToggle);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('commentary-recorded-evidence')),
+        findsOneWidget,
+      );
+      expect(find.textContaining('0:40–0:50'), findsOneWidget);
+      expect(find.textContaining('Commentary does not alter'), findsOneWidget);
+
+      final roast = find.byKey(const ValueKey('commentary-tone-roast'));
+      await tester.scrollUntilVisible(
+        roast,
+        -300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(roast);
+      await tester.pumpAndSettle();
+      expect(find.text('ROAST'), findsOneWidget);
+      expect(find.textContaining('brake pedal'), findsOneWidget);
+
+      final silent = find.byKey(const ValueKey('commentary-tone-silent'));
+      await tester.scrollUntilVisible(
+        silent,
+        -300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(silent);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('commentary-silent-state')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('commentary-active-bubble')),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'commentary remains timeline-only without verified route anchor',
+    (tester) async {
+      await _pumpResult(
+        tester,
+        repository: _FakeRepository(
+          history: [_trip],
+          result: _replayResultWithEvent(),
+        ),
+      );
+
+      await tester.scrollUntilVisible(
+        find.text('Replay playback'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      tester
+          .widget<Slider>(find.byKey(const ValueKey('replay-timeline-slider')))
+          .onChanged!(0.5);
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('trip-route-available')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('commentary-active-bubble')),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Timeline-only: no verified route anchor exists at this event time.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel(
+          RegExp(r'No verified map anchor is available for this event time\.'),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('disabled animations preserve manual replay without autoplay', (
     tester,
   ) async {
@@ -348,6 +503,16 @@ void main() {
     await tester.pump();
     expect(find.text('0:45'), findsOneWidget);
     expect(find.text('Paused · 1×'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('commentary-active-bubble')),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(
+        RegExp(r'Commentary: .*Anchored to a verified persisted event point\.'),
+      ),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 

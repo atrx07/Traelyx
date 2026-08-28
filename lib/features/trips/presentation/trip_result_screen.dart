@@ -9,6 +9,7 @@ import 'package:traelyx/features/trips/application/replay_clock_controller.dart'
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
 import 'package:traelyx/features/trips/application/trip_route_providers.dart';
 import 'package:traelyx/features/trips/data/trip_route_repository.dart';
+import 'package:traelyx/features/trips/domain/procedural_commentary.dart';
 import 'package:traelyx/features/trips/domain/replay_timeline.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 import 'package:traelyx/features/trips/presentation/replay_evidence_timeline.dart';
@@ -620,14 +621,21 @@ enum _ReplayCameraMode { overview, follow }
 class _ReplayWorkspaceState extends State<_ReplayWorkspace>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late ReplayClockController _clock;
+  late ProceduralCommentaryPlan _commentaryPlan;
   late final Ticker _ticker;
   Duration _lastTickerElapsed = Duration.zero;
   _ReplayCameraMode _cameraMode = _ReplayCameraMode.overview;
+  CommentaryTone _commentaryTone = CommentaryTone.chill;
+  int? _expandedCommentaryEventIndex;
 
   @override
   void initState() {
     super.initState();
     _clock = ReplayClockController(widget.timeline);
+    _commentaryPlan = ProceduralCommentaryPlan.build(
+      timeline: widget.timeline,
+      tone: _commentaryTone,
+    );
     _ticker = createTicker(_handleTick);
     WidgetsBinding.instance.addObserver(this);
   }
@@ -643,6 +651,10 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
       _clock = ReplayClockController(widget.timeline)
         ..setSpeed(speed)
         ..seek(position);
+      _commentaryPlan = ProceduralCommentaryPlan.build(
+        timeline: widget.timeline,
+        tone: _commentaryTone,
+      );
     }
   }
 
@@ -671,7 +683,10 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
 
   void _startPlayback() {
     if (_clock.isPlaying) return;
-    setState(() => _cameraMode = _ReplayCameraMode.follow);
+    setState(() {
+      _cameraMode = _ReplayCameraMode.follow;
+      _expandedCommentaryEventIndex = null;
+    });
     _clock.play();
     _lastTickerElapsed = Duration.zero;
     _ticker.start();
@@ -685,13 +700,41 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
 
   void _seekFraction(double fraction) {
     _pausePlayback();
+    if (_expandedCommentaryEventIndex != null) {
+      setState(() => _expandedCommentaryEventIndex = null);
+    }
     _clock.seekFraction(fraction);
   }
 
   void _seekToEvent(int index) {
     _pausePlayback();
-    setState(() => _cameraMode = _ReplayCameraMode.follow);
+    setState(() {
+      _cameraMode = _ReplayCameraMode.follow;
+      _expandedCommentaryEventIndex = null;
+    });
     _clock.seekToEvent(index);
+  }
+
+  void _selectCommentaryTone(CommentaryTone tone) {
+    if (_commentaryTone == tone) return;
+    setState(() {
+      _commentaryTone = tone;
+      _commentaryPlan = ProceduralCommentaryPlan.build(
+        timeline: widget.timeline,
+        tone: tone,
+      );
+      _expandedCommentaryEventIndex = null;
+    });
+  }
+
+  void _toggleCommentaryEvidence(CommentaryMoment moment) {
+    _pausePlayback();
+    setState(() {
+      _expandedCommentaryEventIndex =
+          _expandedCommentaryEventIndex == moment.eventIndex
+          ? null
+          : moment.eventIndex;
+    });
   }
 
   @override
@@ -703,6 +746,11 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
         final snapshot = _clock.snapshot;
         final geometry = timeline.route;
         final animationsDisabled = MediaQuery.disableAnimationsOf(context);
+        final commentaryPlan = _commentaryPlan;
+        final activeCommentary = commentaryPlan.at(snapshot.position);
+        final commentaryAnchor = activeCommentary == null
+            ? null
+            : timeline.at(activeCommentary.anchorTime).routeMarker;
         if (animationsDisabled && _clock.isPlaying) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) _pausePlayback();
@@ -720,6 +768,11 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
         final pulsePhase = animationsDisabled || activeEventMarkers.isEmpty
             ? 0.0
             : snapshot.position.inMilliseconds.remainder(1400) / 1400;
+        final commentaryReveal = activeCommentary == null
+            ? 0.0
+            : animationsDisabled
+            ? 1.0
+            : activeCommentary.revealProgressAt(snapshot.position);
         final cameraTarget =
             _cameraMode == _ReplayCameraMode.follow &&
                 snapshot.routeMarker != null &&
@@ -748,6 +801,19 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
                   cameraFollow: cameraFollow,
                   activeEventMarkers: activeEventMarkers,
                   eventPulsePhase: pulsePhase,
+                  commentary:
+                      activeCommentary == null || commentaryAnchor == null
+                      ? null
+                      : RouteReplayCommentary(
+                          coordinate: commentaryAnchor.coordinate,
+                          afterPointIndex: commentaryAnchor.afterPointIndex,
+                          text: activeCommentary.text,
+                        ),
+                  commentaryRevealProgress: commentaryReveal,
+                  onCommentaryTap:
+                      activeCommentary == null || commentaryAnchor == null
+                      ? null
+                      : () => _toggleCommentaryEvidence(activeCommentary),
                 ),
               ),
               const SizedBox(height: TraelyxSpacing.sm),
@@ -778,6 +844,23 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
               ),
               const SizedBox(height: TraelyxSpacing.md),
             ],
+            _CommentaryPanel(
+              tone: _commentaryTone,
+              plan: commentaryPlan,
+              active: activeCommentary,
+              hasVerifiedAnchor: commentaryAnchor != null,
+              evidenceExpanded:
+                  activeCommentary != null &&
+                  _expandedCommentaryEventIndex == activeCommentary.eventIndex,
+              event: activeCommentary == null
+                  ? null
+                  : timeline.events[activeCommentary.eventIndex],
+              onToneSelected: _selectCommentaryTone,
+              onToggleEvidence: activeCommentary == null
+                  ? null
+                  : () => _toggleCommentaryEvidence(activeCommentary),
+            ),
+            const SizedBox(height: TraelyxSpacing.md),
             _Panel(
               children: [
                 Text(
@@ -997,6 +1080,212 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
       },
     );
   }
+}
+
+class _CommentaryPanel extends StatelessWidget {
+  const _CommentaryPanel({
+    required this.tone,
+    required this.plan,
+    required this.active,
+    required this.hasVerifiedAnchor,
+    required this.evidenceExpanded,
+    required this.event,
+    required this.onToneSelected,
+    required this.onToggleEvidence,
+  });
+
+  final CommentaryTone tone;
+  final ProceduralCommentaryPlan plan;
+  final CommentaryMoment? active;
+  final bool hasVerifiedAnchor;
+  final bool evidenceExpanded;
+  final ReplayEventRange? event;
+  final ValueChanged<CommentaryTone> onToneSelected;
+  final VoidCallback? onToggleEvidence;
+
+  @override
+  Widget build(BuildContext context) {
+    final totalEvents = plan.supportedEventCount + plan.unsupportedEventCount;
+    final activeMoment = active;
+    return _Panel(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Road commentary',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+        const SizedBox(height: TraelyxSpacing.xxs),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Bundled and fully offline. Commentary never changes recorded events, integrity, or scores.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        const SizedBox(height: TraelyxSpacing.sm),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Wrap(
+            spacing: TraelyxSpacing.xs,
+            runSpacing: TraelyxSpacing.xs,
+            children: [
+              for (final candidate in CommentaryTone.values)
+                ChoiceChip(
+                  key: ValueKey('commentary-tone-${candidate.name}'),
+                  label: Text(candidate.label),
+                  selected: tone == candidate,
+                  onSelected: (selected) {
+                    if (selected) onToneSelected(candidate);
+                  },
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: TraelyxSpacing.xs),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            tone.description,
+            key: const ValueKey('commentary-tone-description'),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        const SizedBox(height: TraelyxSpacing.sm),
+        if (tone == CommentaryTone.silent)
+          const _CommentaryStateText(
+            key: ValueKey('commentary-silent-state'),
+            text:
+                'Silent mode is on. Persisted events remain available in the replay controls.',
+          )
+        else if (totalEvents == 0)
+          const _CommentaryStateText(
+            key: ValueKey('commentary-empty-state'),
+            text:
+                'No governed event ranges are persisted for commentary on this drive.',
+          )
+        else if (plan.moments.isEmpty)
+          const _CommentaryStateText(
+            key: ValueKey('commentary-unsupported-state'),
+            text:
+                'No supported governed event type is available for safe procedural commentary.',
+          )
+        else if (activeMoment == null)
+          _CommentaryStateText(
+            key: const ValueKey('commentary-ready-state'),
+            text:
+                '${plan.moments.length} of ${plan.supportedEventCount} supported ${plan.supportedEventCount == 1 ? 'event was' : 'events were'} selected using category novelty, a ${ProceduralCommentaryPlan.cooldown.inSeconds}-second cooldown, and a ${ProceduralCommentaryPlan.maximumMoments}-moment limit. Play, scrub, or select an event to show it.',
+          )
+        else ...[
+          Semantics(
+            container: true,
+            liveRegion: true,
+            label:
+                '${tone.label} road commentary. ${activeMoment.text} ${hasVerifiedAnchor ? 'Anchored to a verified persisted event point.' : 'No verified map anchor is available for this event time.'}',
+            child: ExcludeSemantics(
+              child: Container(
+                key: const ValueKey('commentary-active-bubble'),
+                width: double.infinity,
+                padding: const EdgeInsets.all(TraelyxSpacing.md),
+                decoration: BoxDecoration(
+                  color: context.traelyxColors.canvas,
+                  borderRadius: BorderRadius.circular(TraelyxRadii.control),
+                  border: Border.all(color: context.traelyxColors.caution),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tone.label.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: context.traelyxColors.caution,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: TraelyxSpacing.xxs),
+                    Text(
+                      activeMoment.text,
+                      key: const ValueKey('commentary-active-text'),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: TraelyxSpacing.xxs),
+                    Text(
+                      hasVerifiedAnchor
+                          ? 'Anchored to the verified event midpoint.'
+                          : 'Timeline-only: no verified route anchor exists at this event time.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: TraelyxSpacing.xs),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              key: const ValueKey('commentary-evidence-toggle'),
+              onPressed: onToggleEvidence,
+              icon: Icon(
+                evidenceExpanded
+                    ? Icons.expand_less_rounded
+                    : Icons.fact_check_outlined,
+              ),
+              label: Text(
+                evidenceExpanded
+                    ? 'Hide recorded evidence'
+                    : 'Show recorded evidence',
+              ),
+            ),
+          ),
+          if (evidenceExpanded && event != null) ...[
+            const SizedBox(height: TraelyxSpacing.xs),
+            Semantics(
+              key: const ValueKey('commentary-recorded-evidence'),
+              container: true,
+              label:
+                  'Recorded evidence. ${activeMoment.eventLabel}. ${formatReplayOffset(event!.start)} to ${formatReplayOffset(event!.end)} on the recorder timeline. Commentary does not alter the event or score.',
+              child: ExcludeSemantics(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Recorded evidence · ${activeMoment.eventLabel}\n${formatReplayOffset(event!.start)}–${formatReplayOffset(event!.end)} on the recorder timeline\nCommentary does not alter the event label or score.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+        if (plan.unsupportedEventCount > 0) ...[
+          const SizedBox(height: TraelyxSpacing.xs),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${plan.unsupportedEventCount} unsupported persisted ${plan.unsupportedEventCount == 1 ? 'event type was' : 'event types were'} excluded from commentary without hiding the event from replay.',
+              key: const ValueKey('commentary-unsupported-count'),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.traelyxColors.caution,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _CommentaryStateText extends StatelessWidget {
+  const _CommentaryStateText({required this.text, super.key});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: Text(text, style: Theme.of(context).textTheme.bodySmall),
+  );
 }
 
 class _RouteLegend extends StatelessWidget {

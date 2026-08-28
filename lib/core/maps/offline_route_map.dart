@@ -14,10 +14,14 @@ class OfflineRouteMap extends StatelessWidget {
     this.cameraFollow = 0,
     this.activeEventMarkers = const [],
     this.eventPulsePhase = 0,
+    this.commentary,
+    this.commentaryRevealProgress = 1,
+    this.onCommentaryTap,
     super.key,
   }) : assert((replayMarker == null) == (replayMarkerAfterPointIndex == null)),
        assert(cameraFollow >= 0 && cameraFollow <= 1),
-       assert(eventPulsePhase >= 0 && eventPulsePhase <= 1);
+       assert(eventPulsePhase >= 0 && eventPulsePhase <= 1),
+       assert(commentaryRevealProgress >= 0 && commentaryRevealProgress <= 1);
 
   final MapRouteGeometry geometry;
   final MapCoordinate? replayMarker;
@@ -26,6 +30,9 @@ class OfflineRouteMap extends StatelessWidget {
   final double cameraFollow;
   final List<RouteReplayPoint> activeEventMarkers;
   final double eventPulsePhase;
+  final RouteReplayCommentary? commentary;
+  final double commentaryRevealProgress;
+  final VoidCallback? onCommentaryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -33,31 +40,42 @@ class OfflineRouteMap extends StatelessWidget {
     return Semantics(
       container: true,
       image: true,
+      button: onCommentaryTap != null,
+      onTap: onCommentaryTap,
+      hint: commentary == null
+          ? null
+          : 'Open the persisted event evidence for this commentary.',
       label:
-          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.${replayMarker == null || replayPosition == null ? ' No verified replay position at the selected time.' : ' Replay marker shown at ${_formatMapOffset(replayPosition!)}.'}${cameraFollow > 0 && replayMarker != null ? ' Camera follows the verified marker.' : ' Route overview is shown.'}${activeEventMarkers.isEmpty ? '' : ' ${activeEventMarkers.length} active ${activeEventMarkers.length == 1 ? 'event point is' : 'event points are'} emphasized.'}',
+          'Offline route view. ${geometry.points.length} verified display points across ${geometry.segmentCount} ${geometry.segmentCount == 1 ? 'segment' : 'segments'}. Start and end are marked${gaps == 0 ? '' : ', with $gaps ${gaps == 1 ? 'gap' : 'gaps'}'}.${replayMarker == null || replayPosition == null ? ' No verified replay position at the selected time.' : ' Replay marker shown at ${_formatMapOffset(replayPosition!)}.'}${cameraFollow > 0 && replayMarker != null ? ' Camera follows the verified marker.' : ' Route overview is shown.'}${activeEventMarkers.isEmpty ? '' : ' ${activeEventMarkers.length} active ${activeEventMarkers.length == 1 ? 'event point is' : 'event points are'} emphasized.'}${commentary == null ? '' : ' Commentary: ${commentary!.text} Anchored to a verified persisted event point.'}',
       child: ExcludeSemantics(
-        child: RepaintBoundary(
-          child: AspectRatio(
-            aspectRatio: 1.55,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: context.traelyxColors.canvas,
-                borderRadius: BorderRadius.circular(TraelyxRadii.card),
-                border: Border.all(color: context.traelyxColors.outline),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(TraelyxRadii.card),
-                child: CustomPaint(
-                  key: const ValueKey('offline-route-map-canvas'),
-                  painter: OfflineRoutePainter(
-                    geometry: geometry,
-                    colors: context.traelyxColors,
-                    replayMarker: replayMarker,
-                    replayMarkerAfterPointIndex: replayMarkerAfterPointIndex,
-                    replayPosition: replayPosition,
-                    cameraFollow: cameraFollow,
-                    activeEventMarkers: activeEventMarkers,
-                    eventPulsePhase: eventPulsePhase,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onCommentaryTap,
+          child: RepaintBoundary(
+            child: AspectRatio(
+              aspectRatio: 1.55,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: context.traelyxColors.canvas,
+                  borderRadius: BorderRadius.circular(TraelyxRadii.card),
+                  border: Border.all(color: context.traelyxColors.outline),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(TraelyxRadii.card),
+                  child: CustomPaint(
+                    key: const ValueKey('offline-route-map-canvas'),
+                    painter: OfflineRoutePainter(
+                      geometry: geometry,
+                      colors: context.traelyxColors,
+                      replayMarker: replayMarker,
+                      replayMarkerAfterPointIndex: replayMarkerAfterPointIndex,
+                      replayPosition: replayPosition,
+                      cameraFollow: cameraFollow,
+                      activeEventMarkers: activeEventMarkers,
+                      eventPulsePhase: eventPulsePhase,
+                      commentary: commentary,
+                      commentaryRevealProgress: commentaryRevealProgress,
+                    ),
                   ),
                 ),
               ),
@@ -77,6 +95,16 @@ class RouteReplayPoint {
 
   final MapCoordinate coordinate;
   final int afterPointIndex;
+}
+
+class RouteReplayCommentary extends RouteReplayPoint {
+  const RouteReplayCommentary({
+    required super.coordinate,
+    required super.afterPointIndex,
+    required this.text,
+  });
+
+  final String text;
 }
 
 @visibleForTesting
@@ -160,6 +188,8 @@ class OfflineRoutePainter extends CustomPainter {
     this.cameraFollow = 0,
     this.activeEventMarkers = const [],
     this.eventPulsePhase = 0,
+    this.commentary,
+    this.commentaryRevealProgress = 1,
   });
 
   final MapRouteGeometry geometry;
@@ -170,6 +200,8 @@ class OfflineRoutePainter extends CustomPainter {
   final double cameraFollow;
   final List<RouteReplayPoint> activeEventMarkers;
   final double eventPulsePhase;
+  final RouteReplayCommentary? commentary;
+  final double commentaryRevealProgress;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -189,10 +221,14 @@ class OfflineRoutePainter extends CustomPainter {
     final overviewEvents = [
       for (final event in activeEventMarkers) _projectReplayPoint(event, size),
     ];
+    final overviewCommentary = commentary == null
+        ? null
+        : _projectReplayPoint(commentary!, size);
     final combined = <Offset>[
       ...overviewRoute,
       ?overviewMarker,
       ...overviewEvents,
+      ?overviewCommentary,
     ];
     final framed = overviewMarker == null
         ? combined
@@ -207,7 +243,14 @@ class OfflineRoutePainter extends CustomPainter {
     final markerOffset = overviewMarker == null
         ? null
         : framed[nextOffsetIndex++];
-    final eventOffsets = framed.sublist(nextOffsetIndex);
+    final eventOffsets = framed.sublist(
+      nextOffsetIndex,
+      nextOffsetIndex + overviewEvents.length,
+    );
+    nextOffsetIndex += overviewEvents.length;
+    final commentaryOffset = overviewCommentary == null
+        ? null
+        : framed[nextOffsetIndex];
 
     final casing = Paint()
       ..color = colors.canvas
@@ -246,6 +289,9 @@ class OfflineRoutePainter extends CustomPainter {
     }
     if (markerOffset != null) _paintReplayMarker(canvas, markerOffset);
     _paintNorth(canvas, size);
+    if (commentaryOffset != null) {
+      _paintCommentaryBubble(canvas, size, commentaryOffset, commentary!.text);
+    }
   }
 
   Offset _projectReplayPoint(RouteReplayPoint point, Size size) {
@@ -394,6 +440,77 @@ class OfflineRoutePainter extends CustomPainter {
     );
   }
 
+  void _paintCommentaryBubble(
+    Canvas canvas,
+    Size size,
+    Offset anchor,
+    String text,
+  ) {
+    final progress = commentaryRevealProgress.clamp(0.0, 1.0);
+    if (progress <= 0) return;
+    final maxTextWidth = math.min(190.0, math.max(100.0, size.width - 44));
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: colors.textPrimary.withValues(alpha: progress),
+          fontSize: 11.5,
+          height: 1.22,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      maxLines: 3,
+      ellipsis: '…',
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxTextWidth);
+    const horizontalPadding = 10.0;
+    const verticalPadding = 8.0;
+    final bubbleSize = Size(
+      textPainter.width + horizontalPadding * 2,
+      textPainter.height + verticalPadding * 2,
+    );
+    final rise = (1 - progress) * 12;
+    final placeAbove = anchor.dy > size.height * 0.46;
+    var left = anchor.dx - bubbleSize.width / 2;
+    left = left.clamp(8.0, math.max(8.0, size.width - bubbleSize.width - 8));
+    var top = placeAbove
+        ? anchor.dy - bubbleSize.height - 22 - rise
+        : anchor.dy + 22 + rise;
+    top = top.clamp(8.0, math.max(8.0, size.height - bubbleSize.height - 8));
+    final rect = Rect.fromLTWH(
+      left.toDouble(),
+      top.toDouble(),
+      bubbleSize.width,
+      bubbleSize.height,
+    );
+    final bubbleAnchor = Offset(
+      anchor.dx.clamp(rect.left + 12, rect.right - 12).toDouble(),
+      placeAbove ? rect.bottom : rect.top,
+    );
+    canvas.drawLine(
+      anchor,
+      bubbleAnchor,
+      Paint()
+        ..color = colors.caution.withValues(alpha: progress * 0.92)
+        ..strokeWidth = 2,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(12)),
+      Paint()..color = colors.surface.withValues(alpha: progress * 0.97),
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(12)),
+      Paint()
+        ..color = colors.caution.withValues(alpha: progress)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+    textPainter.paint(
+      canvas,
+      Offset(rect.left + horizontalPadding, rect.top + verticalPadding),
+    );
+  }
+
   void _paintNorth(Canvas canvas, Size size) {
     final textPainter = TextPainter(
       text: TextSpan(
@@ -426,7 +543,9 @@ class OfflineRoutePainter extends CustomPainter {
         oldDelegate.replayPosition != replayPosition ||
         oldDelegate.cameraFollow != cameraFollow ||
         !listEquals(oldDelegate.activeEventMarkers, activeEventMarkers) ||
-        oldDelegate.eventPulsePhase != eventPulsePhase;
+        oldDelegate.eventPulsePhase != eventPulsePhase ||
+        oldDelegate.commentary != commentary ||
+        oldDelegate.commentaryRevealProgress != commentaryRevealProgress;
   }
 }
 

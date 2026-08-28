@@ -65,6 +65,12 @@ The local canvas draws verified completed-path progress over muted future-route 
 
 When system animations are disabled, autonomous playback and event pulsing are disabled while manual seeking and explicit overview/follow framing remain available. M5.6 adds no native bridge, M3.7 telemetry exposure, schema, dependency, provider, or network behavior.
 
+### 4.3 M5.7 anchored commentary
+
+M5.7 projects at most one visible commentary bubble through the same local-canvas route transform and the same selected replay time. Its anchor is the verified marker at an eligible persisted event's midpoint; a missing marker keeps the moment timeline-only and never synthesizes a coordinate. The painter clamps the bubble to the canvas, uses a bounded connector and text layout, and derives reveal progress from the replay clock rather than an independent timer.
+
+The route semantics become tappable only while a verified anchored bubble is present. The label remains coordinate-free, and activation pauses replay before exposing only the persisted event label and recorder-relative time range. Commentary adds no native bridge, schema, map provider, tile request, cache entry, dependency, or network behavior.
+
 ## 5. Privacy
 
 Fetching map tiles can expose approximate viewed areas to tile providers. Document this in privacy behavior and avoid adding analytics trackers.
