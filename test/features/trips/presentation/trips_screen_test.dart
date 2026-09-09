@@ -70,10 +70,18 @@ void main() {
     expect(find.byKey(const ValueKey('trip-result-screen')), findsOneWidget);
     expect(find.text('LOCAL DRIVE RESULT'), findsOneWidget);
     expect(find.text('Analysis not available'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Completed')).dy,
+      greaterThan(tester.getBottomLeft(find.text('1m 30s')).dy),
+    );
     await tester.scrollUntilVisible(
       find.text('OFFLINE ROUTE'),
       280,
       scrollable: find.byType(Scrollable).first,
+    );
+    await _scrollUntilHitTestable(
+      tester,
+      find.byKey(const ValueKey('offline-route-map-canvas')),
     );
     expect(find.byKey(const ValueKey('trip-route-available')), findsOneWidget);
     expect(
@@ -82,10 +90,6 @@ void main() {
     );
     expect(find.text('2 display points · GNSS processing v1'), findsOneWidget);
     expect(find.text('Tile cache unavailable · 0 B'), findsOneWidget);
-    expect(
-      tester.getTopLeft(find.text('Completed')).dy,
-      greaterThan(tester.getBottomLeft(find.text('1m 30s')).dy),
-    );
     expect(tester.takeException(), isNull);
     await tester.scrollUntilVisible(
       find.text('CONFIDENCE & INTEGRITY'),
@@ -133,6 +137,9 @@ void main() {
           type: 'strong_braking',
           startElapsedNanos: 2000000000,
           endElapsedNanos: 3000000000,
+          normalizedMagnitude: 0.5,
+          magnitudeCalibrationVersion: 'event-v1',
+          confidenceRecorded: true,
         ),
       ],
       score: const TripScoreSummary(
@@ -149,18 +156,42 @@ void main() {
 
     expect(find.text('81'), findsOneWidget);
     expect(find.text('Overall synthesis'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.text('Summary recorded'),
-      280,
-      scrollable: find.byType(Scrollable).first,
-    );
+    var semantics = tester.ensureSemantics();
+    try {
+      expect(
+        find.bySemanticsLabel(RegExp(r'Overall synthesis: 81 out of 100\.')),
+        findsOneWidget,
+      );
+    } finally {
+      semantics.dispose();
+    }
+    await _scrollUntilHitTestable(tester, find.text('Summary recorded'));
     expect(find.text('Summary recorded'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.text('Strong Braking'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.text('Strong Braking'), findsOneWidget);
+    await _scrollUntilHitTestable(tester, find.text('Strong braking'));
+    expect(find.text('Strong braking'), findsOneWidget);
+    expect(find.text('Relative magnitude 50 / 100'), findsOneWidget);
+    expect(find.textContaining('calibration event-v1'), findsOneWidget);
+    semantics = tester.ensureSemantics();
+    try {
+      expect(
+        find.bySemanticsLabel(
+          RegExp(
+            r'Moment 1\. Strong braking\..*Relative magnitude 50 out of 100\..*percentage is hidden\.',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .getSemantics(find.text('NOTABLE MOMENTS'))
+            .getSemanticsData()
+            .flagsCollection
+            .isHeader,
+        isTrue,
+      );
+    } finally {
+      semantics.dispose();
+    }
   });
 
   testWidgets('one replay clock synchronizes marker graph and event seeking', (
@@ -225,7 +256,7 @@ void main() {
     expect(find.textContaining('12.97'), findsNothing);
 
     final event = find.byKey(const ValueKey('replay-event-0'));
-    await tester.ensureVisible(event);
+    await _scrollUntilHitTestable(tester, event);
     await tester.tap(event);
     await tester.pumpAndSettle();
     expect(find.text('0:45'), findsOneWidget);
@@ -516,6 +547,101 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'accessible navigation preserves manual replay without autoplay',
+    (tester) async {
+      await _pumpResult(
+        tester,
+        repository: _FakeRepository(
+          history: [_trip],
+          result: _replayResultWithEvent(),
+        ),
+        routeRepository: _FakeRouteRepository(result: _availableRoute),
+        accessibleNavigation: true,
+      );
+      await _scrollUntilHitTestable(tester, find.text('Replay playback'));
+
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.byKey(const ValueKey('replay-playback-toggle')),
+            )
+            .onPressed,
+        isNull,
+      );
+      expect(
+        tester
+            .widget<ChoiceChip>(
+              find.byKey(const ValueKey('replay-speed-doubleSpeed')),
+            )
+            .onSelected,
+        isNull,
+      );
+      expect(
+        find.byKey(const ValueKey('replay-reduced-motion-note')),
+        findsOneWidget,
+      );
+
+      tester
+          .widget<Slider>(find.byKey(const ValueKey('replay-timeline-slider')))
+          .onChanged!(0.5);
+      await tester.pump();
+      expect(find.text('0:45'), findsOneWidget);
+      expect(find.text('Paused · 1×'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('commentary-active-bubble')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('phone movement magnitude is explicitly unavailable', (
+    tester,
+  ) async {
+    final phoneMovement = TripResult(
+      trip: _result.trip,
+      telemetrySchemaVersion: 1,
+      telemetryConfidenceRecorded: true,
+      evidence: _result.evidence,
+      finalization: _result.finalization,
+      events: const [
+        TripEventSummary(
+          type: 'phone_moved',
+          startElapsedNanos: 2000000000,
+          endElapsedNanos: 3000000000,
+          confidenceRecorded: true,
+        ),
+      ],
+      score: null,
+    );
+    await _pumpResult(
+      tester,
+      repository: _FakeRepository(history: [_trip], result: phoneMovement),
+    );
+    await _scrollUntilHitTestable(
+      tester,
+      find.text('Device moved during trip'),
+    );
+
+    expect(
+      find.text(
+        'Relative magnitude unavailable · no calibrated value is shown',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(
+        RegExp(
+          r'Device moved during trip\..*Relative magnitude unavailable; no calibrated value is shown\.',
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('0.9'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('missing and malformed results fail clearly', (tester) async {
     await _pumpResult(
       tester,
@@ -680,6 +806,7 @@ Future<void> _pumpResult(
   TripRouteRepository routeRepository = const _FakeRouteRepository(),
   double textScale = 1,
   bool disableAnimations = false,
+  bool accessibleNavigation = false,
   bool settle = true,
 }) async {
   await _pump(
@@ -689,6 +816,7 @@ Future<void> _pumpResult(
     home: const TripResultScreen(tripId: 'trip-one'),
     textScale: textScale,
     disableAnimations: disableAnimations,
+    accessibleNavigation: accessibleNavigation,
     settle: settle,
   );
 }
@@ -701,6 +829,7 @@ Future<void> _pump(
   bool settle = true,
   double textScale = 1,
   bool disableAnimations = false,
+  bool accessibleNavigation = false,
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
@@ -719,6 +848,7 @@ Future<void> _pump(
           data: MediaQuery.of(context).copyWith(
             textScaler: TextScaler.linear(textScale),
             disableAnimations: disableAnimations,
+            accessibleNavigation: accessibleNavigation,
           ),
           child: child!,
         ),
@@ -731,6 +861,25 @@ Future<void> _pump(
   } else {
     await tester.pump();
   }
+}
+
+Future<void> _scrollUntilHitTestable(
+  WidgetTester tester,
+  Finder finder, {
+  int maximumScrolls = 24,
+}) async {
+  final scrollable = find.byType(Scrollable).first;
+  for (var attempt = 0; attempt < maximumScrolls; attempt++) {
+    if (finder.hitTestable().evaluate().isNotEmpty) return;
+    if (finder.evaluate().isNotEmpty) {
+      await tester.ensureVisible(finder);
+      await tester.pump();
+      if (finder.hitTestable().evaluate().isNotEmpty) return;
+    }
+    await tester.drag(scrollable, const Offset(0, -160));
+    await tester.pump();
+  }
+  expect(finder.hitTestable(), findsOneWidget);
 }
 
 class _FakeRepository implements TripHistoryRepository {
@@ -822,6 +971,9 @@ TripResult _replayResultWithEvent() => TripResult(
       type: 'strong_braking',
       startElapsedNanos: 40_000_000_000,
       endElapsedNanos: 50_000_000_000,
+      normalizedMagnitude: 0.5,
+      magnitudeCalibrationVersion: 'event-v1',
+      confidenceRecorded: true,
     ),
   ],
   score: null,

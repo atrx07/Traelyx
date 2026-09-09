@@ -212,12 +212,17 @@ class _ScoreHero extends StatelessWidget {
     final hasScore = score?.overallScore != null;
     final value = hasScore ? score!.overallScore!.round().toString() : '—';
     final label = hasScore ? 'Overall synthesis' : 'Analysis not available';
+    final eligibility = hasScore
+        ? _scoreEligibilityLabel(score!.eligibilityState)
+        : null;
     final detail = hasScore
-        ? '${_scoreEligibilityLabel(score!.eligibilityState)} · ${score!.scoringVersion}'
+        ? '$eligibility · ${score!.scoringVersion}'
         : 'This drive has not been processed into a persisted score. Recorded evidence remains available below.';
 
     return Semantics(
-      label: hasScore ? '$label. $value.' : '$label. $detail',
+      label: hasScore
+          ? '$label: $value out of 100. Eligibility: $eligibility. Scoring version ${score!.scoringVersion}.'
+          : '$label. $detail',
       child: ExcludeSemantics(
         child: Container(
           width: double.infinity,
@@ -242,10 +247,30 @@ class _ScoreHero extends StatelessWidget {
                     width: 2,
                   ),
                 ),
-                child: Text(
-                  value,
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    color: hasScore ? colors.accent : colors.textSecondary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    width: 76,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          value,
+                          style: Theme.of(context).textTheme.displayMedium
+                              ?.copyWith(
+                                color: hasScore
+                                    ? colors.accent
+                                    : colors.textSecondary,
+                              ),
+                        ),
+                        if (hasScore)
+                          Text(
+                            'OUT OF 100',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -275,11 +300,14 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-        color: context.traelyxColors.textSecondary,
-        letterSpacing: 1.5,
+    return Semantics(
+      header: true,
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: context.traelyxColors.textSecondary,
+          letterSpacing: 1.5,
+        ),
       ),
     );
   }
@@ -363,8 +391,11 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.traelyxColors;
+    final evidenceState = metric.state == null
+        ? ''
+        : ' Evidence state: ${_evidenceStateLabel(metric.state!)}.';
     return Semantics(
-      label: '${metric.label}: ${metric.value}. ${metric.detail}',
+      label: '${metric.label}: ${metric.value}.$evidenceState ${metric.detail}',
       child: ExcludeSemantics(
         child: Container(
           padding: const EdgeInsets.all(TraelyxSpacing.md),
@@ -391,6 +422,10 @@ class _MetricCard extends StatelessWidget {
               ),
               const SizedBox(height: TraelyxSpacing.xxs),
               Text(metric.detail, style: Theme.of(context).textTheme.bodySmall),
+              if (metric.state != null) ...[
+                const SizedBox(height: TraelyxSpacing.xs),
+                _EvidenceStateBadge(state: metric.state!),
+              ],
             ],
           ),
         ),
@@ -745,13 +780,13 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
         final timeline = _clock.timeline;
         final snapshot = _clock.snapshot;
         final geometry = timeline.route;
-        final animationsDisabled = MediaQuery.disableAnimationsOf(context);
+        final reduceMotion = TraelyxMotion.reduceMotionOf(context);
         final commentaryPlan = _commentaryPlan;
         final activeCommentary = commentaryPlan.at(snapshot.position);
         final commentaryAnchor = activeCommentary == null
             ? null
             : timeline.at(activeCommentary.anchorTime).routeMarker;
-        if (animationsDisabled && _clock.isPlaying) {
+        if (reduceMotion && _clock.isPlaying) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) _pausePlayback();
           });
@@ -765,12 +800,12 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
                 afterPointIndex: marker.afterPointIndex,
               ),
         ];
-        final pulsePhase = animationsDisabled || activeEventMarkers.isEmpty
+        final pulsePhase = reduceMotion || activeEventMarkers.isEmpty
             ? 0.0
             : snapshot.position.inMilliseconds.remainder(1400) / 1400;
         final commentaryReveal = activeCommentary == null
             ? 0.0
-            : animationsDisabled
+            : reduceMotion
             ? 1.0
             : activeCommentary.revealProgressAt(snapshot.position);
         final cameraTarget =
@@ -890,7 +925,7 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
                   children: [
                     FilledButton.icon(
                       key: const ValueKey('replay-playback-toggle'),
-                      onPressed: animationsDisabled
+                      onPressed: reduceMotion
                           ? null
                           : _clock.isPlaying
                           ? _pausePlayback
@@ -951,7 +986,7 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
                         key: ValueKey('replay-speed-${speed.name}'),
                         label: Text(speed.label),
                         selected: _clock.speed == speed,
-                        onSelected: animationsDisabled
+                        onSelected: reduceMotion
                             ? null
                             : (selected) {
                                 if (selected) _clock.setSpeed(speed);
@@ -959,7 +994,7 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
                       ),
                   ],
                 ),
-                if (animationsDisabled) ...[
+                if (reduceMotion) ...[
                   const SizedBox(height: TraelyxSpacing.xs),
                   Text(
                     'Reduced motion is on. Playback and pulsing are disabled; scrub manually or choose a camera view.',
@@ -1245,13 +1280,27 @@ class _CommentaryPanel extends StatelessWidget {
               key: const ValueKey('commentary-recorded-evidence'),
               container: true,
               label:
-                  'Recorded evidence. ${activeMoment.eventLabel}. ${formatReplayOffset(event!.start)} to ${formatReplayOffset(event!.end)} on the recorder timeline. Commentary does not alter the event or score.',
+                  'Recorded evidence. ${activeMoment.eventLabel}. ${formatReplayOffset(event!.start)} to ${formatReplayOffset(event!.end)} on the recorder timeline. ${_eventEvidenceSemantics(_EventMetricData.fromReplay(event!))} Commentary does not alter the event or score.',
               child: ExcludeSemantics(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Recorded evidence · ${activeMoment.eventLabel}\n${formatReplayOffset(event!.start)}–${formatReplayOffset(event!.end)} on the recorder timeline\nCommentary does not alter the event label or score.',
-                    style: Theme.of(context).textTheme.bodySmall,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Recorded evidence · ${activeMoment.eventLabel}\n${formatReplayOffset(event!.start)}–${formatReplayOffset(event!.end)} on the recorder timeline',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: TraelyxSpacing.xs),
+                      _EventMagnitudeMetric(
+                        data: _EventMetricData.fromReplay(event!),
+                      ),
+                      const SizedBox(height: TraelyxSpacing.xs),
+                      Text(
+                        'Commentary does not alter the event label or score.',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -1437,15 +1486,155 @@ class _MomentsPanel extends StatelessWidget {
     return _Panel(
       children: [
         for (var index = 0; index < events.length; index++) ...[
-          _StatusRow(
-            icon: Icons.bolt_outlined,
-            label: 'Moment ${index + 1}',
-            value: _eventLabel(events[index].type),
-            detail: _relativeRange(events[index]),
-            state: TripEvidenceState.limited,
-          ),
+          _MomentRow(index: index, event: events[index]),
           if (index != events.length - 1)
             const Divider(height: TraelyxSpacing.xxl),
+        ],
+      ],
+    );
+  }
+}
+
+class _EventMetricData {
+  const _EventMetricData({
+    required this.normalizedMagnitude,
+    required this.magnitudeCalibrationVersion,
+    required this.confidenceRecorded,
+  });
+
+  factory _EventMetricData.fromSummary(TripEventSummary event) =>
+      _EventMetricData(
+        normalizedMagnitude: event.normalizedMagnitude,
+        magnitudeCalibrationVersion: event.magnitudeCalibrationVersion,
+        confidenceRecorded: event.confidenceRecorded,
+      );
+
+  factory _EventMetricData.fromReplay(ReplayEventRange event) =>
+      _EventMetricData(
+        normalizedMagnitude: event.normalizedMagnitude,
+        magnitudeCalibrationVersion: event.magnitudeCalibrationVersion,
+        confidenceRecorded: event.confidenceRecorded,
+      );
+
+  final double? normalizedMagnitude;
+  final String? magnitudeCalibrationVersion;
+  final bool confidenceRecorded;
+}
+
+class _MomentRow extends StatelessWidget {
+  const _MomentRow({required this.index, required this.event});
+
+  final int index;
+  final TripEventSummary event;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = _eventLabel(event.type);
+    final range = _relativeRange(event);
+    return Semantics(
+      label:
+          'Moment ${index + 1}. $label. $range. ${_eventEvidenceSemantics(_EventMetricData.fromSummary(event))}',
+      child: ExcludeSemantics(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.bolt_outlined, color: context.traelyxColors.information),
+            const SizedBox(width: TraelyxSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Moment ${index + 1}',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: TraelyxSpacing.xxs),
+                  Text(label, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: TraelyxSpacing.xxs),
+                  Text(range, style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: TraelyxSpacing.sm),
+                  _EventMagnitudeMetric(
+                    data: _EventMetricData.fromSummary(event),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EventMagnitudeMetric extends StatelessWidget {
+  const _EventMagnitudeMetric({required this.data});
+
+  final _EventMetricData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final magnitude = data.normalizedMagnitude;
+    final calibration = data.magnitudeCalibrationVersion;
+    if (magnitude == null || calibration == null) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.horizontal_rule_rounded,
+            size: 18,
+            color: context.traelyxColors.textSecondary,
+          ),
+          const SizedBox(width: TraelyxSpacing.xs),
+          Expanded(
+            child: Text(
+              'Relative magnitude unavailable · no calibrated value is shown',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      );
+    }
+    final scaled = (magnitude * 100).round();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.straighten_rounded,
+              size: 18,
+              color: context.traelyxColors.information,
+            ),
+            const SizedBox(width: TraelyxSpacing.xs),
+            Expanded(
+              child: Text(
+                'Relative magnitude $scaled / 100',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: TraelyxSpacing.xs),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(TraelyxRadii.pill),
+          child: LinearProgressIndicator(
+            value: magnitude,
+            minHeight: 8,
+            color: context.traelyxColors.information,
+            backgroundColor: context.traelyxColors.outline,
+          ),
+        ),
+        const SizedBox(height: TraelyxSpacing.xs),
+        Text(
+          'Normalized persisted magnitude · not a safety, moral, or legal judgment · calibration $calibration',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        if (data.confidenceRecorded) ...[
+          const SizedBox(height: TraelyxSpacing.xxs),
+          Text(
+            'Event confidence recorded · percentage hidden',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ],
     );
@@ -1492,7 +1681,8 @@ class _StatusRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = _stateColor(context, state);
     return Semantics(
-      label: '$label: $value. $detail',
+      label:
+          '$label: $value. Evidence state: ${_evidenceStateLabel(state)}. $detail',
       child: ExcludeSemantics(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1511,6 +1701,8 @@ class _StatusRow extends StatelessWidget {
                       context,
                     ).textTheme.titleMedium?.copyWith(color: color),
                   ),
+                  const SizedBox(height: TraelyxSpacing.xs),
+                  _EvidenceStateBadge(state: state),
                   const SizedBox(height: TraelyxSpacing.xxs),
                   Text(detail, style: Theme.of(context).textTheme.bodySmall),
                 ],
@@ -1518,6 +1710,41 @@ class _StatusRow extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _EvidenceStateBadge extends StatelessWidget {
+  const _EvidenceStateBadge({required this.state});
+
+  final TripEvidenceState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _stateColor(context, state);
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: TraelyxSpacing.xs,
+        vertical: TraelyxSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(TraelyxRadii.pill),
+        border: Border.all(color: color),
+      ),
+      child: Row(
+        children: [
+          Icon(_stateIcon(state), size: 16, color: color),
+          const SizedBox(width: TraelyxSpacing.xxs),
+          Expanded(
+            child: Text(
+              _evidenceStateLabel(state),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: color),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1744,12 +1971,48 @@ String _scoreEligibilityLabel(TripEvidenceState state) => switch (state) {
 };
 
 String _eventLabel(String type) {
-  final normalized = type
-      .split('_')
-      .where((part) => part.isNotEmpty)
-      .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
-      .join(' ');
-  return normalized.isEmpty ? 'Recorded event' : normalized;
+  return switch (type.trim().toLowerCase()) {
+    'evt_accel_strong' ||
+    'strong_acceleration' ||
+    'accel_strong' => 'Strong acceleration',
+    'evt_accel_abrupt_transition' ||
+    'abrupt_acceleration_transition' ||
+    'accel_abrupt_transition' => 'Abrupt acceleration transition',
+    'evt_brake_strong' ||
+    'strong_braking' ||
+    'brake_strong' => 'Strong braking',
+    'evt_brake_abrupt_transition' ||
+    'abrupt_braking_transition' ||
+    'brake_abrupt_transition' => 'Abrupt braking transition',
+    'evt_corner_high_load_left' ||
+    'high_lateral_load_left' ||
+    'corner_high_load_left' => 'High lateral-load left corner',
+    'evt_corner_high_load_right' ||
+    'high_lateral_load_right' ||
+    'corner_high_load_right' => 'High lateral-load right corner',
+    'evt_corner_abrupt_entry' || 'abrupt_corner_entry' => 'Abrupt corner entry',
+    'evt_corner_abrupt_exit' || 'abrupt_corner_exit' => 'Abrupt corner exit',
+    'evt_road_impact' ||
+    'road_impact' ||
+    'road_impact_or_bump' => 'Road impact or bump',
+    'evt_phone_moved' ||
+    'phone_moved' ||
+    'device_moved_during_trip' => 'Device moved during trip',
+    _ => 'Recorded event',
+  };
+}
+
+String _eventEvidenceSemantics(_EventMetricData event) {
+  final magnitude = event.normalizedMagnitude;
+  final calibration = event.magnitudeCalibrationVersion;
+  final confidence = event.confidenceRecorded
+      ? 'Event confidence was recorded; its percentage is hidden.'
+      : 'No event confidence summary is available.';
+  if (magnitude == null || calibration == null) {
+    return 'Relative magnitude unavailable; no calibrated value is shown. $confidence';
+  }
+  return 'Relative magnitude ${(magnitude * 100).round()} out of 100. '
+      'This is a normalized persisted magnitude using calibration $calibration, not a moral or legal judgment. $confidence';
 }
 
 String _relativeRange(TripEventSummary event) {
@@ -1772,3 +2035,19 @@ Color _stateColor(BuildContext context, TripEvidenceState state) =>
       TripEvidenceState.unavailable => context.traelyxColors.textSecondary,
       TripEvidenceState.notAssessed => context.traelyxColors.information,
     };
+
+IconData _stateIcon(TripEvidenceState state) => switch (state) {
+  TripEvidenceState.verified => Icons.check_circle_outline_rounded,
+  TripEvidenceState.limited => Icons.info_outline_rounded,
+  TripEvidenceState.reviewRequired => Icons.report_problem_outlined,
+  TripEvidenceState.unavailable => Icons.horizontal_rule_rounded,
+  TripEvidenceState.notAssessed => Icons.help_outline_rounded,
+};
+
+String _evidenceStateLabel(TripEvidenceState state) => switch (state) {
+  TripEvidenceState.verified => 'Verified evidence',
+  TripEvidenceState.limited => 'Limited evidence',
+  TripEvidenceState.reviewRequired => 'Review required',
+  TripEvidenceState.unavailable => 'Unavailable',
+  TripEvidenceState.notAssessed => 'Not assessed',
+};

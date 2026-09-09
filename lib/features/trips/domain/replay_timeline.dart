@@ -8,11 +8,17 @@ class ReplayEventRange {
     required this.type,
     required this.start,
     required this.end,
+    this.normalizedMagnitude,
+    this.magnitudeCalibrationVersion,
+    this.confidenceRecorded = false,
   });
 
   final String type;
   final Duration start;
   final Duration end;
+  final double? normalizedMagnitude;
+  final String? magnitudeCalibrationVersion;
+  final bool confidenceRecorded;
 
   Duration get midpoint => Duration(
     microseconds:
@@ -105,6 +111,9 @@ class ReplayTimeline {
         type: event.type,
         start: Duration(microseconds: event.startElapsedNanos ~/ 1000),
         end: Duration(microseconds: event.endElapsedNanos ~/ 1000),
+        normalizedMagnitude: event.normalizedMagnitude,
+        magnitudeCalibrationVersion: event.magnitudeCalibrationVersion,
+        confidenceRecorded: event.confidenceRecorded,
       );
       if (hasIndependentExtent &&
           replayEvent.end.inMicroseconds > maximumMicros) {

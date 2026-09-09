@@ -41,17 +41,19 @@ void main() {
       expect(theme.materialTapTargetSize, MaterialTapTargetSize.padded);
     });
 
-    testWidgets('removes user-visible motion when animations are disabled', (
-      tester,
-    ) async {
-      Duration? resolved;
+    testWidgets('honors both platform reduced-motion signals', (tester) async {
+      Duration? disabledAnimationDuration;
+      Duration? accessibleNavigationDuration;
+      bool? animationsReduced;
+      bool? navigationReduced;
 
       await tester.pumpWidget(
         MediaQuery(
           data: const MediaQueryData(disableAnimations: true),
           child: Builder(
             builder: (context) {
-              resolved = TraelyxMotion.effectiveDuration(
+              animationsReduced = TraelyxMotion.reduceMotionOf(context);
+              disabledAnimationDuration = TraelyxMotion.effectiveDuration(
                 context,
                 TraelyxMotion.standard,
               );
@@ -61,7 +63,26 @@ void main() {
         ),
       );
 
-      expect(resolved, Duration.zero);
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(accessibleNavigation: true),
+          child: Builder(
+            builder: (context) {
+              navigationReduced = TraelyxMotion.reduceMotionOf(context);
+              accessibleNavigationDuration = TraelyxMotion.effectiveDuration(
+                context,
+                TraelyxMotion.standard,
+              );
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(animationsReduced, isTrue);
+      expect(disabledAnimationDuration, Duration.zero);
+      expect(navigationReduced, isTrue);
+      expect(accessibleNavigationDuration, Duration.zero);
     });
   });
 }

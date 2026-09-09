@@ -71,13 +71,21 @@ class DriftTripHistoryRepository implements TripHistoryRepository {
         indexedChunkCount: chunks.length,
       ),
       events: List.unmodifiable(
-        events.map(
-          (event) => TripEventSummary(
+        events.map((event) {
+          final severity = _normalizedEventMagnitude(event);
+          _validateEventConfidence(event.confidence);
+          final magnitudeUnavailable = _isPhoneMovement(event.eventType);
+          return TripEventSummary(
             type: event.eventType,
             startElapsedNanos: event.startElapsedNanos,
             endElapsedNanos: event.endElapsedNanos,
-          ),
-        ),
+            normalizedMagnitude: magnitudeUnavailable ? null : severity,
+            magnitudeCalibrationVersion: magnitudeUnavailable
+                ? null
+                : event.severityCalibrationVersion,
+            confidenceRecorded: true,
+          );
+        }),
       ),
       score: scores.isEmpty ? null : _scoreFromRow(scores.first),
     );
@@ -102,6 +110,39 @@ class DriftTripHistoryRepository implements TripHistoryRepository {
       integrityState: _integrityState(trip.integrityStatus),
     );
   }
+}
+
+double _normalizedEventMagnitude(TripEvent event) {
+  final severity = event.severity;
+  if (!severity.isFinite || severity < 0 || severity > 1) {
+    throw const FormatException(
+      'Persisted event magnitude must be finite and normalized.',
+    );
+  }
+  final calibration = event.severityCalibrationVersion.trim();
+  if (calibration.isEmpty ||
+      calibration.length > 64 ||
+      !RegExp(r'^[A-Za-z0-9._-]+$').hasMatch(calibration)) {
+    throw const FormatException(
+      'Persisted event magnitude calibration is invalid.',
+    );
+  }
+  return severity;
+}
+
+void _validateEventConfidence(double confidence) {
+  if (!confidence.isFinite || confidence < 0 || confidence > 1) {
+    throw const FormatException(
+      'Persisted event confidence must be finite and normalized.',
+    );
+  }
+}
+
+bool _isPhoneMovement(String type) {
+  final normalized = type.trim().toLowerCase();
+  return normalized == 'evt_phone_moved' ||
+      normalized == 'phone_moved' ||
+      normalized == 'device_moved_during_trip';
 }
 
 TripEvidenceSummary _evidenceFromChunks(List<TripChunk> chunks) {

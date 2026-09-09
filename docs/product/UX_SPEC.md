@@ -254,6 +254,14 @@ Advanced cloud view may expose provider/model/temperature/max tokens/timeout/fal
 - Avoid flashing/strobing animation.
 - Respect text scaling without breaking critical controls.
 
+### M5.8 implemented baseline
+
+- Treat both the platform reduced-animation signal and accessible-navigation signal as one application-wide reduced-motion preference. User-visible transitions resolve immediately; replay autonomous playback, pulsing, and commentary reveal motion are disabled while manual scrubbing and explicit camera controls remain available.
+- Result section labels are semantic headings. Scores announce and display their `out of 100` scale, eligibility, and scoring version. Evidence states use text and icons in addition to color, and aggregate metrics include their units and evidence state.
+- A persisted maneuver magnitude may render only as a normalized `0–100` relative magnitude with its persisted calibration version and an explicit statement that it is not a safety, moral, or legal judgment. Do not invent severity bands.
+- Phone-movement magnitude remains explicitly unavailable because its source evidence is uncalibrated. Event-confidence presence may be stated, but a percentage remains hidden until a governed display calibration exists.
+- Unknown event identifiers use a generic recorded-event label and are never echoed into visible copy or accessibility semantics.
+
 ## 18. Copy tone
 
 Core UI should be clean and trustworthy. Humor belongs primarily in optional commentary and non-critical celebratory surfaces.

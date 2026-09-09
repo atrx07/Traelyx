@@ -4,41 +4,42 @@
 **Owner:** agent/maintainer
 **Milestone:** M5 — Experience & Replay
 **Started:** 2026-08-25
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-09
 
 ## Context budget / references
 
 Read only:
 
 - `AGENTS.md` and `app/AGENTS.md`
-- `docs/product/UX_SPEC.md` replay/commentary sections, `COMMENTARY_SPEC.md`, and the experience boundary in `MVP_SCOPE.md`
-- `docs/technical/MAP_ARCHITECTURE.md`, the persisted-event identifiers in `EVENT_ENGINE.md`, and `PROVIDER_ARCHITECTURE.md` only to preserve the procedural/provider boundary
+- `docs/product/UX_SPEC.md` result/replay/accessibility sections and the experience boundary in `MVP_SCOPE.md`
+- `docs/technical/EVENT_ENGINE.md`, `SCORING_SPEC.md`, and `DATA_MODEL.md` only for persisted event magnitude, calibration, confidence, and historical-result boundaries
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization/approval sections of `DOCUMENTATION_POLICY.md`
 - `docs/exec-plans/ROADMAP.md` M5 and `docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md`
-- affected Flutter commentary/replay/map code and tests
+- affected Flutter theme, trip-result, replay, Drive DNA, repository/model, and accessibility tests
 
-Do not inspect M5.8 or later implementation until its approval gate. Broader accessibility redesign, storage management, ML, cloud/local model providers, online tile-provider selection, and unrelated technical specifications remain outside M5.7.
+Do not inspect M5.9 or later implementation until its approval gate. OS-level assistive-technology configuration, broad visual redesign, storage management, ML, cloud/local model providers, online tile-provider selection, and unrelated technical specifications remain outside M5.8.
 
 ## Goal
 
-Add deterministic fully offline road commentary over persisted governed event timing, with safe tone packs, interpretable novelty/cooldown selection, one anchored bubble, and recorded-evidence expansion driven by M5.6's single replay clock.
+Complete the M5 experience accessibility baseline by honoring both reduced-animation and accessible-navigation platform preferences, providing explicit static replay alternatives, and making persisted result status/severity/metrics understandable without color, motion, or unlabeled numbers.
 
 ## User-visible result
 
-Completed Drive, Trips, DNA, offline route, and replay experiences remain intact. A user can select Analyst, Chill, Supportive, Roast, Unhinged, or Silent commentary for the current replay. Only noteworthy allowlisted persisted events receive concise safe narration; bubbles respect cooldown, use actual verified event anchors when available, collapse on the same clock, remain inspectable while paused, and expand only into facts already present in the event summary.
+Completed Drive, Trips, DNA, offline route, replay, and commentary experiences remain intact. Platform reduced-motion/accessibility-navigation preferences replace animated transitions with immediate state changes and a clearly announced manual replay mode. Result sections are headings, score and evidence metrics include their scale/state, status rows use explicit text and icons, and persisted event magnitude is exposed as a normalized value with its calibration version. Phone-movement magnitude remains explicitly unavailable and uncalibrated event-confidence percentages remain hidden.
 
 ## In scope
 
-- Completed M5.1–M5.6 experiences and the single replay-clock authority.
-- M5.7 bundled procedural commentary only: six tone choices, allowlisted event vocabulary, deterministic seeded variation, contextual repetition, interestingness/cooldown selection, and a bounded visible-moment count.
-- One commentary bubble anchored to the selected persisted event's verified route midpoint when available, with rise/fade progress derived only from selected replay time.
-- Pause-preserved commentary, event seeking, safe recorded-evidence expansion, explicit no-event/no-anchor/unsupported-event states, reduced-motion static fallback, accessible coordinate-free semantics, text-scale compatibility, and physical offline Tecno QA.
+- Completed M5.1–M5.7 experiences and the single replay-clock authority.
+- One centralized reduced-motion decision covering both platform `disableAnimations` and `accessibleNavigation`, applied to Drive transitions, Drive DNA interpolation/progress, replay playback/camera/pulse/commentary motion, and explicit static/manual replay copy.
+- Accessible result hierarchy with semantic section headings, score scale and eligibility, text/icon status indicators, and unit-aware aggregate evidence descriptions.
+- Strict read-only projection of persisted event normalized magnitude and calibration version into Notable Moments and commentary evidence; phone movement stays magnitude-unavailable and confidence remains categorical/hidden rather than inventing display calibration.
+- Semantics, contrast/touch-target, reduced-motion, accessible-navigation, text-scale, navigation compatibility, and physical offline Tecno QA.
 
 ## Out of scope
 
-- M5.8 and every later M5 substep.
-- Generative AI, downloadable models, cloud providers, API keys, streaming text, provider fallback, remote prompts, or network behavior.
-- New telemetry measurements, inferred severity/control/confidence/baseline claims, commentary persistence, or commentary influence on event labels, integrity, scoring, or safety state.
+- M5.9 and every later M5 substep.
+- New event/scoring calculations, severity bands, confidence thresholds/percentages, baseline comparisons, telemetry measurements, or historical recomputation.
+- Generative AI, downloadable models, cloud providers, API keys, provider fallback, remote prompts, or network behavior.
 - Online tiles, geocoding, provider credentials, downloaded regions, or a third-party map dependency/provider choice.
 - New replay-telemetry/native bridge, score/event/baseline persistence, or analysis execution; M3.7 display channels remain native-only until separately governed exposure exists.
 - Native acquisition/service/recorder semantics, database schema, permissions, export format, account, share transport, or network behavior changes.
@@ -54,25 +55,26 @@ Completed Drive, Trips, DNA, offline route, and replay experiences remain intact
 - Maintainer authorized M5.5 on 2026-08-25 after M5.4 completed at `f2c1f147269051e70427d3a61c9f9a2305c8e9fd`.
 - Maintainer authorized M5.6 on 2026-08-25 after M5.5 completed at `3d6675425edc8c39cb1fdbdba75d7602a0770aeb`.
 - Maintainer authorized M5.7 on 2026-08-28 after M5.6 completed at `e2c208efccac92874a62fff118e7d594ba368698`.
-- Local `main`, tracked `origin/main`, `FETCH_HEAD`, and the direct GitHub `refs/heads/main` query matched at `e2c208efccac92874a62fff118e7d594ba368698` before M5.7 began.
-- The Tecno LH8n is required for physical validation but was not visible through ADB at the M5.7 baseline; the maintainer was notified immediately. Host implementation may proceed, but M5.7 cannot complete until debug/release physical QA is performed.
-- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. M5.7 requires no phone internet and will not enable either connection.
+- Maintainer authorized M5.8 on 2026-09-08 after M5.7 completed at `f96e25f8b90b3b52f34c517768cf8fd22f3ea9b3`.
+- Local `main`, tracked `origin/main`, `FETCH_HEAD`, and the direct GitHub `refs/heads/main` query matched at `f96e25f8b90b3b52f34c517768cf8fd22f3ea9b3` before M5.8 began.
+- The Tecno LH8n was connected at the M5.8 baseline with Wi-Fi/data off/off, only carrier IMS connectivity, no app service, and database hash `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`.
+- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. M5.8 requires no phone internet and will not enable either connection.
 
 ## Affected components
 
-- `lib/features/trips/domain/` immutable procedural commentary plan, tone/event vocabulary, selection, timing, and safe text
-- `lib/core/maps/` bounded anchored commentary-bubble rendering and coordinate-free interaction semantics
-- the trip-result tone controls, active commentary/evidence expansion, and existing replay controls
-- related domain/renderer/widget/navigation/accessibility tests
+- `lib/core/theme/` centralized reduced-motion/accessibility preference handling
+- `lib/features/trips/` strict persisted event-magnitude projection, accessible result/status/moment presentation, commentary evidence, and replay reduced-motion alternative
+- `lib/features/drive_dna/` use of the centralized reduced-motion decision
+- related repository/model/widget/navigation/theme/accessibility tests
 - roadmap/status documentation
 
 ## Data/privacy/security implications
 
-No new collection, persistence, permission, secret, share transport, analytics, tile request, provider, prompt, or network flow. Procedural commentary consumes only allowlisted persisted event type/timing plus M5.6's selected time and transient verified midpoint anchor. Unknown event types fail closed. Coordinates, trip identifiers, raw telemetry, unavailable measurements, and commentary selection internals remain excluded from text, controls, semantics, logs, diagnostics, analytics, cache metadata, and network payloads.
+No new collection, persistence, permission, secret, share transport, analytics, tile request, provider, prompt, or network flow. M5.8 reads only already-persisted normalized event magnitude and its calibration version through the selected local result. Unknown/non-finite/out-of-range values fail closed. Confidence percentages, coordinates, trip/event identifiers, raw measurements, storage paths, and provider metadata remain excluded from presentation and semantics.
 
 ## Compatibility/migration implications
 
-No schema, platform-channel, data migration, dependency, or settings-persistence change. Map-data/recorder bridge v1, raw chunk/schema versions, M3.7 replay telemetry, event/scoring versions, and historical results remain unchanged.
+No schema, platform-channel, data migration, dependency, or settings-persistence change. Existing non-null event columns are projected read-only; map-data/recorder bridge v1, raw chunk/schema versions, M3.7 replay telemetry, event/scoring versions, and historical results remain unchanged.
 
 ## Implementation steps
 
@@ -106,6 +108,10 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - [x] 28. Synchronize one safe commentary moment and verified midpoint anchor with the existing replay clock; add tone controls, an anchored bubble, pause-preserved display, and recorded-evidence expansion without creating new evidence.
 - [x] 29. Cover tone safety, unknown inputs, deterministic seed behavior, cooldown/novelty, clock visibility, missing anchors/events, semantics/privacy, reduced motion, text scale, and navigation compatibility.
 - [x] 30. Run all M5.7 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.8.
+- [x] 31. Centralize reduced-motion detection across platform animation and accessible-navigation preferences, then apply immediate/static alternatives throughout the authorized M5 experience.
+- [x] 32. Add strict persisted normalized event-magnitude/calibration projection and accessible score, status, metric, section-heading, moment, and commentary-evidence presentation without inventing confidence or severity bands.
+- [x] 33. Cover reduced-motion/accessible-navigation equivalence, semantic hierarchy/state/units, strict event magnitude, phone-movement unavailability, touch targets/contrast, text scale, and navigation compatibility.
+- [x] 34. Run all M5.8 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.9.
 
 ## Tests / validation
 
@@ -143,6 +149,12 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - [x] M5.7 deterministic seed, unknown-input, cooldown/novelty, clock visibility, missing-anchor/event, reduced-motion, semantics/privacy, and text-scale checks
 - [x] M5.7 debug/release six-tone, truthful no-event, replay-playback, route-layout, and release-parity QA while fully offline
 - [x] M5.7 final debug restore, unchanged database hash, service/log/connectivity verification, and scoped phone-artifact cleanup
+- [x] M5.8 centralized reduced-motion and accessible-navigation behavior across existing M5 motion surfaces
+- [x] M5.8 strict persisted event-magnitude/calibration projection, phone-movement suppression, and malformed-calibration failure
+- [x] M5.8 score scale, semantic headings, text/icon evidence states, event/commentary evidence semantics, and 2× text layout coverage
+- [x] M5.8 analysis, 164 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository validation
+- [x] M5.8 debug/release offline Tecno route/result/replay/accessibility parity, Android back, and crash/service checks
+- [x] M5.8 final debug restore, unchanged database hash/four-trip history, offline radios, and scoped device-artifact cleanup
 
 ## Acceptance criteria
 
@@ -180,6 +192,9 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - Selection uses only allowlisted event type, category novelty, deterministic interestingness, a ten-second cooldown, a sixty-second recent-context window, and a six-moment cap; unavailable severity, control, confidence, or baseline evidence is never fabricated.
 - A commentary moment is visible only from the existing replay clock. It anchors to the persisted event midpoint only when that time has a verified route marker; otherwise the same commentary remains timeline-only and no coordinate is synthesized.
 - Commentary text and semantics expose no coordinate, trip ID, raw telemetry, storage path, provider metadata, or new safety claim. Tapping a bubble pauses playback and expands only the persisted event label and recorder time range.
+- Both platform animation-disable and accessible-navigation preferences produce the same immediate/static M5 behavior. Replay disables autonomous playback and pulsing, announces the manual alternative, and retains scrub and explicit camera controls.
+- Result headings, score scale/version/eligibility, metric units, and evidence state remain understandable through screen-reader output and visible text/icons without relying on color or motion.
+- Persisted event magnitude renders only as a normalized relative value with calibration provenance and non-judgment copy. Phone movement remains magnitude-unavailable, unknown event identifiers are not echoed, and event-confidence percentages remain hidden.
 
 ## Risks
 
@@ -198,6 +213,7 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - M3.7 replay telemetry remains native-only; the M5.5 evidence graph represents verified route coverage and persisted event ranges, not speed/acceleration/yaw display channels.
 - UI-Automator waits for an idle frame during continuous animation on the Tecno, so physical semantics capture must pause playback first; widget semantics and paused-device hierarchy cover accessibility without treating tool idleness as app behavior.
 - The genuine Tecno trips have no persisted governed events, so M5.7 physical QA validates the truthful no-commentary state, tone controls, offline route/replay integration, and release parity; anchored bubbles and evidence expansion remain deterministic domain/widget/map evidence rather than a physical persisted-event claim.
+- The genuine Tecno trips still have no persisted governed events or scores, so M5.8 physical QA can validate truthful unavailable states, accessible labels/layout, and reduced-motion replay behavior but cannot claim a real persisted magnitude or score; those paths remain repository/domain/widget evidence.
 
 ## Decisions made during execution
 
@@ -225,6 +241,9 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - Default to Chill for the current result-screen session and keep tone selection non-persistent; Silent is a first-class explicit mode that produces no moments.
 - Fail closed to ten allowlisted persisted event types. Rank candidates with versioned category novelty and event-type interestingness only, then apply a ten-second cooldown, sixty-second repetition context, and six-moment cap with deterministic seeded copy variation.
 - Anchor a bubble only to the verified route marker at its persisted event midpoint. Missing route evidence preserves timeline commentary but never invents a map point; tapping commentary pauses the single replay clock before showing only recorded event evidence.
+- Treat both Flutter platform signals as one centralized reduced-motion decision. In replay, reduced motion disables autonomous progression and pulsing while retaining manual time selection and camera controls rather than removing access to evidence.
+- Present only the already-persisted normalized event severity and calibration as relative magnitude. Do not create named severity bands, expose event-confidence percentages, or treat phone-movement placeholder severity as calibrated evidence.
+- Use an explicit text-and-icon evidence-state badge and semantic section headings so color is supplementary. Unknown stored event identifiers collapse to `Recorded event` instead of entering user-visible or assistive copy.
 
 ## Progress log
 
@@ -258,7 +277,14 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - 2026-08-28: Implemented cached immutable commentary plans for Analyst, Chill, Supportive, Roast, Unhinged, and Silent; strict event allowlisting; deterministic safe copy variation and repetition context; auditable novelty/cooldown/cap selection; same-clock visibility; verified-midpoint map bubbles; and recorded-evidence expansion without changing events, scores, schemas, native bridges, dependencies, providers, or network behavior.
 - 2026-08-28: Final formatting and analysis passed; 160 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, repository JSON/YAML/secret validation, and debug/release APK builds passed. APKs measured 166.34 MiB debug and 54.99 MiB release.
 - 2026-08-28: Tecno debug/release QA rendered the 2,122-point, 10-segment, 9-gap route with all six tones and truthful no-event commentary state, verified Silent/Chill selection and replay advancement to 0:14, and found no service or crash. Wi-Fi/data stayed off/off, the database remained `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, final debug was restored, and four scoped phone artifacts were removed. Because the retained trips contain no governed events, physical anchored-bubble behavior is not claimed.
+- 2026-09-08: M5.8 authorized after exact local/tracked/fetched/direct-remote `main` verification at `f96e25f8b90b3b52f34c517768cf8fd22f3ea9b3`. The connected Tecno baseline had Wi-Fi/data off/off, only carrier IMS connectivity, no app service, and the retained database hash unchanged; M5.8 requires no phone internet.
+- 2026-09-08: Implemented centralized reduced-motion handling for both platform signals, static/manual replay fallback, semantic result headings, score scale/provenance, text-and-icon evidence states, and strict persisted relative-event-magnitude presentation. Phone movement remains uncalibrated, confidence percentages remain hidden, and unknown event identifiers fail closed without schema, dependency, native, recorder, account, or network changes.
+- 2026-09-08: Focused QA caught and fixed a 2 px score-label overflow, evidence-badge wrapping at 2× text, and lazy-sliver test visibility assumptions. Formatting and analysis then passed; all 164 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository validation passed with zero failures.
+- 2026-09-08: Debug APK built and installed without clearing app data. Offline Tecno QA verified the genuine 39m17s route (2,122 points, 10 spans, 9 gaps), explicit unavailable score/event state, text/icon evidence badge, active accessibility-navigation reduced-motion note, disabled Play/speed controls, manual scrub to 22:53, Android back to history, unchanged database hash, no recorder service, and no app fatal crash. Scoped device artifacts were removed and final debug was restored.
+- 2026-09-09: Audited the interrupted closeout from repository, artifact, and device state rather than relying on the prior narrative. The intended 15-file scope was intact at the M5.7 base, formatting and analysis were clean, all 164 Flutter tests, native Android tests, three trip-debug tests, and repository validation passed again, and a fresh 57,681,726-byte release APK was built with SHA-256 `2167b282e6a0ad446e2d7a3b1a18bc65136afb04a3269e4a542bf1a02b4f0fca`.
+- 2026-09-09: Before release installation, the SIM 2 mobile-data setting unexpectedly read enabled even though the turn-start baseline was off; no build step can change it. It was reported and disabled before QA. Telephony data remained disconnected, and release QA then ran with Wi-Fi/data off/off throughout.
+- 2026-09-09: Release QA preserved all four trips; rendered the genuine 39m17s route with 2,122 points, 10 spans, and 9 gaps; exposed text/icon evidence state and truthful unavailable analysis; disabled Play/speed under accessible-navigation reduced motion while retaining camera selection and manual scrub to 22:53; selected follow framing; returned to history through Android back; and found no app fatal crash or recorder service. Final debug was restored, the database remained `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, radios remained off/off, and all seven scoped device artifacts were removed.
 
 ## Completion summary
 
-M5.1 through M5.7 are complete. M5.7 adds deterministic bundled procedural commentary, six explicit tones, governed selection, same-clock visibility, verified event-midpoint bubbles, and persisted-evidence expansion while remaining fully offline and non-evidentiary. M5.8 is not authorized.
+M5.1 through M5.8 are complete. M5.8 adds centralized reduced-motion handling, static/manual replay alternatives, semantic result hierarchy, explicit score/evidence/metric state, and strict persisted relative-magnitude presentation without changing schemas, native recording, dependencies, privacy, or network behavior. Host and debug/release offline Tecno gates passed. Stop at M5.9 until explicit maintainer authorization.

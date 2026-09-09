@@ -164,8 +164,13 @@ abstract final class TraelyxMotion {
   static const Curve standardCurve = Curves.easeOutCubic;
   static const Curve emphasizedCurve = Curves.easeInOutCubic;
 
+  static bool reduceMotionOf(BuildContext context) {
+    return MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context);
+  }
+
   static Duration effectiveDuration(BuildContext context, Duration duration) {
-    return MediaQuery.disableAnimationsOf(context) ? Duration.zero : duration;
+    return reduceMotionOf(context) ? Duration.zero : duration;
   }
 }
 

@@ -76,6 +76,9 @@ void main() {
                       type: 'road_impact',
                       startElapsedNanos: 4_000_000_000,
                       endElapsedNanos: 6_000_000_000,
+                      normalizedMagnitude: 0.42,
+                      magnitudeCalibrationVersion: 'event-v1',
+                      confidenceRecorded: true,
                     ),
                   ],
                 )
@@ -87,6 +90,9 @@ void main() {
     clock.seekFraction(0.5);
     expect(clock.snapshot.position, const Duration(seconds: 15));
     expect(clock.snapshot.activeEventIndexes, isEmpty);
+    expect(timeline.events.single.normalizedMagnitude, 0.42);
+    expect(timeline.events.single.magnitudeCalibrationVersion, 'event-v1');
+    expect(timeline.events.single.confidenceRecorded, isTrue);
     clock.seekToEvent(0);
     expect(clock.snapshot.position, const Duration(seconds: 5));
     expect(clock.snapshot.activeEventIndexes, [0]);

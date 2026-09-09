@@ -123,6 +123,9 @@ void main() {
       expect(result.evidence.gyroscopeSampleCount, 40);
       expect(result.finalization!.logicVersion, 1);
       expect(result.events.single.type, 'strong_braking');
+      expect(result.events.single.normalizedMagnitude, 0.5);
+      expect(result.events.single.magnitudeCalibrationVersion, 'event-v1');
+      expect(result.events.single.confidenceRecorded, isTrue);
       expect(result.score!.overallScore, 81);
       expect(result.score!.scoringVersion, 'scoring-v1');
     },
@@ -167,6 +170,66 @@ void main() {
       throwsA(isA<FormatException>()),
     );
   });
+
+  test('phone movement never exposes an uncalibrated magnitude', () async {
+    await _insertTrip(database, id: 'trip-one', startMicros: 1000000);
+    await _insertEvent(
+      database,
+      type: 'phone_moved',
+      severity: 0.9,
+      calibration: 'event-v1',
+    );
+
+    final result = await repository.loadResult('trip-one');
+
+    expect(result!.events.single.normalizedMagnitude, isNull);
+    expect(result.events.single.magnitudeCalibrationVersion, isNull);
+    expect(result.events.single.confidenceRecorded, isTrue);
+  });
+
+  test('invalid event calibration fails closed', () async {
+    await _insertTrip(database, id: 'trip-one', startMicros: 1000000);
+    await _insertEvent(
+      database,
+      type: 'strong_braking',
+      severity: 0.5,
+      calibration: 'event v1',
+    );
+
+    await expectLater(
+      repository.loadResult('trip-one'),
+      throwsA(isA<FormatException>()),
+    );
+  });
+}
+
+Future<void> _insertEvent(
+  AppDatabase database, {
+  required String type,
+  required double severity,
+  required String calibration,
+}) {
+  return database
+      .into(database.tripEvents)
+      .insert(
+        TripEventsCompanion.insert(
+          id: 'event-one',
+          tripId: 'trip-one',
+          eventType: type,
+          startElapsedNanos: 2000000000,
+          peakElapsedNanos: 2500000000,
+          endElapsedNanos: 3000000000,
+          severity: severity,
+          severityCalibrationVersion: calibration,
+          confidence: 0.8,
+          qualityFlagsJson: '[]',
+          primaryMeasurementsJson: '{}',
+          ruleEvidenceJson: '{}',
+          contextTagsJson: '[]',
+          algorithmVersion: 'event-v1',
+          createdAtMicros: 4,
+        ),
+      );
 }
 
 Future<void> _insertTrip(

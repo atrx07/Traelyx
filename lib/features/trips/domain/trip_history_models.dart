@@ -73,11 +73,23 @@ class TripEventSummary {
     required this.type,
     required this.startElapsedNanos,
     required this.endElapsedNanos,
-  });
+    this.normalizedMagnitude,
+    this.magnitudeCalibrationVersion,
+    this.confidenceRecorded = false,
+  }) : assert(
+         normalizedMagnitude == null ||
+             (normalizedMagnitude >= 0 && normalizedMagnitude <= 1),
+       ),
+       assert(
+         normalizedMagnitude == null || magnitudeCalibrationVersion != null,
+       );
 
   final String type;
   final int startElapsedNanos;
   final int endElapsedNanos;
+  final double? normalizedMagnitude;
+  final String? magnitudeCalibrationVersion;
+  final bool confidenceRecorded;
 }
 
 class TripScoreSummary {
