@@ -1,44 +1,47 @@
 # Execution Plan — M5 Experience & Replay
 
-**Status:** Active
+**Status:** Complete
 **Owner:** agent/maintainer
 **Milestone:** M5 — Experience & Replay
 **Started:** 2026-08-25
-**Last updated:** 2026-09-09
+**Last updated:** 2026-09-23
 
 ## Context budget / references
 
 Read only:
 
 - `AGENTS.md` and `app/AGENTS.md`
-- `docs/product/UX_SPEC.md` result/replay/accessibility sections and the experience boundary in `MVP_SCOPE.md`
-- `docs/technical/EVENT_ENGINE.md`, `SCORING_SPEC.md`, and `DATA_MODEL.md` only for persisted event magnitude, calibration, confidence, and historical-result boundaries
+- `docs/product/UX_SPEC.md` settings/accessibility sections, `MVP_SCOPE.md`, `PRODUCT_SPEC.md` data controls, and `PRIVACY_MODEL.md` deletion/export boundaries
+- `docs/technical/STORAGE_SPEC.md`, `MAP_ARCHITECTURE.md`, and `.tripdebug` format only for storage, cache, precise export, and redaction contracts
 - `docs/governance/TESTING_POLICY.md`, `DEFINITION_OF_DONE.md`, and the roadmap synchronization/approval sections of `DOCUMENTATION_POLICY.md`
 - `docs/exec-plans/ROADMAP.md` M5 and `docs/exec-plans/milestones/M5_EXPERIENCE_REPLAY.md`
-- affected Flutter theme, trip-result, replay, Drive DNA, repository/model, and accessibility tests
+- affected Flutter navigation/data-management/diagnostics code, native app-private storage/export bridge, and tests
 
-Do not inspect M5.9 or later implementation until its approval gate. OS-level assistive-technology configuration, broad visual redesign, storage management, ML, cloud/local model providers, online tile-provider selection, and unrelated technical specifications remain outside M5.8.
+Do not inspect M6 or later implementation until its approval gate. Automatic/background deletion, cloud sync/share, account export, public fixture contribution, online tile providers, local models, and unrelated specifications remain outside M5.9.
 
 ## Goal
 
-Complete the M5 experience accessibility baseline by honoring both reduced-animation and accessible-navigation platform preferences, providing explicit static replay alternatives, and making persisted result status/severity/metrics understandable without color, motion, or unlabeled numbers.
+Complete M5 with a local-first storage and export surface that reports real aggregate use, previews and confirms raw-retention cleanup, exposes provider-neutral cache control, distinguishes precise-private debug archives from redacted summaries, and never deletes or shares data silently.
 
 ## User-visible result
 
-Completed Drive, Trips, DNA, offline route, replay, and commentary experiences remain intact. Platform reduced-motion/accessibility-navigation preferences replace animated transitions with immediate state changes and a clearly announced manual replay mode. Result sections are headings, score and evidence metrics include their scale/state, status rows use explicit text and icons, and persisted event magnitude is exposed as a normalized value with its calibration version. Phone-movement magnitude remains explicitly unavailable and uncalibrated event-confidence percentages remain hidden.
+Completed Drive, Trips, DNA, route, replay, commentary, and accessibility experiences remain intact. You gains a Data & Export screen with truthful storage categories, an explicit non-automatic raw-retention rule, reviewed cleanup, map-cache status/control, per-trip precise-private export, a separately versioned redacted summary export, raw-only deletion, and whole-trip deletion with irreversible-consequence confirmation.
 
 ## In scope
 
-- Completed M5.1–M5.7 experiences and the single replay-clock authority.
-- One centralized reduced-motion decision covering both platform `disableAnimations` and `accessibleNavigation`, applied to Drive transitions, Drive DNA interpolation/progress, replay playback/camera/pulse/commentary motion, and explicit static/manual replay copy.
-- Accessible result hierarchy with semantic section headings, score scale and eligibility, text/icon status indicators, and unit-aware aggregate evidence descriptions.
-- Strict read-only projection of persisted event normalized magnitude and calibration version into Notable Moments and commentary evidence; phone movement stays magnitude-unavailable and confidence remains categorical/hidden rather than inventing display calibration.
-- Semantics, contrast/touch-target, reduced-motion, accessible-navigation, text-scale, navigation compatibility, and physical offline Tecno QA.
+- Completed M5.1–M5.8 experiences.
+- Real app/database/raw/map/model aggregate byte reporting without paths or private identifiers.
+- A persisted manual/7-day/30-day/forever cleanup preference; no background action, with candidate count/bytes and explicit confirmation before raw-only deletion.
+- Provider-neutral map-cache status and clear action, including the current truthful unavailable/zero-byte no-op.
+- Per-trip precise-private `.tripdebug` export and a separate deterministic redacted-summary format that omits route, raw samples, IDs, vehicle, and wall-clock time.
+- Explicit raw-only and whole-trip deletion with recorder/finalization guards, failure reporting, and irreversible-consequence confirmation.
+- Domain/bridge/widget/navigation/privacy tests plus debug/release offline Tecno QA that does not delete retained evidence.
 
 ## Out of scope
 
-- M5.9 and every later M5 substep.
-- New event/scoring calculations, severity bands, confidence thresholds/percentages, baseline comparisons, telemetry measurements, or historical recomputation.
+- M6 and later milestones.
+- Automatic/background pruning, an assumed 30-day default, lower-rate archive creation, analysis/baseline recomputation, or cloud/account deletion.
+- Public/community fixture contribution or claims that a behavior summary is anonymous; M5.9 provides local redaction only.
 - Generative AI, downloadable models, cloud providers, API keys, provider fallback, remote prompts, or network behavior.
 - Online tiles, geocoding, provider credentials, downloaded regions, or a third-party map dependency/provider choice.
 - New replay-telemetry/native bridge, score/event/baseline persistence, or analysis execution; M3.7 display channels remain native-only until separately governed exposure exists.
@@ -58,23 +61,24 @@ Completed Drive, Trips, DNA, offline route, replay, and commentary experiences r
 - Maintainer authorized M5.8 on 2026-09-08 after M5.7 completed at `f96e25f8b90b3b52f34c517768cf8fd22f3ea9b3`.
 - Local `main`, tracked `origin/main`, `FETCH_HEAD`, and the direct GitHub `refs/heads/main` query matched at `f96e25f8b90b3b52f34c517768cf8fd22f3ea9b3` before M5.8 began.
 - The Tecno LH8n was connected at the M5.8 baseline with Wi-Fi/data off/off, only carrier IMS connectivity, no app service, and database hash `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`.
-- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. M5.8 requires no phone internet and will not enable either connection.
+- Maintainer requires the Tecno to remain Wi-Fi/data offline by default and to be notified before any phone-side internet is requested. M5.9 required no phone internet and enabled neither connection.
 
 ## Affected components
 
-- `lib/core/theme/` centralized reduced-motion/accessibility preference handling
-- `lib/features/trips/` strict persisted event-magnitude projection, accessible result/status/moment presentation, commentary evidence, and replay reduced-motion alternative
-- `lib/features/drive_dna/` use of the centralized reduced-motion decision
-- related repository/model/widget/navigation/theme/accessibility tests
+- `lib/features/data_management/` domain, repository, providers, and Data & Export UI
+- `lib/core/diagnostics/`, `lib/core/platform/`, `lib/core/settings/`, and map/export adapters
+- `lib/app/` and `lib/features/navigation/` Data & Export route/entry
+- Android diagnostics, app-private raw deletion, and redacted-document export bridge
+- related domain/repository/bridge/widget/navigation/native/privacy tests
 - roadmap/status documentation
 
 ## Data/privacy/security implications
 
-No new collection, persistence, permission, secret, share transport, analytics, tile request, provider, prompt, or network flow. M5.8 reads only already-persisted normalized event magnitude and its calibration version through the selected local result. Unknown/non-finite/out-of-range values fail closed. Confidence percentages, coordinates, trip/event identifiers, raw measurements, storage paths, and provider metadata remain excluded from presentation and semantics.
+No new collection, permission, secret, analytics, provider, upload, or network flow. The retention preference is non-sensitive local settings data. Precise `.tripdebug` remains explicitly private and user-destination-only. Redacted export uses a new whitelist/version, contains no coordinate, raw sample, trip/vehicle/account/device identifier, filename/path, or wall-clock time, and is described as redacted rather than guaranteed anonymous. Deletion is local, explicit, confirmed, and irreversible.
 
 ## Compatibility/migration implications
 
-No schema, platform-channel, data migration, dependency, or settings-persistence change. Existing non-null event columns are projected read-only; map-data/recorder bridge v1, raw chunk/schema versions, M3.7 replay telemetry, event/scoring versions, and historical results remain unchanged.
+No database schema, migration, dependency, raw encoding, telemetry, event, scoring, or replay-version change. One namespaced non-secret setting and versioned platform data-management/export contracts are added. Deleting raw telemetry removes chunk files and their index rows while preserving summary/derived rows; deleting a trip cascades its local rows after raw removal. Existing history remains untouched unless the user confirms an action.
 
 ## Implementation steps
 
@@ -112,6 +116,10 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - [x] 32. Add strict persisted normalized event-magnitude/calibration projection and accessible score, status, metric, section-heading, moment, and commentary-evidence presentation without inventing confidence or severity bands.
 - [x] 33. Cover reduced-motion/accessible-navigation equivalence, semantic hierarchy/state/units, strict event magnitude, phone-movement unavailability, touch targets/contrast, text scale, and navigation compatibility.
 - [x] 34. Run all M5.8 host/device gates offline, synchronize status, commit/push atomically, verify remote main and CI, then stop at M5.9.
+- [x] 35. Audit existing storage/export authorities, privacy boundaries, and the clean remote/device baseline; define the no-background-delete and separate-redacted-format contract.
+- [x] 36. Implement real raw-byte reporting, retention planning/cleanup, explicit local deletion, and strict native/Flutter bridge behavior without schema or dependency changes.
+- [x] 37. Add the Data & Export route and accessible UI for storage, retention, cache, precise export, redacted export, and confirmations with honest unavailable/error states.
+- [x] 38. Run all M5.9 host/device gates offline, synchronize/close M5, commit/push atomically, verify remote main and CI, then stop before M6.
 
 ## Tests / validation
 
@@ -155,6 +163,10 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - [x] M5.8 analysis, 164 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, and repository validation
 - [x] M5.8 debug/release offline Tecno route/result/replay/accessibility parity, Android back, and crash/service checks
 - [x] M5.8 final debug restore, unchanged database hash/four-trip history, offline radios, and scoped device-artifact cleanup
+- [x] M5.9 retention/domain/repository/bridge/native failure, privacy, and deletion-consistency tests
+- [x] M5.9 Data & Export navigation, semantics, 2× text, confirmation/cancellation, cache, and export-state widget tests
+- [x] M5.9 format, analysis, full Flutter/native/inspector/repository gates and debug/release builds
+- [x] M5.9 offline Tecno debug/release non-destructive QA, final debug restore, database/hash/history/service/radio checks, and scoped artifact cleanup
 
 ## Acceptance criteria
 
@@ -195,6 +207,10 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - Both platform animation-disable and accessible-navigation preferences produce the same immediate/static M5 behavior. Replay disables autonomous playback and pulsing, announces the manual alternative, and retains scrub and explicit camera controls.
 - Result headings, score scale/version/eligibility, metric units, and evidence state remain understandable through screen-reader output and visible text/icons without relying on color or motion.
 - Persisted event magnitude renders only as a normalized relative value with calibration provenance and non-judgment copy. Phone movement remains magnitude-unavailable, unknown event identifiers are not echoed, and event-confidence percentages remain hidden.
+- Storage totals use real aggregate byte counts and never expose paths, filenames, coordinates, or identifiers. Unavailable categories remain explicit.
+- Retention never runs automatically in M5.9. Raw cleanup presents its exact candidate count/indexed bytes and recomputation consequence, requires confirmation, refuses active/pending recorder state, and preserves trip summaries and derived results.
+- Precise `.tripdebug` and redacted summary are visibly distinct. Redacted summary format v1 excludes route, raw telemetry, IDs, vehicle/account/device identity, storage metadata, and wall-clock time; it makes no anonymity guarantee and performs no upload.
+- Raw-only and whole-trip deletion require separate consequence-specific confirmation and report partial/failure states without silently claiming success.
 
 ## Risks
 
@@ -214,6 +230,7 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - UI-Automator waits for an idle frame during continuous animation on the Tecno, so physical semantics capture must pause playback first; widget semantics and paused-device hierarchy cover accessibility without treating tool idleness as app behavior.
 - The genuine Tecno trips have no persisted governed events, so M5.7 physical QA validates the truthful no-commentary state, tone controls, offline route/replay integration, and release parity; anchored bubbles and evidence expansion remain deterministic domain/widget/map evidence rather than a physical persisted-event claim.
 - The genuine Tecno trips still have no persisted governed events or scores, so M5.8 physical QA can validate truthful unavailable states, accessible labels/layout, and reduced-motion replay behavior but cannot claim a real persisted magnitude or score; those paths remain repository/domain/widget evidence.
+- Destructive M5.9 actions will be covered with isolated database/native fixtures and confirmation UI. Physical Tecno QA will inspect previews/cancellation and export picker behavior only; it will not delete the four retained trips or raw evidence.
 
 ## Decisions made during execution
 
@@ -244,6 +261,9 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - Treat both Flutter platform signals as one centralized reduced-motion decision. In replay, reduced motion disables autonomous progression and pulsing while retaining manual time selection and camera controls rather than removing access to evidence.
 - Present only the already-persisted normalized event severity and calibration as relative magnitude. Do not create named severity bands, expose event-confidence percentages, or treat phone-movement placeholder severity as calibrated evidence.
 - Use an explicit text-and-icon evidence-state badge and semantic section headings so color is supplementary. Unknown stored event identifiers collapse to `Recorded event` instead of entering user-visible or assistive copy.
+- Keep retention as a stored planning preference only: candidate selection and deletion remain explicit foreground actions, with no scheduler or background pruning path.
+- Compute redacted summary format v1 from allowlisted aggregate fields rather than subtracting fields from a precise archive. Keep it separate from `.tripdebug`, deterministic, local-only, and explicitly non-anonymous.
+- Delete raw telemetry only through the native app-private store after UUID validation, canonical descendant verification, and recorder/pending-finalization guards. Whole-trip deletion removes database evidence only after the raw deletion contract succeeds.
 
 ## Progress log
 
@@ -284,7 +304,12 @@ No schema, platform-channel, data migration, dependency, or settings-persistence
 - 2026-09-09: Audited the interrupted closeout from repository, artifact, and device state rather than relying on the prior narrative. The intended 15-file scope was intact at the M5.7 base, formatting and analysis were clean, all 164 Flutter tests, native Android tests, three trip-debug tests, and repository validation passed again, and a fresh 57,681,726-byte release APK was built with SHA-256 `2167b282e6a0ad446e2d7a3b1a18bc65136afb04a3269e4a542bf1a02b4f0fca`.
 - 2026-09-09: Before release installation, the SIM 2 mobile-data setting unexpectedly read enabled even though the turn-start baseline was off; no build step can change it. It was reported and disabled before QA. Telephony data remained disconnected, and release QA then ran with Wi-Fi/data off/off throughout.
 - 2026-09-09: Release QA preserved all four trips; rendered the genuine 39m17s route with 2,122 points, 10 spans, and 9 gaps; exposed text/icon evidence state and truthful unavailable analysis; disabled Play/speed under accessible-navigation reduced motion while retaining camera selection and manual scrub to 22:53; selected follow framing; returned to history through Android back; and found no app fatal crash or recorder service. Final debug was restored, the database remained `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, radios remained off/off, and all seven scoped device artifacts were removed.
+- 2026-09-09: Maintainer authorized M5.9 after M5.8 completed at `5b8d139ea875c3e929b3ac034f29b683c561b0d6`. Local/tracked remote matched, the worktree was clean, and the connected Tecno baseline retained four trips, the accepted database hash, Wi-Fi/data off/off, and no requested phone internet.
+- 2026-09-09: Scoped M5.9 to explicit local storage management: real aggregate bytes, non-automatic retention planning, provider-neutral cache control, precise-private export, a separately versioned redacted summary, and confirmation-gated local deletion. Automatic pruning, cloud sharing, public contribution, and anonymity claims remain out of scope.
+- 2026-09-23: Implemented real raw-byte inventory, strict versioned native/Dart data-management contracts, manual retention previews, recorder-safe raw deletion, database-consistent whole-trip deletion, provider-neutral cache handling, precise-private export, deterministic redacted-summary format v1, and the accessible You > Data & Export experience without a schema, dependency, permission, account, provider, upload, or network change.
+- 2026-09-23: Final host gates passed with clean formatting/analysis, 180 Flutter tests, 219 native Kotlin tests, three inspector tests, repository validation, generated/schema drift checks, and debug/release APKs. Debug measured 166.4 MiB with SHA-256 `13e0d7a54b014851d40d67964480c223c4abc0e4dee599211d6f6285ef15d845`; release measured 55.93 MiB with SHA-256 `530e107c1fadfd6512f0052de2f26499b9f746012774a831b59aa9614352df58`.
+- 2026-09-23: Offline Tecno debug/release QA verified real storage values, Manual retention, all four trip cards, redacted and precise save pickers, and cancellation of raw-only and whole-trip confirmation dialogs. Final debug was restored; database SHA-256 `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, four trips, 7,546 indexed/raw chunks, the accepted M2.8 fixture, offline radios, and inactive recorder service were preserved. No app crash occurred, no export temp remained, and all 14 scoped UI dumps were removed.
 
 ## Completion summary
 
-M5.1 through M5.8 are complete. M5.8 adds centralized reduced-motion handling, static/manual replay alternatives, semantic result hierarchy, explicit score/evidence/metric state, and strict persisted relative-magnitude presentation without changing schemas, native recording, dependencies, privacy, or network behavior. Host and debug/release offline Tecno gates passed. Stop at M5.9 until explicit maintainer authorization.
+M5 complete. The app now combines truthful recording readiness, accountless local history/results, accessible Drive DNA, verified offline route replay, deterministic non-evidentiary commentary, reduced-motion alternatives, and explicit local storage/export controls. M5.9 reports real aggregate use, keeps retention manual and reviewed, separates precise-private `.tripdebug` from redacted-summary format v1, and confirmation-gates recorder-safe deletion. It adds no schema migration, dependency, account, provider, upload, background pruning, or network behavior. M6 is not authorized.

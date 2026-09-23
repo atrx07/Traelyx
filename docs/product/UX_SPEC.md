@@ -267,3 +267,13 @@ Advanced cloud view may expose provider/model/temperature/max tokens/timeout/fal
 Core UI should be clean and trustworthy. Humor belongs primarily in optional commentary and non-critical celebratory surfaces.
 
 Safety/errors/privacy copy should be direct and unambiguous.
+
+## 19. Data & Export
+
+### M5.9 implemented baseline
+
+- **You → Data & Export** presents aggregate storage before explicit retention, cache, export, and deletion actions.
+- Retention defaults to Manual and never runs in the background. Age-based cleanup requires preview and confirmation with candidate count, indexed bytes, and replay/recomputation consequences.
+- Precise `.tripdebug` and redacted-summary actions remain visibly distinct. Precise export warns about exact route and raw motion before opening the system picker; redacted export states its omissions and avoids an anonymity claim.
+- Raw-only and whole-trip deletion use separate confirmations. Controls disable while another local data action runs; errors use bounded copy rather than exception or path details.
+- The screen is scrollable at large text sizes, exposes text labels in addition to icons/color, reports unavailable storage/cache categories honestly, and keeps every action local and user-directed.

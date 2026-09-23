@@ -96,9 +96,13 @@ Support:
 
 Deletion UX must state what is deleted and what cannot be recovered.
 
+M5.9 deletion is local, user-directed, and confirmation-gated. Retention settings only produce a preview and never trigger background deletion. Raw-only deletion preserves the trip summary, events, and score but can remove route replay and recomputation evidence. Whole-trip deletion has separate consequence copy. Native recorder/finalization guards and exact UUID path checks fail closed before authoritative raw data is removed.
+
 ## 10. Export
 
 Exports intended for personal use may contain precise data. Debug/community exports should provide anonymization controls and warn when precise route is included.
+
+M5.9 keeps `.tripdebug` explicitly `precise_private` and not anonymized. Its separate `redacted_trip_summary` version 1 omits precise route, raw telemetry, identifiers, vehicle/account/device identity, storage metadata, and wall-clock time. The app describes it as redacted, not anonymous, and neither export path uploads data.
 
 ## 11. Logging
 

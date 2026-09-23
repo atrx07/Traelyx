@@ -6,6 +6,8 @@ These files are intended to be consumed by tests, generators, validators, and ag
 
 `TRIPDEBUG_FORMAT.md` defines the versioned local-private drive archive used for deterministic fixture inspection and replay input.
 
+`REDACTED_TRIP_SUMMARY_FORMAT.md` defines the separately versioned local redacted summary export. It is not an anonymized telemetry archive and contains no route or raw samples.
+
 Important:
 
 - `scoring-v1.yaml` is the implemented deterministic M4.4 synthetic baseline. It contains no null weights, remains `production_ready: false` pending controlled field calibration, and any semantic or weight change requires a new scoring version rather than rewriting version-1 history.

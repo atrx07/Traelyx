@@ -16,7 +16,7 @@ classes:
     cloud_sync: false_by_default
     public: false
   derived_private:
-    examples: [trip_summary, drive_dna, event_details]
+    examples: [trip_summary, redacted_trip_summary_export, drive_dna, event_details]
     default_storage: local
     cloud_sync: optional_account_feature
     public: false_by_default

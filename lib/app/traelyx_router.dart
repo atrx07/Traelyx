@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
+import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
 import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
@@ -85,6 +86,10 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                 path: TraelyxRoutes.you,
                 builder: (context, state) => const YouScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'data-export',
+                    builder: (context, state) => const DataExportScreen(),
+                  ),
                   GoRoute(
                     path: 'diagnostics',
                     builder: (context, state) => const DiagnosticsScreen(),

@@ -219,8 +219,9 @@ class _StorageCard extends StatelessWidget {
         _DiagnosticRow('Total', formatDiagnosticBytes(storage.totalBytes)),
       ],
       footer:
-          'Aggregate bytes only. Unimplemented storage categories report zero; '
-          'cache controls and export arrive in later roadmap steps.',
+          'Aggregate bytes only. Raw telemetry measures app-private recorder '
+          'files; unavailable cache/model categories report zero. Manage '
+          'retention and exports in Data & Export.',
     );
   }
 }

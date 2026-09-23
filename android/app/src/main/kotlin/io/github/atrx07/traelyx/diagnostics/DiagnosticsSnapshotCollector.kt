@@ -24,6 +24,9 @@ class DiagnosticsSnapshotCollector(
                 File(applicationInfo.dataDir, "app_flutter/traelyx.sqlite-shm"),
             ),
         )
+        val rawTelemetryBytes = DiagnosticsStorage.sizeOf(
+            File(context.applicationContext.noBackupFilesDir, "recorder/trips"),
+        )
 
         @Suppress("DEPRECATION")
         val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -46,9 +49,8 @@ class DiagnosticsSnapshotCollector(
             },
             "appBytes" to appBytes,
             "databaseBytes" to databaseBytes,
-            // These storage systems do not exist yet. Returning explicit zeroes is
-            // more honest than inventing future directory contracts in M1.
-            "rawTelemetryBytes" to 0L,
+            "rawTelemetryBytes" to rawTelemetryBytes,
+            // The current offline-canvas map and local-model placeholder store no files.
             "mapCacheBytes" to 0L,
             "localModelBytes" to 0L,
         )

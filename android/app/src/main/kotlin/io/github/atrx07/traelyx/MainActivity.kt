@@ -7,6 +7,10 @@ import android.os.Build
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
+import io.github.atrx07.traelyx.data.DataManagementContract
+import io.github.atrx07.traelyx.data.RedactedTripSummaryPayload
+import io.github.atrx07.traelyx.data.rawTelemetryDeletionMap
+import io.github.atrx07.traelyx.data.redactedSummaryExportMap
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsContract
 import io.github.atrx07.traelyx.diagnostics.DiagnosticsSnapshotCollector
 import io.github.atrx07.traelyx.maps.MapDataContract
@@ -20,6 +24,7 @@ import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatchResult
 import io.github.atrx07.traelyx.recorder.RecorderBridgeDispatcher
 import io.github.atrx07.traelyx.recorder.RecorderContract
 import io.github.atrx07.traelyx.recorder.RecorderService
+import io.github.atrx07.traelyx.recorder.RawTelemetryDeletionResult
 import io.github.atrx07.traelyx.recorder.PreparedTripDebugExport
 import io.github.atrx07.traelyx.recorder.TripDebugArchiveExporter
 import io.github.atrx07.traelyx.recorder.TripDebugPreparationResult
@@ -35,7 +40,10 @@ class MainActivity : FlutterActivity() {
     private var pendingTripDebugResult: MethodChannel.Result? = null
     private var pendingTripDebugTripId: String? = null
     private var preparedTripDebugExport: PreparedTripDebugExport? = null
+    private var pendingRedactedSummaryResult: MethodChannel.Result? = null
+    private var preparedRedactedSummary: ByteArray? = null
     private val tripDebugExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val dataManagementExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val routeExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onPostResume() {
@@ -99,6 +107,24 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DataManagementContract.CHANNEL_NAME,
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                DataManagementContract.DELETE_RAW_TELEMETRY ->
+                    deleteRawTelemetry(call.argument<String>("tripId"), result)
+                DataManagementContract.EXPORT_REDACTED_SUMMARY -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val payload = RedactedTripSummaryPayload.fromMap(
+                        call.arguments as? Map<String, Any?>,
+                    )
+                    beginRedactedSummaryExport(payload, result)
+                }
+                else -> result.notImplemented()
+            }
+        }
+
         val routeReader = TripRouteReader(AtomicFileTelemetryChunkStore(applicationContext))
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -123,7 +149,7 @@ class MainActivity : FlutterActivity() {
         tripId: String?,
         result: MethodChannel.Result,
     ) {
-        if (pendingTripDebugResult != null) {
+        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null) {
             result.success(tripDebugExportFailureMap(tripId, "export_in_progress"))
             return
         }
@@ -185,6 +211,30 @@ class MainActivity : FlutterActivity() {
         data: Intent?,
     ) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REDACTED_SUMMARY_EXPORT_REQUEST_CODE) {
+            if (resultCode != Activity.RESULT_OK || data?.data == null) {
+                completeRedactedSummaryExport(false, "export_cancelled")
+                return
+            }
+            val target = requireNotNull(data.data)
+            val bytes = preparedRedactedSummary
+            if (bytes == null) {
+                completeRedactedSummaryExport(false, "export_preparation_missing")
+                return
+            }
+            dataManagementExecutor.execute {
+                val written = runCatching {
+                    contentResolver.openOutputStream(target, "w")?.use { it.write(bytes) } != null
+                }.getOrDefault(false)
+                runOnUiThread {
+                    completeRedactedSummaryExport(
+                        exported = written,
+                        errorCode = if (written) null else "export_write_failed",
+                    )
+                }
+            }
+            return
+        }
         if (requestCode != TRIPDEBUG_EXPORT_REQUEST_CODE) return
         if (resultCode != Activity.RESULT_OK || data?.data == null) {
             completeTripDebugExport(false, "export_cancelled")
@@ -228,6 +278,76 @@ class MainActivity : FlutterActivity() {
         preparedTripDebugExport = null
     }
 
+    private fun deleteRawTelemetry(
+        tripId: String?,
+        result: MethodChannel.Result,
+    ) {
+        if (tripId == null) {
+            result.success(rawTelemetryDeletionMap(null, false, 0L, "raw_delete_invalid_trip_id"))
+            return
+        }
+        if (RecorderService.queryState(applicationContext).isActive) {
+            result.success(rawTelemetryDeletionMap(tripId, false, 0L, "raw_delete_recorder_active"))
+            return
+        }
+        if (AtomicRecorderFinalizationStore(applicationContext).load(tripId) != null) {
+            result.success(rawTelemetryDeletionMap(tripId, false, 0L, "raw_delete_finalization_pending"))
+            return
+        }
+        dataManagementExecutor.execute {
+            val payload = when (
+                val deletion = AtomicFileTelemetryChunkStore(applicationContext)
+                    .deleteTripRawTelemetry(tripId)
+            ) {
+                is RawTelemetryDeletionResult.Success ->
+                    rawTelemetryDeletionMap(tripId, true, deletion.bytesDeleted, null)
+                is RawTelemetryDeletionResult.Failure ->
+                    rawTelemetryDeletionMap(tripId, false, 0L, deletion.errorCode)
+            }
+            runOnUiThread {
+                if (!isDestroyed) result.success(payload)
+            }
+        }
+    }
+
+    private fun beginRedactedSummaryExport(
+        payload: RedactedTripSummaryPayload?,
+        result: MethodChannel.Result,
+    ) {
+        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null) {
+            result.success(redactedSummaryExportMap(false, 0L, "export_in_progress"))
+            return
+        }
+        if (payload == null) {
+            result.success(redactedSummaryExportMap(false, 0L, "export_payload_invalid"))
+            return
+        }
+        preparedRedactedSummary = payload.encode()
+        pendingRedactedSummaryResult = result
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, "traelyx-redacted-trip-summary.json")
+        }
+        try {
+            startActivityForResult(intent, REDACTED_SUMMARY_EXPORT_REQUEST_CODE)
+        } catch (_: Exception) {
+            completeRedactedSummaryExport(false, "export_picker_unavailable")
+        }
+    }
+
+    private fun completeRedactedSummaryExport(
+        exported: Boolean,
+        errorCode: String?,
+    ) {
+        val byteLength = preparedRedactedSummary?.size?.toLong() ?: 0L
+        pendingRedactedSummaryResult?.success(
+            redactedSummaryExportMap(exported, byteLength, errorCode),
+        )
+        pendingRedactedSummaryResult = null
+        preparedRedactedSummary = null
+    }
+
     override fun onDestroy() {
         runCatching {
             pendingTripDebugResult?.success(
@@ -238,7 +358,15 @@ class MainActivity : FlutterActivity() {
         pendingTripDebugTripId = null
         preparedTripDebugExport?.deleteTemporaryFile()
         preparedTripDebugExport = null
+        runCatching {
+            pendingRedactedSummaryResult?.success(
+                redactedSummaryExportMap(false, 0L, "export_activity_destroyed"),
+            )
+        }
+        pendingRedactedSummaryResult = null
+        preparedRedactedSummary = null
         tripDebugExecutor.shutdownNow()
+        dataManagementExecutor.shutdownNow()
         routeExecutor.shutdownNow()
         super.onDestroy()
     }
@@ -301,5 +429,6 @@ class MainActivity : FlutterActivity() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 7302
         private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 7303
         private const val TRIPDEBUG_EXPORT_REQUEST_CODE = 7308
+        private const val REDACTED_SUMMARY_EXPORT_REQUEST_CODE = 7309
     }
 }

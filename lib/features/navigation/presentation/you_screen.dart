@@ -50,6 +50,20 @@ class YouScreen extends StatelessWidget {
               const SizedBox(height: TraelyxSpacing.xxl),
               Card(
                 child: ListTile(
+                  key: const ValueKey('open-data-export'),
+                  contentPadding: const EdgeInsets.all(TraelyxSpacing.md),
+                  leading: Icon(Icons.storage_rounded, color: colors.positive),
+                  title: const Text('Data & Export'),
+                  subtitle: const Text(
+                    'Review local storage, retention, cache, exports, and deletion.',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.go(TraelyxRoutes.youDataExport),
+                ),
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
+              Card(
+                child: ListTile(
                   key: const ValueKey('open-diagnostics'),
                   contentPadding: const EdgeInsets.all(TraelyxSpacing.md),
                   leading: Icon(

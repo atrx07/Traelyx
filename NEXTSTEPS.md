@@ -4,19 +4,19 @@
 
 ## Current gate
 
-M5.8 completed on 2026-09-09. Stop at the numbered-substep approval gate; M5.9 remains pending explicit maintainer authorization.
+M5 is complete. M6 remains pending explicit maintainer authorization; do not implement or prepare M6 work until that gate opens.
 
-## P0 — Approval gate
+## P0 — Await M6 authorization
 
-1. Await explicit maintainer authorization before inspecting, implementing, or substantially preparing M5.9.
-2. Preserve the accepted private M2.8 fixture locally; do not place its route or raw telemetry in Git or logs.
+1. Keep `main`, `origin/main`, and CI synchronized at the M5 closeout commit.
+2. Preserve the accepted private M2.8 fixture and four retained Tecno trips; do not place routes or raw telemetry in Git or logs.
+3. Begin M6 only after an explicit maintainer authorization.
+
+## P1 — Preserve M5 boundaries
+
+1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.
+2. Keep retention non-automatic and deletion user-directed, consequence-labeled, recorder-safe, and fail-closed.
 3. Keep the Tecno LH8n +0.03 g Z-axis bias as fixture calibration context only; do not add a production phone-specific offset.
-
-## P1 — M5.9 pending
-
-1. Begin storage manager/export work only after explicit authorization and scoped contract review.
-2. Preserve M5.7's single replay clock, gap-safe progress/follow behavior, deterministic non-evidentiary commentary, independent route/event failure, coordinate-free semantics, and offline operation.
-3. Do not expose M3.7 replay channels, add an LLM/provider dependency, or create network behavior without a separately governed contract.
 
 ## P2 — Analysis foundation
 

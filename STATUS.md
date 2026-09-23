@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M5 active — M5.8 complete, awaiting explicit M5.9 authorization**
+**M5 complete — awaiting explicit authorization for M6**
 
 ## Working
 
@@ -115,6 +115,9 @@
 - Final M5.7 Tecno debug/release QA rendered all six tone controls and the truthful no-event state over the genuine 2,122-point route, verified Silent/Chill selection and replay advancement, kept Wi-Fi/data off/off, preserved the exact database hash and four trips, found no service or crash, restored debug, and removed four scoped artifacts. Host gates passed with 160 Flutter tests, 214 native Kotlin tests, three inspector tests, repository validation, and debug/release builds.
 - M5.8 centralizes reduced-motion handling across platform animation-disable and accessible-navigation signals, adds static/manual replay alternatives, semantic result headings, score scale/provenance, text-and-icon evidence states, and strict persisted relative event-magnitude presentation. Phone movement remains magnitude-unavailable and event-confidence percentages remain hidden; no schema, dependency, native, recorder, account, or network behavior changed.
 - M5.8 host validation passed with clean analysis, 164 Flutter tests, 214 native Kotlin tests, three trip-debug inspector tests, repository validation, and debug/release builds. Debug and release physical QA on the offline Tecno rendered the genuine 39m17s route (2,122 points, 10 spans, 9 gaps), exposed reduced-motion/manual replay semantics, scrubbed to 22:53, selected follow framing, returned through Android back, and preserved all four trips. No recorder service or app fatal crash appeared. Final debug was restored, the exact database hash was preserved, and all seven scoped device artifacts were removed.
+- M5.9 adds a You > Data & Export surface backed by real aggregate app/database/raw bytes, a persisted manual/7-day/30-day/forever retention preference that never runs automatically, reviewed raw-cleanup candidates, truthful provider-neutral cache state, precise-private export, a separate redacted-summary format v1, and consequence-specific raw-only/whole-trip deletion confirmations.
+- Native deletion validates canonical app-private trip roots and refuses active or pending-finalization recorder state. Strict versioned bridge parsing, fail-closed repositories, deterministic redaction, partial-failure reporting, and isolated destructive fixtures cover the privacy/data-integrity boundary without a schema, dependency, permission, account, provider, upload, or network change.
+- M5.9 host validation passed with clean analysis, 180 Flutter tests, 219 native Kotlin tests, three trip-debug inspector tests, repository validation, generated/schema drift checks, and debug/release builds. Offline debug/release Tecno QA verified storage/retention rendering, both export pickers, and cancellation of both destructive confirmations. Final debug was restored; database SHA-256 `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, four trips, 7,546 indexed/raw chunks, accepted M2.8 fixture, offline radios, and inactive recorder service were preserved; all 14 scoped UI dumps were removed.
 
 ## Partial
 
@@ -159,6 +162,7 @@
 - M5.6 physical QA covers the same Tecno and genuine route with no persisted governed events. Active-event pulsing and event selection remain deterministic painter/widget evidence rather than a physical persisted-event claim. UI-Automator also waits for an idle frame during continuous playback, so hierarchy capture was performed only after pause; this is an automation limitation, not evidence of an app stall.
 - M5.7 physical QA covers the same Tecno and genuine route with no persisted governed events. Tone controls, truthful no-commentary state, route/replay integration, and release parity are physical evidence; anchored bubbles and evidence expansion remain deterministic domain/widget/map evidence rather than a physical persisted-event claim.
 - M5.8 physical QA covers debug and release builds on the same Tecno and genuine route with active platform accessibility navigation. Static/manual replay, semantic state/scale text, route rendering, back navigation, offline operation, data preservation, and release parity are physical evidence; persisted score/magnitude paths remain deterministic repository/domain/widget evidence because the retained trips contain none.
+- M5.9 physical QA is deliberately non-destructive on the retained Tecno evidence. Confirmation, cancellation, picker, storage, and release-parity paths are physical evidence; successful raw/trip deletion and partial-failure behavior are isolated native/repository/widget test evidence.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - Online tile/provider selection and downloaded-region policy remain deferred; core route rendering and its zero-byte local-canvas cache behavior are established offline.
 - Availability/diversity of labeled telemetry for ML.
@@ -167,4 +171,4 @@
 
 ## Current step
 
-**Approval gate:** M5.8 completed 2026-09-09. M5.9 Storage manager/export remains pending explicit user authorization. Do not inspect, implement, or substantially prepare M5.9 before that authorization.
+**Active step:** No implementation step is authorized. M5 is complete; do not begin M6 without a new explicit authorization.

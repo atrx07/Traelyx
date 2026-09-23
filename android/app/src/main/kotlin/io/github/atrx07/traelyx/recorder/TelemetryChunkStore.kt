@@ -12,6 +12,12 @@ sealed interface TelemetryChunkWriteResult {
     data class Failure(val errorCode: String) : TelemetryChunkWriteResult
 }
 
+sealed interface RawTelemetryDeletionResult {
+    data class Success(val bytesDeleted: Long) : RawTelemetryDeletionResult
+
+    data class Failure(val errorCode: String) : RawTelemetryDeletionResult
+}
+
 interface TelemetryChunkStore {
     fun scan(tripId: String): TelemetryChunkCatalogSnapshot
 
@@ -29,9 +35,15 @@ interface TelemetryChunkStore {
     fun read(tripId: String, sequence: Long): ByteArray? = null
 }
 
-class AtomicFileTelemetryChunkStore(context: Context) : TelemetryChunkStore {
-    private val tripsDirectory =
-        File(context.applicationContext.noBackupFilesDir, "$RECORDER_DIRECTORY_NAME/$TRIPS_DIRECTORY_NAME")
+class AtomicFileTelemetryChunkStore internal constructor(
+    private val tripsDirectory: File,
+) : TelemetryChunkStore {
+    constructor(context: Context) : this(
+        File(
+            context.applicationContext.noBackupFilesDir,
+            "$RECORDER_DIRECTORY_NAME/$TRIPS_DIRECTORY_NAME",
+        ),
+    )
 
     override fun scan(tripId: String): TelemetryChunkCatalogSnapshot {
         if (!isValidTripId(tripId)) return emptyCatalogWithCorruption()
@@ -160,13 +172,38 @@ class AtomicFileTelemetryChunkStore(context: Context) : TelemetryChunkStore {
         return runCatching { AtomicFile(baseFile).openRead().use { it.readBytes() } }.getOrNull()
     }
 
+    fun deleteTripRawTelemetry(tripId: String): RawTelemetryDeletionResult {
+        if (!isValidTripId(tripId)) {
+            return RawTelemetryDeletionResult.Failure("raw_delete_invalid_trip_id")
+        }
+        val target = chunkDirectory(tripId).parentFile
+            ?: return RawTelemetryDeletionResult.Failure("raw_delete_path_unavailable")
+        val canonicalTrips = runCatching { tripsDirectory.canonicalFile }.getOrNull()
+            ?: return RawTelemetryDeletionResult.Failure("raw_delete_path_unavailable")
+        val canonicalTarget = runCatching { target.canonicalFile }.getOrNull()
+            ?: return RawTelemetryDeletionResult.Failure("raw_delete_path_unavailable")
+        if (canonicalTarget.parentFile?.canonicalFile != canonicalTrips) {
+            return RawTelemetryDeletionResult.Failure("raw_delete_path_invalid")
+        }
+        val bytesBefore = sizeOf(canonicalTarget)
+        if (canonicalTarget.exists() && !canonicalTarget.deleteRecursively()) {
+            return RawTelemetryDeletionResult.Failure("raw_delete_failed")
+        }
+        return if (canonicalTarget.exists()) {
+            RawTelemetryDeletionResult.Failure("raw_delete_verification_failed")
+        } else {
+            RawTelemetryDeletionResult.Success(bytesBefore)
+        }
+    }
+
     internal fun deleteTripForTest(tripId: String): Boolean {
-        if (!isValidTripId(tripId)) return false
-        val target = chunkDirectory(tripId).parentFile ?: return false
-        val canonicalTrips = runCatching { tripsDirectory.canonicalFile }.getOrNull() ?: return false
-        val canonicalTarget = runCatching { target.canonicalFile }.getOrNull() ?: return false
-        if (canonicalTarget.parentFile?.canonicalFile != canonicalTrips) return false
-        return !canonicalTarget.exists() || canonicalTarget.deleteRecursively()
+        return deleteTripRawTelemetry(tripId) is RawTelemetryDeletionResult.Success
+    }
+
+    private fun sizeOf(file: File): Long {
+        if (!file.exists()) return 0L
+        if (file.isFile) return file.length().coerceAtLeast(0L)
+        return file.listFiles()?.sumOf(::sizeOf) ?: 0L
     }
 
     private fun chunkDirectory(tripId: String): File =

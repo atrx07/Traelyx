@@ -63,6 +63,12 @@ User-configurable policy candidates:
 
 Do not hardcode final default until storage measurements are available.
 
+### M5.9 implemented baseline
+
+The default remains `manual`. The user may save `manual`, `7 days`, `30 days`, or `forever` as a local non-secret preference. A time-based policy only creates a preview: M5.9 never runs raw cleanup in the background. The preview includes the exact finalized-trip candidate count and indexed raw bytes, and execution requires a separate confirmation that explains the loss of route replay and future recomputation.
+
+Raw-only cleanup asks native storage to remove one exact UUID trip directory before deleting that trip's chunk-index rows. Whole-trip deletion uses the same native guard before deleting the selected schema-v1 trip and its cascaded event/score/chunk rows. Both operations refuse active trips and pending finalization, fail closed on unsafe paths or native errors, and do not claim success after a partial failure. No database migration or raw-format change is involved.
+
 ## 6. Downsampling/archive
 
 A future archive may retain lower-rate replay channels after full raw streams expire. If implemented, explain which analysis can no longer be recomputed.
@@ -89,6 +95,10 @@ Actions:
 - remove local model;
 - export/archive;
 - delete selected trips.
+
+M5.9 implements these controls under **You → Data & Export**. Raw telemetry bytes are measured from the app-private recorder authority, while database, app, map-cache, and model categories retain their existing aggregate contracts. The current offline-canvas map provider continues to report an unavailable `0 B` cache and a safe no-op clear action. No local model deletion control is enabled while no downloaded-model provider exists.
+
+The existing `.tripdebug` path remains version 1 `precise_private`. M5.9 adds a separate JSON `redacted_trip_summary` format version 1 for user-directed local export. It contains only bounded duration, distance, evidence states, telemetry schema version, event count, and an all-or-none score/provenance group. It excludes route geometry, raw samples, trip/account/device/vehicle identifiers, storage metadata, and wall-clock time. Redaction is not an anonymity guarantee. See `docs/reference/REDACTED_TRIP_SUMMARY_FORMAT.md`.
 
 ## 8. Database migration
 

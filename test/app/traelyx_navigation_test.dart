@@ -7,10 +7,13 @@ import 'package:traelyx/app/traelyx_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/diagnostics/diagnostics_providers.dart';
 import 'package:traelyx/core/diagnostics/diagnostics_report.dart';
+import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
+import 'package:traelyx/features/data_management/application/data_management_providers.dart';
+import 'package:traelyx/features/data_management/domain/data_management_models.dart';
 import 'package:traelyx/features/drive_dna/application/drive_dna_providers.dart';
 import 'package:traelyx/features/drive_dna/data/drive_dna_repository.dart';
 import 'package:traelyx/features/drive_dna/domain/drive_dna_models.dart';
@@ -203,6 +206,32 @@ void main() {
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
     expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
   });
+
+  testWidgets('You opens data controls as a deep-link-safe nested route', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter(initialLocation: TraelyxRoutes.you);
+    addTearDown(router.dispose);
+
+    await _pumpApp(tester, router);
+    await tester.tap(find.byKey(const ValueKey('open-data-export')));
+    await tester.pumpAndSettle();
+
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.youDataExport,
+    );
+    expect(find.byKey(const ValueKey('data-export-screen')), findsOneWidget);
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      4,
+    );
+
+    await tester.tap(find.byTooltip('Back to You'));
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
+    expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
+  });
 }
 
 Future<void> _pumpApp(
@@ -230,6 +259,15 @@ Future<void> _pumpApp(
           ),
         ),
         diagnosticsReportProvider.overrideWith((ref) async => _report),
+        storedTripsProvider.overrideWith((ref) => const Stream.empty()),
+        rawRetentionPolicyProvider.overrideWith(
+          (ref) => Stream.value(RawRetentionPolicy.manual),
+        ),
+        tripMapCacheStatusProvider.overrideWith(
+          (ref) => Stream.value(
+            const MapCacheStatus(bytesUsed: 0, isAvailable: false),
+          ),
+        ),
         recorderFinalizationSyncProvider.overrideWith(
           (ref) async => const RecorderFinalizationSyncResult(
             reconciledTripIds: [],

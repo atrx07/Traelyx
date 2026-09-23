@@ -29,7 +29,7 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Local AI models'), findsOneWidget);
-    expect(find.textContaining('cache controls and export'), findsOneWidget);
+    expect(find.textContaining('Manage retention and exports'), findsOneWidget);
   });
 
   testWidgets('error state redacts the underlying exception', (tester) async {

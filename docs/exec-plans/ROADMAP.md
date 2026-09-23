@@ -209,7 +209,7 @@ Tone packs, context/cooldown/interestingness, anchored bubbles.
 Alternative transitions and accessible severity/metrics.
 
 ### M5.9 Storage manager/export
-Raw retention controls, map cache, debug export/anonymization.
+Raw retention controls, map cache, precise-private debug export, and a separate redacted summary with no anonymity claim.
 
 **Exit:** app is fun to use/replay, not merely technically correct.
 
