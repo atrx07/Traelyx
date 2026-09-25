@@ -61,7 +61,7 @@ not add sign-in or upload behavior to the app; those are later substeps.
 
 ## Implementation steps
 
-- [ ] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
+- [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
 - [ ] M6.2 Auth UX (requires next authorization).
 - [ ] M6.3 Local-to-account migration.
 - [ ] M6.4 Profiles/vehicles sync.
@@ -79,9 +79,9 @@ not add sign-in or upload behavior to the app; those are later substeps.
 - [x] Verify both hosted migrations, RLS state, helper grants, enabled event
   trigger, and a refreshed security advisor with zero errors or warnings.
 - [x] Run repository contract/secret validation and `git diff --check`.
-- [ ] Confirm the PostgreSQL 17 CI job and other relevant CI checks pass.
-- [ ] Inspect diff, commit/push one bounded unit, and verify `HEAD` equals
-  `origin/main`.
+- [x] Confirm the PostgreSQL 17 CI job and other relevant CI checks pass.
+- [x] Inspect the exact diff and commit/push the bounded implementation unit.
+- [x] Push this completion-state update and verify `HEAD` equals `origin/main`.
 
 ## M6.1 acceptance criteria
 
@@ -133,7 +133,21 @@ requires its own narrowly scoped schema and policies.
   `PUBLIC`/`anon`/`authenticated` cannot, and the trigger is enabled. Refreshed
   Security Advisor reports zero errors and zero warnings. Repository
   contract/secret validation and whitespace checks pass; CI remains pending.
+- 2026-09-25: Committed and pushed implementation as `c4b9c33`. GitHub Actions
+  [run 36167160163](https://github.com/atrx07/Traelyx/actions/runs/36167160163)
+  passed both jobs: PostgreSQL 17 cloud schema/RLS tests and the existing
+  generated-source, schema snapshot, format, analysis, Flutter/Kotlin test,
+  repository-validation, debug/release build, size, and artifact gates. The
+  temporary local Supabase CLI credential was removed and a subsequent
+  authenticated CLI request correctly required login. M6.1 is complete;
+  M6.2 remains unauthorized.
 
 ## Completion summary
 
-Pending.
+M6.1 provides three empty, private, owner-scoped cloud tables, versioned
+migrations, and reproducible SQL access tests. Both migrations are installed
+on the Traelyx free-tier Singapore project. No app sign-in, upload, local
+schema change, route storage, or new production dependency was introduced.
+Hosted RLS/privileges and the zero-warning security advisor were verified;
+the cloud Data API table exposure remains off pending a later authorized sync
+step. No new physical-device behavior was involved.

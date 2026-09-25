@@ -4,13 +4,12 @@
 
 ## Current gate
 
-M6 is authorized. M6.1 is active; M6.2 remains pending its separate substep authorization.
+M6 is active. M6.1 is complete; wait for explicit authorization before M6.2.
 
-## P0 — Complete M6.1
+## P0 — M6.2 authorization gate
 
-1. Validate the versioned Supabase foundation migration, grants, and owner RLS against PostgreSQL and the intended free-tier project.
-2. Keep accountless operation intact; do not add automatic route or raw telemetry upload.
-3. After M6.1 passes its gates, commit/push its bounded change and wait for explicit M6.2 authorization.
+1. Preserve the completed M6.1 schema/RLS contract and accountless operation.
+2. Begin M6.2 auth UX only after the maintainer explicitly authorizes that substep.
 
 ## P1 — Preserve M5 boundaries
 
