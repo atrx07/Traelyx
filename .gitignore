@@ -53,6 +53,7 @@ key.properties
 .env
 .env.*
 !.env.example
+.supabase/
 **/secrets.*
 **/*private-key*
 **/*api-key*

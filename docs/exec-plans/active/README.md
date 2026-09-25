@@ -2,4 +2,5 @@
 
 Place current non-trivial execution plans here. Keep only genuinely active work in this directory so agents can inspect it cheaply.
 
-No execution plan is active. M5 is complete and archived; M6 remains pending explicit maintainer authorization.
+M6 is active. See [M6_CONNECTED_LAYER.md](M6_CONNECTED_LAYER.md); only M6.1 is
+currently authorized.

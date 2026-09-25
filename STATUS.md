@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M5 complete — awaiting explicit authorization for M6**
+**M6 active — M6.1 cloud schema/RLS in progress**
 
 ## Working
 
@@ -171,4 +171,4 @@
 
 ## Current step
 
-**Active step:** No implementation step is authorized. M5 is complete; do not begin M6 without a new explicit authorization.
+**Active step:** M6.1 Supabase project/schema/RLS is authorized and in progress. M6.2 remains behind the next explicit substep authorization gate.

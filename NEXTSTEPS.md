@@ -4,13 +4,13 @@
 
 ## Current gate
 
-M5 is complete. M6 remains pending explicit maintainer authorization; do not implement or prepare M6 work until that gate opens.
+M6 is authorized. M6.1 is active; M6.2 remains pending its separate substep authorization.
 
-## P0 — Await M6 authorization
+## P0 — Complete M6.1
 
-1. Keep `main`, `origin/main`, and CI synchronized at the M5 closeout commit.
-2. Preserve the accepted private M2.8 fixture and four retained Tecno trips; do not place routes or raw telemetry in Git or logs.
-3. Begin M6 only after an explicit maintainer authorization.
+1. Validate the versioned Supabase foundation migration, grants, and owner RLS against PostgreSQL and the intended free-tier project.
+2. Keep accountless operation intact; do not add automatic route or raw telemetry upload.
+3. After M6.1 passes its gates, commit/push its bounded change and wait for explicit M6.2 authorization.
 
 ## P1 — Preserve M5 boundaries
 

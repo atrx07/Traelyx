@@ -9,6 +9,38 @@ permissions:
   contents: read
 
 jobs:
+  cloud-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: traelyx_test
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d traelyx_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGPASSWORD: postgres
+    steps:
+      - name: Check out source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Apply cloud schema and test grants/RLS
+        run: |
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260925000000_connected_foundation.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260925010000_harden_rls_helper.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/connected_foundation.sql
+
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 30

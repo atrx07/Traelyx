@@ -69,6 +69,12 @@ Non-secret app settings. Secrets live in secure storage.
 
 ## 2. Cloud database — compact connected layer
 
+M6.1 begins with private `profiles`, sanitized `vehicles`, and compact
+`trip_summaries`. Their exact version-1 fields and access rules are listed in
+[`CLOUD_SCHEMA_V1.md`](../reference/CLOUD_SCHEMA_V1.md); the migration is the
+executable source. Later entities below remain candidates for their own
+authorized substeps and migrations.
+
 Candidate Supabase entities:
 
 - `profiles`;
