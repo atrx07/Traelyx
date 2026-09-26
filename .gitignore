@@ -54,6 +54,7 @@ key.properties
 .env.*
 !.env.example
 .supabase/
+/auth-config.local.json
 **/secrets.*
 **/*private-key*
 **/*api-key*

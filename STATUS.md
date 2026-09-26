@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1 cloud schema/RLS complete; awaiting M6.2 authorization**
+**M6 active — M6.1 complete; M6.2 optional auth in progress**
 
 ## Working
 
@@ -119,7 +119,8 @@
 - Native deletion validates canonical app-private trip roots and refuses active or pending-finalization recorder state. Strict versioned bridge parsing, fail-closed repositories, deterministic redaction, partial-failure reporting, and isolated destructive fixtures cover the privacy/data-integrity boundary without a schema, dependency, permission, account, provider, upload, or network change.
 - M5.9 host validation passed with clean analysis, 180 Flutter tests, 219 native Kotlin tests, three trip-debug inspector tests, repository validation, generated/schema drift checks, and debug/release builds. Offline debug/release Tecno QA verified storage/retention rendering, both export pickers, and cancellation of both destructive confirmations. Final debug was restored; database SHA-256 `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, four trips, 7,546 indexed/raw chunks, accepted M2.8 fixture, offline radios, and inactive recorder service were preserved; all 14 scoped UI dumps were removed.
 
-- M6.1 links the Traelyx free-tier Singapore Supabase project to two versioned migrations. Three empty private tables (`profiles`, `vehicles`, `trip_summaries`) have explicit client grants and owner-only RLS; precise routes, raw telemetry, and API secrets are absent. The pre-existing `rls_auto_enable()` helper is no longer executable by `PUBLIC`, `anon`, or `authenticated`, while its database trigger remains enabled. The refreshed hosted Security Advisor has zero errors and warnings, and PostgreSQL 17 and existing CI checks pass. Per-table Data API exposure remains off; the app has no sign-in or upload path.
+- M6.1 links the Traelyx free-tier Singapore Supabase project to two versioned migrations. Three empty private tables (`profiles`, `vehicles`, `trip_summaries`) have explicit client grants and owner-only RLS; precise routes, raw telemetry, and API secrets are absent. The pre-existing `rls_auto_enable()` helper is no longer executable by `PUBLIC`, `anon`, or `authenticated`, while its database trigger remains enabled. The refreshed hosted Security Advisor has zero errors and warnings, and PostgreSQL 17 and existing CI checks pass. Per-table Data API exposure remains off.
+- M6.2 optional email-link account UI, secure session and PKCE storage, Android callback registration, selective backup exclusion, and accountless navigation are implemented locally. Flutter checks, Traelyx Android app unit tests, and debug/release APK builds pass; a transitive plugin's all-module Robolectric test could not fetch its external Android artifact. Hosted redirect configuration, real email-link/session QA, CI, and completion commit remain pending. Signing in does not upload local trips or enable cloud table access.
 
 ## Partial
 
@@ -173,4 +174,4 @@
 
 ## Current step
 
-**Active step:** M6.1 Supabase project/schema/RLS is complete. Wait for explicit M6.2 authorization before changing auth UX.
+**Active step:** Finish M6.2 validation. Request the physical phone for hosted email-link and encrypted session QA after host checks; keep M6.3 gated.

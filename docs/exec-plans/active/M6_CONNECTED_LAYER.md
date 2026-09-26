@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-09-25
+**Last updated:** 2026-09-26
 
 ## Context budget / references
 
@@ -20,19 +20,31 @@ replay, or export depend on an account or cloud service.
 
 ## User-visible result
 
-M6.1 provides a versioned cloud schema and tested access boundaries. It does
-not add sign-in or upload behavior to the app; those are later substeps.
+M6.1 provides a versioned cloud schema and tested access boundaries. M6.2
+adds an optional account path with secure sessions while local use remains
+available without sign-in. Summary sync is a later substep.
 
 ## In scope
 
 - M6.1: Supabase project linkage, versioned initial migration, explicit grants
   and RLS, reproducible access tests, and deployment verification.
+- M6.2: optional email magic-link auth UX, secure session persistence, session refresh
+  and sign-out, accountless navigation, and hosted auth configuration.
 - Later M6 substeps only after their individual authorization gates.
 
 ## Out of scope for M6.1
 
 - Flutter auth/session UI, cloud sync, public profiles, friendships,
   leaderboards, Guardian relationships/alerts, and raw-route upload.
+
+## M6.2 boundary
+
+- Email magic links are the initial method; password, Google, and Apple sign-in
+  are deferred. Password reset is unnecessary without passwords.
+- No local-to-account migration or trip upload is started by sign-in.
+- Production auth uses a publishable client key supplied at build time, never
+  a service-role key or a committed credential.
+- Secure session storage must fail closed; device behavior needs physical QA.
 
 ## Preconditions
 
@@ -62,7 +74,7 @@ not add sign-in or upload behavior to the app; those are later substeps.
 ## Implementation steps
 
 - [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
-- [ ] M6.2 Auth UX (requires next authorization).
+- [ ] M6.2 Auth UX (authorized; host implementation ready for physical QA).
 - [ ] M6.3 Local-to-account migration.
 - [ ] M6.4 Profiles/vehicles sync.
 - [ ] M6.5 Friends/social.
@@ -82,6 +94,16 @@ not add sign-in or upload behavior to the app; those are later substeps.
 - [x] Confirm the PostgreSQL 17 CI job and other relevant CI checks pass.
 - [x] Inspect the exact diff and commit/push the bounded implementation unit.
 - [x] Push this completion-state update and verify `HEAD` equals `origin/main`.
+
+## M6.2 tests / validation
+
+- [x] Verify optional local navigation and account flows with unit/widget tests.
+- [ ] Verify session persistence, refresh, sign-out, and failure paths.
+- [x] Run format, analysis, tests, repository validation, and Android builds.
+- [ ] Exercise the configured auth flow and secure storage on a physical phone;
+  stop and ask the maintainer to connect it when host checks are ready.
+- [ ] Inspect the exact diff, commit/push, verify green CI and Git alignment,
+  then mark M6.2 complete and stop before M6.3.
 
 ## M6.1 acceptance criteria
 
@@ -141,6 +163,25 @@ requires its own narrowly scoped schema and policies.
   temporary local Supabase CLI credential was removed and a subsequent
   authenticated CLI request correctly required login. M6.1 is complete;
   M6.2 remains unauthorized.
+- 2026-09-26: Maintainer authorized continuing with M6.2 and noted the phone
+  is disconnected. Implementation and host validation may proceed; pause for
+  physical auth QA when the code and CI checks are ready.
+- 2026-09-26: Implemented optional email-link UX, build-time publishable-key
+  configuration, Android callback registration, encrypted session and PKCE
+  storage, and backup exclusion. Accountless operation remains available and
+  sign-in triggers no trip upload. Focused Flutter tests and debug/release APK
+  builds passed. Dart format, Flutter analysis, all 187 Flutter tests, repository
+  contract/secret validation, and whitespace checks passed. Hosted callback
+  configuration and physical session QA remain.
+- 2026-09-26: Traelyx's `:app:testDebugUnitTest` passed with Android Studio's
+  Java 21. The broader all-module Gradle task was inconclusive because a
+  transitive `shared_preferences_android` Robolectric test needed an Android
+  artifact whose download was aborted by the host network. No app test failed.
+- 2026-09-26: Updated CI's Java runtime from 17 to 21 because the new
+  transitive Android SDK 36 Robolectric test requires Java 21. Generated
+  sources, Drift schema snapshots, and trip-debug inspector tests match the
+  committed contracts. The physical phone is still absent from ADB; hosted
+  auth redirect and session QA are still pending.
 
 ## Completion summary
 

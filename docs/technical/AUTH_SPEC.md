@@ -113,4 +113,15 @@ MVP:
 - secure credential storage;
 - account deletion.
 
+## M6.2 implementation boundary
+
+The first implemented method is email magic-link sign-in or signup through
+Supabase Auth. A dedicated Android callback URI completes the link; session
+JSON and PKCE verifiers use encrypted platform storage. Without build-time
+provider configuration or working secure storage, Account remains unavailable
+while local driving features continue. User-initiated link sending is the
+first cloud identity action. Signing in does not migrate or upload local
+trip data. See `docs/reference/AUTH_SETUP.md` and ADR-0019 for setup and
+dependency reasoning.
+
 Future optional MFA can be added if useful.

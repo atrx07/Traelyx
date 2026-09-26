@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +13,9 @@ import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_finalization.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
+import 'package:traelyx/features/account/application/account_providers.dart';
+import 'package:traelyx/features/account/domain/account_gateway.dart';
+import 'package:traelyx/features/account/domain/account_identity.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 import 'package:traelyx/features/data_management/application/data_management_providers.dart';
 import 'package:traelyx/features/data_management/domain/data_management_models.dart';
@@ -188,6 +193,9 @@ void main() {
     addTearDown(router.dispose);
 
     await _pumpApp(tester, router);
+    await tester.ensureVisible(find.byKey(const ValueKey('open-diagnostics')));
+    await tester.drag(find.byType(ListView).first, const Offset(0, -160));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('open-diagnostics')));
     await tester.pumpAndSettle();
 
@@ -204,6 +212,8 @@ void main() {
     await tester.tap(find.byTooltip('Back to You'));
     await tester.pumpAndSettle();
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
+    await tester.drag(find.byType(ListView).first, const Offset(0, 300));
+    await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
   });
 
@@ -232,6 +242,100 @@ void main() {
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
     expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
   });
+
+  testWidgets('You opens Account and returns to local Drive without sign-in', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter(initialLocation: TraelyxRoutes.you);
+    addTearDown(router.dispose);
+
+    await _pumpApp(tester, router);
+    await tester.tap(find.byKey(const ValueKey('open-account')));
+    await tester.pumpAndSettle();
+
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.youAccount,
+    );
+    expect(find.byKey(const ValueKey('account-screen')), findsOneWidget);
+    expect(find.textContaining('unavailable in this build'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('account-continue-locally')));
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.drive);
+    expect(find.byKey(const ValueKey('ready-drive-view')), findsOneWidget);
+  });
+
+  testWidgets(
+    'Account sends a link and signs out without touching local trips',
+    (tester) async {
+      final router = createTraelyxRouter(
+        initialLocation: TraelyxRoutes.youAccount,
+      );
+      addTearDown(router.dispose);
+      final accountGateway = _FakeAccountGateway();
+      addTearDown(accountGateway.dispose);
+
+      await _pumpApp(tester, router, accountGateway: accountGateway);
+      await tester.enterText(
+        find.byKey(const ValueKey('account-email')),
+        ' Driver@Example.com ',
+      );
+      await tester.tap(find.byKey(const ValueKey('account-send-link')));
+      await tester.pumpAndSettle();
+
+      expect(accountGateway.sentEmails, ['Driver@Example.com']);
+      expect(find.textContaining('Check your email'), findsOneWidget);
+
+      accountGateway.emit(
+        const AccountIdentity(userId: 'user-one', email: 'Driver@Example.com'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Signed in'), findsOneWidget);
+      expect(find.textContaining('does not upload'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('account-sign-out')));
+      await tester.pumpAndSettle();
+      expect(accountGateway.signOutCount, 1);
+      expect(find.textContaining('Local trips are still here'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Account rejects invalid email and handles link failure', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter(
+      initialLocation: TraelyxRoutes.youAccount,
+    );
+    addTearDown(router.dispose);
+    final accountGateway = _FakeAccountGateway()..failSend = true;
+    addTearDown(accountGateway.dispose);
+
+    await _pumpApp(tester, router, accountGateway: accountGateway);
+    await tester.enterText(
+      find.byKey(const ValueKey('account-email')),
+      'not-an-email',
+    );
+    await tester.tap(find.byKey(const ValueKey('account-send-link')));
+    await tester.pumpAndSettle();
+    expect(find.text('Enter a valid email address.'), findsOneWidget);
+    expect(accountGateway.sentEmails, isEmpty);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('account-email')),
+      'driver@example.com',
+    );
+    await tester.tap(find.byKey(const ValueKey('account-send-link')));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Could not send a sign-in link'),
+      findsOneWidget,
+    );
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.youAccount,
+    );
+  });
 }
 
 Future<void> _pumpApp(
@@ -241,6 +345,7 @@ Future<void> _pumpApp(
   RecorderStatus? recorderStatus,
   RecorderPermissionStatus? permissionStatus,
   TripHistoryRepository tripRepository = const _FakeTripRepository(),
+  AccountGateway? accountGateway,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -250,6 +355,8 @@ Future<void> _pumpApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        if (accountGateway != null)
+          accountGatewayProvider.overrideWithValue(accountGateway),
         bootstrapReadinessProvider.overrideWith(
           (ref) async => const BootstrapReadiness(
             databaseReady: true,
@@ -347,7 +454,52 @@ const _deepLinks = [
     index: 4,
     contentKey: 'destination-You',
   ),
+  _DeepLinkCase(
+    path: TraelyxRoutes.youAccount,
+    label: 'You',
+    index: 4,
+    contentKey: 'account-screen',
+  ),
 ];
+
+class _FakeAccountGateway implements AccountGateway {
+  final _changes = StreamController<AccountIdentity?>.broadcast();
+  AccountIdentity? _identity;
+  final sentEmails = <String>[];
+  int signOutCount = 0;
+  bool failSend = false;
+
+  void emit(AccountIdentity? identity) {
+    _identity = identity;
+    _changes.add(identity);
+  }
+
+  void dispose() => _changes.close();
+
+  @override
+  bool get isAvailable => true;
+
+  @override
+  AccountIdentity? get currentIdentity => _identity;
+
+  @override
+  Stream<AccountIdentity?> get identityChanges => _changes.stream;
+
+  @override
+  Future<void> sendSignInLink(String email) async {
+    if (failSend) throw StateError('network unavailable');
+    sentEmails.add(email);
+  }
+
+  @override
+  Future<void> refreshSession() async {}
+
+  @override
+  Future<void> signOut() async {
+    signOutCount++;
+    emit(null);
+  }
+}
 
 const _report = DiagnosticsReport(
   platform: PlatformDiagnosticsSnapshot(

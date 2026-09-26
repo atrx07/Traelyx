@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
+import 'package:traelyx/features/account/presentation/account_screen.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
@@ -86,6 +87,10 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                 path: TraelyxRoutes.you,
                 builder: (context, state) => const YouScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'account',
+                    builder: (context, state) => const AccountScreen(),
+                  ),
                   GoRoute(
                     path: 'data-export',
                     builder: (context, state) => const DataExportScreen(),

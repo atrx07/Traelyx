@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
+import 'package:traelyx/features/account/application/account_providers.dart';
 
-class YouScreen extends StatelessWidget {
+class YouScreen extends ConsumerWidget {
   const YouScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.traelyxColors;
+    final account = ref.watch(accountIdentityProvider).valueOrNull;
     return SafeArea(
       child: Center(
         child: ConstrainedBox(
@@ -48,6 +51,25 @@ class YouScreen extends StatelessWidget {
                 ).textTheme.bodyLarge?.copyWith(color: colors.textSecondary),
               ),
               const SizedBox(height: TraelyxSpacing.xxl),
+              Card(
+                child: ListTile(
+                  key: const ValueKey('open-account'),
+                  contentPadding: const EdgeInsets.all(TraelyxSpacing.md),
+                  leading: Icon(
+                    Icons.person_outline_rounded,
+                    color: colors.accent,
+                  ),
+                  title: const Text('Account'),
+                  subtitle: Text(
+                    account == null
+                        ? 'Continue locally or sign in for future online features.'
+                        : 'Signed in as ${account.email ?? 'your account'}. Local drives stay on this device.',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.go(TraelyxRoutes.youAccount),
+                ),
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
               Card(
                 child: ListTile(
                   key: const ValueKey('open-data-export'),
@@ -90,7 +112,7 @@ class YouScreen extends StatelessWidget {
                       const SizedBox(width: TraelyxSpacing.md),
                       const Expanded(
                         child: Text(
-                          'Other profile and settings areas remain foundation '
+                          'Vehicle and other settings areas remain foundation '
                           'placeholders.',
                         ),
                       ),

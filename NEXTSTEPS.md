@@ -4,12 +4,13 @@
 
 ## Current gate
 
-M6 is active. M6.1 is complete; wait for explicit authorization before M6.2.
+M6 is active. M6.1 is complete; M6.2 is authorized and in progress.
 
-## P0 — M6.2 authorization gate
+## P0 — M6.2 validation gate
 
 1. Preserve the completed M6.1 schema/RLS contract and accountless operation.
-2. Begin M6.2 auth UX only after the maintainer explicitly authorizes that substep.
+2. Finish host checks, configure the hosted email-link redirect, and validate callback, encrypted session restore, refresh, and sign-out on the physical phone when connected.
+3. Inspect the exact diff, commit/push, confirm CI and Git alignment, then report M6.2 complete and wait for separate M6.3 authorization.
 
 ## P1 — Preserve M5 boundaries
 
