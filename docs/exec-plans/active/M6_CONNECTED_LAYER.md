@@ -78,7 +78,7 @@ available without sign-in. M6.3 adds explicit compact-summary review and consent
 
 - [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
 - [x] M6.2 Auth UX (physical auth QA and CI passed).
-- [ ] M6.3 Local-to-account migration (authorized 2026-09-26).
+- [x] M6.3 Local-to-account migration (hosted/device/CI validation passed).
 - [ ] M6.4 Profiles/vehicles sync.
 - [ ] M6.5 Friends/social.
 - [ ] M6.6 Safe leaderboards.
@@ -119,11 +119,11 @@ available without sign-in. M6.3 adds explicit compact-summary review and consent
   forward migration; retain RLS and verify the needed hosted client route.
 - [x] Test payload minimization, duplicate/restart recovery, partial network
   failure, account switching, cancellation/deletion, and v1 upgrade preservation.
-- [ ] Run formatting, analysis, generated/schema checks, full Flutter/native/SQL
+- [x] Run formatting, analysis, generated/schema checks, full Flutter/native/SQL
   tests, repository validation, and debug/release builds.
 - [x] Verify the physical upgrade and consent UI; require maintainer consent
   before sending their summaries. Verify authenticated hosted idempotency/RLS.
-- [ ] Review/commit/push the bounded unit, verify CI and Git alignment, record
+- [x] Review/commit/push the bounded unit, verify CI and Git alignment, record
   completion, and stop before M6.4.
 
 M6.3 cloud payloads omit dates, vehicle labels, route geometry, raw samples,
@@ -168,7 +168,7 @@ requires its own narrowly scoped schema and policies.
   deployment. Dry run listed only `20260925000000`; push succeeded, and remote
   migration history matches local. Dashboard shows three empty public tables,
   each with RLS and its owner-scoped policies. Per-table Data API exposure
-  remains off (0 of 3); M6.3 must enable and verify only needed routes.
+  was recorded as off (0 of 3); M6.3 must verify needed client routes.
 - 2026-09-25: Hosted security advisor reported two client-EXECUTE warnings on
   a pre-existing `public.rls_auto_enable()` helper. A conditional follow-up
   revoke migration passed local present/absent-helper tests and remote dry run.
@@ -283,6 +283,16 @@ requires its own narrowly scoped schema and policies.
   release-validation APK builds (58.6 MB), and all three inspector tests pass.
   CI gates and completion persistence remain.
 
+- 2026-09-26: Committed and pushed implementation as `a228da9`; local HEAD
+  matched `origin/main`. GitHub Actions [run 36224500242](https://github.com/atrx07/Traelyx/actions/runs/36224500242)
+  passed both jobs, including PostgreSQL 17/RLS, generated/schema checks,
+  formatting, analysis, all Flutter/native tests, inspector/contract checks,
+  debug/release builds, size reporting, and artifact publication. The prior
+  M6.2 documentation-only run failed resolving Kotlin artifacts from the
+  Gradle plugin repository; that failure did not recur in this full run.
+  M6.3 is complete. This completion update changes documentation only;
+  M6.4 remains unauthorized.
+
 ## Completion summary
 
 M6.1 provides three empty, private, owner-scoped cloud tables, versioned
@@ -290,8 +300,9 @@ migrations, and reproducible SQL access tests. Both migrations are installed
 on the Traelyx free-tier Singapore project. No app sign-in, upload, local
 schema change, route storage, or new production dependency was introduced.
 Hosted RLS/privileges and the zero-warning security advisor were verified;
-the cloud Data API table exposure remains off pending a later authorized sync
-step. No new physical-device behavior was involved.
+the dashboard exposure indicators were recorded as off at that stage.
+M6.3 subsequently verifies authenticated summary access. No new
+physical-device behavior was involved in M6.1.
 
 M6.2 adds optional Supabase email-link sign-in, encrypted session/PKCE
 storage with backup exclusions, Account callback landing, explicit refresh,
@@ -304,4 +315,16 @@ failure classification and retry are regression-tested; the earlier
 transient send failure's root cause remains unknown. The phone is left
 signed in. No trip upload or local database migration was added, and
 accountless driving remains available. Dependencies are documented in
-ADR-0019. M6.3 requires separate authorization.
+ADR-0019. M6.3 was subsequently authorized on 2026-09-26.
+
+M6.3 adds optional, explicitly consented compact-summary snapshots, immutable
+local account links, durable retries with backoff, conflict protection, and
+cancellation. Local Drift schema 2 is additive; the cloud summary owner now
+references `auth.users` directly while RLS/grants remain intact. The physical
+upgrade and Keep local flow preserved four local trips and 7,546 raw files;
+real hosted validation used only a synthetic row whose cleanup was verified.
+The final ordinary debug app remains installed and signed in. All 216 Flutter
+tests and the full CI gates pass. No personal trip upload, new package,
+permission, background sync, future-trip opt-in, restore flow, or remote
+deletion UI was introduced. Sign-out/cancellation cannot recall an already
+in-flight request. M6.4 requires separate authorization.

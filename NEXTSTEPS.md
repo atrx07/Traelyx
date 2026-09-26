@@ -4,13 +4,14 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.2 are complete; M6.3 is authorized and in progress.
+M6 is active. M6.1–M6.3 are complete. M6.4 requires explicit authorization.
 
-## P0 — M6.3 final validation and persistence
+## P0 — Wait at the M6.4 approval gate
 
-1. Preserve the completed M6.1 schema/RLS contract and accountless operation.
-2. M6.2 physical auth QA, 199 Flutter tests, analysis, debug/release builds, and GitHub CI pass. The final live email link succeeded on the updated phone build; the phone remains signed in.
-3. M6.3 explicit consent, durable account-bound queue, retries, and additive local upgrade are implemented. All 216 Flutter tests, analysis, generated/schema checks, repository validation, local SQL tests, hosted synthetic access tests, and physical upgrade/Keep local checks pass. Finish release/CI verification and commit/push completion. Stop before M6.4.
+1. M6.3 is complete: explicit compact-summary consent, account-bound durable queue, safe retries, local schema-2 upgrade, and hosted owner-only access are validated.
+2. All 216 Flutter tests, analysis, generated/schema checks, repository validation, local/hosted SQL checks, physical upgrade/Keep local checks, and debug/release builds pass. GitHub CI run 36224500242 also passes native Kotlin and all remaining gates.
+3. The phone remains signed in; four trips remain local with zero queued/synced, and all 7,546 raw telemetry files are preserved. No personal trip upload was performed.
+4. Wait for maintainer authorization before starting M6.4 profiles/vehicles sync. Do not prepare or implement it while waiting.
 
 ## P1 — Preserve M5 boundaries
 

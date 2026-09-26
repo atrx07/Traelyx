@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.2 complete; M6.3 in progress**
+**M6 active — M6.1–M6.3 complete; M6.4 awaits authorization**
 
 ## Working
 
@@ -122,7 +122,7 @@
 - M6.1 links the Traelyx free-tier Singapore Supabase project to two versioned migrations. Three empty private tables (`profiles`, `vehicles`, `trip_summaries`) have explicit client grants and owner-only RLS; precise routes, raw telemetry, and API secrets are absent. The pre-existing `rls_auto_enable()` helper is no longer executable by `PUBLIC`, `anon`, or `authenticated`, while its database trigger remains enabled. The refreshed hosted Security Advisor has zero errors and warnings, and PostgreSQL 17 and existing CI checks pass. M6.1 recorded the dashboard exposure indicators as off; M6.3 subsequently verified real authenticated summary access.
 - M6.2 optional email-link account UI, secure session and PKCE storage, Android callback registration, selective backup exclusion, and accountless navigation are implemented. Physical Android 14 Tecno QA verified real email links, encrypted session restore, local sign-out, successful refresh, offline refresh failure/recovery, and retained trip history. Warm/cold callback routing now opens Account; ordinary launch opens Drive. A misleading catch-all link-send connection message now distinguishes network, provider limit, service, rejection, and unknown errors. The final link succeeded after updating and restarting the app; the earlier failure's exact cause remains unknown. All 199 Flutter tests, analysis, repository validation, debug/release builds, and GitHub CI run 36221304374 pass. The implementation is committed and pushed; M6.2 is complete. Signing in does not upload local trips or grant upload consent.
 
-- M6.3 implements explicitly consented compact snapshots, immutable account links, a durable foreground retry queue, and a non-destructive Drift v1→v2 upgrade. Hosted ownership/idempotency/conflict/anonymous checks passed with a disposable synthetic row and verified cleanup. Physical review/Keep local left four available, zero queued, zero synced, and 7,546 raw files / 59,570 KiB preserved. All 216 Flutter tests, analysis, generated/schema checks, local SQL tests, repository validation, three inspector tests, and debug/release builds pass. Final native/CI validation and completion persistence remain; no personal trip data was uploaded.
+- M6.3 implements explicitly consented compact snapshots, immutable account links, a durable foreground retry queue, and a non-destructive Drift v1→v2 upgrade. Hosted ownership/idempotency/conflict/anonymous checks passed with a disposable synthetic row and verified cleanup. Physical review/Keep local left four available, zero queued, zero synced, and 7,546 raw files / 59,570 KiB preserved. All 216 Flutter tests, analysis, generated/schema checks, local SQL tests, repository validation, three inspector tests, and debug/release builds pass. GitHub CI run 36224500242 passes PostgreSQL 17/RLS, Flutter/native tests, generated/schema checks, debug/release builds, and artifact gates for implementation commit `a228da9`. M6.3 is complete; no personal trip data was uploaded.
 
 ## Partial
 
@@ -176,4 +176,4 @@
 
 ## Current step
 
-**Active step:** Finish M6.3 release/CI validation and persist completion; stop before M6.4.
+**Gate:** M6.3 is complete. Wait for explicit authorization before beginning M6.4 profiles/vehicles sync.

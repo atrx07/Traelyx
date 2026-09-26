@@ -54,8 +54,8 @@ Sign-out must not necessarily erase local trip data. Cloud deletion and local de
 Account → Private summary sync reviews currently completed eligible UUID
 trips. Only explicit confirmation links those trips to the displayed account
 and atomically queues version-1 snapshots. New trips require another review.
-Signing in, opening the review screen, and keeping trips local make no data
-requests. Account links prevent another signed-in account from claiming the
+Signing in, opening the review screen, and keeping trips local make no trip
+upload requests. Account links prevent another signed-in account from claiming the
 same local trip. Original anonymous vehicle/baseline ownership is retained.
 
 The allowlist is `user_id`, `source_trip_id`, `summary_version`,
