@@ -119,3 +119,22 @@ account retains at most 1,000 pairs. Writes are revision-checked and uncertain
 responses require reload. Sending shares only the sender's saved username and
 display name with the target; acceptance grants no trip/vehicle/Guardian access.
 See ADR-0022 for server state and block semantics.
+
+## 11. M6.6 ranking consent
+
+Explicit local analysis is accountless and produces an immutable original
+score/event/integrity audit. Ranking eligibility does not cause an upload.
+Social → Safe comparisons requires explicit reload, per-trip vehicle-class
+review, and a separate confirmation naming the fields and friend audience.
+Summary-sync consent never authorizes ranking evidence or score publication.
+
+Ranking calls are foreground-only with no automatic outbox. Before sending,
+validate the reviewed immutable audit and persist the existing per-trip account
+association (`trip_account_links`, version 1). This association does not create
+a summary queue or imply summary consent. An uncertain response requires an
+explicit reload and review/retry; the server recognizes an identical trip/dossier
+without charging quota again. Account guards apply before and after network
+operations, and submission/withdrawal are serialized in both app and server.
+Sign-out/local deletion does not recall an in-flight request or delete cloud
+ranking evidence. Explicit Withdraw all comparisons does; local association
+remains to prevent moving the same trip into a different account.

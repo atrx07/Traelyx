@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/maps/offline_route_map.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
+import 'package:traelyx/features/trip_analysis/local_analysis_panel.dart';
 import 'package:traelyx/features/trips/application/replay_clock_controller.dart';
 import 'package:traelyx/features/trips/application/trip_history_providers.dart';
 import 'package:traelyx/features/trips/application/trip_route_providers.dart';
@@ -150,6 +151,9 @@ class _ResultContent extends StatelessWidget {
                   _MomentsPanel(events: result.events),
                   const SizedBox(height: TraelyxSpacing.xxl),
                   _PrivacyFooter(schemaVersion: result.telemetrySchemaVersion),
+                  if (result.score == null &&
+                      result.trip.completionState == TripEvidenceState.verified)
+                    LocalAnalysisPanel(tripId: result.trip.id),
                 ],
               ),
             ),
@@ -211,13 +215,20 @@ class _ScoreHero extends StatelessWidget {
     final colors = context.traelyxColors;
     final hasScore = score?.overallScore != null;
     final value = hasScore ? score!.overallScore!.round().toString() : '—';
-    final label = hasScore ? 'Overall synthesis' : 'Analysis not available';
+    final label = hasScore
+        ? 'Overall synthesis'
+        : score == null
+        ? 'Analysis not available'
+        : 'Insufficient supported evidence';
     final eligibility = hasScore
         ? _scoreEligibilityLabel(score!.eligibilityState)
         : null;
     final detail = hasScore
         ? '$eligibility · ${score!.scoringVersion}'
-        : 'This drive has not been processed into a persisted score. Recorded evidence remains available below.';
+        : score == null
+        ? 'This drive has not been processed into a persisted score. Recorded evidence remains available below.'
+        : 'Local analysis ${score!.scoringVersion} is preserved. Evidence did not support an overall score; '
+              'this trip is not eligible for rankings. Recorded evidence remains available below.';
 
     return Semantics(
       label: hasScore

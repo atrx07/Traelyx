@@ -86,6 +86,10 @@ class _SignedInSocialState extends ConsumerState<_SignedInSocial> {
       padding: const EdgeInsets.all(24),
       children: [
         Text('Social', style: Theme.of(context).textTheme.displaySmall),
+        TextButton(
+          onPressed: () => context.go('/social/rankings'),
+          child: const Text('Safe comparisons'),
+        ),
         const SizedBox(height: 16),
         const Text(
           'Connect by exact public username. Requests and acceptance share only username and display name with that person, even if your profile is private. Trips, routes, vehicles, and scores stay private.',

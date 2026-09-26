@@ -78,6 +78,50 @@ No notifications, contacts import, messaging, ranking, or new dependency.
 - [x] Verify hosted/device behavior, full CI, and data preservation.
 - [x] Synchronize completion, commit/push, stop before M6.6.
 
+### M6.6 boundary (authorized 2026-09-26)
+
+The maintainer explicitly approved completing the missing local analysis and
+server-validation prerequisites within M6.6. Preserve scoring version 1 and
+historical results. Local analysis is accountless, explicitly requested, and
+separate from recording finalization. Missing calibration, mount orientation,
+raw evidence, or full confidence must remain unavailable/ineligible.
+
+Ranking submission requires a separate review and consent for a bounded,
+sanitized validation dossier. Existing compact-summary consent is insufficient.
+The server must recompute accepted metrics and enforce eligibility, versions,
+ownership, deduplication, quotas, and withdrawal. Client integrity labels alone
+are not validation. No coordinates, raw samples, exact dates, speed rankings,
+extreme-G rewards, or new paid dependencies. Device-provided evidence cannot
+prove driver identity or resist a fully compromised client; disclose that limit.
+
+- [x] Persist immutable local scoring/integrity/event evidence from verified raw
+  trips, with explicit mount input, bounded execution, failure recovery, and tests.
+- [x] Define/version the minimized ranking dossier and safe aggregation policy;
+  implement server validation/access controls and adversarial SQL tests.
+- [x] Implement separate consent, account-safe submission/retry/withdrawal and
+  truthful ranking/insufficient-evidence UI with regression coverage.
+- [x] Validate full suites/builds; obtain exact migration approval; verify hosted
+  synthetic transactions, device behavior, and preservation of personal data.
+- [ ] Review/commit/push, verify CI, synchronize completion, stop before M6.7.
+
+M6.6 validation in progress: all 260 Flutter tests, 222 native tests including
+production analysis fixtures, static analysis, all local SQL
+suites, exact atomic deployment-script checks, configured debug build and
+release build (59.6 MB) pass. An 80-second synthetic trip passes the complete
+raw-to-score adapter with full/verified eligibility; missing calibration and
+corrupt evidence fail closed. Existing result/replay/accessibility tests remain
+unchanged and pass after analysis controls were placed below recorded evidence.
+The explicitly approved production migration and atomic hosted tests passed:
+migration history, private RLS, guarded RPC grants and fixture rollback all
+verified true. Physical synthetic analysis on Android 14 Tecno passed full/
+verified scoring, durable persistence, immutable repeat refusal, minimized
+payload and no-upload assertions (8,741 ms native analysis). The temporary
+in-memory probe and 80 generated chunks were removed; the configured normal
+app was restored. Explicit live comparison reload succeeds with no shared
+results or eligible personal trips. All 7,546 original raw files / 59,570 KiB
+remain. Consent/submission transitions use widget/SDK and hosted synthetic
+tests; no personal trip or real friend's data was shared. Final CI remains.
+
 ## Out of scope for M6.1
 
 - Flutter auth/session UI, cloud sync, public profiles, friendships,

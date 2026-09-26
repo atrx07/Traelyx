@@ -64,7 +64,9 @@ class DriftTripHistoryRepository implements TripHistoryRepository {
     return TripResult(
       trip: _historyItemFromRow(row),
       telemetrySchemaVersion: trip.telemetrySchemaVersion,
-      telemetryConfidenceRecorded: trip.telemetryConfidence != null,
+      telemetryConfidenceRecorded:
+          trip.telemetryConfidence != null ||
+          scores.any((s) => s.id == 'analysis-v1-$tripId'),
       evidence: _evidenceFromChunks(chunks),
       finalization: _finalizationFromJson(
         trip.telemetryQualitySummaryJson,
@@ -245,7 +247,9 @@ TripEvidenceState _recoveryState(String value) => switch (value) {
 
 TripEvidenceState _integrityState(String value) => switch (value) {
   'verified' => TripEvidenceState.verified,
-  'limited' || 'questionable' => TripEvidenceState.limited,
+  'limited' ||
+  'limited_confidence' ||
+  'questionable' => TripEvidenceState.limited,
   'review_required' || 'unranked' => TripEvidenceState.reviewRequired,
   'unavailable' => TripEvidenceState.unavailable,
   'unassessed' => TripEvidenceState.notAssessed,

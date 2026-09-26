@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.5 complete; awaiting M6.6 authorization**
+**M6 active — M6.1–M6.5 complete; M6.6 in progress**
 
 ## Working
 
@@ -128,20 +128,21 @@
 
 - M6.5 implements mutual friendship requests, participant-only name snapshots, account/revision guards, cancellation/removal/blocking, expiry/cooldown, request limits, and explicit consent. The approved hosted migration and synthetic transaction tests pass with fixture cleanup verified. All 244 Flutter tests, analysis, SQL suites, repository checks, and debug/release builds pass. Physical Social reload/no-match and data preservation pass; real-person requests were not sent. GitHub CI run 36244993247 passes all PostgreSQL 17, Flutter/native, generated/schema, build, size, and artifact gates for implementation commit `d79c5ae`. M6.5 is complete.
 
+- M6.6 implements immutable accountless local analysis and separately consented friends-only comparisons by broad vehicle class. The approved production migration and rollback-only security tests pass. All 260 Flutter / 222 native tests, analysis, contract checks and debug/release builds pass. Physical synthetic analysis and live comparison reload pass with original raw data preserved. Final CI and completion persistence remain.
+
 ## Partial
 
-- Social supports M6.5 friendships; rankings and Guardian remain pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
+- Social supports M6.5 friendships and deployed M6.6 comparisons; final ranking CI remains pending. Guardian remains pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
 - Drive DNA presentation is implemented, but production does not yet persist governed M4.5/M4.6 baseline snapshots; existing physical trips therefore remain truthfully uncalibrated instead of being analyzed in Flutter.
-- Trip history/results are implemented, but current production finalization does not execute or persist the M4 score/event/confidence pipeline or derive distance; those fields therefore remain honestly unavailable for existing physical trips.
+- Automatic finalization does not run scoring. M6.6 adds explicit accountless local analysis with user-supplied mount orientation, preserving existing scores. Unanalyzed or unsupported physical trips retain honest unavailable states.
 - Encrypted account session/PKCE storage is implemented; other future secret consumers remain outside M6.2–M6.3.
 - Online basemap tiles, downloaded-region cache implementation, and provider selection remain unimplemented; verified local-canvas route rendering is available offline.
 
 ## Not implemented
 
-- Final event/integrity/scoring persistence and server-side ranking enforcement.
 - Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
 - M3.7 replay-channel exposure and authoritative speed/acceleration/yaw/confidence replay graphs.
-- Social relationships, rankings, cloud trip restore, and remote deletion UI.
+- Cloud trip restore and general cloud data deletion UI. M6.6 provides separately confirmed ranking-only withdrawal.
 - Guardian Connect.
 - ML models.
 - Commentary provider integrations.
@@ -175,6 +176,7 @@
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - M6.4 physical QA covers private saves, explicit reload, upgrade, and cold cache restore on one Android 14 Tecno. Cross-account races, lost acknowledgements, conflicts, and public/private transitions are automated SDK/repository/rollback-only SQL evidence; simultaneous physical devices and real-profile publication were not tested.
 - M6.5 physical QA covers one signed-in Android 14 Tecno, explicit empty-list reload, no-match public lookup, layout, and raw-data preservation. Relationship transitions, blocking, quotas, and cross-account isolation are synthetic hosted SQL/SDK/widget evidence; two physical accounts and real-person requests were not exercised.
+- M6.6 physical QA covers a governed 80-second synthetic trip through the production native bridge and local persistence (8,741 ms), then live comparison reload on the restored normal app. All 7,546 raw files / 59,570 KiB remain. Consent/submission/withdrawal and friend projections are widget/SDK/hosted synthetic evidence; no personal trip was submitted. Mounted field scoring, population calibration and simultaneous physical accounts remain unverified.
 - Online tile/provider selection and downloaded-region policy remain deferred; core route rendering and its zero-byte local-canvas cache behavior are established offline.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -182,4 +184,5 @@
 
 ## Current step
 
-**Approval gate:** M6.5 is complete. Wait for explicit authorization before M6.6 safe leaderboards.
+**Approval gate:** M6.6 is authorized, including local analysis persistence and separately
+consented sanitized ranking-validation evidence. M6.7 remains unauthorized.

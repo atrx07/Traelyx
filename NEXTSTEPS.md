@@ -4,14 +4,15 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.5 are complete. M6.6 requires explicit authorization.
+M6 is active. M6.1–M6.5 are complete. M6.6 is authorized and in progress,
+including the explicitly approved local-analysis and ranking-validation prerequisites.
 
-## P0 — Wait at the M6.6 approval gate
+## P0 — Complete M6.6 safe leaderboards
 
 1. M6.5 is complete: mutual requests, participant-only name snapshots, account/revision guards, removal/blocking, expiry/cooldown, and request quotas are validated.
 2. All 244 Flutter tests, analysis, local/hosted SQL suites, repository checks, physical reload/no-match checks, and debug/release builds pass. GitHub CI run 36244993247 passes generated/schema checks, native Kotlin, and all remaining gates for implementation commit `d79c5ae`.
 3. The phone remains signed in with its private metadata and local trips. All 7,546 raw telemetry files / 59,570 KiB are preserved. No real friend requests or personal trip uploads were sent; hosted synthetic fixtures were rolled back and cleanup verified.
-4. Wait for maintainer authorization before starting M6.6 safe leaderboards. Do not prepare or implement it while waiting.
+4. M6.6 local analysis, separate consent and server validation are implemented. All 260 Flutter / 222 native tests, local and hosted SQL tests, and debug/release builds pass. Synthetic phone analysis and live empty comparison reload pass; final GitHub CI and completion persistence remain. M6.7 stays gated.
 
 ## P1 — Preserve M5 boundaries
 

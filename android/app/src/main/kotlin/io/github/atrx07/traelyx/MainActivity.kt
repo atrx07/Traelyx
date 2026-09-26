@@ -32,6 +32,7 @@ import io.github.atrx07.traelyx.recorder.toBridgeMap
 import io.github.atrx07.traelyx.recorder.tripDebugExportFailureMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import io.github.atrx07.traelyx.intelligence.LocalTripAnalysis
 
 class MainActivity : FlutterActivity() {
     private val permissionGateway by lazy { AndroidRecorderPermissionGateway(this) }
@@ -45,6 +46,8 @@ class MainActivity : FlutterActivity() {
     private val tripDebugExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val dataManagementExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val routeExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val analysisExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var analysisBusy = false
 
     override fun onPostResume() {
         super.onPostResume()
@@ -53,6 +56,33 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        val localAnalysis = LocalTripAnalysis(AtomicFileTelemetryChunkStore(applicationContext))
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LocalTripAnalysis.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method != "analyzeTrip") {
+                    result.notImplemented()
+                } else if (analysisBusy || RecorderService.queryState(applicationContext).isActive) {
+                    result.error("analysis_busy", "Local analysis is already running.", null)
+                } else {
+                    val tripId = call.argument<String>("tripId")
+                    val forwardAxis = call.argument<String>("forwardAxis")
+                    analysisBusy = true
+                    analysisExecutor.execute {
+                        val outcome = runCatching {
+                            localAnalysis.read(requireNotNull(tripId), requireNotNull(forwardAxis))
+                        }
+                        runOnUiThread {
+                            analysisBusy = false
+                            if (!isDestroyed) outcome.fold(
+                                onSuccess = { result.success(it) },
+                                onFailure = { result.error("analysis_unavailable",
+                                    "Raw evidence is missing, invalid, or exceeds local analysis limits.", null) },
+                            )
+                        }
+                    }
+                }
+            }
 
         val recorderDispatcher =
             RecorderBridgeDispatcher(
@@ -368,6 +398,7 @@ class MainActivity : FlutterActivity() {
         tripDebugExecutor.shutdownNow()
         dataManagementExecutor.shutdownNow()
         routeExecutor.shutdownNow()
+        analysisExecutor.shutdownNow()
         super.onDestroy()
     }
 

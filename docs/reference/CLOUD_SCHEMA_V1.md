@@ -73,3 +73,43 @@ exposes only relationship ID/revision, peer name snapshots, and caller-relative
 state; it never exposes the other account UUID or other people's relationships.
 Existing profile/vehicle/summary grants and public projection remain unchanged.
 See ADR-0022 and `supabase/tests/friendships.sql` for transitions and abuse limits.
+
+## M6.6 safe comparisons
+
+Migration `20260926040000` adds `ranking_members`, `ranking_entries` and
+`ranking_limits`. All have RLS, no direct PUBLIC/anon/authenticated table access,
+and no client sequence grants. The private pure validator has no client EXECUTE.
+Only authenticated callers can execute `submit_ranking_v1`, `read_rankings_v1`
+and `withdraw_rankings_v1`, each with an expected-account guard and empty search
+path. Submission validates current profile snapshots and a saved vehicle class.
+One owner's retained history uses one class; changing it requires withdrawal.
+
+The exact dossier keys are `versions`, `source_digest`, `vehicle_class`,
+`duration_ms`, `moving_ms`, `calibration`, `integrity_counts`, `dimensions`, and
+`events`. Every version in the validator's named registry must equal 1. Three
+calibration checks must all pass; eleven ordered integrity exclusion counts
+must all be zero. These are client-supplied evidence claims, not attestation.
+Four dimension tuples contain opportunity/usable/fully-eligible milliseconds
+in smoothness/braking/acceleration/cornering order. Full evidence must cover
+at least 80% of each opportunity; minimum control opportunity is 500 ms, minimum
+moving evidence 60 seconds, maximum duration two hours. Durations are integral.
+
+At most 1,000 ordered event tuples contain category ordinal, clamped activation
+severity in permille (1,000–2,000) and supported confidence weight (1,000).
+Categories 0–8 follow strong/abrupt acceleration, strong/abrupt braking,
+left/right high-load cornering, abrupt corner entry/exit and road impact.
+Server scoring v1 independently reconstructs penalties; road impact earns
+neither penalty nor reward. A maximum 64 KiB exact shape rejects extra fields.
+No client score or rank is accepted. Trip IDs and digests deduplicate immutable
+submissions; quotas are 30 new entries per 24-hour window and 1,000 retained.
+
+Read returns the caller's current profile, eligible saved classes, own submitted
+trip IDs, and sanitized comparison rows for self/accepted unblocked friends.
+Rows expose name snapshots, broad class, capped sample count, self marker and
+three aggregate metrics. No peer account ID, dossier or trip ID is projected.
+Ten submissions are required; metrics use latest/preceding five by server
+acceptance order. Withdrawal removes the owner's member/entries; rate-limit
+counters remain. Account deletion cascades all three tables. See ADR-0023 and
+`supabase/tests/safe_rankings.sql`. The approved production migration and atomic
+synthetic tests passed on 2026-09-26; RLS, guarded grants, migration history and
+rollback of every synthetic fixture were verified.

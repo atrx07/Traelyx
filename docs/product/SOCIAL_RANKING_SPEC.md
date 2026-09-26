@@ -60,3 +60,23 @@ Achievements should reward engagement/quality, e.g.:
 - successful data export / open-source contributor easter eggs.
 
 Avoid achievements for dangerous maxima.
+
+## M6.6 implemented comparison contract (validation pending)
+
+Experimental friends-only cohorts are separated into car, motorcycle and other.
+The user explicitly selects the recorded trip's class from saved vehicle classes;
+unknown classes are excluded. A member's retained history uses one class until
+withdrawn. Only complete scoring-v1 dimensions, verified integrity, clean
+finalization and supported calibration/orientation evidence are admitted.
+Minimum moving evidence is 60 seconds; opportunity coverage and contribution
+rules retain scoring-v1 semantics. The server derives scores from a separately
+consented minimized dossier, never trusts the owner-writable compact summary.
+
+Ten accepted submissions unlock comparison: latest-five mean smoothness,
+100 minus their mean absolute deviation for consistency, and latest-five minus
+preceding-five mean for improvement. This uses server acceptance order and is
+not a chronological or population-normalized skill claim. It does not change
+trip scoring or Drive DNA. No extra-driving incentive or achievement is added.
+Names/class/aggregates are shared with accepted unblocked friends only; underlying
+evidence remains private. User-controlled withdrawal removes ranking evidence.
+Server validation cannot establish physical truth or driver identity. See ADR-0023.

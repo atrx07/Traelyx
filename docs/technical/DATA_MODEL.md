@@ -154,3 +154,21 @@ and no direct client privileges. Only guarded RPC projections return peer
 username/display name, relationship ID, revision, and caller-relative state.
 Closed pairs retain minimal abuse/cooldown history; account/profile deletion
 cascades relationship rows. Local Drift remains schema 3. See ADR-0022.
+
+## M6.6 analysis and ranking evidence
+
+Explicit local analysis writes existing `trip_scores` and `trip_events` in one
+transaction and updates the trip's versioned distance/integrity fields. Schema
+3 is unchanged. `audit_contributions_json` retains analysis orchestration v1,
+source digest/versions/bounds, explicit mount hint, calibration/config snapshots,
+dimension coverage, contribution audits, integrity findings and merged events.
+An existing score is never overwritten. Global confidence remains null; typed
+categorical evidence is preserved rather than inventing a probability.
+Event confidence uses 1/0.5 categorical compatibility weights, with the original
+category in the audit. Relative event magnitude uses the explicitly named
+`activation-ratio-cap2-v1` mapping; the physical activation ratio remains local.
+
+The cloud adds private ranking membership/evidence/quota tables and guarded
+projections described in `CLOUD_SCHEMA_V1.md`. Ranking consent may create an
+immutable `trip_account_links` association without a summary-sync queue.
+Existing summary consent and payloads are not expanded. See ADR-0023.

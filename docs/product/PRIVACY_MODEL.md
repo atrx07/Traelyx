@@ -136,3 +136,17 @@ direction; only the blocker sees their block. A separately public profile
 remains publicly discoverable. Unblock does not restore friendship. Closed
 pairs retain minimal name/state history for abuse/cooldown enforcement, bounded
 to 1,000 pairs per account; account/profile deletion cascades relationship rows.
+
+## M6.6 safe comparisons
+
+Local analysis stays on-device. Ranking uses separate per-trip consent to store
+a minimized private validation dossier and share only name snapshots, broad
+vehicle class and aggregate metrics with current/future accepted friends.
+Neither sign-in, friendships, public profiles nor compact-summary sync grants
+this consent. No coordinates, exact dates, raw samples, device identifiers,
+vehicle labels, speed or physical G values are admitted. Evidence durations,
+event categories and bounded severity/confidence weights are sensitive derived
+data and are explained in the confirmation. Friend removal/blocking hides the
+projection server-side on the next read; UI snapshots require explicit reload.
+Withdraw all comparisons deletes this account's ranking evidence across devices;
+local trips, original scores, summary sync and friendships remain independent.

@@ -65,7 +65,9 @@ class DriftRecorderFinalizationRepository
               completionState: finalization.completionState,
               recoveryState: finalization.recoveryState,
               telemetrySchemaVersion: telemetrySchemaVersion,
-              integrityStatus: finalization.integrityStatus,
+              integrityStatus: existingTrip?.scoringVersion == null
+                  ? finalization.integrityStatus
+                  : existingTrip!.integrityStatus,
               telemetryQualitySummaryJson: Value(qualitySummary),
               cloudSyncState: existingTrip?.cloudSyncState ?? 'local_only',
               createdAtMicros: existingTrip?.createdAtMicros ?? startWallMicros,
