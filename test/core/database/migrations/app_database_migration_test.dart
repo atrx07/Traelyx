@@ -19,7 +19,7 @@ void main() {
     verifier = SchemaVerifier(GeneratedHelper());
   });
 
-  test('version 1 upgrades to version 2 while preserving settings', () async {
+  test('version 1 upgrades to version 3 while preserving settings', () async {
     final schema = await verifier.schemaAt(1);
     final fixture = v1.DatabaseAtV1(schema.newConnection());
     await fixture
@@ -36,7 +36,7 @@ void main() {
     final database = AppDatabase(schema.newConnection());
     await verifier.migrateAndValidate(
       database,
-      2,
+      3,
       options: const ValidationOptions(validateDropped: true),
     );
     final setting = await database.select(database.appSettings).getSingle();
@@ -54,6 +54,7 @@ void main() {
     expect(setting.key, 'privacy.accountless');
     expect(setting.value, 'true');
     expect(await _tableNames(database), [
+      'account_metadata_cache',
       'app_settings',
       'driver_baselines',
       'sync_queue',
@@ -79,7 +80,7 @@ void main() {
   });
 
   test(
-    'v1 trip evidence and pending queue survive the additive v2 upgrade',
+    'v1 trip evidence and pending queue survive the additive v3 upgrade',
     () async {
       final schema = await verifier.schemaAt(1);
       final fixture = v1.DatabaseAtV1(schema.newConnection());
@@ -160,7 +161,7 @@ void main() {
       final database = AppDatabase(schema.newConnection());
       await verifier.migrateAndValidate(
         database,
-        2,
+        3,
         options: const ValidationOptions(validateDropped: true),
       );
       for (final table in tables) {
@@ -207,6 +208,7 @@ void main() {
         await _tableNames(database),
         containsAll(<String>[
           'android_metadata',
+          'account_metadata_cache',
           'app_settings',
           'trips',
           'vehicles',

@@ -78,6 +78,17 @@ one transaction. The trip's anonymous vehicle owner namespace is not changed.
 ### `settings`
 Non-secret app settings. Secrets live in secure storage.
 
+### `account_metadata_cache` — Drift schema 3
+- composite primary key: `user_id`, `entity_type` (profile/vehicle), `entity_id`;
+- strict version-1 `payload_json`, server `revision` (0 only for unsaved creation);
+- optional `source_local_vehicle_id`, local-only provenance for a reviewed copy.
+
+An additive schema-1/2→3 upgrade creates this cache without rewriting existing
+trip evidence, account links, or queues. Draft operations use `sync_queue`
+entity type `account_metadata_v1`, mutation UUID idempotency, and expected
+revision. Profile/vehicle cloud rows gain server-maintained `revision` and
+`last_mutation_id`; no new raw/private telemetry fields are introduced.
+
 ## 2. Cloud database — compact connected layer
 
 M6.1 begins with private `profiles`, sanitized `vehicles`, and compact

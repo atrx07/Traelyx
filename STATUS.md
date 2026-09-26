@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.3 complete; M6.4 awaits authorization**
+**M6 active — M6.1–M6.3 complete; M6.4 in progress**
 
 ## Working
 
@@ -124,6 +124,8 @@
 
 - M6.3 implements explicitly consented compact snapshots, immutable account links, a durable foreground retry queue, and a non-destructive Drift v1→v2 upgrade. Hosted ownership/idempotency/conflict/anonymous checks passed with a disposable synthetic row and verified cleanup. Physical review/Keep local left four available, zero queued, zero synced, and 7,546 raw files / 59,570 KiB preserved. All 216 Flutter tests, analysis, generated/schema checks, local SQL tests, repository validation, three inspector tests, and debug/release builds pass. GitHub CI run 36224500242 passes PostgreSQL 17/RLS, Flutter/native tests, generated/schema checks, debug/release builds, and artifact gates for implementation commit `a228da9`. M6.3 is complete; no personal trip data was uploaded.
 
+- M6.4 adds a schema-3 account metadata cache, explicitly reviewed profile/vehicle edits, idempotent mutation IDs, optimistic revision conflicts, durable foreground retries, and a two-field exact-username public lookup only for explicitly published profiles. Both hosted migrations and rollback-only access tests pass, including server rejection of a request whose intended owner differs from the session. Final guarded profile/vehicle saves confirm with zero queue. All 235 Flutter tests, analysis, generated/schema checks, repository validation, and debug/release builds pass. Physical private profile/vehicle saves, zero queue, cold cache restore, and 7,546 raw files / 59,570 KiB preservation pass. No personal trips or public profile were published. Final CI/persistence remain.
+
 ## Partial
 
 - Social remains a navigation skeleton. You exposes diagnostics; its other profile/settings features remain placeholders.
@@ -137,7 +139,7 @@
 - Final event/integrity/scoring persistence and server-side ranking enforcement.
 - Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
 - M3.7 replay-channel exposure and authoritative speed/acceleration/yaw/confidence replay graphs.
-- Profile/vehicle sync, public/social features, cloud restore, and remote deletion UI.
+- Social relationships, rankings, cloud trip restore, and remote deletion UI.
 - Guardian Connect.
 - ML models.
 - Commentary provider integrations.
@@ -176,4 +178,4 @@
 
 ## Current step
 
-**Gate:** M6.3 is complete. Wait for explicit authorization before beginning M6.4 profiles/vehicles sync.
+**Active step:** Finish M6.4 CI validation and completion persistence; stop before M6.5.

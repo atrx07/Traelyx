@@ -23,8 +23,8 @@ denied anonymous reads, and denied forged-owner writes. SQL grants and RLS
 establish the tested database boundary. No profile or vehicle sync flow is
 introduced by M6.3.
 
-No public profile, social, leaderboard, or Guardian read path exists in version
-1. Later M6 substeps must add those paths with migrations and access tests.
+The initial version-1 foundation introduced no public profile, social,
+leaderboard, or Guardian read path. Later migrations are described below.
 M6.1 did not alter local Drift schema version 1. M6.3 adds separate local
 account associations in Drift schema 2, without rewriting existing evidence.
 
@@ -38,3 +38,27 @@ The second M6.1 migration revokes `EXECUTE` on an existing Supabase
 `public.rls_auto_enable()` helper from `PUBLIC`, `anon`, and `authenticated`
 where present. The `postgres` owner retains execution rights, and the
 `ensure_rls` database event trigger remains enabled.
+
+## M6.4 metadata revisions and public projection
+
+Migration `20260926010000` adds server-maintained `revision` and nullable
+`last_mutation_id` to profiles/vehicles. `save_profile_v1` and `save_vehicle_v1`
+are authenticated-only SECURITY INVOKER RPCs: ownership comes from `auth.uid`,
+RLS applies, and expected revisions prevent stale replacement. A revoked
+client-EXECUTE trigger helper advances revisions for every update, including
+direct writes. Existing profile/vehicle field grants and RLS remain intact.
+
+`lookup_public_profile_v1(text)` is a deliberate SECURITY DEFINER projection
+with a fixed empty search path and exact-username predicate. Only username
+and display name of public profiles are returned; anon/authenticated can
+execute it, PUBLIC cannot. It gives no base-table access, owner ID, private
+profile, vehicle, or trip information. SQL tests verify publish/unpublish,
+projection keys, denied base-table access, stale writes, and duplicate retries.
+
+Forward migration `20260926020000` adds `expected_user_id` to both save RPCs
+and requires it to match `auth.uid()` before any read/write. It revokes all
+client execution on the initial unguarded signatures. Public lookup and stored
+data are unchanged. A pre-guard development app must update before saving;
+its existing queued metadata already contains the intended owner and remains
+usable by the updated app. Tests simulate account A's payload arriving with
+account B's session and require rejection before writing either account.

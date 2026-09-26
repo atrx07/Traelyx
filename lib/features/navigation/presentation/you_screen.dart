@@ -43,8 +43,8 @@ class YouScreen extends ConsumerWidget {
               ),
               const SizedBox(height: TraelyxSpacing.md),
               Text(
-                'Vehicles, local settings, privacy controls, and data '
-                'management will be collected here.',
+                'Manage your account, private vehicle details, privacy controls, '
+                'and local data here.',
                 textAlign: TextAlign.center,
                 style: Theme.of(
                   context,
@@ -62,7 +62,7 @@ class YouScreen extends ConsumerWidget {
                   title: const Text('Account'),
                   subtitle: Text(
                     account == null
-                        ? 'Continue locally or sign in for future online features.'
+                        ? 'Continue locally or sign in for optional account features.'
                         : 'Signed in as ${account.email ?? 'your account'}. Local drives stay on this device.',
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -112,8 +112,8 @@ class YouScreen extends ConsumerWidget {
                       const SizedBox(width: TraelyxSpacing.md),
                       const Expanded(
                         child: Text(
-                          'Vehicle and other settings areas remain foundation '
-                          'placeholders.',
+                          'Profile and private vehicle details are available in Account. '
+                          'Recording vehicle selection is not available yet.',
                         ),
                       ),
                     ],

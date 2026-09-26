@@ -79,3 +79,32 @@ download/restore, or remote deletion UI is introduced in M6.3.
 `trips.cloud_sync_state` mirrors `summary_pending`, `summary_synced`, or
 `summary_linked` (cancelled queue, cloud existence may be unknown). Recorder
 finalization replay preserves this field. See ADR-0020.
+
+## 9. M6.4 profile/vehicle boundary
+
+Account → Profile & vehicles opens an account-scoped local cache. Saving a
+reviewed form queues its exact fields and attempts foreground sync; new
+profiles default private. Reload cloud explicitly reads the current owner's
+profile/vehicles and replaces acknowledged cache only when no draft is pending.
+Cloud metadata remains separate from local recording vehicle configuration.
+
+Version-1 edits use a random mutation UUID, expected server revision, and
+explicit reviewed account ID. The server rejects an authenticated account
+that differs from that ID, even if the SDK session changed during dispatch.
+Idempotent lost-acknowledgement retries preserve the request; stale revisions
+or username collisions require discard/reload/review instead of last-write-wins.
+Retry delay persists from 30 seconds to one hour, with at most 50 edits per
+batch. Pending profile edits hold vehicles until the profile is acknowledged.
+Account changes stop later requests and prevent another account using the queue.
+
+The public projection contains only exact username/display name for explicitly
+published profiles. Private vehicles contain only account/opaque ID, chosen
+label, and broad class. No vehicle registration, make/model/year, calibration,
+baseline, route, trip, email, or credential is copied by these operations.
+An explicit local metadata copy preserves local IDs/ownership/assignments.
+
+Discard removes drafts, not remote data; already-sent requests may complete.
+Visibility changes are effective only after cloud acknowledgement. Cache and
+queued metadata stay on-device across restart/sign-out, scoped to the account.
+No metadata deletion UI, auto-fetch, background sync, public vehicle lookup,
+or social relationship is added here. See ADR-0021.

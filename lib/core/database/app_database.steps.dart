@@ -1226,8 +1226,369 @@ i1.GeneratedColumn<int> _column_82(String aliasedName) =>
       type: i1.DriftSqlType.int,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    appSettings,
+    vehicles,
+    trips,
+    tripChunks,
+    tripEvents,
+    driverBaselines,
+    tripScores,
+    syncQueue,
+    tripAccountLinks,
+    accountMetadataCache,
+    vehiclesOwnerNamespace,
+    tripsVehicleStart,
+    tripsStartTime,
+    tripEventsTripStart,
+    tripScoresTripVersion,
+    driverBaselinesOwnerVehicle,
+    syncQueueIdempotencyKey,
+    syncQueueStateNextAttempt,
+  ];
+  late final Shape0 appSettings = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'app_settings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY("key")'],
+      columns: [_column_0, _column_1, _column_2],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 vehicles = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'vehicles',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_2,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 trips = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'trips',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(end_wall_time_micros IS NULL OR end_wall_time_micros >= start_wall_time_micros)',
+        'CHECK(end_elapsed_nanos IS NULL OR end_elapsed_nanos >= start_elapsed_nanos)',
+        'CHECK(duration_millis IS NULL OR duration_millis >= 0)',
+        'CHECK(distance_meters IS NULL OR distance_meters >= 0)',
+        'CHECK(telemetry_schema_version > 0)',
+        'CHECK(telemetry_confidence IS NULL OR(telemetry_confidence >= 0 AND telemetry_confidence <= 1))',
+      ],
+      columns: [
+        _column_3,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+        _column_26,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_12,
+        _column_2,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 tripChunks = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'trip_chunks',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(trip_id, sequence)',
+        'CHECK(sequence >= 0)',
+        'CHECK(encoding_version > 0)',
+        'CHECK(end_elapsed_nanos >= start_elapsed_nanos)',
+        'CHECK(byte_length >= 0)',
+      ],
+      columns: [
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_16,
+        _column_34,
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_41,
+        _column_12,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 tripEvents = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'trip_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(peak_elapsed_nanos >= start_elapsed_nanos)',
+        'CHECK(end_elapsed_nanos >= peak_elapsed_nanos)',
+        'CHECK(severity >= 0 AND severity <= 1)',
+        'CHECK(confidence >= 0 AND confidence <= 1)',
+      ],
+      columns: [
+        _column_3,
+        _column_30,
+        _column_42,
+        _column_16,
+        _column_43,
+        _column_34,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_50,
+        _column_51,
+        _column_52,
+        _column_12,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape5 driverBaselines = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'driver_baselines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(baseline_schema_version > 0)',
+        'CHECK(valid_trip_count >= 0)',
+        'CHECK(confidence IS NULL OR(confidence >= 0 AND confidence <= 1))',
+        'CHECK(window_start_wall_time_micros IS NULL OR window_end_wall_time_micros IS NULL OR window_end_wall_time_micros >= window_start_wall_time_micros)',
+      ],
+      columns: [
+        _column_3,
+        _column_4,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_57,
+        _column_58,
+        _column_59,
+        _column_60,
+        _column_61,
+        _column_12,
+        _column_2,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 tripScores = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'trip_scores',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(score_schema_version > 0)',
+        'CHECK(overall_score IS NULL OR(overall_score >= 0 AND overall_score <= 100))',
+        'CHECK(confidence IS NULL OR(confidence >= 0 AND confidence <= 1))',
+      ],
+      columns: [
+        _column_3,
+        _column_30,
+        _column_62,
+        _column_57,
+        _column_63,
+        _column_64,
+        _column_61,
+        _column_65,
+        _column_66,
+        _column_67,
+        _column_68,
+        _column_12,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 syncQueue = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'sync_queue',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(operation_id)',
+        'CHECK(entity_version >= 0)',
+        'CHECK(attempt_count >= 0)',
+      ],
+      columns: [
+        _column_69,
+        _column_70,
+        _column_71,
+        _column_72,
+        _column_73,
+        _column_74,
+        _column_75,
+        _column_76,
+        _column_77,
+        _column_78,
+        _column_79,
+        _column_12,
+        _column_2,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 tripAccountLinks = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'trip_account_links',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(trip_id)', 'CHECK(summary_version = 1)'],
+      columns: [_column_30, _column_80, _column_81, _column_82],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 accountMetadataCache = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'account_metadata_cache',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(user_id, entity_type, entity_id)',
+        'CHECK(entity_type IN (\'profile\', \'vehicle\'))',
+        'CHECK(revision >= 0)',
+      ],
+      columns: [
+        _column_80,
+        _column_71,
+        _column_72,
+        _column_83,
+        _column_84,
+        _column_85,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index vehiclesOwnerNamespace = i1.Index(
+    'vehicles_owner_namespace',
+    'CREATE INDEX vehicles_owner_namespace ON vehicles (owner_namespace)',
+  );
+  final i1.Index tripsVehicleStart = i1.Index(
+    'trips_vehicle_start',
+    'CREATE INDEX trips_vehicle_start ON trips (vehicle_id, start_wall_time_micros)',
+  );
+  final i1.Index tripsStartTime = i1.Index(
+    'trips_start_time',
+    'CREATE INDEX trips_start_time ON trips (start_wall_time_micros)',
+  );
+  final i1.Index tripEventsTripStart = i1.Index(
+    'trip_events_trip_start',
+    'CREATE INDEX trip_events_trip_start ON trip_events (trip_id, start_elapsed_nanos)',
+  );
+  final i1.Index tripScoresTripVersion = i1.Index(
+    'trip_scores_trip_version',
+    'CREATE UNIQUE INDEX trip_scores_trip_version ON trip_scores (trip_id, score_schema_version, scoring_version)',
+  );
+  final i1.Index driverBaselinesOwnerVehicle = i1.Index(
+    'driver_baselines_owner_vehicle',
+    'CREATE INDEX driver_baselines_owner_vehicle ON driver_baselines (owner_namespace, vehicle_id)',
+  );
+  final i1.Index syncQueueIdempotencyKey = i1.Index(
+    'sync_queue_idempotency_key',
+    'CREATE UNIQUE INDEX sync_queue_idempotency_key ON sync_queue (idempotency_key)',
+  );
+  final i1.Index syncQueueStateNextAttempt = i1.Index(
+    'sync_queue_state_next_attempt',
+    'CREATE INDEX sync_queue_state_next_attempt ON sync_queue (state, next_attempt_at_micros)',
+  );
+}
+
+class Shape9 extends i0.VersionedTable {
+  Shape9({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get userId =>
+      columnsByName['user_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get entityType =>
+      columnsByName['entity_type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get entityId =>
+      columnsByName['entity_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get payloadJson =>
+      columnsByName['payload_json']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get revision =>
+      columnsByName['revision']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get sourceLocalVehicleId =>
+      columnsByName['source_local_vehicle_id']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_83(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'payload_json',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_84(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'revision',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_85(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'source_local_vehicle_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1236,6 +1597,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1244,6 +1610,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );

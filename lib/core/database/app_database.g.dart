@@ -6844,6 +6844,452 @@ class TripAccountLinksCompanion extends UpdateCompanion<TripAccountLink> {
   }
 }
 
+class $AccountMetadataCacheTable extends AccountMetadataCache
+    with TableInfo<$AccountMetadataCacheTable, AccountMetadataCacheData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AccountMetadataCacheTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityTypeMeta = const VerificationMeta(
+    'entityType',
+  );
+  @override
+  late final GeneratedColumn<String> entityType = GeneratedColumn<String>(
+    'entity_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
+    'payloadJson',
+  );
+  @override
+  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
+    'payload_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceLocalVehicleIdMeta =
+      const VerificationMeta('sourceLocalVehicleId');
+  @override
+  late final GeneratedColumn<String> sourceLocalVehicleId =
+      GeneratedColumn<String>(
+        'source_local_vehicle_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userId,
+    entityType,
+    entityId,
+    payloadJson,
+    revision,
+    sourceLocalVehicleId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'account_metadata_cache';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AccountMetadataCacheData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('entity_type')) {
+      context.handle(
+        _entityTypeMeta,
+        entityType.isAcceptableOrUnknown(data['entity_type']!, _entityTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityTypeMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('payload_json')) {
+      context.handle(
+        _payloadJsonMeta,
+        payloadJson.isAcceptableOrUnknown(
+          data['payload_json']!,
+          _payloadJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadJsonMeta);
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionMeta);
+    }
+    if (data.containsKey('source_local_vehicle_id')) {
+      context.handle(
+        _sourceLocalVehicleIdMeta,
+        sourceLocalVehicleId.isAcceptableOrUnknown(
+          data['source_local_vehicle_id']!,
+          _sourceLocalVehicleIdMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId, entityType, entityId};
+  @override
+  AccountMetadataCacheData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AccountMetadataCacheData(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      entityType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_type'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      payloadJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload_json'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      sourceLocalVehicleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_local_vehicle_id'],
+      ),
+    );
+  }
+
+  @override
+  $AccountMetadataCacheTable createAlias(String alias) {
+    return $AccountMetadataCacheTable(attachedDatabase, alias);
+  }
+}
+
+class AccountMetadataCacheData extends DataClass
+    implements Insertable<AccountMetadataCacheData> {
+  final String userId;
+  final String entityType;
+  final String entityId;
+  final String payloadJson;
+  final int revision;
+  final String? sourceLocalVehicleId;
+  const AccountMetadataCacheData({
+    required this.userId,
+    required this.entityType,
+    required this.entityId,
+    required this.payloadJson,
+    required this.revision,
+    this.sourceLocalVehicleId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['entity_type'] = Variable<String>(entityType);
+    map['entity_id'] = Variable<String>(entityId);
+    map['payload_json'] = Variable<String>(payloadJson);
+    map['revision'] = Variable<int>(revision);
+    if (!nullToAbsent || sourceLocalVehicleId != null) {
+      map['source_local_vehicle_id'] = Variable<String>(sourceLocalVehicleId);
+    }
+    return map;
+  }
+
+  AccountMetadataCacheCompanion toCompanion(bool nullToAbsent) {
+    return AccountMetadataCacheCompanion(
+      userId: Value(userId),
+      entityType: Value(entityType),
+      entityId: Value(entityId),
+      payloadJson: Value(payloadJson),
+      revision: Value(revision),
+      sourceLocalVehicleId: sourceLocalVehicleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceLocalVehicleId),
+    );
+  }
+
+  factory AccountMetadataCacheData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AccountMetadataCacheData(
+      userId: serializer.fromJson<String>(json['userId']),
+      entityType: serializer.fromJson<String>(json['entityType']),
+      entityId: serializer.fromJson<String>(json['entityId']),
+      payloadJson: serializer.fromJson<String>(json['payloadJson']),
+      revision: serializer.fromJson<int>(json['revision']),
+      sourceLocalVehicleId: serializer.fromJson<String?>(
+        json['sourceLocalVehicleId'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userId': serializer.toJson<String>(userId),
+      'entityType': serializer.toJson<String>(entityType),
+      'entityId': serializer.toJson<String>(entityId),
+      'payloadJson': serializer.toJson<String>(payloadJson),
+      'revision': serializer.toJson<int>(revision),
+      'sourceLocalVehicleId': serializer.toJson<String?>(sourceLocalVehicleId),
+    };
+  }
+
+  AccountMetadataCacheData copyWith({
+    String? userId,
+    String? entityType,
+    String? entityId,
+    String? payloadJson,
+    int? revision,
+    Value<String?> sourceLocalVehicleId = const Value.absent(),
+  }) => AccountMetadataCacheData(
+    userId: userId ?? this.userId,
+    entityType: entityType ?? this.entityType,
+    entityId: entityId ?? this.entityId,
+    payloadJson: payloadJson ?? this.payloadJson,
+    revision: revision ?? this.revision,
+    sourceLocalVehicleId: sourceLocalVehicleId.present
+        ? sourceLocalVehicleId.value
+        : this.sourceLocalVehicleId,
+  );
+  AccountMetadataCacheData copyWithCompanion(
+    AccountMetadataCacheCompanion data,
+  ) {
+    return AccountMetadataCacheData(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      entityType: data.entityType.present
+          ? data.entityType.value
+          : this.entityType,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      payloadJson: data.payloadJson.present
+          ? data.payloadJson.value
+          : this.payloadJson,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      sourceLocalVehicleId: data.sourceLocalVehicleId.present
+          ? data.sourceLocalVehicleId.value
+          : this.sourceLocalVehicleId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AccountMetadataCacheData(')
+          ..write('userId: $userId, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('revision: $revision, ')
+          ..write('sourceLocalVehicleId: $sourceLocalVehicleId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userId,
+    entityType,
+    entityId,
+    payloadJson,
+    revision,
+    sourceLocalVehicleId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AccountMetadataCacheData &&
+          other.userId == this.userId &&
+          other.entityType == this.entityType &&
+          other.entityId == this.entityId &&
+          other.payloadJson == this.payloadJson &&
+          other.revision == this.revision &&
+          other.sourceLocalVehicleId == this.sourceLocalVehicleId);
+}
+
+class AccountMetadataCacheCompanion
+    extends UpdateCompanion<AccountMetadataCacheData> {
+  final Value<String> userId;
+  final Value<String> entityType;
+  final Value<String> entityId;
+  final Value<String> payloadJson;
+  final Value<int> revision;
+  final Value<String?> sourceLocalVehicleId;
+  final Value<int> rowid;
+  const AccountMetadataCacheCompanion({
+    this.userId = const Value.absent(),
+    this.entityType = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.payloadJson = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.sourceLocalVehicleId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AccountMetadataCacheCompanion.insert({
+    required String userId,
+    required String entityType,
+    required String entityId,
+    required String payloadJson,
+    required int revision,
+    this.sourceLocalVehicleId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       entityType = Value(entityType),
+       entityId = Value(entityId),
+       payloadJson = Value(payloadJson),
+       revision = Value(revision);
+  static Insertable<AccountMetadataCacheData> custom({
+    Expression<String>? userId,
+    Expression<String>? entityType,
+    Expression<String>? entityId,
+    Expression<String>? payloadJson,
+    Expression<int>? revision,
+    Expression<String>? sourceLocalVehicleId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (entityType != null) 'entity_type': entityType,
+      if (entityId != null) 'entity_id': entityId,
+      if (payloadJson != null) 'payload_json': payloadJson,
+      if (revision != null) 'revision': revision,
+      if (sourceLocalVehicleId != null)
+        'source_local_vehicle_id': sourceLocalVehicleId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AccountMetadataCacheCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? entityType,
+    Value<String>? entityId,
+    Value<String>? payloadJson,
+    Value<int>? revision,
+    Value<String?>? sourceLocalVehicleId,
+    Value<int>? rowid,
+  }) {
+    return AccountMetadataCacheCompanion(
+      userId: userId ?? this.userId,
+      entityType: entityType ?? this.entityType,
+      entityId: entityId ?? this.entityId,
+      payloadJson: payloadJson ?? this.payloadJson,
+      revision: revision ?? this.revision,
+      sourceLocalVehicleId: sourceLocalVehicleId ?? this.sourceLocalVehicleId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (entityType.present) {
+      map['entity_type'] = Variable<String>(entityType.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<String>(entityId.value);
+    }
+    if (payloadJson.present) {
+      map['payload_json'] = Variable<String>(payloadJson.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (sourceLocalVehicleId.present) {
+      map['source_local_vehicle_id'] = Variable<String>(
+        sourceLocalVehicleId.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AccountMetadataCacheCompanion(')
+          ..write('userId: $userId, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('revision: $revision, ')
+          ..write('sourceLocalVehicleId: $sourceLocalVehicleId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6860,6 +7306,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TripAccountLinksTable tripAccountLinks = $TripAccountLinksTable(
     this,
   );
+  late final $AccountMetadataCacheTable accountMetadataCache =
+      $AccountMetadataCacheTable(this);
   late final Index vehiclesOwnerNamespace = Index(
     'vehicles_owner_namespace',
     'CREATE INDEX vehicles_owner_namespace ON vehicles (owner_namespace)',
@@ -6906,6 +7354,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     tripScores,
     syncQueue,
     tripAccountLinks,
+    accountMetadataCache,
     vehiclesOwnerNamespace,
     tripsVehicleStart,
     tripsStartTime,
@@ -11551,6 +12000,247 @@ typedef $$TripAccountLinksTableProcessedTableManager =
       TripAccountLink,
       PrefetchHooks Function({bool tripId})
     >;
+typedef $$AccountMetadataCacheTableCreateCompanionBuilder =
+    AccountMetadataCacheCompanion Function({
+      required String userId,
+      required String entityType,
+      required String entityId,
+      required String payloadJson,
+      required int revision,
+      Value<String?> sourceLocalVehicleId,
+      Value<int> rowid,
+    });
+typedef $$AccountMetadataCacheTableUpdateCompanionBuilder =
+    AccountMetadataCacheCompanion Function({
+      Value<String> userId,
+      Value<String> entityType,
+      Value<String> entityId,
+      Value<String> payloadJson,
+      Value<int> revision,
+      Value<String?> sourceLocalVehicleId,
+      Value<int> rowid,
+    });
+
+class $$AccountMetadataCacheTableFilterComposer
+    extends Composer<_$AppDatabase, $AccountMetadataCacheTable> {
+  $$AccountMetadataCacheTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceLocalVehicleId => $composableBuilder(
+    column: $table.sourceLocalVehicleId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AccountMetadataCacheTableOrderingComposer
+    extends Composer<_$AppDatabase, $AccountMetadataCacheTable> {
+  $$AccountMetadataCacheTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceLocalVehicleId => $composableBuilder(
+    column: $table.sourceLocalVehicleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AccountMetadataCacheTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AccountMetadataCacheTable> {
+  $$AccountMetadataCacheTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceLocalVehicleId => $composableBuilder(
+    column: $table.sourceLocalVehicleId,
+    builder: (column) => column,
+  );
+}
+
+class $$AccountMetadataCacheTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AccountMetadataCacheTable,
+          AccountMetadataCacheData,
+          $$AccountMetadataCacheTableFilterComposer,
+          $$AccountMetadataCacheTableOrderingComposer,
+          $$AccountMetadataCacheTableAnnotationComposer,
+          $$AccountMetadataCacheTableCreateCompanionBuilder,
+          $$AccountMetadataCacheTableUpdateCompanionBuilder,
+          (
+            AccountMetadataCacheData,
+            BaseReferences<
+              _$AppDatabase,
+              $AccountMetadataCacheTable,
+              AccountMetadataCacheData
+            >,
+          ),
+          AccountMetadataCacheData,
+          PrefetchHooks Function()
+        > {
+  $$AccountMetadataCacheTableTableManager(
+    _$AppDatabase db,
+    $AccountMetadataCacheTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AccountMetadataCacheTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AccountMetadataCacheTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$AccountMetadataCacheTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> entityType = const Value.absent(),
+                Value<String> entityId = const Value.absent(),
+                Value<String> payloadJson = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<String?> sourceLocalVehicleId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AccountMetadataCacheCompanion(
+                userId: userId,
+                entityType: entityType,
+                entityId: entityId,
+                payloadJson: payloadJson,
+                revision: revision,
+                sourceLocalVehicleId: sourceLocalVehicleId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                required String entityType,
+                required String entityId,
+                required String payloadJson,
+                required int revision,
+                Value<String?> sourceLocalVehicleId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AccountMetadataCacheCompanion.insert(
+                userId: userId,
+                entityType: entityType,
+                entityId: entityId,
+                payloadJson: payloadJson,
+                revision: revision,
+                sourceLocalVehicleId: sourceLocalVehicleId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AccountMetadataCacheTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AccountMetadataCacheTable,
+      AccountMetadataCacheData,
+      $$AccountMetadataCacheTableFilterComposer,
+      $$AccountMetadataCacheTableOrderingComposer,
+      $$AccountMetadataCacheTableAnnotationComposer,
+      $$AccountMetadataCacheTableCreateCompanionBuilder,
+      $$AccountMetadataCacheTableUpdateCompanionBuilder,
+      (
+        AccountMetadataCacheData,
+        BaseReferences<
+          _$AppDatabase,
+          $AccountMetadataCacheTable,
+          AccountMetadataCacheData
+        >,
+      ),
+      AccountMetadataCacheData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11573,4 +12263,6 @@ class $AppDatabaseManager {
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
   $$TripAccountLinksTableTableManager get tripAccountLinks =>
       $$TripAccountLinksTableTableManager(_db, _db.tripAccountLinks);
+  $$AccountMetadataCacheTableTableManager get accountMetadataCache =>
+      $$AccountMetadataCacheTableTableManager(_db, _db.accountMetadataCache);
 }

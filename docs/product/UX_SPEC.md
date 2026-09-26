@@ -277,3 +277,11 @@ Safety/errors/privacy copy should be direct and unambiguous.
 - Precise `.tripdebug` and redacted-summary actions remain visibly distinct. Precise export warns about exact route and raw motion before opening the system picker; redacted export states its omissions and avoids an anonymity claim.
 - Raw-only and whole-trip deletion use separate confirmations. Controls disable while another local data action runs; errors use bounded copy rather than exception or path details.
 - The screen is scrollable at large text sizes, exposes text labels in addition to icons/color, reports unavailable storage/cache categories honestly, and keeps every action local and user-directed.
+
+## 20. Profile & vehicles — M6.4
+
+- Account opens cached profile/vehicle details without automatically reading or writing cloud data.
+- Reviewed profile forms default private; publishing uses an explicit checkbox, two-field disclosure, and Save public profile label. Pending visibility is never shown as an acknowledged cloud state.
+- Private vehicle forms accept a chosen label and broad class. A local-copy picker previews only these fields; cloud metadata does not select the recorder's local vehicle or change trip assignments.
+- Reload cloud, Retry queued changes, and confirmation-gated Discard queued changes have distinct purposes. Conflicts retain drafts and direct the user to discard/reload/review.
+- Details stay accessible offline from an account-scoped cache. Forms are scrollable, labeled, and keyboard-compatible; errors expose bounded guidance instead of provider response bodies.

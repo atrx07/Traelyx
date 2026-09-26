@@ -353,3 +353,19 @@ class TripAccountLinks extends Table {
   @override
   List<String> get customConstraints => ['CHECK (summary_version = 1)'];
 }
+
+class AccountMetadataCache extends Table {
+  TextColumn get userId => text()();
+  TextColumn get entityType => text()();
+  TextColumn get entityId => text()();
+  TextColumn get payloadJson => text()();
+  IntColumn get revision => integer()();
+  TextColumn get sourceLocalVehicleId => text().nullable()();
+  @override
+  Set<Column<Object>> get primaryKey => {userId, entityType, entityId};
+  @override
+  List<String> get customConstraints => [
+    "CHECK (entity_type IN ('profile', 'vehicle'))",
+    'CHECK (revision >= 0)',
+  ];
+}

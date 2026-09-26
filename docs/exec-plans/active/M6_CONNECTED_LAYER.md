@@ -35,6 +35,30 @@ available without sign-in. M6.3 adds explicit compact-summary review and consent
   owner-only cloud writes and authenticated hosted verification.
 - Later M6 substeps only after their individual authorization gates.
 
+### M6.4 boundary (authorized 2026-09-26)
+
+Add account-scoped cached profile/vehicle metadata and explicit foreground
+save/reload/retry. Profiles default private; an explicit publication choice
+exposes only username/display name through an exact-username lookup. Vehicles
+remain private and contain only an opaque ID, chosen label, and broad class.
+Copying selected local metadata never reassigns local vehicles or trips.
+Server revisions detect concurrent edits; persisted mutation IDs make lost
+acknowledgements retryable. Conflicts require discard/reload/review. No new
+dependency, recorder behavior, social relationship, or trip upload consent.
+
+- [x] Add versioned cloud revision/mutation APIs and sanitized public lookup;
+  prove owner/cross-owner/anonymous boundaries and stale-write rejection.
+- [x] Add additive local schema-3 metadata cache and account-scoped queue;
+  preserve schema-1/2 trip evidence and existing summary consent/operations.
+- [x] Implement profile/vehicle review/edit UI, explicit publication consent,
+  selected metadata copy, offline cache, retries, and conflict feedback.
+- [ ] Validate domain/repository/SDK/widget/navigation/upgrade paths, full
+  tests, generated files, analysis, repository checks, and Android builds.
+- [x] Deploy and verify hosted migration; use synthetic metadata for network
+  QA and preserve personal profile/trips. Verify physical upgrade/consent UI.
+- [ ] Review, commit/push, verify CI and Git alignment, synchronize completion
+  documents, and stop before M6.5.
+
 ## Out of scope for M6.1
 
 - Flutter auth/session UI, cloud sync, public profiles, friendships,
@@ -292,6 +316,42 @@ requires its own narrowly scoped schema and policies.
   Gradle plugin repository; that failure did not recur in this full run.
   M6.3 is complete. This completion update changes documentation only;
   M6.4 remains unauthorized.
+
+- 2026-09-26: Maintainer authorized M6.4. Automatic approval review rejected
+  writing the proposed public lookup grants; the maintainer then explicitly
+  approved the complete M6.4 migration and access contract. Implemented
+  ADR-0021 account-scoped metadata cache (Drift schema 3), reviewed profile/
+  vehicle forms, explicit publication choice, durable idempotent edits,
+  optimistic conflict detection, manual reload/discard, and bounded retries.
+- 2026-09-26: All local PGlite migration/RLS suites passed. Browser control
+  still crashed before connecting. The maintainer ran the reviewed SQL script
+  and confirmed migration history, private RLS, and safe lookup grants all
+  true with no test error. Hosted synthetic fixtures were rolled back.
+  Tests cover denied anonymous/private access, two-field exact public lookup,
+  unpublishing, stale revisions, duplicate mutations, and cross-owner denial.
+- 2026-09-26: All 235 Flutter tests and static analysis pass, including strict
+  SDK request shapes, account switching, disk reopen, profile-dependent retries,
+  stale acknowledgements, schema-1/2 upgrades, and consent/navigation tests.
+  Generated/schema output is reproducible; repository validation and local
+  debug/release builds pass (release-validation APK 59.2 MB). The Tecno
+  upgraded in place, defaulted to private, and successfully reloaded cloud
+  metadata. The maintainer saved a chosen private profile and vehicle and
+  reported both saves succeeded with zero queued changes. Cold restart
+  restored both private cached records and zero queue; all 7,546 raw telemetry
+  files / 59,570 KiB remain. No personal trip upload or public publication
+  was performed. Final CI validation and completion persistence remain.
+
+- 2026-09-26: Final review identified an SDK session-switch race: metadata RPCs
+  inferred the owner only from the session. Added forward migration
+  `20260926020000` to bind each request to its reviewed owner and revoke the
+  unguarded signatures. Updated exact SDK payload assertions and SQL tests
+  proving account-A payloads authenticated as B fail before writes. All local
+  migration/RLS tests pass. The maintainer deployed the forward guard and
+  confirmed all three checks true with no test error. Both final guarded
+  profile and vehicle saves, with existing private fields unchanged, showed
+  cloud confirmation and zero queue on the phone. The matching release APK
+  builds successfully; final CI and completion persistence remain. Anonymous HTTP lookup returned 200 with no rolled-back
+  fixture present; all three private tables returned `42501` / HTTP 401.
 
 ## Completion summary
 

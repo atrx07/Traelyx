@@ -248,6 +248,14 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
               ],
               if (identity != null)
                 TextButton(
+                  key: const ValueKey('account-profile-vehicles'),
+                  onPressed: _busy
+                      ? null
+                      : () => context.go(TraelyxRoutes.youMetadata),
+                  child: const Text('Profile & vehicles'),
+                ),
+              if (identity != null)
+                TextButton(
                   key: const ValueKey('account-summary-sync'),
                   onPressed: _busy
                       ? null

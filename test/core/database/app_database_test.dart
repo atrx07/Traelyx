@@ -15,12 +15,13 @@ void main() {
   });
 
   test(
-    'schema version 2 creates the canonical local-first structure',
+    'schema version 3 creates the canonical local-first structure',
     () async {
-      expect(database.schemaVersion, 2);
+      expect(database.schemaVersion, 3);
 
       final tableNames = await _schemaObjectNames(database, 'table');
       expect(tableNames, [
+        'account_metadata_cache',
         'app_settings',
         'driver_baselines',
         'sync_queue',

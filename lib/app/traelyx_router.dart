@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/account/domain/account_callback.dart';
 import 'package:traelyx/features/account/presentation/account_screen.dart';
+import 'package:traelyx/features/account_metadata/presentation/metadata_screen.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
@@ -100,6 +101,10 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                     path: 'account',
                     builder: (context, state) => const AccountScreen(),
                     routes: [
+                      GoRoute(
+                        path: 'profile',
+                        builder: (context, state) => const MetadataScreen(),
+                      ),
                       GoRoute(
                         path: 'summaries',
                         builder: (context, state) => const SummarySyncScreen(),

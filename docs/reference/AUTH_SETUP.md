@@ -62,3 +62,26 @@ update-installing with `-r`; do not uninstall or clear app data. Validate the
 real review/Keep local UI separately. Uploading personal summaries requires
 explicit consent in that UI. Drift schema 2 is a forward upgrade; do not
 reinstall an older schema-1 build over the upgraded database.
+
+## M6.4 profile/vehicle validation
+
+Apply `20260926010000_profile_vehicle_sync.sql`, then
+`20260926020000_metadata_account_guard.sql`, after previous migrations.
+The maintainer must approve the exact public lookup grants before hosted
+deployment. The narrow lookup returns only published username/display name;
+owner-only mutation RPCs use expected revisions and idempotent mutation UUIDs.
+Local SQL tests are `supabase/tests/profile_vehicle_sync.sql`; when adapting
+them for a hosted SQL transaction, insert isolated test auth identities inside
+that transaction and roll back all fixtures. Never reuse existing identities.
+
+On a configured phone, open Account → Profile & vehicles, verify publication
+is unchecked, and confirm Reload cloud works. The maintainer chooses any real
+private profile/vehicle fields and confirms saves. Verify zero queued edits,
+cold-start cache restoration, retained local trips/raw-file counts, and no
+automatic summary upload. Public/private transitions and stale writes can be
+tested with rollback-only synthetic SQL; do not publish a real test profile
+without its owner's explicit choice. Schema 3 must not be downgraded.
+
+For anonymous REST checks, PostgreSQL `42501` can map to HTTP 401; the same
+privilege failure for an authenticated caller maps to 403. Check the error
+code as well as HTTP status; see [PostgREST errors](https://docs.postgrest.org/en/v13/references/errors.html).

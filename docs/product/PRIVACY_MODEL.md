@@ -71,6 +71,15 @@ Public profile/rank query paths must not grant raw trip access.
 
 A leaderboard should read from a purpose-built sanitized table/view rather than querying private trip geometry.
 
+M6.4 profiles default private. The reviewed publication checkbox and explicit
+Save public profile action expose only username/display name to anyone who
+knows the exact username. Vehicles remain owner-only. The underlying private
+profile/vehicle/trip tables remain inaccessible to anonymous callers.
+Unpublishing takes effect when saved successfully; previously copied public
+details cannot be recalled. Queued/discarded edits do not imply a changed
+cloud visibility. Vehicle copies include only the label and broad class that
+the user reviews, leaving original local vehicles and trips untouched.
+
 ## 6. Guardian privacy
 
 Guardian permissions are explicit. A safety relationship does not imply route history/live location.
