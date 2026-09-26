@@ -74,7 +74,7 @@ available without sign-in. Summary sync is a later substep.
 ## Implementation steps
 
 - [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
-- [ ] M6.2 Auth UX (authorized; host implementation ready for physical QA).
+- [x] M6.2 Auth UX (physical auth QA and CI passed).
 - [ ] M6.3 Local-to-account migration.
 - [ ] M6.4 Profiles/vehicles sync.
 - [ ] M6.5 Friends/social.
@@ -102,7 +102,7 @@ available without sign-in. Summary sync is a later substep.
 - [x] Run format, analysis, tests, repository validation, and Android builds.
 - [x] Exercise the configured auth flow and secure storage on a physical phone;
   stop and ask the maintainer to connect it when host checks are ready.
-- [ ] Inspect the exact diff, commit/push, verify green CI and Git alignment,
+- [x] Inspect the exact diff, commit/push, verify green CI and Git alignment,
   then mark M6.2 complete and stop before M6.3.
 
 ## M6.1 acceptance criteria
@@ -221,6 +221,13 @@ requires its own narrowly scoped schema and policies.
   tests, static analysis, and repository contract/secret validation pass;
   the configured debug APK builds and installs, and the unconfigured release
   APK builds (57.6 MB). Final CI validation and completion persistence remain.
+- 2026-09-26: Committed and pushed callback/refresh/error-feedback fixes as
+  `236201d`; local HEAD matched `origin/main` and the worktree was clean.
+  GitHub Actions [run 36221304374](https://github.com/atrx07/Traelyx/actions/runs/36221304374)
+  passed PostgreSQL 17/RLS, generated-source/schema checks, formatting,
+  analysis, Flutter tests, inspector and repository checks, debug/release
+  builds, native Kotlin tests, and artifact publication. M6.2 is complete;
+  this completion-state update is documentation-only. M6.3 remains gated.
 
 ## Completion summary
 
@@ -231,3 +238,16 @@ schema change, route storage, or new production dependency was introduced.
 Hosted RLS/privileges and the zero-warning security advisor were verified;
 the cloud Data API table exposure remains off pending a later authorized sync
 step. No new physical-device behavior was involved.
+
+M6.2 adds optional Supabase email-link sign-in, encrypted session/PKCE
+storage with backup exclusions, Account callback landing, explicit refresh,
+and local sign-out through a replaceable gateway. The Android 14 Tecno
+validated real links, cold session restore, refresh success and offline
+failure/recovery, sign-out, retained local history, and callback routing.
+The initial cold real link exposed the landing bug; token-free cold routing
+and a fresh real link on the corrected build verified the fix. Provider
+failure classification and retry are regression-tested; the earlier
+transient send failure's root cause remains unknown. The phone is left
+signed in. No trip upload or local database migration was added, and
+accountless driving remains available. Dependencies are documented in
+ADR-0019. M6.3 requires separate authorization.
