@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.4 complete; M6.5 in progress**
+**M6 active — M6.1–M6.5 complete; awaiting M6.6 authorization**
 
 ## Working
 
@@ -126,7 +126,7 @@
 
 - M6.4 adds a schema-3 account metadata cache, explicitly reviewed profile/vehicle edits, idempotent mutation IDs, optimistic revision conflicts, durable foreground retries, and a two-field exact-username public lookup only for explicitly published profiles. Both hosted migrations and rollback-only access tests pass, including server rejection of a request whose intended owner differs from the session. Final guarded profile/vehicle saves confirm with zero queue. All 235 Flutter tests, analysis, generated/schema checks, repository validation, and debug/release builds pass. Physical private profile/vehicle saves, zero queue, cold cache restore, and 7,546 raw files / 59,570 KiB preservation pass. No personal trips or public profile were published. GitHub CI run 36228279521 passes all PostgreSQL 17, Flutter/native, generated/schema, build, and artifact gates for implementation commit `56083b3`. M6.4 is complete.
 
-- M6.5 implements mutual friendship requests, participant-only name snapshots, account/revision guards, cancellation/removal/blocking, expiry/cooldown, request limits, and explicit consent. The approved hosted migration and synthetic transaction tests pass with fixture cleanup verified. All 244 Flutter tests, analysis, SQL suites, repository checks, and debug/release builds pass. Physical Social reload/no-match and data preservation pass; real-person requests were not sent. Final CI and persistence remain.
+- M6.5 implements mutual friendship requests, participant-only name snapshots, account/revision guards, cancellation/removal/blocking, expiry/cooldown, request limits, and explicit consent. The approved hosted migration and synthetic transaction tests pass with fixture cleanup verified. All 244 Flutter tests, analysis, SQL suites, repository checks, and debug/release builds pass. Physical Social reload/no-match and data preservation pass; real-person requests were not sent. GitHub CI run 36244993247 passes all PostgreSQL 17, Flutter/native, generated/schema, build, size, and artifact gates for implementation commit `d79c5ae`. M6.5 is complete.
 
 ## Partial
 
@@ -174,6 +174,7 @@
 - M5.9 physical QA is deliberately non-destructive on the retained Tecno evidence. Confirmation, cancellation, picker, storage, and release-parity paths are physical evidence; successful raw/trip deletion and partial-failure behavior are isolated native/repository/widget test evidence.
 - On the Tecno LH8n, Android persistently reports calibrated-accelerometer status `0` / `SENSOR_STATUS_UNRELIABLE` while gyroscope status remains high. Maintainer testing identifies a repeatable positive Z-axis bias of roughly +0.03 g (+0.294 m/s²); Traelyx's stationary rehearsal independently preserved status `0` on all 16,413 accelerometer samples. This is a test-device calibration note, not a production-app offset: raw values/status remain unchanged, and any Tecno-specific fixture validation must account for the bias outside the production algorithm. M3.3 classifies selected unreliable evidence as degraded calibration, M3.5 subtracts the measured stationary reference without a phone-specific constant, and M3.6 propagates unreliable status as ordinary degraded evidence; physical fixture replay/tuning remains pending later M3 work.
 - M6.4 physical QA covers private saves, explicit reload, upgrade, and cold cache restore on one Android 14 Tecno. Cross-account races, lost acknowledgements, conflicts, and public/private transitions are automated SDK/repository/rollback-only SQL evidence; simultaneous physical devices and real-profile publication were not tested.
+- M6.5 physical QA covers one signed-in Android 14 Tecno, explicit empty-list reload, no-match public lookup, layout, and raw-data preservation. Relationship transitions, blocking, quotas, and cross-account isolation are synthetic hosted SQL/SDK/widget evidence; two physical accounts and real-person requests were not exercised.
 - Online tile/provider selection and downloaded-region policy remain deferred; core route rendering and its zero-byte local-canvas cache behavior are established offline.
 - Availability/diversity of labeled telemetry for ML.
 - Free-tier cloud limits if adoption becomes large.
@@ -181,4 +182,4 @@
 
 ## Current step
 
-**Active step:** M6.5 friends/social; stop before M6.6.
+**Approval gate:** M6.5 is complete. Wait for explicit authorization before M6.6 safe leaderboards.

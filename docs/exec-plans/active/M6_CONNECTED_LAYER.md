@@ -75,8 +75,8 @@ No notifications, contacts import, messaging, ranking, or new dependency.
 - [x] Implement forward schema, guarded transitions/projections, and SQL tests.
 - [x] Implement replaceable gateway, account-safe state, Social UI and tests.
 - [x] Validate local suites/builds and prepare reviewed hosted deployment.
-- [ ] Verify hosted/device behavior, full CI, and data preservation.
-- [ ] Synchronize completion, commit/push, stop before M6.6.
+- [x] Verify hosted/device behavior, full CI, and data preservation.
+- [x] Synchronize completion, commit/push, stop before M6.6.
 
 ## Out of scope for M6.1
 
@@ -123,7 +123,7 @@ No notifications, contacts import, messaging, ranking, or new dependency.
 - [x] M6.2 Auth UX (physical auth QA and CI passed).
 - [x] M6.3 Local-to-account migration (hosted/device/CI validation passed).
 - [x] M6.4 Profiles/vehicles sync (hosted/device/CI validation passed).
-- [ ] M6.5 Friends/social.
+- [x] M6.5 Friends/social (hosted/device/CI validation passed).
 - [ ] M6.6 Safe leaderboards.
 - [ ] M6.7 Guardian pairing.
 - [ ] M6.8 Guardian alerts.
@@ -396,6 +396,14 @@ requires its own narrowly scoped schema and policies.
   passed. Visual QA passed and all 7,546 raw files / 59,570 KiB remain.
   No real friend request or personal trip upload occurred. CI/persistence remain.
 
+- 2026-09-26: Implementation committed and pushed as `d79c5ae`; local HEAD
+  matched `origin/main`. GitHub Actions [run 36244993247](https://github.com/atrx07/Traelyx/actions/runs/36244993247)
+  passed both jobs, including PostgreSQL 17 migration/access tests, generated
+  sources/schema snapshots, format/analysis, all 244 Flutter tests, native
+  Kotlin, inspector/contracts, debug/release builds, size reporting, and artifact
+  publication. M6.5 is complete. This completion update changes documentation
+  only; M6.6 remains unauthorized.
+
 ## Completion summary
 
 M6.1 provides three empty, private, owner-scoped cloud tables, versioned
@@ -446,3 +454,16 @@ fixtures, not simultaneous physical devices or real-profile publication.
 All 235 Flutter tests and full CI gates pass. No new dependency, permission,
 background sync, recorder behavior, or local vehicle reassignment was added.
 The additive local schema must not be downgraded. M6.5 requires authorization.
+
+
+M6.5 provides mutual requests, acceptance/decline/cancel/removal, and blocking
+with explicit username/display-name disclosure. Participant-only projections,
+expected-account/revision guards, 30-request quotas, seven-day expiry/cooldown,
+and bounded relationship history enforce the documented privacy/abuse contract.
+The hosted migration and synthetic rollback tests pass; fixture cleanup was
+verified. Physical reload/no-match/layout checks on one Tecno and all 244 Flutter
+plus full CI gates pass. Two physical accounts and real-person request flows
+were not exercised; those transitions have synthetic SQL/SDK/widget coverage.
+The phone remains signed in; all retained raw telemetry is preserved. No new
+package, permission, local schema, background upload, notification, ranking,
+or Guardian capability was introduced. M6.6 requires separate authorization.
