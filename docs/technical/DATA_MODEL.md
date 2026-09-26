@@ -109,6 +109,9 @@ Candidate Supabase entities:
 - `leaderboard_entries`;
 - `friendships` / follows as product decides;
 - `guardian_connections`;
+- M6.7 stores Guardian invites, directional connections, quotas and bounded
+  permission audit separately; see `CLOUD_SCHEMA_V1.md` and ADR-0024. No local
+  schema change, trip association or telemetry upload follows from pairing.
 - `guardian_events` / notification delivery records where needed;
 - `achievements` later;
 - moderation/report tables if social features require them.

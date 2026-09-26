@@ -1,0 +1,110 @@
+begin;
+insert into auth.users(id) values('33333333-3333-4333-8333-333333333333');
+insert into public.profiles(user_id,username,display_name,visibility) values
+('11111111-1111-4111-8111-111111111111','guardian_driver','Driver','private'),
+('22222222-2222-4222-8222-222222222222','guardian_peer','Peer','private'),
+('33333333-3333-4333-8333-333333333333','guardian_other','Other','private');
+create function pg_temp.check_true(value boolean,label text) returns void language plpgsql as $$
+begin if value is distinct from true then raise exception 'FAIL: %',label; end if; end $$;
+create function pg_temp.denied(query text) returns void language plpgsql as $$
+begin
+  begin execute query; exception when others then return; end;
+  raise exception 'Expected rejection: %',query;
+end $$;
+create temp table guardian_test_data(k text primary key,v jsonb);
+grant all on guardian_test_data to authenticated;
+insert into guardian_test_data values('permissions','{"crash_alert":true,"severe_drive_alert":false,"current_safety_state":false,"live_location":false,"current_speed":false,"trip_history":false}');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+select pg_temp.denied($q$select * from public.guardian_invites$q$);
+select pg_temp.denied($q$select * from public.guardian_connections$q$);
+select pg_temp.denied($q$select * from public.guardian_audit$q$);
+select pg_temp.denied($q$select public.guardian_allows_v1(null,null,'crash_alert')$q$);
+select pg_temp.denied($q$select public.list_guardian_v1('22222222-2222-4222-8222-222222222222')$q$);
+select pg_temp.denied($q$select public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','wrong',(select v from guardian_test_data where k='permissions'))$q$);
+select pg_temp.denied($q$select public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver','{}')$q$);
+select pg_temp.denied($q$select public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v||'{"live_location":true}' from guardian_test_data where k='permissions'))$q$);
+insert into guardian_test_data values('first',public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v from guardian_test_data where k='permissions')));
+select pg_temp.check_true((select v->>'token' ~ '^[0-9a-f]{64}$' and (v->>'expires_at')::timestamptz=now()+interval '10 minutes' from guardian_test_data where k='first'),'random code shape/expiry');
+select pg_temp.check_true(public.preview_guardian_invite_v1('11111111-1111-4111-8111-111111111111',(select v->>'token' from guardian_test_data where k='first')) is null,'self preview denied');
+insert into guardian_test_data values('second',public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v from guardian_test_data where k='permissions')));
+select pg_temp.check_true((select a.v->>'token'<>b.v->>'token' from guardian_test_data a,guardian_test_data b where a.k='first' and b.k='second'),'rotated code differs');
+select pg_temp.check_true(not ((public.list_guardian_v1('11111111-1111-4111-8111-111111111111')->'invite') ? 'token'),'reload never exposes secret');
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+select pg_temp.check_true(public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select v->>'token' from guardian_test_data where k='first')) is null,'replaced code invalid');
+select pg_temp.check_true(public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222','malformed') is null,'invalid preview safe');
+insert into guardian_test_data values('preview',public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select v->>'token' from guardian_test_data where k='second')));
+select pg_temp.check_true((select v->>'username'='guardian_driver' and v->>'own_username'='guardian_peer' and not(v ? 'driver_id') from guardian_test_data where k='preview'),'review limited identities');
+select public.accept_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='preview'),(select v->>'token' from guardian_test_data where k='second'),'guardian_peer','Peer');
+select pg_temp.denied($q$select public.accept_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='preview'),(select v->>'token' from guardian_test_data where k='second'),'guardian_peer','Peer')$q$);
+insert into guardian_test_data values('row',public.list_guardian_v1('22222222-2222-4222-8222-222222222222')->'connections'->0);
+select pg_temp.check_true((select v->>'state'='waiting' from guardian_test_data where k='row'),'acceptance not activation');
+select pg_temp.denied($q$select public.change_guardian_connection_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='row'),1,'confirm')$q$);
+reset role;
+select pg_temp.check_true(not public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','crash_alert'),'pending permissions inactive');
+select pg_temp.check_true((select used=3 from public.guardian_limits where user_id='22222222-2222-4222-8222-222222222222' and operation='preview'),'failed previews counted');
+select pg_temp.check_true((select token_hash=sha256(convert_to((select v->>'token' from guardian_test_data where k='second'),'UTF8')) and consumed from public.guardian_invites where driver_id='11111111-1111-4111-8111-111111111111'),'hash only and consumed');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
+select pg_temp.check_true(jsonb_array_length(public.list_guardian_v1('33333333-3333-4333-8333-333333333333')->'connections')=0,'third-party isolation');
+select pg_temp.denied($q$select public.change_guardian_connection_v1('33333333-3333-4333-8333-333333333333',(select (v->>'id')::uuid from guardian_test_data where k='row'),1,'confirm')$q$);
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),1,'confirm');
+select pg_temp.denied($q$select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),1,'disconnect')$q$);
+reset role;
+select pg_temp.check_true(public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','crash_alert'),'confirmed permission available');
+select pg_temp.check_true(not public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','live_location'),'unsupported permission denied');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+select pg_temp.denied($q$select public.change_guardian_connection_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='row'),2,'permissions',(select v from guardian_test_data where k='permissions'))$q$);
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),2,'permissions',(select v||'{"crash_alert":false,"severe_drive_alert":true}' from guardian_test_data where k='permissions'));
+reset role;
+select pg_temp.check_true(not public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','crash_alert') and public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','severe_drive_alert'),'granular update enforced');
+update public.guardian_limits set used=30 where operation='edit';
+set local role authenticated;
+select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),3,'permissions',(select v||'{"crash_alert":false}' from guardian_test_data where k='permissions'));
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+select public.change_guardian_connection_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='row'),4,'block');
+reset role;
+select pg_temp.check_true(not public.guardian_allows_v1('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','severe_drive_alert'),'block revokes');
+select pg_temp.check_true((select count(*)=5 from public.guardian_audit),'audit recorded');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+update guardian_test_data set v=public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v from guardian_test_data where k='permissions')) where k='second';
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+select pg_temp.check_true(public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select v->>'token' from guardian_test_data where k='second')) is null,'blocked invitation hidden');
+select pg_temp.denied($q$select public.accept_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='second'),(select v->>'token' from guardian_test_data where k='second'),'guardian_peer','Peer')$q$);
+select public.change_guardian_connection_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='row'),5,'unblock');
+select pg_temp.check_true(public.list_guardian_v1('22222222-2222-4222-8222-222222222222')->'connections'->0->>'state'='closed','unblock never restores permissions');
+reset role;
+update public.guardian_invites set expires_at=now()-interval '1 second';
+set local role authenticated;
+select pg_temp.check_true(public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select v->>'token' from guardian_test_data where k='second')) is null,'expired code hidden');
+select pg_temp.denied($q$select public.accept_guardian_invite_v1('22222222-2222-4222-8222-222222222222',(select (v->>'id')::uuid from guardian_test_data where k='second'),(select v->>'token' from guardian_test_data where k='second'),'guardian_peer','Peer')$q$);
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+update guardian_test_data set v=public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v from guardian_test_data where k='permissions')) where k='second';
+select public.cancel_guardian_invite_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='second'));
+select pg_temp.check_true(public.list_guardian_v1('11111111-1111-4111-8111-111111111111')->'invite'='null'::jsonb,'cancel hides invite');
+reset role;
+update public.guardian_limits set used=10 where operation='create';
+update public.guardian_limits set used=60 where operation='preview' and user_id='22222222-2222-4222-8222-222222222222';
+update public.guardian_connections set status='pending',expires_at=now()-interval '1 second';
+set local role authenticated;
+select pg_temp.denied($q$select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),6,'confirm')$q$);
+select public.change_guardian_connection_v1('11111111-1111-4111-8111-111111111111',(select (v->>'id')::uuid from guardian_test_data where k='row'),6,'disconnect');
+select pg_temp.denied($q$select public.create_guardian_invite_v1('11111111-1111-4111-8111-111111111111','guardian_driver','Driver',(select v from guardian_test_data where k='permissions'))$q$);
+select set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+select pg_temp.denied($q$select public.preview_guardian_invite_v1('22222222-2222-4222-8222-222222222222','malformed')$q$);
+reset role;
+select pg_temp.check_true((select bool_and(relrowsecurity) and count(*)=4 from pg_class where oid in
+  ('public.guardian_invites'::regclass,'public.guardian_connections'::regclass,'public.guardian_limits'::regclass,'public.guardian_audit'::regclass)),'private tables RLS');
+select pg_temp.check_true((select bool_and(not has_function_privilege('anon',p.oid,'execute') and
+  not exists(select 1 from aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a where a.grantee=0 and a.privilege_type='EXECUTE'))
+  from pg_proc p where p.proname in ('create_guardian_invite_v1','cancel_guardian_invite_v1','preview_guardian_invite_v1',
+  'accept_guardian_invite_v1','change_guardian_connection_v1','list_guardian_v1','guardian_allows_v1','guardian_permissions_valid_v1','guardian_quota_v1','guardian_record_v1')),'no public/anon execution');
+set local role anon;
+select pg_temp.denied($q$select public.list_guardian_v1('11111111-1111-4111-8111-111111111111')$q$);
+select pg_temp.denied($q$select public.preview_guardian_invite_v1('11111111-1111-4111-8111-111111111111','x')$q$);
+reset role;
+rollback;

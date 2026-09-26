@@ -84,6 +84,15 @@ the user reviews, leaving original local vehicles and trips untouched.
 
 Guardian permissions are explicit. A safety relationship does not imply route history/live location.
 
+M6.7 separately reviews username/display-name disclosure between driver and
+recipient, even for private profiles. Only a hashed short-lived invite is
+retained server-side. Acceptance needs final driver confirmation. Location,
+speed and trip history remain off and unsupported, and no alert delivery is
+available yet. Either participant can disconnect/block; the server retains
+bounded participant-only permission audit history. Guardian blocking is separate
+from friendship blocking. Codes are transient in-app; explicit copying may
+leave a code on the system clipboard until the user clears it.
+
 ## 7. AI privacy
 
 BYO cloud commentary sends only the sanitized event dossier required to generate text by default. The app should present a clear "sent / not sent" explanation.

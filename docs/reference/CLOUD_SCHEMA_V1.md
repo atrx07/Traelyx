@@ -113,3 +113,27 @@ counters remain. Account deletion cascades all three tables. See ADR-0023 and
 `supabase/tests/safe_rankings.sql`. The approved production migration and atomic
 synthetic tests passed on 2026-09-26; RLS, guarded grants, migration history and
 rollback of every synthetic fixture were verified.
+
+## M6.7 Guardian pairing (deployed 2026-09-27)
+
+Migration `20260927000000_guardian_pairing.sql` adds four private RLS tables:
+`guardian_invites` (one hashed, expiring code per driver), `guardian_connections`
+(one directional relationship per unordered account pair), `guardian_limits`
+(anchored daily quotas), and `guardian_audit` (last 100 changes per pair).
+No direct client table/sequence grants or policies. Six signed-in RPCs create,
+cancel, preview, accept, change and list; every call checks the expected owner.
+Changes also require current revision, and only the driver can confirm or edit
+permission preferences. Public/anonymous execution and private-helper execution
+are revoked. `guardian_allows_v1` is private and requires active, unblocked
+directional consent for the named supported permission.
+
+The exact six-boolean permission object follows the version-1 permission matrix;
+location, speed and history are always false. Creation/acceptance validate
+reviewed profile names; tokens are random, hashed, single-use and expire after
+10 minutes. Acceptance remains pending for driver confirmation (24 hours).
+Projections expose peer name snapshots, own role, connection ID/revision,
+preferences, state and bounded audit history; never peer account IDs or tokens.
+Only create returns the one-time code. No telemetry access/delivery is added.
+See ADR-0024 and `supabase/tests/guardian_pairing.sql` for boundaries and tests.
+
+The approved production migration passed the atomic rollback-only test bundle: migration history, private RLS, guarded-only RPC grants and fixture rollback all verified true.

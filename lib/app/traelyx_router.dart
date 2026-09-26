@@ -8,6 +8,7 @@ import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
 import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
+import 'package:traelyx/features/guardian/guardian_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
@@ -84,6 +85,10 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                 path: TraelyxRoutes.social,
                 builder: (context, state) => const SocialScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'guardian',
+                    builder: (context, state) => const GuardianScreen(),
+                  ),
                   GoRoute(
                     path: 'rankings',
                     builder: (context, state) => const RankingScreen(),

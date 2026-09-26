@@ -87,6 +87,10 @@ class _SignedInSocialState extends ConsumerState<_SignedInSocial> {
       children: [
         Text('Social', style: Theme.of(context).textTheme.displaySmall),
         TextButton(
+          onPressed: () => context.go('/social/guardian'),
+          child: const Text('Guardian pairing'),
+        ),
+        TextButton(
           onPressed: () => context.go('/social/rankings'),
           child: const Text('Safe comparisons'),
         ),

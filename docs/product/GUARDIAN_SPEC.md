@@ -124,3 +124,25 @@ Include:
 - severe event with/without permission;
 - disconnect while trip active;
 - blocked invitation.
+
+## 11. M6.7 implemented pairing contract (validation pending)
+
+Social → Guardian pairing opens without network access. Explicit reload shows
+relationships, permission preferences and recent audit history. The driver
+reviews name sharing and permissions before creating a 10-minute single-use
+code. A new code replaces the previous code. Only its hash is stored server-side;
+the app displays it once in memory, clearing it on backgrounding, navigation,
+reload or expiry. Copying uses the system clipboard with an explicit disclosure.
+
+A signed-in recipient reviews the code, then confirms disclosure of their name.
+The driver must reload and confirm that identity within 24 hours. Private
+profiles remain private. Support one directional relationship per account pair;
+disconnect/re-pair to reverse roles. Driver may edit the three supported
+preferences. Either participant can disconnect or block. Guardian blocking is
+independent of friendship blocking; unblocking never restores access. A change
+requires a confirmed server response. ADR-0024 defines quotas and audit retention.
+
+**Alerts and safety-state delivery are unavailable in M6.7.** Location, speed
+and history remain off and cannot be enabled. Saved preferences must not imply
+emergency protection. M6.8 must enforce the current private server authorization
+predicate at dispatch/read time and pass separate delivery validation.

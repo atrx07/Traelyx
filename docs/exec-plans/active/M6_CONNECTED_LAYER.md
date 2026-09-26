@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-09-26
+**Last updated:** 2026-09-27
 
 ## Context budget / references
 
@@ -124,6 +124,25 @@ remain. Consent/submission transitions use widget/SDK and hosted synthetic
 tests; no personal trip or real friend's data was shared. CI run 36250004115
 passed every gate for implementation commit `728254f`, including PostgreSQL 17,
 generated/schema checks, Flutter/native tests, both APK builds and artifacts.
+
+### M6.7 boundary (authorized 2026-09-27)
+
+Implement authenticated short-lived random invite codes, recipient acceptance,
+driver confirmation, explicit granular permission preferences, visible connection
+history, revocation/disconnection and blocking. Invite secrets stay transient in
+the app; the server stores only hashes. One directional Guardian relationship per
+account pair is supported at a time; reciprocal roles require disconnect/re-pair.
+Pairing shares reviewed username/display-name snapshots, never trip data. Keep
+location, speed and history unsupported/off; label all alert/state delivery as
+unavailable until M6.8. No new dependency, local schema or recorder change.
+
+- [x] Implement private schema, account/revision guards, bounded invitations,
+  single use/expiry, permissions, audit and adversarial SQL tests.
+- [x] Implement provider-isolated account-safe UI and transient token handling;
+  test consent, failures, stale responses and sign-out behavior.
+- [ ] Run relevant full suites/builds and hosted rollback-only validation after
+  exact deployment approval; verify device behavior when a phone is available.
+- [ ] Commit/push, verify CI, synchronize completion and stop before M6.8.
 
 ## Out of scope for M6.1
 
@@ -527,3 +546,11 @@ passed on the Tecno; its normal app/session and original raw data were preserved
 Real driving calibration and simultaneous physical-account sharing remain
 unverified. No personal trip upload, new dependency, local schema change or
 recorder sampling change was introduced. Stop before M6.7 Guardian pairing.
+
+
+M6.7 implementation validation (2026-09-27): all 273 Flutter tests, static
+analysis, repository contracts/secrets, local SQL suites and debug/release
+builds pass (release 60.2 MB). The exact approved deployment bundle passed
+locally and on production: migration history, private RLS, guarded RPC grants
+and fixture rollback are all true. No personal telemetry or real invitations
+were sent. Device QA and implementation CI remain pending.

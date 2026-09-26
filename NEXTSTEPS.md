@@ -4,14 +4,13 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.6 are complete. M6.7 requires explicit authorization.
+M6 is active. M6.1–M6.6 are complete. M6.7 Guardian pairing is authorized and in progress.
 
-## P0 — Wait at the M6.7 approval gate
+## P0 — Complete M6.7 Guardian pairing
 
-1. M6.6 is complete: immutable local analysis, separate ranking consent, server validation, friend-only comparisons by vehicle class, account guards and withdrawal.
-2. All 260 Flutter / 222 native tests, local and hosted SQL tests, and debug/release builds pass. GitHub CI run 36250004115 passes every gate for implementation commit `728254f`.
-3. The normal signed-in app is restored. Physical synthetic analysis and live empty comparison reload pass; all 7,546 original raw files / 59,570 KiB remain. No personal trip was uploaded, and synthetic hosted/device data was removed.
-4. Wait for explicit authorization before M6.7 Guardian pairing. Do not prepare or implement it while waiting.
+1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.
+2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
+3. Finish physical UI/data-preservation checks and GitHub CI, synchronize completion and stop before M6.8 alerts.
 
 ## P1 — Preserve M5 boundaries
 

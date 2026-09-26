@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.6 complete; awaiting M6.7 authorization**
+**M6 active — M6.1–M6.6 complete; M6.7 in progress**
 
 ## Working
 
@@ -130,9 +130,11 @@
 
 - M6.6 implements immutable accountless local analysis and separately consented friends-only comparisons by broad vehicle class. The approved production migration and rollback-only security tests pass. All 260 Flutter / 222 native tests, analysis, contract checks and debug/release builds pass. Physical synthetic analysis and live comparison reload pass with original raw data preserved. GitHub CI run 36250004115 passes every PostgreSQL 17, generated/schema, test, build and artifact gate for implementation commit `728254f`. M6.6 is complete.
 
+- M6.7 implements private short-lived invitations, recipient acceptance plus driver confirmation, granular permission preferences, revocation/blocking and bounded audit history. The approved migration and hosted rollback-only tests pass; all 273 Flutter tests, local SQL suites, analysis and debug/release builds pass. Device and final CI checks remain pending. No personal telemetry upload or alert delivery is enabled.
+
 ## Partial
 
-- Social supports friendships and experimental safe comparisons. Guardian remains pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
+- Social supports friendships and experimental safe comparisons. Guardian pairing is implemented and hosted-tested; device/CI validation is in progress. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
 - Drive DNA presentation is implemented, but production does not yet persist governed M4.5/M4.6 baseline snapshots; existing physical trips therefore remain truthfully uncalibrated instead of being analyzed in Flutter.
 - Automatic finalization does not run scoring. M6.6 adds explicit accountless local analysis with user-supplied mount orientation, preserving existing scores. Unanalyzed or unsupported physical trips retain honest unavailable states.
 - Encrypted account session/PKCE storage is implemented; other future secret consumers remain outside M6.2–M6.3.
@@ -143,7 +145,7 @@
 - Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
 - M3.7 replay-channel exposure and authoritative speed/acceleration/yaw/confidence replay graphs.
 - Cloud trip restore and general cloud data deletion UI. M6.6 provides separately confirmed ranking-only withdrawal.
-- Guardian Connect.
+- Guardian alert delivery and safety-state delivery.
 - ML models.
 - Commentary provider integrations.
 - Release pipeline.
@@ -184,4 +186,4 @@
 
 ## Current step
 
-**Approval gate:** M6.6 is complete. Wait for explicit authorization before M6.7 Guardian pairing.
+**Approval gate:** M6.7 Guardian pairing is authorized and in progress. M6.8 remains unauthorized.
