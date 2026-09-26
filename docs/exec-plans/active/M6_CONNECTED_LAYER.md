@@ -52,11 +52,11 @@ dependency, recorder behavior, social relationship, or trip upload consent.
   preserve schema-1/2 trip evidence and existing summary consent/operations.
 - [x] Implement profile/vehicle review/edit UI, explicit publication consent,
   selected metadata copy, offline cache, retries, and conflict feedback.
-- [ ] Validate domain/repository/SDK/widget/navigation/upgrade paths, full
+- [x] Validate domain/repository/SDK/widget/navigation/upgrade paths, full
   tests, generated files, analysis, repository checks, and Android builds.
 - [x] Deploy and verify hosted migration; use synthetic metadata for network
   QA and preserve personal profile/trips. Verify physical upgrade/consent UI.
-- [ ] Review, commit/push, verify CI and Git alignment, synchronize completion
+- [x] Review, commit/push, verify CI and Git alignment, synchronize completion
   documents, and stop before M6.5.
 
 ## Out of scope for M6.1
@@ -103,7 +103,7 @@ dependency, recorder behavior, social relationship, or trip upload consent.
 - [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
 - [x] M6.2 Auth UX (physical auth QA and CI passed).
 - [x] M6.3 Local-to-account migration (hosted/device/CI validation passed).
-- [ ] M6.4 Profiles/vehicles sync.
+- [x] M6.4 Profiles/vehicles sync (hosted/device/CI validation passed).
 - [ ] M6.5 Friends/social.
 - [ ] M6.6 Safe leaderboards.
 - [ ] M6.7 Guardian pairing.
@@ -353,6 +353,14 @@ requires its own narrowly scoped schema and policies.
   builds successfully; final CI and completion persistence remain. Anonymous HTTP lookup returned 200 with no rolled-back
   fixture present; all three private tables returned `42501` / HTTP 401.
 
+- 2026-09-26: Implementation committed and pushed as `56083b3`, with local
+  HEAD matching `origin/main`. GitHub Actions [run 36228279521](https://github.com/atrx07/Traelyx/actions/runs/36228279521)
+  passed both jobs: PostgreSQL 17 migrations/access tests, generated/schema
+  reproducibility, formatting, analysis, 235 Flutter tests, native Kotlin,
+  inspector/contract checks, debug/release builds, size reporting, and artifact
+  publication. M6.4 is complete; this completion update is documentation only.
+  M6.5 remains unauthorized.
+
 ## Completion summary
 
 M6.1 provides three empty, private, owner-scoped cloud tables, versioned
@@ -388,3 +396,18 @@ tests and the full CI gates pass. No personal trip upload, new package,
 permission, background sync, future-trip opt-in, restore flow, or remote
 deletion UI was introduced. Sign-out/cancellation cannot recall an already
 in-flight request. M6.4 requires separate authorization.
+
+
+M6.4 adds reviewed private profile/vehicle saves, an account-scoped schema-3
+cache, durable foreground retries, mutation idempotency, and revision conflicts.
+Both approved hosted migrations are installed; the forward guard rejects a
+session that differs from the intended account and disables legacy unguarded
+RPCs. Explicit publication exposes only exact username/display name. The
+maintainer's real profile remains private; no personal trips were uploaded.
+Physical saves, reload, cache restore, and data preservation passed on one
+Android 14 Tecno. Account-switch races, conflicts, lost acknowledgements, and
+public/private transitions were tested through automated SDK/repository/SQL
+fixtures, not simultaneous physical devices or real-profile publication.
+All 235 Flutter tests and full CI gates pass. No new dependency, permission,
+background sync, recorder behavior, or local vehicle reassignment was added.
+The additive local schema must not be downgraded. M6.5 requires authorization.
