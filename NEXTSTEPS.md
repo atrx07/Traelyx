@@ -9,7 +9,7 @@ M6 is active. M6.1 is complete; M6.2 is authorized and in progress.
 ## P0 — M6.2 validation gate
 
 1. Preserve the completed M6.1 schema/RLS contract and accountless operation.
-2. Finish host checks, configure the hosted email-link redirect, and validate callback, encrypted session restore, refresh, and sign-out on the physical phone when connected.
+2. Physical auth QA, 199 Flutter tests, analysis, and debug/release builds pass, including the final live email link on the updated phone build. Verify final CI for callback routing and truthful failure messages.
 3. Inspect the exact diff, commit/push, confirm CI and Git alignment, then report M6.2 complete and wait for separate M6.3 authorization.
 
 ## P1 — Preserve M5 boundaries

@@ -32,3 +32,10 @@ Data API tables; those belong to later authorized substeps.
 Physical QA must verify a fresh link, warm and cold app callback, session
 restore after restart, refresh after token expiry/network interruption, and
 local sign-out. Do not mark M6.2 complete from widget tests alone.
+
+The built-in Supabase email provider has a small project-wide hourly limit
+(currently two emails per hour; see the [provider rate limits](https://supabase.com/docs/guides/auth/rate-limits)).
+Plan physical link tests accordingly. If Account reports temporarily limited
+email requests, wait for the provider limit to recover rather than repeatedly
+retrying or toggling Wi-Fi. A rate-limit response demonstrates a reachable
+auth service; it is not an offline-device error.

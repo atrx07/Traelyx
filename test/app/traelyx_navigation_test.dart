@@ -16,6 +16,7 @@ import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
+import 'package:traelyx/features/account/domain/account_link_failure.dart';
 import 'package:traelyx/features/bootstrap/application/bootstrap_readiness.dart';
 import 'package:traelyx/features/data_management/application/data_management_providers.dart';
 import 'package:traelyx/features/data_management/domain/data_management_models.dart';
@@ -266,6 +267,48 @@ void main() {
     expect(find.byKey(const ValueKey('ready-drive-view')), findsOneWidget);
   });
 
+  test('cold callback selects Account only when the provider is available', () {
+    final callback = Uri.parse(
+      'io.github.atrx07.traelyx://auth-callback/?code=opaque',
+    );
+    expect(
+      initialLocationForAccountLink(callback, accountEnabled: true),
+      TraelyxRoutes.youAccount,
+    );
+    expect(
+      initialLocationForAccountLink(callback, accountEnabled: false),
+      TraelyxRoutes.root,
+    );
+    expect(
+      initialLocationForAccountLink(null, accountEnabled: true),
+      TraelyxRoutes.root,
+    );
+  });
+
+  testWidgets('warm callback opens Account from a local screen', (
+    tester,
+  ) async {
+    final router = createTraelyxRouter();
+    addTearDown(router.dispose);
+    final accountLinks = StreamController<Uri>.broadcast();
+    addTearDown(accountLinks.close);
+
+    await _pumpApp(tester, router, accountLinks: accountLinks.stream);
+    accountLinks.add(Uri.parse('https://example.com/other'));
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.drive);
+
+    accountLinks.add(
+      Uri.parse('io.github.atrx07.traelyx://auth-callback/?code=opaque'),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      TraelyxRoutes.youAccount,
+    );
+    expect(find.byKey(const ValueKey('account-screen')), findsOneWidget);
+  });
+
   testWidgets(
     'Account sends a link and signs out without touching local trips',
     (tester) async {
@@ -294,12 +337,68 @@ void main() {
       expect(find.text('Signed in'), findsOneWidget);
       expect(find.textContaining('does not upload'), findsOneWidget);
 
+      await tester.tap(find.byKey(const ValueKey('account-refresh')));
+      await tester.pumpAndSettle();
+      expect(accountGateway.refreshCount, 1);
+      await tester.drag(
+        find.byKey(const ValueKey('account-screen')),
+        const Offset(0, -200),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Sign-in refreshed on this device.'), findsOneWidget);
+
+      accountGateway.failRefresh = true;
+      await tester.tap(find.byKey(const ValueKey('account-refresh')));
+      await tester.pumpAndSettle();
+      expect(accountGateway.refreshCount, 2);
+      expect(find.textContaining('Could not refresh sign-in'), findsOneWidget);
+      expect(find.text('Signed in'), findsOneWidget);
+
       await tester.tap(find.byKey(const ValueKey('account-sign-out')));
       await tester.pumpAndSettle();
       expect(accountGateway.signOutCount, 1);
       expect(find.textContaining('Local trips are still here'), findsOneWidget);
     },
   );
+
+  for (final failure in AccountLinkFailure.values) {
+    testWidgets('Account explains $failure and permits a successful retry', (
+      tester,
+    ) async {
+      final router = createTraelyxRouter(
+        initialLocation: TraelyxRoutes.youAccount,
+      );
+      addTearDown(router.dispose);
+      final gateway = _FakeAccountGateway()
+        ..sendFailure = AccountLinkException(failure);
+      addTearDown(gateway.dispose);
+      await _pumpApp(tester, router, accountGateway: gateway);
+      await tester.enterText(
+        find.byKey(const ValueKey('account-email')),
+        'driver@example.com',
+      );
+      await tester.tap(find.byKey(const ValueKey('account-send-link')));
+      await tester.pumpAndSettle();
+      final expected = switch (failure) {
+        AccountLinkFailure.network => 'Could not reach the sign-in service.',
+        AccountLinkFailure.rateLimited => 'temporarily limited email requests',
+        AccountLinkFailure.service => 'temporarily unavailable',
+        AccountLinkFailure.rejected => 'could not accept this email request',
+        AccountLinkFailure.unknown => 'Could not send a sign-in link.',
+      };
+      expect(find.textContaining(expected), findsOneWidget);
+      if (failure != AccountLinkFailure.network) {
+        expect(find.textContaining('Check your connection'), findsNothing);
+      }
+      gateway.sendFailure = null;
+      await tester.tap(find.byKey(const ValueKey('account-send-link')));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Check your email for the sign-in link'),
+        findsOneWidget,
+      );
+    });
+  }
 
   testWidgets('Account rejects invalid email and handles link failure', (
     tester,
@@ -346,6 +445,7 @@ Future<void> _pumpApp(
   RecorderPermissionStatus? permissionStatus,
   TripHistoryRepository tripRepository = const _FakeTripRepository(),
   AccountGateway? accountGateway,
+  Stream<Uri>? accountLinks,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -396,7 +496,7 @@ Future<void> _pumpApp(
             (ref) async => permissionStatus,
           ),
       ],
-      child: TraelyxApp(router: router),
+      child: TraelyxApp(router: router, accountLinks: accountLinks),
     ),
   );
   await tester.pumpAndSettle();
@@ -467,7 +567,10 @@ class _FakeAccountGateway implements AccountGateway {
   AccountIdentity? _identity;
   final sentEmails = <String>[];
   int signOutCount = 0;
+  int refreshCount = 0;
   bool failSend = false;
+  Object? sendFailure;
+  bool failRefresh = false;
 
   void emit(AccountIdentity? identity) {
     _identity = identity;
@@ -487,12 +590,16 @@ class _FakeAccountGateway implements AccountGateway {
 
   @override
   Future<void> sendSignInLink(String email) async {
+    if (sendFailure != null) throw sendFailure!;
     if (failSend) throw StateError('network unavailable');
     sentEmails.add(email);
   }
 
   @override
-  Future<void> refreshSession() async {}
+  Future<void> refreshSession() async {
+    refreshCount++;
+    if (failRefresh) throw StateError('network unavailable');
+  }
 
   @override
   Future<void> signOut() async {

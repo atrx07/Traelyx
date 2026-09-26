@@ -98,9 +98,9 @@ available without sign-in. Summary sync is a later substep.
 ## M6.2 tests / validation
 
 - [x] Verify optional local navigation and account flows with unit/widget tests.
-- [ ] Verify session persistence, refresh, sign-out, and failure paths.
+- [x] Verify session persistence, refresh, sign-out, and failure paths.
 - [x] Run format, analysis, tests, repository validation, and Android builds.
-- [ ] Exercise the configured auth flow and secure storage on a physical phone;
+- [x] Exercise the configured auth flow and secure storage on a physical phone;
   stop and ask the maintainer to connect it when host checks are ready.
 - [ ] Inspect the exact diff, commit/push, verify green CI and Git alignment,
   then mark M6.2 complete and stop before M6.3.
@@ -182,6 +182,45 @@ requires its own narrowly scoped schema and policies.
   sources, Drift schema snapshots, and trip-debug inspector tests match the
   committed contracts. The physical phone is still absent from ADB; hosted
   auth redirect and session QA are still pending.
+- 2026-09-26: Committed and pushed the in-progress M6.2 implementation as
+  `fb03bc4`. GitHub Actions [run 36205833119](https://github.com/atrx07/Traelyx/actions/runs/36205833119)
+  passed cloud PostgreSQL 17/RLS and all validation, Flutter, native Kotlin,
+  debug/release build, and artifact gates. The maintainer connected the
+  Android 14 Tecno, set the hosted auth redirect, and supplied an ignored
+  local publishable-key build config. The auth-enabled APK updated the
+  existing installation in place. Physical email-link callback signed in,
+  encrypted session restore survived a cold app restart, local sign-out
+  returned to the signed-out screen, and retained local trip history remained
+  nonempty. Cold-start callback and post-expiry refresh remain to verify.
+- 2026-09-26: The cold-start callback signed in but landed on Drive, requiring
+  manual navigation to Account. The maintainer reported this UX gap. Added
+  explicit dedicated-link routing for warm and cold callbacks while ordinary
+  launches still enter Drive; focused route tests pass. Physical landing QA
+  and full regression/CI validation remain.
+- 2026-09-26: The auth-enabled phone build opens Account for a token-free cold
+  callback while ordinary app launch still opens Drive. Added an explicit
+  refresh action with visible success/failure and a widget regression path.
+  The real Supabase session refreshed successfully and survived cold restart.
+  With Wi-Fi briefly disabled (mobile data already off), refresh showed a
+  connection failure without signing out; Wi-Fi was restored and a retry
+  succeeded. Existing local trip history remained nonempty.
+- 2026-09-26: The final link request displayed the generic connection error
+  after the interrupted QA run. Phone Wi-Fi was on, airplane mode off,
+  Internet ping passed 3/3, and project DNS resolved with 2/3 then 4/5 ping
+  responses. No persistent offline flag exists in the auth flow. Fixed the
+  misleading catch-all message by mapping provider errors to safe categories
+  (transport, rate limit, service, rejection, unknown), with successful-retry
+  regression coverage. The original failure category is not recoverable from
+  the old UI/logs; one retry on a restarted updated build is still required.
+- 2026-09-26: Updated the retained phone installation with the safe error
+  categories and restarted only Traelyx. The maintainer requested one fresh
+  link and confirmed Account shows Signed in; a privacy-safe UI check agreed.
+  The current flow is healthy, while the original transient failure cannot
+  be attributed conclusively to stale process state, transport, or the
+  provider. The phone remains signed in and Wi-Fi enabled. All 199 Flutter
+  tests, static analysis, and repository contract/secret validation pass;
+  the configured debug APK builds and installs, and the unconfigured release
+  APK builds (57.6 MB). Final CI validation and completion persistence remain.
 
 ## Completion summary
 

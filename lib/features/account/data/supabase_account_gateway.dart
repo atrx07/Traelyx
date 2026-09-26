@@ -1,6 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/features/account/data/classify_account_link_failure.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
+import 'package:traelyx/features/account/domain/account_link_failure.dart';
 
 final class SupabaseAccountGateway implements AccountGateway {
   const SupabaseAccountGateway(this.client);
@@ -21,11 +23,18 @@ final class SupabaseAccountGateway implements AccountGateway {
       .distinct();
 
   @override
-  Future<void> sendSignInLink(String email) => client.auth.signInWithOtp(
-    email: email,
-    emailRedirectTo: callbackUrl,
-    shouldCreateUser: true,
-  );
+  Future<void> sendSignInLink(String email) async {
+    try {
+      await client.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: callbackUrl,
+        shouldCreateUser: true,
+      );
+    } catch (error) {
+      // Expose only a safe category, never provider bodies or account details.
+      throw AccountLinkException(classifyAccountLinkFailure(error));
+    }
+  }
 
   @override
   Future<void> refreshSession() async {

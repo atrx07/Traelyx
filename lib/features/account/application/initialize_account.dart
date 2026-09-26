@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/features/account/data/secure_auth_storage.dart';
 import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/domain/account_callback.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 
 const _supabaseUrl = String.fromEnvironment('TRAELYX_SUPABASE_URL');
@@ -40,7 +41,7 @@ Future<AccountGateway> initializeAccount() async {
       authOptions: const FlutterAuthClientOptions(
         localStorage: SecureAuthStorage(storage),
         pkceAsyncStorage: SecurePkceStorage(storage),
-        detectSessionInUriPredicate: _isAuthCallback,
+        detectSessionInUriPredicate: isAccountCallback,
       ),
     );
     return SupabaseAccountGateway(Supabase.instance.client);
@@ -48,6 +49,3 @@ Future<AccountGateway> initializeAccount() async {
     return const UnavailableAccountGateway();
   }
 }
-
-bool _isAuthCallback(Uri uri) =>
-    uri.scheme == 'io.github.atrx07.traelyx' && uri.host == 'auth-callback';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
+import 'package:traelyx/features/account/domain/account_callback.dart';
 import 'package:traelyx/features/account/presentation/account_screen.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
@@ -11,6 +12,13 @@ import 'package:traelyx/features/navigation/presentation/foundation_destination_
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
 import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
 import 'package:traelyx/features/trips/presentation/trips_screen.dart';
+
+String initialLocationForAccountLink(
+  Uri? uri, {
+  required bool accountEnabled,
+}) => accountEnabled && uri != null && isAccountCallback(uri)
+    ? TraelyxRoutes.youAccount
+    : TraelyxRoutes.root;
 
 GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
   return GoRouter(

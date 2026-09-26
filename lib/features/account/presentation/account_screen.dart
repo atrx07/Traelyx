@@ -5,6 +5,7 @@ import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/domain/account_email.dart';
+import 'package:traelyx/features/account/domain/account_link_failure.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({super.key});
@@ -46,12 +47,25 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
         _message =
             'Check your email for the sign-in link. Open it on this device.';
       });
-    } catch (_) {
+    } catch (error) {
       if (!mounted) return;
       setState(() {
         _isError = true;
-        _message =
-            'Could not send a sign-in link. Check your connection and try again.';
+        final reason = error is AccountLinkException
+            ? error.reason
+            : AccountLinkFailure.unknown;
+        _message = switch (reason) {
+          AccountLinkFailure.network =>
+            'Could not reach the sign-in service. Check your connection and try again.',
+          AccountLinkFailure.rateLimited =>
+            'The sign-in service has temporarily limited email requests. Wait before requesting another link.',
+          AccountLinkFailure.service =>
+            'The sign-in service is temporarily unavailable. Try again later.',
+          AccountLinkFailure.rejected =>
+            'The sign-in service could not accept this email request. Check the email address or contact the app maintainer.',
+          AccountLinkFailure.unknown =>
+            'Could not send a sign-in link. Try again. If this continues, contact the app maintainer.',
+        };
       });
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -75,6 +89,30 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       setState(() {
         _isError = true;
         _message = 'Could not sign out. Try again.';
+      });
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _refreshSession() async {
+    setState(() {
+      _busy = true;
+      _message = null;
+    });
+    try {
+      await ref.read(accountGatewayProvider).refreshSession();
+      if (!mounted) return;
+      setState(() {
+        _isError = false;
+        _message = 'Sign-in refreshed on this device.';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isError = true;
+        _message =
+            'Could not refresh sign-in. Check your connection and try again.';
       });
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -138,6 +176,12 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           'does not upload them; summary sync is not active yet.',
                         ),
                         const SizedBox(height: TraelyxSpacing.lg),
+                        TextButton(
+                          key: const ValueKey('account-refresh'),
+                          onPressed: _busy ? null : _refreshSession,
+                          child: const Text('Refresh sign-in'),
+                        ),
+                        const SizedBox(height: TraelyxSpacing.sm),
                         OutlinedButton(
                           key: const ValueKey('account-sign-out'),
                           onPressed: _busy ? null : _signOut,

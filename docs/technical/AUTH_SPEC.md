@@ -116,12 +116,20 @@ MVP:
 ## M6.2 implementation boundary
 
 The first implemented method is email magic-link sign-in or signup through
-Supabase Auth. A dedicated Android callback URI completes the link; session
+Supabase Auth. A dedicated Android callback URI completes the link and opens
+Account after warm or cold launch; ordinary launches still open Drive. Session
 JSON and PKCE verifiers use encrypted platform storage. Without build-time
 provider configuration or working secure storage, Account remains unavailable
 while local driving features continue. User-initiated link sending is the
 first cloud identity action. Signing in does not migrate or upload local
-trip data. See `docs/reference/AUTH_SETUP.md` and ADR-0019 for setup and
+trip data. Account offers explicit session refresh with visible success or
+connection failure; a failed refresh does not silently sign out. See
+`docs/reference/AUTH_SETUP.md` and ADR-0019 for setup and
 dependency reasoning.
+
+Link-send failures distinguish transport failures, provider rate limits,
+temporary service failures, rejected requests, and unknown local errors.
+Only transport failures suggest checking the connection. Raw provider error
+bodies, email addresses, and tokens are not exposed in diagnostics.
 
 Future optional MFA can be added if useful.

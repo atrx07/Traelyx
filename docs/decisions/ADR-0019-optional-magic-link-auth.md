@@ -18,6 +18,8 @@ behind `AccountGateway`. Store both session JSON and PKCE code verifiers with
 Disable the plugin's reset-on-error behavior so storage faults fail visibly,
 and exclude its encrypted preferences and configuration from Android backup.
 The SDK accepts only Traelyx's dedicated auth callback URI.
+Traelyx also observes that URI to open Account after warm or cold callbacks;
+ordinary launches continue to open Drive.
 
 Initialize the provider only when an HTTPS project URL and publishable client
 key are supplied as build definitions. Keep the key out of Git and never put
@@ -32,10 +34,13 @@ uses the SDK, and local sign-out clears this device's session.
 |---|---|---|
 | `supabase_flutter` 2.17.2 | Official maintained Supabase Auth client; MIT. Replaces custom auth HTTP and session code. | Adds Auth HTTP, link handling, and several Dart/transitive packages. Network use is confined to user-requested auth and an existing session's refresh. No telemetry is sent. |
 | `flutter_secure_storage` 10.0.0 | Established encrypted storage plugin; BSD-3-Clause. Needed because SDK default session/PKCE persistence uses ordinary preferences. | Adds an Android native plugin, requires API 23+, and increases APK size. Existing Flutter Android minimum is compatible. Encrypted auth files are excluded from backup. |
+| `app_links` 7.2.1 | Existing Supabase transitive dependency, now direct for callback landing; Apache-2.0. | Shares the SDK's Android link stream, so no additional native package or network call. Handles only the dedicated callback URI; replacement stays within the auth adapter. |
 
-Both are optional to core driving and have no required paid plan. The
+These dependencies are optional to core driving and have no required paid plan. The
 `AccountGateway` and `LocalStorage` boundaries keep replacement practical.
-Supabase free-tier auth limits may constrain testing or later scale. APK size
+An explicit Account action allows a user to retry session refresh and see a
+connection failure without signing out. Supabase free-tier auth limits may
+constrain testing or later scale. APK size
 and physical restore/deep-link behavior must be checked in M6.2 validation.
 
 ## Consequences
