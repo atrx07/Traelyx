@@ -2,7 +2,7 @@
 
 Date: 2026-09-27
 
-Status: Accepted for M6.7 implementation; hosted validation passed; device/CI validation pending.
+Status: Accepted for M6.7 implementation; hosted and full CI validation passed; final physical screen QA awaits phone unlock.
 
 ## Decision
 

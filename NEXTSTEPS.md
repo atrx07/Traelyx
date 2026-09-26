@@ -10,7 +10,7 @@ M6 is active. M6.1–M6.6 are complete. M6.7 Guardian pairing is authorized and 
 
 1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
-3. Finish physical UI/data-preservation checks and GitHub CI, synchronize completion and stop before M6.8 alerts.
+3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Phone UI QA awaits unlock: verify inert opening, live reload, default preferences and cancel the invitation review without creating a real code. Then synchronize completion and stop before M6.8 alerts.
 
 ## P1 — Preserve M5 boundaries
 

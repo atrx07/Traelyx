@@ -125,7 +125,7 @@ Include:
 - disconnect while trip active;
 - blocked invitation.
 
-## 11. M6.7 implemented pairing contract (validation pending)
+## 11. M6.7 implemented pairing contract (hosted/CI verified; final device QA pending)
 
 Social → Guardian pairing opens without network access. Explicit reload shows
 relationships, permission preferences and recent audit history. The driver
