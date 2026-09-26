@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.5 complete; M6.6 in progress**
+**M6 active — M6.1–M6.6 complete; awaiting M6.7 authorization**
 
 ## Working
 
@@ -128,11 +128,11 @@
 
 - M6.5 implements mutual friendship requests, participant-only name snapshots, account/revision guards, cancellation/removal/blocking, expiry/cooldown, request limits, and explicit consent. The approved hosted migration and synthetic transaction tests pass with fixture cleanup verified. All 244 Flutter tests, analysis, SQL suites, repository checks, and debug/release builds pass. Physical Social reload/no-match and data preservation pass; real-person requests were not sent. GitHub CI run 36244993247 passes all PostgreSQL 17, Flutter/native, generated/schema, build, size, and artifact gates for implementation commit `d79c5ae`. M6.5 is complete.
 
-- M6.6 implements immutable accountless local analysis and separately consented friends-only comparisons by broad vehicle class. The approved production migration and rollback-only security tests pass. All 260 Flutter / 222 native tests, analysis, contract checks and debug/release builds pass. Physical synthetic analysis and live comparison reload pass with original raw data preserved. Final CI and completion persistence remain.
+- M6.6 implements immutable accountless local analysis and separately consented friends-only comparisons by broad vehicle class. The approved production migration and rollback-only security tests pass. All 260 Flutter / 222 native tests, analysis, contract checks and debug/release builds pass. Physical synthetic analysis and live comparison reload pass with original raw data preserved. GitHub CI run 36250004115 passes every PostgreSQL 17, generated/schema, test, build and artifact gate for implementation commit `728254f`. M6.6 is complete.
 
 ## Partial
 
-- Social supports M6.5 friendships and deployed M6.6 comparisons; final ranking CI remains pending. Guardian remains pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
+- Social supports friendships and experimental safe comparisons. Guardian remains pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
 - Drive DNA presentation is implemented, but production does not yet persist governed M4.5/M4.6 baseline snapshots; existing physical trips therefore remain truthfully uncalibrated instead of being analyzed in Flutter.
 - Automatic finalization does not run scoring. M6.6 adds explicit accountless local analysis with user-supplied mount orientation, preserving existing scores. Unanalyzed or unsupported physical trips retain honest unavailable states.
 - Encrypted account session/PKCE storage is implemented; other future secret consumers remain outside M6.2–M6.3.
@@ -184,5 +184,4 @@
 
 ## Current step
 
-**Approval gate:** M6.6 is authorized, including local analysis persistence and separately
-consented sanitized ranking-validation evidence. M6.7 remains unauthorized.
+**Approval gate:** M6.6 is complete. Wait for explicit authorization before M6.7 Guardian pairing.

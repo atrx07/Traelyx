@@ -102,9 +102,9 @@ prove driver identity or resist a fully compromised client; disclose that limit.
   truthful ranking/insufficient-evidence UI with regression coverage.
 - [x] Validate full suites/builds; obtain exact migration approval; verify hosted
   synthetic transactions, device behavior, and preservation of personal data.
-- [ ] Review/commit/push, verify CI, synchronize completion, stop before M6.7.
+- [x] Review/commit/push, verify CI, synchronize completion, stop before M6.7.
 
-M6.6 validation in progress: all 260 Flutter tests, 222 native tests including
+M6.6 validation complete: all 260 Flutter tests, 222 native tests including
 production analysis fixtures, static analysis, all local SQL
 suites, exact atomic deployment-script checks, configured debug build and
 release build (59.6 MB) pass. An 80-second synthetic trip passes the complete
@@ -114,13 +114,16 @@ unchanged and pass after analysis controls were placed below recorded evidence.
 The explicitly approved production migration and atomic hosted tests passed:
 migration history, private RLS, guarded RPC grants and fixture rollback all
 verified true. Physical synthetic analysis on Android 14 Tecno passed full/
-verified scoring, durable persistence, immutable repeat refusal, minimized
+verified scoring, transactional persistence in an isolated in-memory database,
+immutable repeat refusal, minimized
 payload and no-upload assertions (8,741 ms native analysis). The temporary
 in-memory probe and 80 generated chunks were removed; the configured normal
 app was restored. Explicit live comparison reload succeeds with no shared
 results or eligible personal trips. All 7,546 original raw files / 59,570 KiB
 remain. Consent/submission transitions use widget/SDK and hosted synthetic
-tests; no personal trip or real friend's data was shared. Final CI remains.
+tests; no personal trip or real friend's data was shared. CI run 36250004115
+passed every gate for implementation commit `728254f`, including PostgreSQL 17,
+generated/schema checks, Flutter/native tests, both APK builds and artifacts.
 
 ## Out of scope for M6.1
 
@@ -168,7 +171,7 @@ tests; no personal trip or real friend's data was shared. Final CI remains.
 - [x] M6.3 Local-to-account migration (hosted/device/CI validation passed).
 - [x] M6.4 Profiles/vehicles sync (hosted/device/CI validation passed).
 - [x] M6.5 Friends/social (hosted/device/CI validation passed).
-- [ ] M6.6 Safe leaderboards.
+- [x] M6.6 Safe leaderboards (hosted/device/CI validation passed).
 - [ ] M6.7 Guardian pairing.
 - [ ] M6.8 Guardian alerts.
 
@@ -511,3 +514,16 @@ were not exercised; those transitions have synthetic SQL/SDK/widget coverage.
 The phone remains signed in; all retained raw telemetry is preserved. No new
 package, permission, local schema, background upload, notification, ranking,
 or Guardian capability was introduced. M6.6 requires separate authorization.
+
+M6.6 is complete. Explicit foreground local analysis runs unchanged native v1
+pipelines with a recorded mount choice and persists immutable audits/events.
+Separate consent submits an allowlisted dossier; guarded server APIs validate
+eligibility and arithmetic, isolate accepted unblocked friends by broad vehicle
+class, and support withdrawal. The production migration and synthetic tests
+passed with no retained fixtures. All 260 Flutter / 222 native tests and GitHub
+CI run 36250004115 pass for implementation commit `728254f`.
+Physical synthetic bridge/persistence checks and live empty comparison reload
+passed on the Tecno; its normal app/session and original raw data were preserved.
+Real driving calibration and simultaneous physical-account sharing remain
+unverified. No personal trip upload, new dependency, local schema change or
+recorder sampling change was introduced. Stop before M6.7 Guardian pairing.

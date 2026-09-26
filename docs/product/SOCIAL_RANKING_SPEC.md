@@ -61,7 +61,7 @@ Achievements should reward engagement/quality, e.g.:
 
 Avoid achievements for dangerous maxima.
 
-## M6.6 implemented comparison contract (validation pending)
+## M6.6 implemented comparison contract
 
 Experimental friends-only cohorts are separated into car, motorcycle and other.
 The user explicitly selects the recorded trip's class from saved vehicle classes;

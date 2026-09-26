@@ -2,7 +2,7 @@
 
 Date: 2026-09-26
 
-Status: Accepted and deployed for M6.6; final CI pending.
+Status: Accepted, deployed and validated for M6.6.
 
 ## Context
 
