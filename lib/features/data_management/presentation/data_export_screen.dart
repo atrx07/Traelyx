@@ -305,7 +305,7 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Delete entire trip?'),
         content: const Text(
-          'This removes the local trip summary, raw telemetry, events, and score. The action is permanent and cannot be undone.',
+          'This removes the local trip summary, raw telemetry, events, score, and queued uploads. Any existing cloud copy remains; an upload already in progress may finish. Local deletion is permanent and cannot be undone.',
         ),
         actions: [
           TextButton(

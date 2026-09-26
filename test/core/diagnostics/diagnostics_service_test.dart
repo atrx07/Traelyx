@@ -62,7 +62,7 @@ void main() {
 
       final report = await service.collect();
 
-      expect(report.databaseSchemaVersion, 1);
+      expect(report.databaseSchemaVersion, 2);
       expect(report.platform.storage.totalBytes, 1536);
       expect(report.recorder.implementationState, 'skeleton');
       expect(report.recorder.recordingAvailable, isFalse);

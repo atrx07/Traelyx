@@ -10,6 +10,7 @@ import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
+import 'package:traelyx/features/summary_sync/presentation/summary_sync_screen.dart';
 import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
 import 'package:traelyx/features/trips/presentation/trips_screen.dart';
 
@@ -98,6 +99,12 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                   GoRoute(
                     path: 'account',
                     builder: (context, state) => const AccountScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'summaries',
+                        builder: (context, state) => const SummarySyncScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'data-export',

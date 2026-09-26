@@ -4,13 +4,13 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.2 are complete; M6.3 awaits explicit authorization.
+M6 is active. M6.1–M6.2 are complete; M6.3 is authorized and in progress.
 
-## P0 — M6.3 approval gate
+## P0 — M6.3 final validation and persistence
 
 1. Preserve the completed M6.1 schema/RLS contract and accountless operation.
 2. M6.2 physical auth QA, 199 Flutter tests, analysis, debug/release builds, and GitHub CI pass. The final live email link succeeded on the updated phone build; the phone remains signed in.
-3. Wait for separate M6.3 authorization before implementing local-to-account migration.
+3. M6.3 explicit consent, durable account-bound queue, retries, and additive local upgrade are implemented. All 216 Flutter tests, analysis, generated/schema checks, repository validation, local SQL tests, hosted synthetic access tests, and physical upgrade/Keep local checks pass. Finish release/CI verification and commit/push completion. Stop before M6.4.
 
 ## P1 — Preserve M5 boundaries
 

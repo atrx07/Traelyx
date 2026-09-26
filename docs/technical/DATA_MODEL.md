@@ -64,6 +64,17 @@ Candidate entities:
 - entity/version
 - state/retry metadata
 
+### `trip_account_links` — Drift schema 2
+- `trip_id`: primary key and cascading reference to the original local trip;
+- `user_id`: immutable authenticated account association through the app;
+- `consented_at_micros`: local consent timestamp, never uploaded;
+- `summary_version`: currently 1.
+
+The additive v1→v2 upgrade leaves existing trip, vehicle, raw-chunk, score,
+baseline, settings, and queue rows intact. No existing trip is linked by
+migration or sign-in. Explicit review creates links and upload snapshots in
+one transaction. The trip's anonymous vehicle owner namespace is not changed.
+
 ### `settings`
 Non-secret app settings. Secrets live in secure storage.
 
@@ -74,6 +85,10 @@ M6.1 begins with private `profiles`, sanitized `vehicles`, and compact
 [`CLOUD_SCHEMA_V1.md`](../reference/CLOUD_SCHEMA_V1.md); the migration is the
 executable source. Later entities below remain candidates for their own
 authorized substeps and migrations.
+
+M6.3 changes only the private summary owner foreign key from `profiles` to
+`auth.users`; profiles and vehicles retain their existing contracts. This
+allows compact private snapshots before profile/vehicle sync in M6.4.
 
 Candidate Supabase entities:
 

@@ -51,32 +51,44 @@ void main() {
     },
   );
 
-  test('replay preserves a later user vehicle assignment', () async {
-    final finalization = _finalization();
-    await repository.reconcile(finalization);
-    await database
-        .into(database.vehicles)
-        .insert(
-          VehiclesCompanion.insert(
-            id: 'user-vehicle',
-            ownerNamespace: 'local:user',
-            displayName: 'My bike',
-            vehicleType: 'motorcycle',
-            createdAtMicros: 1,
-            updatedAtMicros: 1,
-          ),
-        );
-    await (database.update(database.trips)
-          ..where((row) => row.id.equals(finalization.tripId)))
-        .write(const TripsCompanion(vehicleId: Value('user-vehicle')));
+  test(
+    'replay preserves later vehicle assignment and summary sync state',
+    () async {
+      final finalization = _finalization();
+      await repository.reconcile(finalization);
+      await database
+          .into(database.vehicles)
+          .insert(
+            VehiclesCompanion.insert(
+              id: 'user-vehicle',
+              ownerNamespace: 'local:user',
+              displayName: 'My bike',
+              vehicleType: 'motorcycle',
+              createdAtMicros: 1,
+              updatedAtMicros: 1,
+            ),
+          );
+      await (database.update(
+        database.trips,
+      )..where((row) => row.id.equals(finalization.tripId))).write(
+        const TripsCompanion(
+          vehicleId: Value('user-vehicle'),
+          cloudSyncState: Value('summary_synced'),
+        ),
+      );
 
-    await repository.reconcile(finalization);
+      await repository.reconcile(finalization);
 
-    expect(
-      (await database.select(database.trips).getSingle()).vehicleId,
-      'user-vehicle',
-    );
-  });
+      expect(
+        (await database.select(database.trips).getSingle()).vehicleId,
+        'user-vehicle',
+      );
+      expect(
+        (await database.select(database.trips).getSingle()).cloudSyncState,
+        'summary_synced',
+      );
+    },
+  );
 
   test('validation failure leaves no partially indexed trip', () async {
     final base =

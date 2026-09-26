@@ -22,7 +22,7 @@ replay, or export depend on an account or cloud service.
 
 M6.1 provides a versioned cloud schema and tested access boundaries. M6.2
 adds an optional account path with secure sessions while local use remains
-available without sign-in. Summary sync is a later substep.
+available without sign-in. M6.3 adds explicit compact-summary review and consent.
 
 ## In scope
 
@@ -30,6 +30,9 @@ available without sign-in. Summary sync is a later substep.
   and RLS, reproducible access tests, and deployment verification.
 - M6.2: optional email magic-link auth UX, secure session persistence, session refresh
   and sign-out, accountless navigation, and hosted auth configuration.
+- M6.3: explicit review/consent for existing compact trip summaries, immutable
+  per-trip account association, durable upload queue and bounded retry,
+  owner-only cloud writes and authenticated hosted verification.
 - Later M6 substeps only after their individual authorization gates.
 
 ## Out of scope for M6.1
@@ -75,7 +78,7 @@ available without sign-in. Summary sync is a later substep.
 
 - [x] M6.1 Create and test initial Supabase schema/RLS; verify project deployment.
 - [x] M6.2 Auth UX (physical auth QA and CI passed).
-- [ ] M6.3 Local-to-account migration.
+- [ ] M6.3 Local-to-account migration (authorized 2026-09-26).
 - [ ] M6.4 Profiles/vehicles sync.
 - [ ] M6.5 Friends/social.
 - [ ] M6.6 Safe leaderboards.
@@ -104,6 +107,31 @@ available without sign-in. Summary sync is a later substep.
   stop and ask the maintainer to connect it when host checks are ready.
 - [x] Inspect the exact diff, commit/push, verify green CI and Git alignment,
   then mark M6.2 complete and stop before M6.3.
+
+## M6.3 implementation and validation
+
+- [x] Add a non-destructive Drift v1→v2 upgrade for per-trip account links;
+  preserve anonymous vehicle/baseline namespaces, trip IDs, and raw evidence.
+- [x] Add an allowlisted version-1 compact payload, explicit preview/consent,
+  atomic linking/queueing, account-switch protection, and foreground retries
+  with persisted backoff. New trips require a new review; sign-in never opts in.
+- [x] Decouple private cloud summary ownership from profile creation using a
+  forward migration; retain RLS and verify the needed hosted client route.
+- [x] Test payload minimization, duplicate/restart recovery, partial network
+  failure, account switching, cancellation/deletion, and v1 upgrade preservation.
+- [ ] Run formatting, analysis, generated/schema checks, full Flutter/native/SQL
+  tests, repository validation, and debug/release builds.
+- [x] Verify the physical upgrade and consent UI; require maintainer consent
+  before sending their summaries. Verify authenticated hosted idempotency/RLS.
+- [ ] Review/commit/push the bounded unit, verify CI and Git alignment, record
+  completion, and stop before M6.4.
+
+M6.3 cloud payloads omit dates, vehicle labels, route geometry, raw samples,
+email, and unbounded JSON. Known duration, distance, score/version, aggregate
+event count, opaque trip ID, and authenticated owner are the only fields.
+Unknown analysis stays null. Local trips remain authoritative. A request
+already in flight may finish when signing out or deleting local data; local
+deletion and cloud deletion are separate actions and must be explained.
 
 ## M6.1 acceptance criteria
 
@@ -228,6 +256,32 @@ requires its own narrowly scoped schema and policies.
   analysis, Flutter tests, inspector and repository checks, debug/release
   builds, native Kotlin tests, and artifact publication. M6.2 is complete;
   this completion-state update is documentation-only. M6.3 remains gated.
+
+- 2026-09-26: Maintainer authorized M6.3. Implemented ADR-0020 compact snapshots,
+  explicit review/consent, atomic account links/queue, persisted foreground
+  backoff, cancellation/deletion handling, and account-switch protection.
+  Drift schema 2 preserves existing local evidence and anonymous namespaces.
+  Active-version event counting and stale in-flight acknowledgement handling
+  have regression coverage. No new dependency or native permission was added.
+- 2026-09-26: Browser control failed before connecting even after reauthentication.
+  The maintainer applied the reviewed cloud migration in the SQL Editor and
+  confirmed migration history, auth-owner foreign key, and RLS checks all true.
+  A phone-only harness verified real owner insert/readback, duplicate handling,
+  snapshot-conflict rejection, forged-owner denial, anonymous denial, and
+  cleanup of its one disposable synthetic summary. No local trip data was read
+  or uploaded by the harness. The ordinary app was restored afterward.
+- 2026-09-26: The physical schema upgrade and Keep local flow passed on the
+  Android 14 Tecno: four available summaries, zero queued, zero synced, with
+  7,546 raw telemetry files / 59,570 KiB preserved. The initial shell-wrapped
+  file count included other app files; a direct scoped count matches the
+  recorded pre-M6 baseline. All 216 Flutter tests, static analysis,
+  formatting, generated/schema reproducibility, repository contract/secret
+  validation, and local PGlite migration/RLS suites pass. CI schema generation
+  uses `--no-test` to avoid a duplicate empty template; substantive upgrade
+  and data-preservation tests remain under `test/core/database/migrations`.
+  Final configured debug was update-installed and remains signed in. The
+  release-validation APK builds (58.6 MB), and all three inspector tests pass.
+  CI gates and completion persistence remain.
 
 ## Completion summary
 

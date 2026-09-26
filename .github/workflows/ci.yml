@@ -39,7 +39,9 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260925000000_connected_foundation.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260925010000_harden_rls_helper.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260926000000_summary_auth_owner.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/connected_foundation.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/summary_sync.sql
 
   validate:
     runs-on: ubuntu-latest
@@ -72,7 +74,8 @@ jobs:
 
       - name: Verify Drift schema snapshots
         run: |
-          dart run drift_dev make-migrations
+          # Substantive upgrade/data-preservation tests live in test/core/database/migrations.
+          dart run drift_dev make-migrations --no-test
           dart run drift_dev schema generate drift_schemas/app_database test/core/database/migrations/generated --data-classes --companions
           dart format test/core/database/migrations/generated
           git diff --exit-code -- drift_schemas test/core/database/migrations/generated

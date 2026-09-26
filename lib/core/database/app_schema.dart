@@ -336,3 +336,20 @@ class SyncQueue extends Table {
     'CHECK (attempt_count >= 0)',
   ];
 }
+
+class TripAccountLinks extends Table {
+  TextColumn get tripId =>
+      text().references(Trips, #id, onDelete: KeyAction.cascade)();
+
+  TextColumn get userId => text()();
+
+  IntColumn get consentedAtMicros => integer()();
+
+  IntColumn get summaryVersion => integer()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {tripId};
+
+  @override
+  List<String> get customConstraints => ['CHECK (summary_version = 1)'];
+}

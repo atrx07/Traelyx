@@ -109,6 +109,12 @@ class DriftDataManagementRepository implements DataManagementRepository {
       throw DataManagementFailure(result.errorCode ?? 'raw_delete_failed');
     }
     return _database.transaction(() async {
+      await (_database.delete(_database.syncQueue)..where(
+            (row) =>
+                row.entityType.equals('trip_summary_v1') &
+                row.entityId.equals(tripId),
+          ))
+          .go();
       final deleted = await (_database.delete(
         _database.trips,
       )..where((row) => row.id.equals(tripId))).go();

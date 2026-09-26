@@ -67,7 +67,7 @@ class DriftRecorderFinalizationRepository
               telemetrySchemaVersion: telemetrySchemaVersion,
               integrityStatus: finalization.integrityStatus,
               telemetryQualitySummaryJson: Value(qualitySummary),
-              cloudSyncState: 'local_only',
+              cloudSyncState: existingTrip?.cloudSyncState ?? 'local_only',
               createdAtMicros: existingTrip?.createdAtMicros ?? startWallMicros,
               updatedAtMicros: stoppedWallMicros,
             ),

@@ -560,6 +560,12 @@ const _deepLinks = [
     index: 4,
     contentKey: 'account-screen',
   ),
+  _DeepLinkCase(
+    path: TraelyxRoutes.youSummarySync,
+    label: 'You',
+    index: 4,
+    contentKey: 'summary-sync-screen',
+  ),
 ];
 
 class _FakeAccountGateway implements AccountGateway {

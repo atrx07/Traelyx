@@ -36,6 +36,13 @@ Account may unlock:
 
 Account creation must show what begins syncing.
 
+M6.3 starts no trip sync at sign-in. A separate Account review identifies the
+private destination and data categories before the user confirms existing
+compact summaries. Dates, vehicle labels, precise routes, and raw sensors are
+excluded. Future trips require another review. Cancelling the queue does not
+remove already uploaded copies; deleting a local trip does not delete its
+cloud copy. An upload already in progress may finish. See `SYNC_SPEC.md`.
+
 ## 4. Data minimization
 
 ### Keep local by default

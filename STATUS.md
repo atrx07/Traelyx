@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.2 complete; M6.3 awaiting authorization**
+**M6 active — M6.1–M6.2 complete; M6.3 in progress**
 
 ## Working
 
@@ -119,15 +119,17 @@
 - Native deletion validates canonical app-private trip roots and refuses active or pending-finalization recorder state. Strict versioned bridge parsing, fail-closed repositories, deterministic redaction, partial-failure reporting, and isolated destructive fixtures cover the privacy/data-integrity boundary without a schema, dependency, permission, account, provider, upload, or network change.
 - M5.9 host validation passed with clean analysis, 180 Flutter tests, 219 native Kotlin tests, three trip-debug inspector tests, repository validation, generated/schema drift checks, and debug/release builds. Offline debug/release Tecno QA verified storage/retention rendering, both export pickers, and cancellation of both destructive confirmations. Final debug was restored; database SHA-256 `b6cb4afe541a277dae5b0b70a7cd9ed11b9824457833288e710548f64b21d99c`, four trips, 7,546 indexed/raw chunks, accepted M2.8 fixture, offline radios, and inactive recorder service were preserved; all 14 scoped UI dumps were removed.
 
-- M6.1 links the Traelyx free-tier Singapore Supabase project to two versioned migrations. Three empty private tables (`profiles`, `vehicles`, `trip_summaries`) have explicit client grants and owner-only RLS; precise routes, raw telemetry, and API secrets are absent. The pre-existing `rls_auto_enable()` helper is no longer executable by `PUBLIC`, `anon`, or `authenticated`, while its database trigger remains enabled. The refreshed hosted Security Advisor has zero errors and warnings, and PostgreSQL 17 and existing CI checks pass. Per-table Data API exposure remains off.
-- M6.2 optional email-link account UI, secure session and PKCE storage, Android callback registration, selective backup exclusion, and accountless navigation are implemented. Physical Android 14 Tecno QA verified real email links, encrypted session restore, local sign-out, successful refresh, offline refresh failure/recovery, and retained trip history. Warm/cold callback routing now opens Account; ordinary launch opens Drive. A misleading catch-all link-send connection message now distinguishes network, provider limit, service, rejection, and unknown errors. The final link succeeded after updating and restarting the app; the earlier failure's exact cause remains unknown. All 199 Flutter tests, analysis, repository validation, debug/release builds, and GitHub CI run 36221304374 pass. The implementation is committed and pushed; M6.2 is complete. Signing in does not upload local trips or enable cloud table access.
+- M6.1 links the Traelyx free-tier Singapore Supabase project to two versioned migrations. Three empty private tables (`profiles`, `vehicles`, `trip_summaries`) have explicit client grants and owner-only RLS; precise routes, raw telemetry, and API secrets are absent. The pre-existing `rls_auto_enable()` helper is no longer executable by `PUBLIC`, `anon`, or `authenticated`, while its database trigger remains enabled. The refreshed hosted Security Advisor has zero errors and warnings, and PostgreSQL 17 and existing CI checks pass. M6.1 recorded the dashboard exposure indicators as off; M6.3 subsequently verified real authenticated summary access.
+- M6.2 optional email-link account UI, secure session and PKCE storage, Android callback registration, selective backup exclusion, and accountless navigation are implemented. Physical Android 14 Tecno QA verified real email links, encrypted session restore, local sign-out, successful refresh, offline refresh failure/recovery, and retained trip history. Warm/cold callback routing now opens Account; ordinary launch opens Drive. A misleading catch-all link-send connection message now distinguishes network, provider limit, service, rejection, and unknown errors. The final link succeeded after updating and restarting the app; the earlier failure's exact cause remains unknown. All 199 Flutter tests, analysis, repository validation, debug/release builds, and GitHub CI run 36221304374 pass. The implementation is committed and pushed; M6.2 is complete. Signing in does not upload local trips or grant upload consent.
+
+- M6.3 implements explicitly consented compact snapshots, immutable account links, a durable foreground retry queue, and a non-destructive Drift v1→v2 upgrade. Hosted ownership/idempotency/conflict/anonymous checks passed with a disposable synthetic row and verified cleanup. Physical review/Keep local left four available, zero queued, zero synced, and 7,546 raw files / 59,570 KiB preserved. All 216 Flutter tests, analysis, generated/schema checks, local SQL tests, repository validation, three inspector tests, and debug/release builds pass. Final native/CI validation and completion persistence remain; no personal trip data was uploaded.
 
 ## Partial
 
 - Social remains a navigation skeleton. You exposes diagnostics; its other profile/settings features remain placeholders.
 - Drive DNA presentation is implemented, but production does not yet persist governed M4.5/M4.6 baseline snapshots; existing physical trips therefore remain truthfully uncalibrated instead of being analyzed in Flutter.
 - Trip history/results are implemented, but current production finalization does not execute or persist the M4 score/event/confidence pipeline or derive distance; those fields therefore remain honestly unavailable for existing physical trips.
-- Secure storage has an interface but no platform-backed production provider; no current feature attempts to persist secrets.
+- Encrypted account session/PKCE storage is implemented; other future secret consumers remain outside M6.2–M6.3.
 - Online basemap tiles, downloaded-region cache implementation, and provider selection remain unimplemented; verified local-canvas route rendering is available offline.
 
 ## Not implemented
@@ -135,7 +137,7 @@
 - Final event/integrity/scoring persistence and server-side ranking enforcement.
 - Personal-baseline persistence, user-facing comparison, localized explanation copy, and explanation UI.
 - M3.7 replay-channel exposure and authoritative speed/acceleration/yaw/confidence replay graphs.
-- Auth, client cloud sync, and social features.
+- Profile/vehicle sync, public/social features, cloud restore, and remote deletion UI.
 - Guardian Connect.
 - ML models.
 - Commentary provider integrations.
@@ -174,4 +176,4 @@
 
 ## Current step
 
-**Current gate:** M6.2 is complete. Wait for explicit authorization before starting M6.3 local-to-account migration.
+**Active step:** Finish M6.3 release/CI validation and persist completion; stop before M6.4.

@@ -15,6 +15,7 @@ part 'app_database.g.dart';
     TripScores,
     DriverBaselines,
     SyncQueue,
+    TripAccountLinks,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -23,13 +24,21 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.defaults() : super(driftDatabase(name: 'traelyx'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (migrator) => migrator.createAll(),
+    onUpgrade: (migrator, from, to) async {
+      if (from != 1 || to != 2) {
+        throw StateError('Unsupported local database upgrade.');
+      }
+      final bootstrapCreatedAll = await migrateRecognizedDevelopmentSchemas(
+        this,
+      );
+      if (!bootstrapCreatedAll) await migrator.createTable(tripAccountLinks);
+    },
     beforeOpen: (_) async {
-      await migrateRecognizedDevelopmentSchemas(this);
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );

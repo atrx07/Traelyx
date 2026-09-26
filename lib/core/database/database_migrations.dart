@@ -24,7 +24,7 @@ const _bootstrapV1Columns = [
   'updated_at_micros|INTEGER|1|0',
 ];
 
-Future<void> migrateRecognizedDevelopmentSchemas(
+Future<bool> migrateRecognizedDevelopmentSchemas(
   GeneratedDatabase database,
 ) async {
   final userVersionRow = await database
@@ -32,7 +32,7 @@ Future<void> migrateRecognizedDevelopmentSchemas(
       .getSingle();
   final userVersion = userVersionRow.read<int>('user_version');
   if (userVersion != 1) {
-    return;
+    return false;
   }
 
   final tableRows = await database
@@ -47,7 +47,7 @@ Future<void> migrateRecognizedDevelopmentSchemas(
   final tableNames = discoveredTableNames.difference(_platformMetadataTables);
 
   if (_sameSet(tableNames, _completeV1Tables)) {
-    return;
+    return false;
   }
 
   if (_sameSet(tableNames, _bootstrapV1Tables) &&
@@ -55,7 +55,7 @@ Future<void> migrateRecognizedDevelopmentSchemas(
     await database.transaction(() async {
       await Migrator(database).createAll();
     });
-    return;
+    return true;
   }
 
   throw StateError(

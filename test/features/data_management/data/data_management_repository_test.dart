@@ -126,12 +126,41 @@ void main() {
       await _insertChunk(database, oldTripId, 0, 100);
       await _insertChunk(database, newTripId, 0, 200);
 
+      await database
+          .into(database.tripAccountLinks)
+          .insert(
+            TripAccountLinksCompanion.insert(
+              tripId: oldTripId,
+              userId: '11111111-1111-4111-8111-111111111111',
+              consentedAtMicros: 1,
+              summaryVersion: 1,
+            ),
+          );
+      await database
+          .into(database.syncQueue)
+          .insert(
+            SyncQueueCompanion.insert(
+              operationId: 'summary-operation',
+              idempotencyKey: 'summary-key',
+              entityType: 'trip_summary_v1',
+              entityId: oldTripId,
+              entityVersion: 1,
+              operationType: 'insert_snapshot',
+              state: 'pending',
+              payloadJson: const Value('{}'),
+              attemptCount: 0,
+              createdAtMicros: 1,
+              updatedAtMicros: 1,
+            ),
+          );
       expect(await repository.deleteTrip(oldTripId), isTrue);
 
       expect(platform.deletedTripIds, [oldTripId]);
       expect(await _tripCount(database), 1);
       expect(await _chunkCount(database, oldTripId), 0);
       expect(await _chunkCount(database, newTripId), 1);
+      expect(await database.select(database.tripAccountLinks).get(), isEmpty);
+      expect(await database.select(database.syncQueue).get(), isEmpty);
     },
   );
 

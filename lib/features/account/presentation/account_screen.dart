@@ -173,7 +173,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         const SizedBox(height: TraelyxSpacing.md),
                         const Text(
                           'Your existing trips stay on this device. Signing in '
-                          'does not upload them; summary sync is not active yet.',
+                          'does not upload them. Summary sync starts only after '
+                          'you review and confirm it.',
                         ),
                         const SizedBox(height: TraelyxSpacing.lg),
                         TextButton(
@@ -245,6 +246,14 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   ),
                 ),
               ],
+              if (identity != null)
+                TextButton(
+                  key: const ValueKey('account-summary-sync'),
+                  onPressed: _busy
+                      ? null
+                      : () => context.go(TraelyxRoutes.youSummarySync),
+                  child: const Text('Review private summary sync'),
+                ),
               const SizedBox(height: TraelyxSpacing.xl),
               TextButton(
                 key: const ValueKey('account-continue-locally'),

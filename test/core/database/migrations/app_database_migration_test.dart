@@ -19,7 +19,7 @@ void main() {
     verifier = SchemaVerifier(GeneratedHelper());
   });
 
-  test('runtime schema matches the committed version 1 snapshot', () async {
+  test('version 1 upgrades to version 2 while preserving settings', () async {
     final schema = await verifier.schemaAt(1);
     final fixture = v1.DatabaseAtV1(schema.newConnection());
     await fixture
@@ -36,7 +36,7 @@ void main() {
     final database = AppDatabase(schema.newConnection());
     await verifier.migrateAndValidate(
       database,
-      1,
+      2,
       options: const ValidationOptions(validateDropped: true),
     );
     final setting = await database.select(database.appSettings).getSingle();
@@ -57,6 +57,7 @@ void main() {
       'app_settings',
       'driver_baselines',
       'sync_queue',
+      'trip_account_links',
       'trip_chunks',
       'trip_events',
       'trip_scores',
@@ -76,6 +77,105 @@ void main() {
     await reopened.close();
     await fixture.dispose();
   });
+
+  test(
+    'v1 trip evidence and pending queue survive the additive v2 upgrade',
+    () async {
+      final schema = await verifier.schemaAt(1);
+      final fixture = v1.DatabaseAtV1(schema.newConnection());
+      await fixture
+          .into(fixture.vehicles)
+          .insert(
+            v1.VehiclesCompanion.insert(
+              id: 'local-vehicle',
+              ownerNamespace: 'local:anonymous',
+              displayName: 'Original vehicle',
+              vehicleType: 'unspecified',
+              createdAtMicros: 1,
+              updatedAtMicros: 1,
+            ),
+          );
+      await fixture
+          .into(fixture.trips)
+          .insert(
+            v1.TripsCompanion.insert(
+              id: 'preserved-trip',
+              vehicleId: 'local-vehicle',
+              startWallTimeMicros: 1,
+              startElapsedNanos: 1,
+              completionState: 'completed',
+              recoveryState: 'clean',
+              telemetrySchemaVersion: 1,
+              integrityStatus: 'unknown',
+              cloudSyncState: 'local_only',
+              createdAtMicros: 1,
+              updatedAtMicros: 2,
+            ),
+          );
+      await fixture
+          .into(fixture.tripChunks)
+          .insert(
+            v1.TripChunksCompanion.insert(
+              tripId: 'preserved-trip',
+              sequence: 0,
+              storageReference: 'private/chunk.tlxc',
+              encodingVersion: 1,
+              startElapsedNanos: 1,
+              endElapsedNanos: 2,
+              channelSampleCountsJson: '{"gnss":1}',
+              compression: 'deflate',
+              atomicWriteStrategy: 'temp_then_rename',
+              checksumAlgorithm: 'sha256',
+              checksum: 'unchanged',
+              byteLength: 42,
+              writeState: 'complete',
+              createdAtMicros: 1,
+            ),
+          );
+      await fixture
+          .into(fixture.syncQueue)
+          .insert(
+            v1.SyncQueueCompanion.insert(
+              operationId: 'old-operation',
+              idempotencyKey: 'old-key',
+              entityType: 'future_operation',
+              entityId: 'preserved-trip',
+              entityVersion: 1,
+              operationType: 'upsert',
+              state: 'pending',
+              attemptCount: 2,
+              createdAtMicros: 1,
+              updatedAtMicros: 2,
+            ),
+          );
+      const tables = ['vehicles', 'trips', 'trip_chunks', 'sync_queue'];
+      final before = <String, List<Map<String, Object?>>>{};
+      for (final table in tables) {
+        before[table] =
+            (await fixture.customSelect('SELECT * FROM $table').get())
+                .map((r) => r.data)
+                .toList();
+      }
+      await fixture.close();
+      final database = AppDatabase(schema.newConnection());
+      await verifier.migrateAndValidate(
+        database,
+        2,
+        options: const ValidationOptions(validateDropped: true),
+      );
+      for (final table in tables) {
+        expect(
+          (await database.customSelect('SELECT * FROM $table').get())
+              .map((r) => r.data)
+              .toList(),
+          before[table],
+        );
+      }
+      expect(await database.select(database.tripAccountLinks).get(), isEmpty);
+      await database.close();
+      schema.close();
+    },
+  );
 
   test(
     'Android metadata table does not invalidate a recognized schema',
