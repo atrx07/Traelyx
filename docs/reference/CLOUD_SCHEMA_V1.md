@@ -62,3 +62,14 @@ data are unchanged. A pre-guard development app must update before saving;
 its existing queued metadata already contains the intended owner and remains
 usable by the updated app. Tests simulate account A's payload arriving with
 account B's session and require rejection before writing either account.
+
+## M6.5 friendships
+
+Migration `20260926030000` adds RLS-enabled `social_relationships` and
+`social_request_limits` without direct PUBLIC/anon/authenticated table grants.
+Authenticated-only `list_social_v1`, `request_friend_v1`, and `change_friend_v1`
+use fixed empty search paths and explicit expected-account guards. The list
+exposes only relationship ID/revision, peer name snapshots, and caller-relative
+state; it never exposes the other account UUID or other people's relationships.
+Existing profile/vehicle/summary grants and public projection remain unchanged.
+See ADR-0022 and `supabase/tests/friendships.sql` for transitions and abuse limits.

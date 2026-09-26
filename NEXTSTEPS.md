@@ -4,14 +4,14 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.4 are complete. M6.5 requires explicit authorization.
+M6 is active. M6.1–M6.4 are complete. M6.5 is authorized and in progress.
 
-## P0 — Wait at the M6.5 approval gate
+## P0 — M6.5 friends/social
 
 1. M6.4 is complete: private profile/vehicle sync, schema-3 cache, guarded account/revision checks, durable retries, and explicit two-field public projection are validated.
 2. All 235 Flutter tests, analysis, generated/schema checks, repository validation, local/hosted SQL checks, physical private saves/cache restore, and debug/release builds pass. GitHub CI run 36228279521 passes native Kotlin and all remaining gates for implementation commit `56083b3`.
 3. The phone remains signed in with a private profile/vehicle and zero queued metadata changes. Four trips remain local; all 7,546 raw telemetry files / 59,570 KiB are preserved. No personal trip upload or real-profile publication was performed.
-4. Wait for maintainer authorization before starting M6.5 friends/social. Do not prepare or implement it while waiting.
+4. M6.5 local/hosted tests and physical reload/no-match checks pass. Finish CI and completion persistence, then stop before M6.6.
 
 ## P1 — Preserve M5 boundaries
 

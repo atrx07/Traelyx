@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.4 complete; awaiting M6.5 authorization**
+**M6 active — M6.1–M6.4 complete; M6.5 in progress**
 
 ## Working
 
@@ -126,9 +126,11 @@
 
 - M6.4 adds a schema-3 account metadata cache, explicitly reviewed profile/vehicle edits, idempotent mutation IDs, optimistic revision conflicts, durable foreground retries, and a two-field exact-username public lookup only for explicitly published profiles. Both hosted migrations and rollback-only access tests pass, including server rejection of a request whose intended owner differs from the session. Final guarded profile/vehicle saves confirm with zero queue. All 235 Flutter tests, analysis, generated/schema checks, repository validation, and debug/release builds pass. Physical private profile/vehicle saves, zero queue, cold cache restore, and 7,546 raw files / 59,570 KiB preservation pass. No personal trips or public profile were published. GitHub CI run 36228279521 passes all PostgreSQL 17, Flutter/native, generated/schema, build, and artifact gates for implementation commit `56083b3`. M6.4 is complete.
 
+- M6.5 implements mutual friendship requests, participant-only name snapshots, account/revision guards, cancellation/removal/blocking, expiry/cooldown, request limits, and explicit consent. The approved hosted migration and synthetic transaction tests pass with fixture cleanup verified. All 244 Flutter tests, analysis, SQL suites, repository checks, and debug/release builds pass. Physical Social reload/no-match and data preservation pass; real-person requests were not sent. Final CI and persistence remain.
+
 ## Partial
 
-- Social remains a navigation skeleton. You exposes diagnostics; its other profile/settings features remain placeholders.
+- Social supports M6.5 friendships; rankings and Guardian remain pending. You exposes account/profile/vehicle controls, data management, and diagnostics; local recording vehicle selection remains pending.
 - Drive DNA presentation is implemented, but production does not yet persist governed M4.5/M4.6 baseline snapshots; existing physical trips therefore remain truthfully uncalibrated instead of being analyzed in Flutter.
 - Trip history/results are implemented, but current production finalization does not execute or persist the M4 score/event/confidence pipeline or derive distance; those fields therefore remain honestly unavailable for existing physical trips.
 - Encrypted account session/PKCE storage is implemented; other future secret consumers remain outside M6.2–M6.3.
@@ -179,4 +181,4 @@
 
 ## Current step
 
-**Approval gate:** M6.4 is complete. Wait for explicit authorization before M6.5 friends/social.
+**Active step:** M6.5 friends/social; stop before M6.6.

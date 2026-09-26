@@ -123,3 +123,16 @@ M5.9 keeps `.tripdebug` explicitly `precise_private` and not anonymized. Its sep
 ## 11. Logging
 
 Production logs should avoid precise coordinates unless a diagnostic mode is explicitly enabled. Diagnostic bundles should allow redaction/anonymization before sharing.
+
+## M6.5 friend requests
+
+A confirmed request shares the sender's saved username/display name with the
+recipient, including when the sender's profile is private. Recipients must
+accept to become friends. Both names are snapshots from request time, not a
+subscription to later private name edits. Relationship lists are participant-
+only; no friend graph, email, vehicle, trip, route, score, or Guardian access is
+exposed. Block ends the connection and prevents new requests in either
+direction; only the blocker sees their block. A separately public profile
+remains publicly discoverable. Unblock does not restore friendship. Closed
+pairs retain minimal name/state history for abuse/cooldown enforcement, bounded
+to 1,000 pairs per account; account/profile deletion cascades relationship rows.

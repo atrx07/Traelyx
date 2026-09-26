@@ -59,6 +59,25 @@ dependency, recorder behavior, social relationship, or trip upload consent.
 - [x] Review, commit/push, verify CI and Git alignment, synchronize completion
   documents, and stop before M6.5.
 
+### M6.5 boundary (authorized 2026-09-26)
+
+Mutual friendship requests use exact public usernames. Sending a request and
+accepting one explicitly share username/display name with that participant,
+including when the sender's profile is private. No trip, vehicle, score, route,
+Guardian permission, email, or account ID is shared. Relationships are private
+to participants through guarded RPC projections, with no direct client table
+access. Implement accept/decline/cancel/remove/block/unblock, bounded request
+rates, expiry and repeat-request cooldown. Block removes the relationship and
+prevents new requests in either direction without revealing who blocked whom.
+Social actions are online and explicit; uncertain responses require reload.
+No notifications, contacts import, messaging, ranking, or new dependency.
+
+- [x] Implement forward schema, guarded transitions/projections, and SQL tests.
+- [x] Implement replaceable gateway, account-safe state, Social UI and tests.
+- [x] Validate local suites/builds and prepare reviewed hosted deployment.
+- [ ] Verify hosted/device behavior, full CI, and data preservation.
+- [ ] Synchronize completion, commit/push, stop before M6.6.
+
 ## Out of scope for M6.1
 
 - Flutter auth/session UI, cloud sync, public profiles, friendships,
@@ -360,6 +379,22 @@ requires its own narrowly scoped schema and policies.
   inspector/contract checks, debug/release builds, size reporting, and artifact
   publication. M6.4 is complete; this completion update is documentation only.
   M6.5 remains unauthorized.
+
+- 2026-09-26: Maintainer authorized M6.5 and subsequently approved the exact
+  migration/hosted tests. Implemented ADR-0022 participant-only mutual requests,
+  guarded state transitions, name snapshots, request limits, expiry/cooldown,
+  blocking, explicit disclosure/confirmation, and a replaceable online gateway.
+  All 244 Flutter tests, static analysis, SQL suites, repository/format checks,
+  and configured debug/release builds pass (release-validation APK 60.6 MB).
+- 2026-09-26: Browser control recovered using keyboard activation; pointer clicks
+  missed their targets. Applied migration `20260926030000` through SQL Editor.
+  Hosted regression fixtures rolled back; migration history, RLS, participant
+  RPC-only grants, and fixture cleanup all verified true. The phone update
+  preserved the signed-in account. Social opening was inert; explicit reload
+  returned an empty list and the rolled-back public username returned no match.
+  A first observation ran before the network response; the completed response
+  passed. Visual QA passed and all 7,546 raw files / 59,570 KiB remain.
+  No real friend request or personal trip upload occurred. CI/persistence remain.
 
 ## Completion summary
 

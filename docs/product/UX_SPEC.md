@@ -285,3 +285,16 @@ Safety/errors/privacy copy should be direct and unambiguous.
 - Private vehicle forms accept a chosen label and broad class. A local-copy picker previews only these fields; cloud metadata does not select the recorder's local vehicle or change trip assignments.
 - Reload cloud, Retry queued changes, and confirmation-gated Discard queued changes have distinct purposes. Conflicts retain drafts and direct the user to discard/reload/review.
 - Details stay accessible offline from an account-scoped cache. Forms are scrollable, labeled, and keyboard-compatible; errors expose bounded guidance instead of provider response bodies.
+
+## 21. Social — M6.5
+
+- Signed-out Social explains optional sign-in and preserves local navigation.
+- Signed-in opening performs no fetch. Reload connections and exact public
+  username lookup are explicit; empty/private/unavailable lookup is honest.
+- Sending/accepting discloses username/display name, including private senders,
+  and requires confirmation. No message, trip, vehicle, or Guardian permission.
+- Incoming requests allow accept/decline/block; outgoing allow cancel/block;
+  friends allow remove/block; own blocks allow unblock without restoring a tie.
+- Online-only actions show bounded errors and require reload after uncertain
+  responses. No success claim is made without acknowledgement. Controls disable
+  during requests; dialogs/lists scroll with large text.

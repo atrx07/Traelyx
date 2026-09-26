@@ -11,6 +11,7 @@ import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
 import 'package:traelyx/features/navigation/presentation/app_navigation_shell.dart';
 import 'package:traelyx/features/navigation/presentation/foundation_destination_screen.dart';
 import 'package:traelyx/features/navigation/presentation/you_screen.dart';
+import 'package:traelyx/features/social/presentation/social_screen.dart';
 import 'package:traelyx/features/summary_sync/presentation/summary_sync_screen.dart';
 import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
 import 'package:traelyx/features/trips/presentation/trips_screen.dart';
@@ -80,14 +81,7 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
             routes: [
               GoRoute(
                 path: TraelyxRoutes.social,
-                builder: (context, state) => const FoundationDestinationScreen(
-                  icon: Icons.people_alt_outlined,
-                  eyebrow: 'OPTIONAL CONNECTIONS',
-                  title: 'Social',
-                  description:
-                      'Friends, safe rankings, and Guardian features will stay '
-                      'optional. Core driving features remain local-first.',
-                ),
+                builder: (context, state) => const SocialScreen(),
               ),
             ],
           ),

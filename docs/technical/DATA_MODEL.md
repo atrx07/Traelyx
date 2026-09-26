@@ -143,3 +143,14 @@ Leaderboards may use purpose-built denormalized rows/materialized views for perf
 ## 7. Generated schema doc
 
 Once implementation begins, generate a DB schema reference under a generated docs area if feasible. Generated artifacts do not replace migration source files.
+
+## M6.5 private relationships
+
+`social_relationships` stores one canonical profile pair, participant-only name
+snapshots, requester, pending/accepted/closed state, owner-specific block flags,
+revision, request mutation UUID, and request/close timestamps.
+`social_request_limits` stores one account quota/window. Both have RLS enabled
+and no direct client privileges. Only guarded RPC projections return peer
+username/display name, relationship ID, revision, and caller-relative state.
+Closed pairs retain minimal abuse/cooldown history; account/profile deletion
+cascades relationship rows. Local Drift remains schema 3. See ADR-0022.

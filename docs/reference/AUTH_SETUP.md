@@ -85,3 +85,14 @@ without its owner's explicit choice. Schema 3 must not be downgraded.
 For anonymous REST checks, PostgreSQL `42501` can map to HTTP 401; the same
 privilege failure for an authenticated caller maps to 403. Check the error
 code as well as HTTP status; see [PostgREST errors](https://docs.postgrest.org/en/v13/references/errors.html).
+
+## M6.5 social validation
+
+Apply `20260926030000_friendships.sql` after prior migrations. Validate
+`supabase/tests/friendships.sql` in a transaction with isolated synthetic auth
+identities; roll back every fixture. The bootstrap file is local/CI only.
+Hosted deployment adds authenticated participant-only RPCs and no anonymous
+social or direct-table privileges. On-device QA opens Social, confirms the
+inert initial state, explicitly reloads, verifies empty/no-match states, and
+preserves existing private metadata/trips. Real requests to other people need
+explicit authorization; automated SQL/SDK/widget tests cover those transitions.

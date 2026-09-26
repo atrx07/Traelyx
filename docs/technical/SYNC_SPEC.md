@@ -108,3 +108,14 @@ Visibility changes are effective only after cloud acknowledgement. Cache and
 queued metadata stay on-device across restart/sign-out, scoped to the account.
 No metadata deletion UI, auto-fetch, background sync, public vehicle lookup,
 or social relationship is added here. See ADR-0021.
+
+## 10. M6.5 relationships
+
+Social has no persistent cache or outbox. Explicit Reload, exact public-name
+lookup, and confirmed relationship actions use account-guarded foreground
+RPCs. Pending requests expire after seven days; closed pairs have a seven-day
+cooldown, accounts can send 30 new requests per 24-hour quota window, and each
+account retains at most 1,000 pairs. Writes are revision-checked and uncertain
+responses require reload. Sending shares only the sender's saved username and
+display name with the target; acceptance grants no trip/vehicle/Guardian access.
+See ADR-0022 for server state and block semantics.
