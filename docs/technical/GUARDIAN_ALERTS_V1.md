@@ -75,6 +75,9 @@ monotonic and wall clocks bound expiry. Reboot, clock rollback, account change
 or consent replacement prevents old dispatch. An attempt reservation must be
 persisted before network IO. Six attempts use 5/10/20/40/80/120-second backoff;
 late callbacks cannot resurrect cancellation or revocation.
+Cancellation is available only before the first network-attempt reservation.
+After handoff, the UI must not claim it can retract an in-flight request;
+account/consent revocation still invalidates subsequent server access.
 
 The network envelope allowlist is schema version, event UUID, kind, rule version,
 occurrence time and `experimental_not_confirmed` uncertainty. No trip ID,

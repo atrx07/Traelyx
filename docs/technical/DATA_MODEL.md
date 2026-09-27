@@ -175,3 +175,13 @@ The cloud adds private ranking membership/evidence/quota tables and guarded
 projections described in `CLOUD_SCHEMA_V1.md`. Ranking consent may create an
 immutable `trip_account_links` association without a summary-sync queue.
 Existing summary consent and payloads are not expanded. See ADR-0023.
+
+## M6.8 alert delivery draft
+
+The locally tested, not-yet-deployed forward migration adds private
+`guardian_driver_sessions`, `guardian_push_devices`, `guardian_alert_events` and
+`guardian_alert_deliveries`. Capabilities are stored as digests. Minimized events
+and delivery transitions retain no route, raw sample, speed or trip identifier.
+ADR-0026 defines exact expiry, quotas, revision/generation binding, access and
+bounded retention. Native persistence/UI/dispatch integration remains pending;
+local Drift stays at schema 3 and pairing does not activate alerts.

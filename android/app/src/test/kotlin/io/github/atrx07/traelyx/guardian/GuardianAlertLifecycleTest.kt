@@ -57,7 +57,8 @@ class GuardianAlertLifecycleTest {
     @Test fun `acceptance does not claim delivery and late success cannot resurrect cancellation`() {
         val pending = advance(30_000).reserveAttempt(31_000)
         assertEquals(GuardianSendState.BACKEND_ACCEPTED, pending.result(true).state)
-        assertEquals(GuardianSendState.CANCELLED, pending.cancel().result(true).state)
+        assertEquals(GuardianSendState.CANCELLED, advance(30_000).cancel().result(true).state)
+        assertEquals(pending, pending.cancel())
         assertEquals(GuardianSendState.CONSENT_REVOKED, pending.result(false, authorizationDenied = true).state)
     }
 

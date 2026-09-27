@@ -197,6 +197,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Add optional Firebase Messaging 25.0.1 registration adapter with consent-race tests; configured/unconfigured builds, release build, 253 native tests and physical inert-startup proof pass. SDK review is in `FIREBASE_PUSH_SETUP.md`. Registration/delivery are not enabled.
 - [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
   expiry, revocation and explicit send/receipt states with adversarial tests.
+- [x] Prepare private alert delivery migration and adversarial SQL tests; local
+  full SQL suites pass. ADR-0026 defines scoped capabilities and bounded retention.
+  Cancellation now ends before first network handoff; all 253 native tests pass.
+- [x] Verify Firebase client CI run 36316643251 (`0171465`) passes all gates.
+- [ ] Approve and deploy `20260927010000_guardian_alert_delivery.sql`; run the
+  exact atomic rollback-only hosted test bundle. No production change yet.
 - [ ] Implement provider-isolated Android push, consent and alert UI; validate
   account switching, offline/recovery and background/locked-device behavior.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;

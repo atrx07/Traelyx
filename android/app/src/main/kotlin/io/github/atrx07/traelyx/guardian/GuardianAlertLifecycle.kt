@@ -48,7 +48,10 @@ data class GuardianPendingAlert(
         "uncertainty" to "experimental_not_confirmed",
     )
 
-    fun cancel(): GuardianPendingAlert = if (state == GuardianSendState.CANCELLABLE || state == GuardianSendState.QUEUED) {
+    // Once an attempt is reserved, a request may already have reached the backend.
+    // Do not claim that cancelling a local callback retracts that network request.
+    fun cancel(): GuardianPendingAlert = if (state == GuardianSendState.CANCELLABLE ||
+        (state == GuardianSendState.QUEUED && attempts == 0)) {
         copy(state = GuardianSendState.CANCELLED)
     } else this
 

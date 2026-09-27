@@ -14,6 +14,13 @@ M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts includes the author
 
 4. The isolated experimental evaluator/lifecycle and optional Firebase adapter pass 253 native tests, builds and physical inert-startup QA. Complete consent, durable persistence, recorder integration and background push before enabling it. Firebase `traelyx-e28ff` exists under `atrx07` on Spark with the Android app registered and FCM v1 enabled. The verified client config is staged at `.dart_tool/firebase/google-services.json` and Git-ignored; backend credentials remain pending. See the active plan for delivery/privacy gates.
 
+The M6.8 server draft now passes local SQL suites for owner/device capabilities,
+current permissions, deduplication, quota/expiry, retry exhaustion and revocation.
+Deploy only after concrete approval and hosted rollback-only checks. Native
+encrypted persistence, consent UI, recorder integration and Edge/FCM dispatch
+remain pending. Firebase client CI run 36316643251 is green; no registrations or
+alerts have been sent.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

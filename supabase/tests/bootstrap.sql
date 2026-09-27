@@ -2,6 +2,7 @@
 -- This file is test-only and is never deployed to a hosted project.
 create role anon nologin;
 create role authenticated nologin;
+create role service_role nologin;
 create schema auth;
 create table auth.users (id uuid primary key);
 create function auth.uid() returns uuid

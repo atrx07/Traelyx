@@ -137,3 +137,29 @@ Only create returns the one-time code. No telemetry access/delivery is added.
 See ADR-0024 and `supabase/tests/guardian_pairing.sql` for boundaries and tests.
 
 The approved production migration passed the atomic rollback-only test bundle: migration history, private RLS, guarded-only RPC grants and fixture rollback all verified true.
+
+## M6.8 alert delivery (locally tested; deployment pending)
+
+Migration `20260927010000_guardian_alert_delivery.sql` adds four private RLS
+tables: driver activation leases, recipient devices, minimized events and
+per-device delivery transitions. Direct table privileges and private helper
+execution are revoked from PUBLIC, anon, authenticated and service_role.
+Signed-in RPCs guard the expected account for activation/device management,
+current-participant reads and explicit recipient views. Only backend service-role
+RPCs may ingest, claim dispatch, record provider results or confirm device receipt.
+
+Activation and receipt credentials are random 256-bit capabilities stored only
+as SHA-256 digests; eight-hour driver and 30-day device leases limit them. Device
+routing tokens remain private. Exact connection revision, device generation,
+current permission, blocking and expiry are rechecked on delivery access.
+Six-key experimental event envelopes exclude telemetry and names. Ten-minute
+access expiry, ten events per driver per 24 hours, three devices per recipient,
+30 targets per event and six bounded attempts constrain delivery and storage.
+Stale events are physically pruned on later ingestion, not automatically at TTL.
+
+Tests cover cross-account isolation, private grants, credential misuse, rejected
+extra location fields, duplicate identity conflicts, permission downgrade,
+blocking/re-pairing, expiry, device opt-out/replacement, quota cleanup, explicit
+receipt/view distinctions and interrupted-final-attempt exhaustion. ADR-0026
+documents the full contract. This migration alone sends no push and enables no
+recorder monitoring; native/Edge/UI integration remains pending.
