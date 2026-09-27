@@ -191,6 +191,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
 - [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
 - [ ] Configure backend dispatch credentials after concrete deployment review.
+- [x] Implement an isolated Edge/FCM dispatch adapter with no runtime package:
+  separate worker-secret authentication, bounded requests/responses, six claims
+  with three concurrent sends, current target recheck, minimal data-only FCM
+  payload, signed OAuth assertion and guarded completion. Eighteen synthetic
+  Deno tests pass, including the combined HTTP adapter flow; formatting, lint
+  and entry-point type checks pass. CI now includes a pinned Deno 2.9.6 gate.
+  Repository secret scanning covers the new JS/TS and SQL/TOML source types.
+  No function deployment, sender key, scheduler, registration or send occurred.
+  Concrete setup/review is in `docs/reference/GUARDIAN_DISPATCH_SETUP.md`.
 - [x] Prepare service-only scheduled retry RPCs in
   `20260927020000_guardian_dispatch_worker.sql`, resolving the gap after native
   backend acceptance. All eight local SQL suites and the exact atomic hosted

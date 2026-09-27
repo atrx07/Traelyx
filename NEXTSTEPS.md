@@ -35,9 +35,11 @@ build; connect it to Auth/bridge/consent and recording before exposing activatio
 The approved retry-worker migration `20260927020000_guardian_dispatch_worker.sql`
 is deployed after green CI run 36334866638 (`85ece8f`). All eight local SQL suites
 and the exact production rollback-fixture bundle pass, with all four checks true.
-Next implement and test the Edge/FCM dispatch adapter, then review backend
-credential and scheduler setup before deployment. Native Auth/consent/recorder
-integration and physical end-to-end delivery also remain required.
+The isolated Edge/FCM dispatch adapter now passes 18 synthetic Deno tests and
+format/lint/type checks. Review the restricted sender credential and disabled
+function deployment in `docs/reference/GUARDIAN_DISPATCH_SETUP.md` after CI passes.
+Scheduler setup, capability ingestion/receipt endpoints, native Auth/consent/
+recorder integration and physical end-to-end delivery remain required.
 
 ## P1 — Preserve M5 boundaries
 

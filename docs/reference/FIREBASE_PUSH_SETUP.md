@@ -64,6 +64,8 @@ Primary references:
 Backend sender credentials have not been created. They will belong only in
 Supabase Edge Function secrets after deployment review, never in this client file,
 the app, a repository commit, or chat.
+The isolated server adapter and concrete deployment boundary are documented in
+`GUARDIAN_DISPATCH_SETUP.md`; synthetic tests pass, but it is not deployed.
 
 For an explicitly unconfigured local validation build, use Gradle property
 `-PtraelyxFirebaseEnabled=false`; no config file needs to be moved or deleted.

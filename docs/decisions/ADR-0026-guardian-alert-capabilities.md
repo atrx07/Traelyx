@@ -91,6 +91,14 @@ The hosted fixture suite first locks and requires an empty delivery queue, so
 global claims cannot touch real deliveries. Non-empty production queues require
 an isolated test project instead; fixtures and migration roll back on failure.
 
+The isolated `guardian-dispatch` Edge adapter is now implemented, not deployed.
+It uses built-in Web APIs, fixed RPC/provider destinations, a separate worker
+secret, six claims per invocation and bounded three-way concurrency. OAuth
+configuration is validated before claiming; target authorization immediately
+precedes sending. Eighteen synthetic tests include signed assertions and the
+combined HTTP flow. Credential/IAM review, disabled deployment and subsequent
+integration gates are recorded in `../reference/GUARDIAN_DISPATCH_SETUP.md`.
+
 The migration adds empty private tables/RPCs. It neither registers Firebase
 devices nor sends alerts by itself. The isolated native encrypted lease/outbox now passes unit and physical Keystore
 tests. Consent UI, account teardown/runtime attachment, HTTP v1 provider/Edge

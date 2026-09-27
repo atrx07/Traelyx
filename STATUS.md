@@ -10,6 +10,8 @@
 
 ## Working
 
+- M6.8's isolated Edge/FCM dispatch adapter now passes 18 synthetic Deno tests, formatting, lint and entry-point type checks. It validates worker authentication, bounded IO, current target authorization, minimal data-only payloads and provider outcomes. A pinned CI job and deployment runbook are added; no runtime package or app change. The function is not deployed; backend credentials, scheduler, ingestion/receipt endpoints and mobile runtime integration remain pending.
+
 - M6.8 scheduled retry SQL is deployed after approval and green CI run 36334866638 (`85ece8f`). All eight local SQL suites and the exact production rollback-fixture bundle pass: migration recorded, service-role-only execution, private RLS and fixture rollback are all true. No scheduler, sender credential or push was created; Edge/FCM dispatch and runtime integration remain pending.
 
 - M6.8's isolated native activation coordinator now guards delayed server confirmation with account/mount binding, short-lived single-use proposals, bounded lease expiry and fail-closed cleanup. All 275 native tests and the configured debug build pass. It is not yet connected to Auth, Flutter consent or recording, and does not enable monitoring or push.
