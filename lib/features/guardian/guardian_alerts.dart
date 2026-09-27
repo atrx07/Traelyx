@@ -211,12 +211,14 @@ class GuardianInbox extends StateNotifier<GuardianInboxState> {
           'Reload before opening an incoming alert.',
         );
       }
-      final alerts = (await gateway!.load(owner))
-          .where(
-            (row) =>
-                row.expiresAt.isAfter(now()) && !row.occurredAt.isAfter(now()),
-          )
-          .toList(growable: false);
+      final alerts =
+          (await gateway!.load(owner).timeout(const Duration(seconds: 20)))
+              .where(
+                (row) =>
+                    row.expiresAt.isAfter(now()) &&
+                    !row.occurredAt.isAfter(now()),
+              )
+              .toList(growable: false);
       _check();
       if (epoch != _epoch) return;
       GuardianAlert? opened;
@@ -224,7 +226,10 @@ class GuardianInbox extends StateNotifier<GuardianInboxState> {
         for (final row in alerts) {
           if (row.id == reviewed.id && !row.ownEvent) opened = row;
         }
-        if (opened == null || !await gateway!.open(owner, opened.id)) {
+        if (opened == null ||
+            !await gateway!
+                .open(owner, opened.id)
+                .timeout(const Duration(seconds: 20))) {
           throw const GuardianException(
             'This alert expired or its permission was revoked.',
           );

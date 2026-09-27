@@ -26,7 +26,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M6.5 |  | Friends/social | ✅ Complete | Done | 2026-09-26 |
 | M6.6 |  | Safe leaderboards | ✅ Complete | Done | 2026-09-26 |
 | M6.7 |  | Guardian pairing | ✅ Complete | Done | 2026-09-27 |
-| M6.8 |  | Guardian alerts | 🟡 In progress | Outbox and guarded inbox tested; consent/delivery integration pending; long-trip crash repaired | — |
+| M6.8 |  | Guardian alerts | 🟡 In progress | Outbox, inbox and activation guards tested; runtime/push integration pending | — |
 | M7 | ML & Advanced Commentary | Auditable intelligence milestone | ⚪ Pending | ~2–3 weeks plus data collection | — |
 | M8 | Hardening & Public Release | Release candidate to v0.1.0 | ⚪ Pending | ~1–1.5 weeks | — |
 

@@ -128,6 +128,23 @@ Primary platform references:
 
 ## Required remaining integration gates
 
+### Two-stage activation prerequisite
+
+`GuardianActivationCoordinator` now binds foreground account identity, explicit
+rigid-mount confirmation and forward axis to a single-use activation proposal.
+Its random capability stays in memory until the caller confirms the server lease;
+only then is the encrypted local lease committed. Proposals expire after two
+minutes on both clocks. Local duration is capped at eight hours from preparation,
+so network delay cannot extend consent. Replacement first removes old local
+authority. Account changes, sign-out, cancellation, reboot, clock rollback and
+failed cleanup invalidate pending activation; a late response cannot restore it.
+Failures to erase leave the coordinator unbound. Status never means monitoring
+or delivery is running. Nine unit regressions cover these boundaries (275 native
+tests total). The coordinator is still isolated: Auth/bridge/consent UI and
+RecorderService integration remain required before activation is available.
+
+### Integration still required
+
 - Connect the tested native encrypted outbox to consent, cancellation notification
   and account-change teardown; no duplicated Supabase refresh-token ownership.
 - Current server permission and connection-generation checks at ingest,

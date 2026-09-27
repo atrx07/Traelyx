@@ -45,6 +45,38 @@ class AlertFake implements GuardianAlertGateway {
 }
 
 void main() {
+  testWidgets('unreachable reload times out and a late response stays hidden', (
+    tester,
+  ) async {
+    final pending = Completer<void>();
+    final fake = AlertFake(GuardianAlert.parse([alertJson(DateTime.now())]))
+      ..onRead = () => pending.future;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          accountGatewayProvider.overrideWithValue(TestAccount()),
+          guardianAlertGatewayProvider.overrideWithValue(fake),
+        ],
+        child: MaterialApp(
+          home: Scaffold(body: GuardianInboxPanel(owner: userA)),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Reload alerts'));
+    await tester.pump();
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    await tester.pump(const Duration(seconds: 21));
+    await tester.pump();
+    expect(find.byType(LinearProgressIndicator), findsNothing);
+    expect(
+      find.text('Alert access unavailable. Reload when connected.'),
+      findsOneWidget,
+    );
+    pending.complete();
+    await tester.pumpAndSettle();
+    expect(find.text('Open alert'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
   test(
     'strict alert parser rejects unsupported, private and duplicate data',
     () {

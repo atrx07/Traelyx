@@ -213,9 +213,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   account switching, offline/recovery and background/locked-device behavior.
 - [x] Add an explicit-load account-bound alert inbox with current-permission
   recheck on opening, separate provider/receipt/view states, expiry and
-  background/account clearing. Nineteen Guardian tests, analysis and configured
-  debug build pass. Push/driver activation remains unavailable; physical inbox
-  QA and end-to-end delivery are still pending.
+  background/account clearing. Twenty Guardian tests, analysis and configured
+  debug build pass, including a 20-second request timeout and late-response
+  rejection. Physical screen/hosted empty reload passes after the maintainer
+  restored the phone's network. Push/driver activation and end-to-end delivery
+  remain unavailable.
+- [x] Implement isolated two-stage native activation coordinator: account/mount
+  binding, two-minute single-use proposal, bounded server-confirmed lease and
+  fail-closed teardown. All 275 native tests and configured debug build pass.
+  Auth/bridge/consent/recorder integration is still pending; no activation enabled.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

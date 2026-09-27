@@ -24,10 +24,13 @@ storage passes 264 tests and isolated physical Keystore QA. Connect it to consen
 UI, recorder integration and Edge/FCM dispatch; those remain pending. Firebase client CI run 36316643251 is green; no registrations or
 alerts have been sent.
 
-The explicit-load alert inbox and guarded opening are implemented and pass 19
-Guardian tests, analysis and a configured debug build. Continue native consent
-activation/account teardown and dispatch integration; physical inbox QA remains
-pending. No push or driver activation is enabled by the inbox.
+The explicit-load alert inbox and guarded opening are implemented and pass 20
+Guardian tests, analysis and a configured debug build. Physical screen/hosted
+empty reload passes after restoring phone connectivity. Requests have a bounded
+20-second timeout. Continue native consent activation/account teardown and
+dispatch integration. No push or driver activation is enabled by the inbox. The two-stage
+native activation coordinator passes 275 native tests and a configured debug
+build; connect it to Auth/bridge/consent and recording before exposing activation.
 
 ## P1 — Preserve M5 boundaries
 
