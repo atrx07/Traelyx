@@ -144,7 +144,7 @@ unavailable until M6.8. No new dependency, local schema or recorder change.
   exact deployment approval; verify device behavior when a phone is available.
 - [x] Commit/push, verify CI, synchronize completion and stop before M6.8.
 
-### M6.8 boundary (authorized 2026-09-27; prerequisite scope pending)
+### M6.8 boundary (authorized 2026-09-27; prerequisites included)
 
 The maintainer authorized starting Guardian alerts. Inspection found that the
 current native pipeline analyzes completed trips only; it has no live governed
@@ -152,8 +152,9 @@ safety-state evaluator or crash inference. Recorder acquisition currently only
 persists samples, and no remote push provider is configured. Existing strong
 maneuvers/road impacts must not be relabelled as crashes or severe risk.
 
-Requested scope decision: include the live native evaluator and background push
-prerequisites, or implement delivery infrastructure while leaving M6.8 incomplete.
+The maintainer's subsequent continue authorizes both the live native evaluator
+and background push prerequisites. Implement and validate them within M6.8;
+synthetic rule validation alone must not be described as field crash accuracy.
 The maintainer authorized creating Firebase under organization `atrx07`. Provider configuration, new
 credentials and production access changes require their concrete deployment
 review; do not collect secrets in chat.
@@ -188,9 +189,11 @@ Final package/version/license, transitive size, permission and battery review
 must pass DEPENDENCY_POLICY before introducing a push SDK.
 
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
-- [ ] Resolve prerequisite scope; Firebase project and Android registration are ready, client configuration is staged locally; backend dispatch credentials remain pending.
+- [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
+- [ ] Configure backend dispatch credentials after concrete deployment review.
 - [ ] Specify auditable safety rules, uncertainty and false-positive fixtures
   if the live evaluator is included; do not enable unvalidated claims.
+- [x] Implement isolated native rules/lifecycle prerequisite: 24 new tests, 246 total native tests pass; debug build and repository validation pass. Rules are not connected to recording or enabled in the app. See ADR-0025 and `GUARDIAN_ALERTS_V1.md`.
 - [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
   expiry, revocation and explicit send/receipt states with adversarial tests.
 - [ ] Implement provider-isolated Android push, consent and alert UI; validate

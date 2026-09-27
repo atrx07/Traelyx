@@ -21,3 +21,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0017-single-manual-replay-clock.md`
 - `ADR-0018-user-directed-storage-and-redacted-export.md`
 - `ADR-0019-optional-magic-link-auth.md`
+- `ADR-0025-guardian-live-evaluation-boundary.md`

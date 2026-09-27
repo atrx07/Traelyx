@@ -146,3 +146,10 @@ requires a confirmed server response. ADR-0024 defines quotas and audit retentio
 and history remain off and cannot be enabled. Saved preferences must not imply
 emergency protection. M6.8 must enforce the current private server authorization
 predicate at dispatch/read time and pass separate delivery validation.
+
+## 12. M6.8 implementation boundary
+
+The isolated experimental native evaluator and alert lifecycle are specified in
+`../technical/GUARDIAN_ALERTS_V1.md`. They are not yet connected to recording or
+enabled by pairing. Alert delivery remains unavailable until consent, persistence,
+server authorization, push delivery and physical validation gates pass.
