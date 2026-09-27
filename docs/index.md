@@ -53,6 +53,10 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 - `exec-plans/completed/` — historical; not normal task context.
 - `exec-plans/ROADMAP.md` — nine-milestone implementation plan.
 
+## Product issues and incidents
+
+- [issues/README.md](issues/README.md) — symptom-based index of significant product failures, root causes, fixes, recovery evidence, and remaining limits. Consult only relevant records when debugging; not normal startup context.
+
 ## Machine-readable references
 
 `reference/` contains YAML/JSON contracts suitable for validation, tests, generators, and tooling. Treat them as contracts and keep them synchronized with prose specs.

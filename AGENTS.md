@@ -59,6 +59,13 @@ Required approach:
 - Keep entries concise and operational. Include only recurring issues likely to affect later sessions, not product defects, transient external failures, or one-off operator mistakes.
 - A tooling-reference update is not a roadmap step. Apply normal step discipline when it accompanies active work: validate it, synchronize status documents only when project state changed, commit and push the bounded change atomically, and preserve the approval gate before the next numbered roadmap substep.
 
+### Product issue records
+
+- `docs/issues/` records significant product bugs and incidents: symptoms, evidence, root cause, recovery, fix, regression checks, and remaining risks. Start with its index and read only records relevant to the current symptom or subsystem; do not load the directory during normal startup.
+- When investigating a matching failure, consult the existing record before proposing a workaround. Add or update a record after a significant crash, data-integrity failure, or recurring product defect, linking the fix commit and validation evidence. Separate confirmed causes and tested guarantees from hypotheses and unverified limits.
+- Keep private telemetry, routes, account identifiers, credentials, and raw device logs out of these records. Link to authoritative specs and execution plans instead of duplicating them. Host/toolchain failures belong in `docs/reference/KNOWN_TOOLING_ISSUES.md`.
+- Issue documentation does not activate a roadmap step or waive its validation and approval gates.
+
 ### Task routing
 
 | Task area | Primary references |
