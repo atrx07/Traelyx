@@ -12,7 +12,7 @@ M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts is authorized; prer
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
 3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Physical inert opening, live reload, defaults and cancelled invite review pass. Sign-in is preserved; no real invitation, alert or trip upload was created. M6.7 is complete. M6.8 was subsequently authorized.
 
-4. Resolve whether M6.8 includes the missing native live safety evaluator and background push prerequisites; Firebase `traelyx-e28ff` now exists under `atrx07` on Spark with the Android app registered and FCM v1 enabled. Obtain the ignored client config; backend credentials and live-evaluator scope remain pending. See the active plan for delivery/privacy gates.
+4. Resolve whether M6.8 includes the missing native live safety evaluator and background push prerequisites; Firebase `traelyx-e28ff` now exists under `atrx07` on Spark with the Android app registered and FCM v1 enabled. The verified client config is staged at `.dart_tool/firebase/google-services.json` and Git-ignored; backend credentials and live-evaluator scope remain pending. See the active plan for delivery/privacy gates.
 
 ## P1 — Preserve M5 boundaries
 

@@ -188,7 +188,7 @@ Final package/version/license, transitive size, permission and battery review
 must pass DEPENDENCY_POLICY before introducing a push SDK.
 
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
-- [ ] Resolve prerequisite scope; Firebase project and Android registration are ready, client configuration and backend dispatch credentials remain pending.
+- [ ] Resolve prerequisite scope; Firebase project and Android registration are ready, client configuration is staged locally; backend dispatch credentials remain pending.
 - [ ] Specify auditable safety rules, uncertainty and false-positive fixtures
   if the live evaluator is included; do not enable unvalidated claims.
 - [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
@@ -636,6 +636,10 @@ is registered as `Traelyx Android`, app ID
 `1:931662794452:android:577b8e092b305bea1b3541`; sender/project number
 `931662794452`. FCM HTTP v1 is enabled; legacy messaging is disabled.
 No billing upgrade, service-account key generation, SDK installation or alert
-sending was performed. Browser config download did not return a file; local
-`android/app/google-services.json` is pending and explicitly Git-ignored.
+sending was performed. The maintainer supplied the downloaded Android client config. Project ID,
+sender number, package and app ID were verified. The unchanged client config is
+staged at `.dart_tool/firebase/google-services.json`, Git-ignored and outside
+the repository scanner. An initial copy under `android/app` was moved there
+because the scanner correctly rejected the embedded Google client API key;
+the validator remains unchanged. SDK/build integration is still pending.
 The earlier prerequisite-scope choice remains unanswered.
