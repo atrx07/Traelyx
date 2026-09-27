@@ -191,6 +191,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
 - [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
 - [ ] Configure backend dispatch credentials after concrete deployment review.
+- [x] Prepare service-only scheduled retry RPCs in
+  `20260927020000_guardian_dispatch_worker.sql`, resolving the gap after native
+  backend acceptance. All eight local SQL suites and the exact atomic hosted
+  bundle pass. Claim replacement, revocation-before-send, expiry, Retry-After,
+  exhausted attempts and stale/duplicate callback protections are tested.
+  The hosted bundle is `.dart_tool/m6_8_worker_dashboard_deploy.sql`, SHA-256
+  `0bbfa7642ba6eae1731baf7895e63a8f28e9bcf50c1bc30a37eaa90e58135611`.
+  It requires an empty delivery queue under a transaction lock before running
+  global-claim fixtures; existing production deliveries cause an atomic refusal.
+- [ ] Obtain exact worker migration approval, deploy and run rollback-only hosted
+  checks. Edge Function, scheduler and sender credentials remain separate gates.
 - [x] Specify the experimental version-1 safety rules, uncertainty and synthetic false-positive fixtures; do not claim field validation.
 - [x] Implement isolated native rules/lifecycle prerequisite: 24 new tests, 246 total native tests pass; debug build and repository validation pass. Rules are not connected to recording or enabled in the app. See ADR-0025 and `GUARDIAN_ALERTS_V1.md`.
 - [x] Verify native foundation CI run 36315748455 (`04a1836`) passes all gates.

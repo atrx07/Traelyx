@@ -10,6 +10,8 @@
 
 ## Working
 
+- M6.8 scheduled retry SQL is prepared and locally validated: service-only bounded claims, current target authorization and claim-consuming provider completion. All eight SQL suites and the atomic deployment bundle pass. Production deployment awaits exact approval; no scheduler, sender credential or push is created by this migration.
+
 - M6.8's isolated native activation coordinator now guards delayed server confirmation with account/mount binding, short-lived single-use proposals, bounded lease expiry and fail-closed cleanup. All 275 native tests and the configured debug build pass. It is not yet connected to Auth, Flutter consent or recording, and does not enable monitoring or push.
 
 - M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Twenty Guardian tests, analysis and the configured debug build pass, including a 20-second timeout and late-response rejection. Physical screen and hosted empty reload pass after restoring phone connectivity. Actual push delivery remains pending; no alert registration or sending is enabled by this change.

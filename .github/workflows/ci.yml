@@ -46,6 +46,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260926040000_safe_rankings.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927000000_guardian_pairing.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927010000_guardian_alert_delivery.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927020000_guardian_dispatch_worker.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/connected_foundation.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/summary_sync.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/profile_vehicle_sync.sql
@@ -53,6 +54,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/safe_rankings.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_pairing.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_alert_delivery.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_dispatch_worker.sql
 
   validate:
     runs-on: ubuntu-latest
