@@ -30,6 +30,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         try {
             val stream =
                 when (instrumentationArguments?.getString("mode")) {
+                    "guardian-provider" -> runGuardianProviderProof()
                     "index" ->
                         runIndexProof(
                             requireNotNull(instrumentationArguments?.getString("tripId")),
@@ -56,6 +57,26 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             )
             finish(Activity.RESULT_CANCELED, results)
         }
+    }
+
+    private fun runGuardianProviderProof(): String {
+        val context = targetContext.applicationContext
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty()) {
+            "Firebase initialized before notification consent."
+        }
+        val registration = io.github.atrx07.traelyx.guardian.FirebaseGuardianRegistration.get(context)
+        val expectedConfigured = instrumentationArguments?.getString("expectFirebase") == "true"
+        check(registration.configured == expectedConfigured) { "Unexpected Firebase configuration availability." }
+        val info = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+        for (key in listOf("firebase_messaging_auto_init_enabled", "firebase_analytics_collection_enabled",
+            "firebase_data_collection_default_enabled", "firebase_messaging_notification_delegation_enabled")) {
+            check(info.metaData.containsKey(key) && !info.metaData.getBoolean(key)) { "Firebase opt-in default changed." }
+        }
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty()) {
+            "Reading provider availability initialized Firebase."
+        }
+        return "M6.8 provider proof passed: configured=$expectedConfigured, Firebase initialized=false, " +
+            "registration requested=false, trip/session storage untouched."
     }
 
     private fun runCleanupProof(tripId: String): String {
