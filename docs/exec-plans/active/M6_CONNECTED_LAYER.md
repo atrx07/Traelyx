@@ -140,9 +140,9 @@ unavailable until M6.8. No new dependency, local schema or recorder change.
   single use/expiry, permissions, audit and adversarial SQL tests.
 - [x] Implement provider-isolated account-safe UI and transient token handling;
   test consent, failures, stale responses and sign-out behavior.
-- [ ] Run relevant full suites/builds and hosted rollback-only validation after
+- [x] Run relevant full suites/builds and hosted rollback-only validation after
   exact deployment approval; verify device behavior when a phone is available.
-- [ ] Commit/push, verify CI, synchronize completion and stop before M6.8.
+- [x] Commit/push, verify CI, synchronize completion and stop before M6.8.
 
 ## Out of scope for M6.1
 
@@ -191,7 +191,7 @@ unavailable until M6.8. No new dependency, local schema or recorder change.
 - [x] M6.4 Profiles/vehicles sync (hosted/device/CI validation passed).
 - [x] M6.5 Friends/social (hosted/device/CI validation passed).
 - [x] M6.6 Safe leaderboards (hosted/device/CI validation passed).
-- [ ] M6.7 Guardian pairing.
+- [x] M6.7 Guardian pairing.
 - [ ] M6.8 Guardian alerts.
 
 ## M6.1 tests / validation
@@ -548,23 +548,26 @@ unverified. No personal trip upload, new dependency, local schema change or
 recorder sampling change was introduced. Stop before M6.7 Guardian pairing.
 
 
-M6.7 implementation validation (2026-09-27): all 273 Flutter tests, static
-analysis, repository contracts/secrets, local SQL suites and debug/release
-builds pass (release 60.2 MB). The exact approved deployment bundle passed
-locally and on production: migration history, private RLS, guarded RPC grants
-and fixture rollback are all true. No personal telemetry or real invitations
-were sent. Device QA and implementation CI remain pending.
-
-The final configured debug APK update-installed on the Tecno LH8n. Aggregate
-raw storage remains exactly 7,546 files / 59,570 KiB. The phone locked before
-live screen verification; unlock requested, with no real invitation created.
-Implementation commit `d8b3823` is pushed and matches `origin/main`.
+M6.7 is complete (2026-09-27). All 273 Flutter tests, static analysis,
+repository contracts/secrets, local SQL suites and debug/release builds pass
+(release 60.2 MB). The exact approved deployment bundle passed locally and on
+production: migration history, private RLS, guarded RPC grants and fixture
+rollback are all true. No personal telemetry or real invitations were sent.
 
 GitHub CI run 36265444147 passed every gate for implementation `d8b3823`:
 PostgreSQL 17 migration/access tests, generated sources/schema snapshots,
-formatting, analysis, 273 Flutter tests, native Kotlin tests, repository checks,
-debug/release APK builds, size reporting and artifacts. The phone remains locked.
-M6.7 is not marked complete: resume its physical inert-open/live-reload/default
-preferences/cancel-review check after unlock, then synchronize completion.
-No real invitation, connection, alert or personal telemetry upload was created.
-M6.8 remains unauthorized.
+formatting, analysis, Flutter/native Kotlin tests, repository checks,
+debug/release APK builds, size reporting and artifacts.
+
+The final configured debug APK update-installed on the Tecno LH8n. After the
+maintainer unlocked it, physical checks passed: initial unloaded Guardian
+screen, live reload, crash preference on and severe/coarse state off, unsupported
+location/speed/history off, explicit name-sharing/expiry/delivery disclosure,
+and Keep unchanged cancelling invitation review. A subsequent live reload
+still showed no invitation; the connection list was empty. The existing session
+and all 7,546 raw files / 59,570 KiB are preserved. Temporary QA XML was removed.
+
+Full pairing transitions use rollback-only synthetic users and SDK/widget
+fixtures; two real physical accounts were not paired. No new dependency,
+local schema, native permission, recorder change or alert delivery was added.
+Stop before M6.8 Guardian alerts; explicit authorization remains required.
