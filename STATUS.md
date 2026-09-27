@@ -186,4 +186,4 @@
 
 ## Current step
 
-**Current step:** M6.8 Guardian alerts is authorized. Inspection found missing live safety evaluation and remote push delivery; prerequisite scope is pending maintainer input; the maintainer confirmed there is no Firebase project yet. M6.7 remains complete; M7 is not authorized.
+**Current step:** M6.8 Guardian alerts is authorized. Inspection found missing live safety evaluation and remote push delivery; prerequisite scope is pending maintainer input; Firebase `traelyx-e28ff` is created under `atrx07` on Spark, Android is registered, and FCM v1 is enabled. Local client config and backend dispatch setup remain pending. M6.7 remains complete; M7 is not authorized.

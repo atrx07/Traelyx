@@ -154,7 +154,7 @@ maneuvers/road impacts must not be relabelled as crashes or severe risk.
 
 Requested scope decision: include the live native evaluator and background push
 prerequisites, or implement delivery infrastructure while leaving M6.8 incomplete.
-The maintainer confirmed there is no Firebase project yet. Provider configuration, new
+The maintainer authorized creating Firebase under organization `atrx07`. Provider configuration, new
 credentials and production access changes require their concrete deployment
 review; do not collect secrets in chat.
 
@@ -188,7 +188,7 @@ Final package/version/license, transitive size, permission and battery review
 must pass DEPENDENCY_POLICY before introducing a push SDK.
 
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
-- [ ] Resolve prerequisite scope; Firebase project creation/configuration is still needed.
+- [ ] Resolve prerequisite scope; Firebase project and Android registration are ready, client configuration and backend dispatch credentials remain pending.
 - [ ] Specify auditable safety rules, uncertainty and false-positive fixtures
   if the live evaluator is included; do not enable unvalidated claims.
 - [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
@@ -627,3 +627,15 @@ Full pairing transitions use rollback-only synthetic users and SDK/widget
 fixtures; two real physical accounts were not paired. No new dependency,
 local schema, native permission, recorder change or alert delivery was added.
 Stop before M6.8 Guardian alerts; explicit authorization remains required.
+
+
+M6.8 Firebase setup (2026-09-27): project `traelyx-e28ff` was created under the
+maintainer-selected `atrx07` organization on Spark. Gemini and Google Analytics
+were disabled in the creation wizard. Android package `io.github.atrx07.traelyx`
+is registered as `Traelyx Android`, app ID
+`1:931662794452:android:577b8e092b305bea1b3541`; sender/project number
+`931662794452`. FCM HTTP v1 is enabled; legacy messaging is disabled.
+No billing upgrade, service-account key generation, SDK installation or alert
+sending was performed. Browser config download did not return a file; local
+`android/app/google-services.json` is pending and explicitly Git-ignored.
+The earlier prerequisite-scope choice remains unanswered.
