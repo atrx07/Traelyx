@@ -30,6 +30,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         try {
             val stream =
                 when (instrumentationArguments?.getString("mode")) {
+                    "guardian-vault" -> runGuardianVaultProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "index" ->
                         runIndexProof(
@@ -77,6 +78,47 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         }
         return "M6.8 provider proof passed: configured=$expectedConfigured, Firebase initialized=false, " +
             "registration requested=false, trip/session storage untouched."
+    }
+
+    private fun runGuardianVaultProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/$namespace.vault")
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
+        val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault)
+        val owner = UUID.randomUUID().toString()
+        val generation = UUID.randomUUID().toString()
+        val now = io.github.atrx07.traelyx.guardian.GuardianClock(System.currentTimeMillis(), SystemClock.elapsedRealtime(), "synthetic-proof-boot")
+        val nanos = now.elapsedMillis * 1_000_000
+        val lease = io.github.atrx07.traelyx.guardian.GuardianDriverLease(owner, generation, "a".repeat(64),
+            now.epochMillis, now.elapsedMillis, now.epochMillis + 60_000, now.bootId, "+y")
+        try {
+            check(vault.read() == io.github.atrx07.traelyx.guardian.GuardianVaultSnapshot())
+            outbox.activate(lease, now)
+            val alert = outbox.enqueue(owner, generation,
+                io.github.atrx07.traelyx.guardian.GuardianDetection(io.github.atrx07.traelyx.guardian.GuardianAlertKind.POSSIBLE_CRASH, nanos, nanos),
+                io.github.atrx07.traelyx.guardian.GuardianSafetyCooldowns(nanos, nanos), now)
+            check(!file.readText(Charsets.ISO_8859_1).contains(lease.credential))
+            check(!file.readText(Charsets.ISO_8859_1).contains(owner))
+            val restored = io.github.atrx07.traelyx.guardian.GuardianOutbox(
+                io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace))
+            val later = now.copy(epochMillis = now.epochMillis + 30_000, elapsedMillis = now.elapsedMillis + 30_000)
+            val attempt = requireNotNull(restored.reserveNext(owner, later))
+            check(attempt.alert.eventId == alert.eventId && attempt.alert.attempts == 1)
+            check(io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace).read().alerts.single().attempts == 1)
+            check(!restored.cancel(owner, alert.eventId, later))
+            val original = file.readBytes()
+            file.writeBytes(original.copyOf().also { it[it.lastIndex] = (it.last().toInt() xor 1).toByte() })
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace).read() }.isFailure)
+            vault.erase()
+            check(!file.exists())
+            file.writeBytes(original) // Old ciphertext must stay unusable after key destruction.
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace).read() }.isFailure)
+        } finally { vault.erase() }
+        check(!file.exists())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 encrypted vault proof passed: Keystore AES-GCM, restore/reservation, tamper rejection, " +
+            "key destruction and scoped cleanup; Firebase inactive, trip/session storage untouched."
     }
 
     private fun runCleanupProof(tripId: String): String {

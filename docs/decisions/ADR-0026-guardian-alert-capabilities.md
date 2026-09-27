@@ -60,8 +60,8 @@ PUBLIC, anonymous, signed-in or service-role callers; RLS stays enabled.
 ## Remaining implementation boundary
 
 The migration adds empty private tables/RPCs. It neither registers Firebase
-devices nor sends alerts by itself. Native encrypted storage, consent UI,
-recorder attachment, HTTP v1 provider/Edge Function and background delivery QA
-remain M6.8 gates. No sender credential has been created. Distributed revocation
+devices nor sends alerts by itself. The isolated native encrypted lease/outbox now passes unit and physical Keystore
+tests. Consent UI, account teardown/runtime attachment, HTTP v1 provider/Edge
+Function and background delivery QA remain M6.8 gates. No sender credential has been created. Distributed revocation
 cannot erase a generic notification already displayed; details always require
 fresh authorization and FCM payloads must contain no event or identity details.

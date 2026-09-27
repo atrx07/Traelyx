@@ -205,6 +205,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   CI gates passed in run 36317565469 (`decacb4`). Exact atomic hosted bundle
   passes: migration history, private RLS, guarded RPC grants and fixture rollback
   are all true. No real devices, personal telemetry or alerts were submitted.
+- [x] Implement isolated Keystore-encrypted driver lease/outbox with bounded
+  schema, atomic reservations/cooldowns, restart/cancellation and stale-callback
+  guards. All 264 native tests, configured debug build and synthetic physical
+  Keystore proof pass; existing raw files preserved. Runtime integration pending.
 - [ ] Implement provider-isolated Android push, consent and alert UI; validate
   account switching, offline/recovery and background/locked-device behavior.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;

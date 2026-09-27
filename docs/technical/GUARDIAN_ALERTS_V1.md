@@ -86,10 +86,50 @@ Backend acceptance is its own state; it never means recipient receipt or view.
 Persistence and dispatch integration must enforce these transitions and remain
 disabled until separate consent, authorization and delivery tests pass.
 
+## Encrypted outbox prerequisite (implemented; not activated)
+
+`AndroidGuardianVault` persists a bounded version-1 binary snapshot under app-private
+credential-encrypted `no_backup/guardian/primary.vault`. Android Keystore generates
+a non-exportable AES-256 key; AES-GCM uses provider-generated random 96-bit IVs,
+128-bit authentication tags and format-specific associated data. The native key
+does not require a biometric prompt per use because explicit background consent
+must survive screen lock after first unlock. No Supabase Auth refresh token,
+service-role key, route, raw samples or trip identifier enters this store.
+
+A driver lease binds account, activation UUID, restricted capability, both clock
+origins, boot identity and confirmed forward axis. Recovery rejects another
+account, reboot, clock rollback or expiry. The lease lasts at most eight hours.
+At most 16 minimal alerts and their evaluator cooldowns share one atomic encrypted
+snapshot, capped at 32 KiB plaintext. Cooldown/event insertion and attempt
+reservation must persist before dispatch authority is returned. Cancellation and
+bounded retries survive reopen; callbacks from older attempts or activations are
+ignored. Expired alerts are pruned on recovery, including terminal records.
+
+Unknown schemas, excess/trailing bytes, tampering and lost keys fail visibly.
+Writes use AtomicFile, explicit file-descriptor sync and readback verification.
+An uncertain write disables the live store and attempts both key destruction and
+ciphertext removal. Revocation destroys the key before deleting ciphertext; no
+plaintext fallback exists. If storage and Keystore both refuse cleanup, revocation
+must be reported unavailable rather than claimed successful; backend expiry and
+server revocation remain independent safeguards. One process-wide coordinator
+serializes transitions on a worker, never the recorder acquisition thread.
+
+Eleven new native tests cover authenticated encryption, restoration, malformed
+state, failure injection, cancellation and stale callbacks. All 264 native tests
+pass. A separate synthetic Android 14 Keystore proof verifies actual encryption,
+reopen, attempt persistence, tamper rejection, invalidation of retained ciphertext
+after key destruction and scoped cleanup. All 7,546 existing raw files / 59,570 KiB
+remain intact. This is not yet integrated with app consent, recorder or dispatch;
+actual process-kill/offline/locked delivery validation remains required.
+
+Primary platform references:
+- https://developer.android.com/privacy-and-security/keystore
+- https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec
+
 ## Required remaining integration gates
 
-- Native durable encrypted activation/outbox, cancellation notification and
-  account-change teardown; no duplicated Supabase refresh-token ownership.
+- Connect the tested native encrypted outbox to consent, cancellation notification
+  and account-change teardown; no duplicated Supabase refresh-token ownership.
 - Current server permission and connection-generation checks at ingest,
   dispatch, receipt and detail reads, with quotas and bounded retention.
 - Replaceable push provider, opt-in device registration, generic lock-screen
