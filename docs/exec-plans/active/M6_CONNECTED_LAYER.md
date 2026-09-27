@@ -200,8 +200,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   `0bbfa7642ba6eae1731baf7895e63a8f28e9bcf50c1bc30a37eaa90e58135611`.
   It requires an empty delivery queue under a transaction lock before running
   global-claim fixtures; existing production deliveries cause an atomic refusal.
-- [ ] Obtain exact worker migration approval, deploy and run rollback-only hosted
-  checks. Edge Function, scheduler and sender credentials remain separate gates.
+- [x] Obtain exact worker migration approval, deploy and run rollback-only hosted
+  checks (2026-09-27). Full CI run 36334866638 for `85ece8f` passed before
+  deployment. Browser-staged SQL matched the reviewed bundle exactly; production
+  returned true for `worker_migration_recorded`, `worker_service_only`,
+  `private_rls_enabled` and `fixtures_rolled_back`, without test errors.
+  Ignored proof: `.dart_tool/m6_8_worker_hosted.png`. No real alerts or device
+  registrations were created. Edge Function, scheduler and sender credentials
+  remain separate gates.
 - [x] Specify the experimental version-1 safety rules, uncertainty and synthetic false-positive fixtures; do not claim field validation.
 - [x] Implement isolated native rules/lifecycle prerequisite: 24 new tests, 246 total native tests pass; debug build and repository validation pass. Rules are not connected to recording or enabled in the app. See ADR-0025 and `GUARDIAN_ALERTS_V1.md`.
 - [x] Verify native foundation CI run 36315748455 (`04a1836`) passes all gates.

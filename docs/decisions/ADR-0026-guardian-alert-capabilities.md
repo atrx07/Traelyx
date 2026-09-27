@@ -59,7 +59,7 @@ PUBLIC, anonymous, signed-in or service-role callers; RLS stays enabled.
 
 ## Remaining implementation boundary
 
-### Scheduled retry follow-up (local draft, not deployed)
+### Scheduled retry follow-up (deployed 2026-09-27)
 
 Backend acceptance ends the native ingestion retry lifecycle. Therefore a
 trusted scheduled worker must retry accepted delivery rows independently of the
@@ -84,8 +84,9 @@ its generic notification; receipt and details still recheck permission.
 
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain
-integration gates. Local SQL suites and the atomic rollback-fixture deployment
-bundle pass; production application requires the maintainer's exact approval.
+integration gates. All eight local SQL suites pass. Following the maintainer's
+exact approval and green CI run 36334866638 (`85ece8f`), the atomic production
+deployment/rollback-fixture bundle passed all four verification checks.
 The hosted fixture suite first locks and requires an empty delivery queue, so
 global claims cannot touch real deliveries. Non-empty production queues require
 an isolated test project instead; fixtures and migration roll back on failure.

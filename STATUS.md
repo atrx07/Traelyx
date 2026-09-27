@@ -10,7 +10,7 @@
 
 ## Working
 
-- M6.8 scheduled retry SQL is prepared and locally validated: service-only bounded claims, current target authorization and claim-consuming provider completion. All eight SQL suites and the atomic deployment bundle pass. Production deployment awaits exact approval; no scheduler, sender credential or push is created by this migration.
+- M6.8 scheduled retry SQL is deployed after approval and green CI run 36334866638 (`85ece8f`). All eight local SQL suites and the exact production rollback-fixture bundle pass: migration recorded, service-role-only execution, private RLS and fixture rollback are all true. No scheduler, sender credential or push was created; Edge/FCM dispatch and runtime integration remain pending.
 
 - M6.8's isolated native activation coordinator now guards delayed server confirmation with account/mount binding, short-lived single-use proposals, bounded lease expiry and fail-closed cleanup. All 275 native tests and the configured debug build pass. It is not yet connected to Auth, Flutter consent or recording, and does not enable monitoring or push.
 

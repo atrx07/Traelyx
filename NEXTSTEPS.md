@@ -32,10 +32,12 @@ dispatch integration. No push or driver activation is enabled by the inbox. The 
 native activation coordinator passes 275 native tests and a configured debug
 build; connect it to Auth/bridge/consent and recording before exposing activation.
 
-The retry-worker SQL follow-up passes all eight local SQL suites and the exact
-atomic rollback-fixture bundle. Obtain approval for `20260927020000_guardian_dispatch_worker.sql`
-before production deployment. It adds only service-role RPC access and a due-work
-index; Edge dispatch, scheduler and backend credential setup remain pending.
+The approved retry-worker migration `20260927020000_guardian_dispatch_worker.sql`
+is deployed after green CI run 36334866638 (`85ece8f`). All eight local SQL suites
+and the exact production rollback-fixture bundle pass, with all four checks true.
+Next implement and test the Edge/FCM dispatch adapter, then review backend
+credential and scheduler setup before deployment. Native Auth/consent/recorder
+integration and physical end-to-end delivery also remain required.
 
 ## P1 — Preserve M5 boundaries
 
