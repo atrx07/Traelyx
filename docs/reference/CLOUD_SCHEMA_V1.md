@@ -138,7 +138,7 @@ See ADR-0024 and `supabase/tests/guardian_pairing.sql` for boundaries and tests.
 
 The approved production migration passed the atomic rollback-only test bundle: migration history, private RLS, guarded-only RPC grants and fixture rollback all verified true.
 
-## M6.8 alert delivery (locally tested; deployment pending)
+## M6.8 alert delivery (deployed 2026-09-27)
 
 Migration `20260927010000_guardian_alert_delivery.sql` adds four private RLS
 tables: driver activation leases, recipient devices, minimized events and
@@ -163,3 +163,9 @@ blocking/re-pairing, expiry, device opt-out/replacement, quota cleanup, explicit
 receipt/view distinctions and interrupted-final-attempt exhaustion. ADR-0026
 documents the full contract. This migration alone sends no push and enables no
 recorder monitoring; native/Edge/UI integration remains pending.
+
+The approved atomic deployment passed on 2026-09-27 after CI run 36317565469
+passed. Hosted checks verify migration history, all four private RLS tables,
+exact guarded RPC grants and rollback of every synthetic account/fixture. The
+permission test edits only its synthetic relationship. Deployment bundle SHA-256:
+`1f935ac821efc15f0a55a018e3392357fc65a7a00ee3d5d3151b7156fac91b16`.

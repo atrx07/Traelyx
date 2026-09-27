@@ -201,8 +201,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   full SQL suites pass. ADR-0026 defines scoped capabilities and bounded retention.
   Cancellation now ends before first network handoff; all 253 native tests pass.
 - [x] Verify Firebase client CI run 36316643251 (`0171465`) passes all gates.
-- [ ] Approve and deploy `20260927010000_guardian_alert_delivery.sql`; run the
-  exact atomic rollback-only hosted test bundle. No production change yet.
+- [x] Deploy approved `20260927010000_guardian_alert_delivery.sql` after all
+  CI gates passed in run 36317565469 (`decacb4`). Exact atomic hosted bundle
+  passes: migration history, private RLS, guarded RPC grants and fixture rollback
+  are all true. No real devices, personal telemetry or alerts were submitted.
 - [ ] Implement provider-isolated Android push, consent and alert UI; validate
   account switching, offline/recovery and background/locked-device behavior.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;

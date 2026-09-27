@@ -16,7 +16,8 @@ M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts includes the author
 
 The M6.8 server draft now passes local SQL suites for owner/device capabilities,
 current permissions, deduplication, quota/expiry, retry exhaustion and revocation.
-Deploy only after concrete approval and hosted rollback-only checks. Native
+Approved production deployment and rollback-only hosted checks pass (all four
+true); implementation CI run 36317565469 is green. Native
 encrypted persistence, consent UI, recorder integration and Edge/FCM dispatch
 remain pending. Firebase client CI run 36316643251 is green; no registrations or
 alerts have been sent.

@@ -176,9 +176,9 @@ projections described in `CLOUD_SCHEMA_V1.md`. Ranking consent may create an
 immutable `trip_account_links` association without a summary-sync queue.
 Existing summary consent and payloads are not expanded. See ADR-0023.
 
-## M6.8 alert delivery draft
+## M6.8 alert delivery server contract
 
-The locally tested, not-yet-deployed forward migration adds private
+The approved, locally and hosted-tested forward migration adds private
 `guardian_driver_sessions`, `guardian_push_devices`, `guardian_alert_events` and
 `guardian_alert_deliveries`. Capabilities are stored as digests. Minimized events
 and delivery transitions retain no route, raw sample, speed or trip identifier.

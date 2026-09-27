@@ -1,7 +1,7 @@
 # ADR-0026: Restrict background Guardian delivery with revocable capabilities
 
 - Date: 2026-09-27
-- Status: implemented and locally tested; hosted deployment pending approval
+- Status: server contract implemented; local and approved hosted tests pass
 
 ## Context
 

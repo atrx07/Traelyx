@@ -129,7 +129,7 @@ reset role;
 select pg_temp.alert_check((select bool_and(status='failed') from public.guardian_alert_deliveries),'interrupted final attempt eventually fails explicitly');
 rollback to recovery_baseline;
 delete from public.guardian_alert_events;
-update public.guardian_connections set permissions=permissions||'{"severe_drive_alert":false}';
+update public.guardian_connections set permissions=permissions||'{"severe_drive_alert":false}' where id='44444444-4444-4444-8444-444444444444';
 set local role service_role;
 select pg_temp.alert_check(public.ingest_guardian_alert_v1('11111111-1111-4111-8111-111111111111',repeat('a',64),
  (select v||'{"kind":"severe_drive"}' from alert_test_data where k='event'))->>'recipient_devices'='0','severe event without permission has no recipients');
