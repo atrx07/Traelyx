@@ -55,7 +55,7 @@ class TelemetryChunkRecorder(
             if (accepting.get()) return TelemetryChunkRecorderStartResult(started = true)
             updateHealth { it.copy(state = TelemetryBufferState.STARTING, errorCode = null) }
             val catalog =
-                runCatching { store.scan(tripId) }.getOrElse {
+                runCatching { store.scanMetadata(tripId) }.getOrElse {
                     return failStart("chunk_scan_failed")
                 }
             if (catalog.maxObservedSequence == Long.MAX_VALUE) {
@@ -67,26 +67,26 @@ class TelemetryChunkRecorder(
             updateHealth {
                 it.copy(
                     state = TelemetryBufferState.ACTIVE,
-                    completedChunkCount = catalog.validChunks.size.toLong(),
+                    completedChunkCount = catalog.chunks.size.toLong(),
                     persistedGnssSampleCount =
-                        catalog.validChunks.sumOf { chunk ->
-                            chunk.metadata.gnssSampleCount.toLong()
+                        catalog.chunks.sumOf { chunk ->
+                            chunk.gnssSampleCount.toLong()
                         },
                     persistedAccelerometerSampleCount =
-                        catalog.validChunks.sumOf { chunk ->
-                            chunk.metadata.accelerometerSampleCount.toLong()
+                        catalog.chunks.sumOf { chunk ->
+                            chunk.accelerometerSampleCount.toLong()
                         },
                     persistedGyroscopeSampleCount =
-                        catalog.validChunks.sumOf { chunk ->
-                            chunk.metadata.gyroscopeSampleCount.toLong()
+                        catalog.chunks.sumOf { chunk ->
+                            chunk.gyroscopeSampleCount.toLong()
                         },
                     persistedByteCount =
-                        catalog.validChunks.sumOf { chunk -> chunk.metadata.byteLength.toLong() },
-                    recoveredValidChunkCount = catalog.validChunks.size,
+                        catalog.chunks.sumOf { chunk -> chunk.byteLength.toLong() },
+                    recoveredValidChunkCount = catalog.chunks.size,
                     corruptChunkCount = catalog.corruptChunkCount,
                     orphanedWriteCount = catalog.orphanedWriteCount,
                     orderingViolationCount = catalog.orderingViolationCount,
-                    lastCompletedSequence = catalog.validChunks.lastOrNull()?.metadata?.sequence,
+                    lastCompletedSequence = catalog.chunks.lastOrNull()?.sequence,
                     hasCommittedElapsedBoundary = catalog.lastVerifiedEndElapsedNanos != null,
                     errorCode = null,
                 )

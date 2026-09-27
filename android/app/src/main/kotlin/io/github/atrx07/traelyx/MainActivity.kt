@@ -47,6 +47,7 @@ class MainActivity : FlutterActivity() {
     private val dataManagementExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val routeExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val analysisExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val finalizationExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private var analysisBusy = false
 
     override fun onPostResume() {
@@ -110,6 +111,23 @@ class MainActivity : FlutterActivity() {
                 }
                 RecorderContract.EXPORT_TRIPDEBUG ->
                     beginTripDebugExport(call.argument<String>("tripId"), result)
+                RecorderContract.GET_PENDING_FINALIZATIONS -> {
+                    // Verify disk evidence off the Android UI thread, including startup recovery.
+                    finalizationExecutor.execute {
+                        val outcome = runCatching { recorderDispatcher.dispatch(call.method) }
+                        runOnUiThread {
+                            if (!isDestroyed) outcome.fold(
+                                onSuccess = { dispatched ->
+                                    when (dispatched) {
+                                        is RecorderBridgeDispatchResult.Handled -> result.success(dispatched.payload)
+                                        RecorderBridgeDispatchResult.NotImplemented -> result.notImplemented()
+                                    }
+                                },
+                                onFailure = { result.error("finalization_unavailable", "Trip evidence could not be verified. Recording files were preserved.", null) },
+                            )
+                        }
+                    }
+                }
                 else ->
                     when (
                         val dispatched =
@@ -399,6 +417,7 @@ class MainActivity : FlutterActivity() {
         dataManagementExecutor.shutdownNow()
         routeExecutor.shutdownNow()
         analysisExecutor.shutdownNow()
+        finalizationExecutor.shutdownNow()
         super.onDestroy()
     }
 

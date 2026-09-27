@@ -213,6 +213,38 @@ class TelemetryChunkCodecTest {
             1_777_777_777_500L,
         ).bytes
 
+    @Test
+    fun `metadata scan preserves corruption ordering and orphan checks without samples`() {
+        val first = encode(0, 100)
+        val input = listOf(TelemetryChunkCandidate(0, first), TelemetryChunkCandidate(1, encode(1, 50)),
+            TelemetryChunkCandidate(2, first.copyOf(10)), TelemetryChunkCandidate(3, null, true),
+            TelemetryChunkCandidate(4, encode(4, 200)), TelemetryChunkCandidate(4, encode(4, 200)))
+        val full = TelemetryChunkCatalog.inspect(input).metadataOnly()
+        assertEquals(full, TelemetryChunkCatalog.inspectMetadata(input.asSequence(), TEST_TRIP_ID))
+        val wrongOwner = TelemetryChunkCatalog.inspectMetadata(sequenceOf(TelemetryChunkCandidate(0, first)),
+            "00000000-0000-4000-8000-000000000000")
+        assertEquals(1, wrongOwner.corruptChunkCount)
+        assertTrue(wrongOwner.chunks.isEmpty())
+    }
+
+    @Test
+    fun `long trip catalog streams two million samples without retaining decoded records`() {
+        val candidates = (0L until 10_000).asSequence().map { sequence ->
+            val records = (0L until 200).map { index ->
+                val elapsed = sequence * 1_000_000_000 + index * 5_000_000
+                TelemetrySampleRecord.Imu(testImuSample(tripElapsedNanos = elapsed,
+                    sourceTimestampNanos = elapsed + 1_000_000_000))
+            }
+            TelemetryChunkCandidate(sequence, TelemetryChunkCodec.encode(TEST_TRIP_ID, sequence,
+                records, 1_777_777_777_500L).bytes)
+        }
+        val catalog = TelemetryChunkCatalog.inspectMetadata(candidates, TEST_TRIP_ID)
+        assertEquals(10_000, catalog.chunks.size)
+        assertEquals(2_000_000, catalog.chunks.sumOf { it.totalSampleCount })
+        assertEquals(9_999L, catalog.maxObservedSequence)
+        assertEquals(0, catalog.corruptChunkCount + catalog.orphanedWriteCount + catalog.orderingViolationCount)
+    }
+
     private fun assertInvalid(bytes: ByteArray, expectedError: String) {
         val result = TelemetryChunkCodec.decode(bytes) as TelemetryChunkDecodeResult.Invalid
         assertEquals(expectedError, result.errorCode)

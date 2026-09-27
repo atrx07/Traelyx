@@ -6,6 +6,8 @@
 
 M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts includes the authorized live-evaluation and background-push prerequisites.
 
+The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. Resume the existing M6.8 scope after reporting this repair; no new milestone is authorized.
+
 ## P0 — Define and implement M6.8 Guardian alerts
 
 1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.

@@ -251,9 +251,14 @@ object RecorderFinalizationEvaluator {
     fun evaluate(
         record: PendingTripFinalizationRecord,
         catalog: TelemetryChunkCatalogSnapshot,
+    ): RecorderTripFinalizationSnapshot = evaluate(record, catalog.metadataOnly())
+
+    fun evaluate(
+        record: PendingTripFinalizationRecord,
+        catalog: TelemetryChunkMetadataCatalog,
     ): RecorderTripFinalizationSnapshot {
         val flags = linkedSetOf<String>()
-        if (catalog.validChunks.isEmpty()) flags += "no_valid_chunks"
+        if (catalog.chunks.isEmpty()) flags += "no_valid_chunks"
         if (catalog.corruptChunkCount > 0) flags += "corrupt_chunks_isolated"
         if (catalog.orphanedWriteCount > 0) flags += "orphaned_writes_isolated"
         if (catalog.orderingViolationCount > 0) flags += "chunk_ordering_violation"
@@ -270,7 +275,7 @@ object RecorderFinalizationEvaluator {
             }
         if (lastTripElapsed != null && endElapsed == null) flags += "elapsed_time_overflow"
         val incomplete =
-            catalog.validChunks.isEmpty() ||
+            catalog.chunks.isEmpty() ||
                 catalog.corruptChunkCount > 0 ||
                 catalog.orphanedWriteCount > 0 ||
                 catalog.orderingViolationCount > 0 ||
@@ -294,7 +299,7 @@ object RecorderFinalizationEvaluator {
             corruptChunkCount = catalog.corruptChunkCount,
             orphanedWriteCount = catalog.orphanedWriteCount,
             orderingViolationCount = catalog.orderingViolationCount,
-            chunks = catalog.validChunks.map { RecorderFinalizedChunkSnapshot(it.metadata) },
+            chunks = catalog.chunks.map { RecorderFinalizedChunkSnapshot(it) },
         )
     }
 }

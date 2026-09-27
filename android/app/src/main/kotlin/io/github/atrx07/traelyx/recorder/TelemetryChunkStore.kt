@@ -21,6 +21,8 @@ sealed interface RawTelemetryDeletionResult {
 interface TelemetryChunkStore {
     fun scan(tripId: String): TelemetryChunkCatalogSnapshot
 
+    fun scanMetadata(tripId: String): TelemetryChunkMetadataCatalog = scan(tripId).metadataOnly()
+
     fun listSequences(tripId: String): TelemetryChunkSequenceSnapshot {
         val catalog = scan(tripId)
         return TelemetryChunkSequenceSnapshot(
@@ -45,8 +47,20 @@ class AtomicFileTelemetryChunkStore internal constructor(
         ),
     )
 
+    override fun scanMetadata(tripId: String): TelemetryChunkMetadataCatalog {
+        if (!isValidTripId(tripId)) return emptyCatalogWithCorruption().metadataOnly()
+        return TelemetryChunkCatalog.inspectMetadata(candidates(tripId), tripId)
+    }
+
     override fun scan(tripId: String): TelemetryChunkCatalogSnapshot {
         if (!isValidTripId(tripId)) return emptyCatalogWithCorruption()
+        val inspected = TelemetryChunkCatalog.inspect(candidates(tripId).toList())
+        val validForTrip = inspected.validChunks.filter { it.metadata.tripId == tripId }
+        val tripMismatchCount = inspected.validChunks.size - validForTrip.size
+        return inspected.copy(validChunks = validForTrip, corruptChunkCount = inspected.corruptChunkCount + tripMismatchCount)
+    }
+
+    private fun candidates(tripId: String): Sequence<TelemetryChunkCandidate> {
         val directory = chunkDirectory(tripId)
         val files = directory.listFiles()?.toList().orEmpty()
         val observed =
@@ -55,39 +69,29 @@ class AtomicFileTelemetryChunkStore internal constructor(
                 val sequence = match.groupValues[1].toLongOrNull() ?: return@mapNotNull null
                 sequence to match.groupValues[2]
             }
-        val sequences = observed.map { it.first }.distinct().sorted()
-        val candidates =
-            sequences.map { sequence ->
-                val baseFile = File(directory, fileName(sequence))
-                val hasBaseOrBackup =
-                    observed.any { (candidateSequence, suffix) ->
-                        candidateSequence == sequence && (suffix.isEmpty() || suffix == ".bak")
-                    }
-                if (!hasBaseOrBackup) {
-                    TelemetryChunkCandidate(
-                        observedSequence = sequence,
-                        bytes = null,
-                        orphanedIncompleteWrite = true,
-                    )
-                } else {
-                    val bytes =
-                        runCatching {
-                            AtomicFile(baseFile).openRead().use { it.readBytes() }
-                        }.getOrNull()
-                    TelemetryChunkCandidate(
-                        observedSequence = sequence,
-                        bytes = bytes,
-                        orphanedIncompleteWrite = bytes == null,
-                    )
-                }
+        val grouped = observed.groupBy({ it.first }, { it.second })
+        return grouped.keys.sorted().asSequence().map { sequence ->
+            val baseFile = File(directory, fileName(sequence))
+            val hasBaseOrBackup =
+                grouped.getValue(sequence).any { it.isEmpty() || it == ".bak" }
+            if (!hasBaseOrBackup) {
+                TelemetryChunkCandidate(
+                    observedSequence = sequence,
+                    bytes = null,
+                    orphanedIncompleteWrite = true,
+                )
+            } else {
+                val bytes =
+                    runCatching {
+                        AtomicFile(baseFile).openRead().use { it.readBytes() }
+                    }.getOrNull()
+                TelemetryChunkCandidate(
+                    observedSequence = sequence,
+                    bytes = bytes,
+                    orphanedIncompleteWrite = bytes == null,
+                )
             }
-        val inspected = TelemetryChunkCatalog.inspect(candidates)
-        val validForTrip = inspected.validChunks.filter { it.metadata.tripId == tripId }
-        val tripMismatchCount = inspected.validChunks.size - validForTrip.size
-        return inspected.copy(
-            validChunks = validForTrip,
-            corruptChunkCount = inspected.corruptChunkCount + tripMismatchCount,
-        )
+        }
     }
 
     override fun write(chunk: EncodedTelemetryChunk): TelemetryChunkWriteResult {

@@ -638,6 +638,35 @@ object TelemetryChunkCodec {
 }
 
 object TelemetryChunkCatalog {
+    /** Input is lazy and sequence-ordered; only one encoded/decoded chunk is live at a time. */
+    fun inspectMetadata(candidates: Sequence<TelemetryChunkCandidate>, expectedTripId: String): TelemetryChunkMetadataCatalog {
+        val valid = mutableListOf<TelemetryChunkMetadata>()
+        var maxObserved: Long? = null
+        var corrupt = 0
+        var orphaned = 0
+        var ordering = 0
+        var lastEnd: Long? = null
+        val seen = hashSetOf<Long>()
+        for (candidate in candidates) {
+            require(maxObserved == null || candidate.observedSequence >= maxObserved)
+            maxObserved = candidate.observedSequence
+            if (candidate.orphanedIncompleteWrite || candidate.bytes == null) {
+                orphaned++
+                continue
+            }
+            val decoded = TelemetryChunkCodec.decode(candidate.bytes)
+            if (decoded !is TelemetryChunkDecodeResult.Success) { corrupt++; continue }
+            val metadata = decoded.chunk.metadata
+            if (metadata.tripId != expectedTripId || metadata.sequence != candidate.observedSequence || !seen.add(metadata.sequence)) {
+                corrupt++; continue
+            }
+            if (lastEnd != null && metadata.startElapsedNanos < lastEnd) { ordering++; continue }
+            valid += metadata
+            lastEnd = metadata.endElapsedNanos
+        }
+        return TelemetryChunkMetadataCatalog(valid, corrupt, orphaned, ordering, maxObserved)
+    }
+
     fun inspect(candidates: List<TelemetryChunkCandidate>): TelemetryChunkCatalogSnapshot {
         val maxObservedSequence = candidates.maxOfOrNull { it.observedSequence }
         var corruptCount = 0

@@ -195,6 +195,46 @@ void main() {
     );
   });
 
+  testWidgets(
+    'confirmation closes while a slow finalization is still pending',
+    (tester) async {
+      final pending = Completer<RecorderStatus>();
+      final commands = _FakeRecorderCommands(
+        _recorderStatus(active: true, state: 'recording'),
+      )..pendingStop = pending.future;
+      await _pumpDrive(
+        tester,
+        recorderStatus: _recorderStatus(active: true, state: 'recording'),
+        commands: commands,
+      );
+      await tester.tap(find.byKey(const ValueKey('drive-end-action')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('confirm-end-drive-action')));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(
+        find.byKey(const ValueKey('end-drive-confirm-dialog')),
+        findsNothing,
+      );
+      expect(find.text('Saving drive…'), findsOneWidget);
+      expect(commands.calls, ['stopTrip']);
+      expect(
+        tester
+            .widget<OutlinedButton>(
+              find.byKey(const ValueKey('drive-end-action')),
+            )
+            .onPressed,
+        isNull,
+      );
+      pending.complete(_recorderStatus());
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Drive finalized and indexed in local history.'),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets('live Drive exposes persistent motion limitations', (
     tester,
   ) async {
@@ -584,6 +624,7 @@ class _FakeRecorderCommands implements RecorderCommands {
 
   final RecorderStatus status;
   final calls = <String>[];
+  Future<RecorderStatus>? pendingStop;
 
   @override
   Future<RecorderStatus> recoverTrip() async {
@@ -600,7 +641,7 @@ class _FakeRecorderCommands implements RecorderCommands {
   @override
   Future<RecorderStatus> stopTrip() async {
     calls.add('stopTrip');
-    return status;
+    return pendingStop ?? status;
   }
 }
 

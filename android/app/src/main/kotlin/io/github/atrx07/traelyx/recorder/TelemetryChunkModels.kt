@@ -175,6 +175,22 @@ data class TelemetryChunkSequenceSnapshot(
     }
 }
 
+/** Verified catalog without retaining the trip's decoded sample objects. */
+data class TelemetryChunkMetadataCatalog(
+    val chunks: List<TelemetryChunkMetadata>,
+    val corruptChunkCount: Int,
+    val orphanedWriteCount: Int,
+    val orderingViolationCount: Int,
+    val maxObservedSequence: Long?,
+) {
+    val lastVerifiedEndElapsedNanos: Long? get() = chunks.lastOrNull()?.endElapsedNanos
+}
+
+fun TelemetryChunkCatalogSnapshot.metadataOnly() = TelemetryChunkMetadataCatalog(
+    validChunks.map { it.metadata }, corruptChunkCount, orphanedWriteCount,
+    orderingViolationCount, maxObservedSequence,
+)
+
 enum class TelemetryBufferState(val wireName: String) {
     IDLE("idle"),
     STARTING("starting"),

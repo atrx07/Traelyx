@@ -119,7 +119,7 @@ class TripDebugArchiveExporter(
         if (runCatching { UUID.fromString(tripId) }.isFailure) {
             return TripDebugPreparationResult.Failure("export_invalid_trip_id")
         }
-        val catalog = store.scan(tripId)
+        val catalog = store.scanMetadata(tripId)
         if (
             catalog.corruptChunkCount != 0 ||
             catalog.orphanedWriteCount != 0 ||
@@ -127,21 +127,20 @@ class TripDebugArchiveExporter(
         ) {
             return TripDebugPreparationResult.Failure("export_catalog_not_verified")
         }
-        if (catalog.validChunks.isEmpty()) {
+        if (catalog.chunks.isEmpty()) {
             return TripDebugPreparationResult.Failure("export_trip_empty")
         }
-        if (catalog.validChunks.size > MAX_TRIPDEBUG_CHUNKS) {
+        if (catalog.chunks.size > MAX_TRIPDEBUG_CHUNKS) {
             return TripDebugPreparationResult.Failure("export_chunk_limit_exceeded")
         }
-        if (catalog.validChunks.map { it.metadata.sequence } !=
-            (0L until catalog.validChunks.size.toLong()).toList()
+        if (catalog.chunks.map { it.sequence } !=
+            (0L until catalog.chunks.size.toLong()).toList()
         ) {
             return TripDebugPreparationResult.Failure("export_sequence_gap")
         }
 
         val chunks = mutableListOf<PreparedTripDebugChunk>()
-        for (decoded in catalog.validChunks) {
-            val metadata = decoded.metadata
+        for (metadata in catalog.chunks) {
             val bytes = store.read(tripId, metadata.sequence)
                 ?: return TripDebugPreparationResult.Failure("export_chunk_unreadable")
             val verified = TelemetryChunkCodec.decode(bytes)

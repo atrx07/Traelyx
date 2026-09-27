@@ -659,3 +659,14 @@ the repository scanner. An initial copy under `android/app` was moved there
 because the scanner correctly rejected the embedded Google client API key;
 the validator remains unchanged. SDK/build integration is still pending.
 The earlier prerequisite-scope choice remains unanswered.
+
+
+### Long-trip reliability interruption — 2026-09-27
+
+M6.8 implementation paused for a reported End drive / cold-start crash. The
+repair streams verified catalog metadata and moves finalization verification
+off the main thread. The actual 45m27s trip is recovered into local history;
+all 4,290 raw chunk hashes match the private pre-fix backup, and a second cold
+launch passes. No cloud upload, schema migration or sampling change occurred.
+See the completed long-trip recovery plan for evidence and limitations. M6.8
+remains in progress; consent/recorder/dispatch integration remains pending.

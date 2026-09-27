@@ -168,7 +168,7 @@ class AndroidRecorderBridgeGateway(
         val read = finalizationStore.loadAll()
         val finalizations =
             read.records.map { record ->
-                RecorderFinalizationEvaluator.evaluate(record, chunkStore.scan(record.tripId)).toMap()
+                RecorderFinalizationEvaluator.evaluate(record, chunkStore.scanMetadata(record.tripId)).toMap()
             }
         return linkedMapOf(
             "contractVersion" to RECORDER_FINALIZATION_CONTRACT_VERSION,
