@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.7 complete; awaiting M6.8 authorization**
+**M6 active — M6.1–M6.7 complete; M6.8 in progress**
 
 ## Working
 
@@ -186,4 +186,4 @@
 
 ## Current step
 
-**Approval gate:** M6.7 Guardian pairing is complete. Stop before M6.8 Guardian alerts; separate authorization is required.
+**Current step:** M6.8 Guardian alerts is authorized. Inspection found missing live safety evaluation and remote push delivery; prerequisite scope is pending maintainer input; the maintainer confirmed there is no Firebase project yet. M6.7 remains complete; M7 is not authorized.

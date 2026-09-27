@@ -4,13 +4,15 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts awaits explicit authorization.
+M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts is authorized; prerequisite scope and push-project configuration are being resolved.
 
-## P0 — Await M6.8 authorization
+## P0 — Define and implement M6.8 Guardian alerts
 
 1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
-3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Physical inert opening, live reload, defaults and cancelled invite review pass. Sign-in is preserved; no real invitation, alert or trip upload was created. M6.7 is complete. Do not begin M6.8 without authorization.
+3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Physical inert opening, live reload, defaults and cancelled invite review pass. Sign-in is preserved; no real invitation, alert or trip upload was created. M6.7 is complete. M6.8 was subsequently authorized.
+
+4. Resolve whether M6.8 includes the missing native live safety evaluator and background push prerequisites; there is no Firebase project yet, so setup remains necessary without sharing credentials. See the active plan for delivery/privacy gates.
 
 ## P1 — Preserve M5 boundaries
 

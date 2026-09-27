@@ -144,6 +144,62 @@ unavailable until M6.8. No new dependency, local schema or recorder change.
   exact deployment approval; verify device behavior when a phone is available.
 - [x] Commit/push, verify CI, synchronize completion and stop before M6.8.
 
+### M6.8 boundary (authorized 2026-09-27; prerequisite scope pending)
+
+The maintainer authorized starting Guardian alerts. Inspection found that the
+current native pipeline analyzes completed trips only; it has no live governed
+safety-state evaluator or crash inference. Recorder acquisition currently only
+persists samples, and no remote push provider is configured. Existing strong
+maneuvers/road impacts must not be relabelled as crashes or severe risk.
+
+Requested scope decision: include the live native evaluator and background push
+prerequisites, or implement delivery infrastructure while leaving M6.8 incomplete.
+The maintainer confirmed there is no Firebase project yet. Provider configuration, new
+credentials and production access changes require their concrete deployment
+review; do not collect secrets in chat.
+
+Common delivery design to validate:
+
+- A minimized, versioned event envelope contains an opaque event identity,
+  event kind, governed rule version, occurrence time and explicit uncertainty.
+  No coordinates, speed, route, raw samples, trip name or free-form message.
+- Explicit driver activation and recipient notification opt-in are separate
+  from pairing. Account changes/sign-out must disable old-account dispatch.
+- Server authorization checks current active, unblocked directional consent
+  on ingestion, dispatch and read. Permission changes must invalidate queued
+  stale deliveries; re-pairing must not revive old events.
+- Durable bounded retries use stable deduplication IDs, expiry, backoff and
+  recipient-level delivery state. Backend acceptance is distinct from device
+  receipt; no claim that a person saw an alert without acknowledgement.
+- Generic push content avoids exposing driver identity or event details on a
+  lock screen; opening details requires authenticated current permission.
+- No automated emergency calling, guaranteed delivery claim, hidden location
+  sharing, or changes to historical scoring rules.
+
+Proposed provider: replaceable FCM Android adapter dispatched by a Supabase Edge
+Function. Firebase documents Cloud Messaging as a no-cost product; high-priority
+push attempts immediate delivery but can be delayed/deprioritized. Supabase
+publishes an Edge Function push pattern. Server credentials stay in backend
+secrets; no service-role or service-account key enters the mobile app.
+Sources: https://firebase.google.com/docs/projects/billing/firebase-pricing-plans,
+https://firebase.google.com/docs/cloud-messaging/android-message-priority,
+https://supabase.com/docs/guides/functions/examples/push-notifications.
+Final package/version/license, transitive size, permission and battery review
+must pass DEPENDENCY_POLICY before introducing a push SDK.
+
+- [x] Inspect current safety/event, recorder, sync and pairing boundaries.
+- [ ] Resolve prerequisite scope; Firebase project creation/configuration is still needed.
+- [ ] Specify auditable safety rules, uncertainty and false-positive fixtures
+  if the live evaluator is included; do not enable unvalidated claims.
+- [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
+  expiry, revocation and explicit send/receipt states with adversarial tests.
+- [ ] Implement provider-isolated Android push, consent and alert UI; validate
+  account switching, offline/recovery and background/locked-device behavior.
+- [ ] Validate all affected suites, schema upgrades, builds and performance;
+  obtain exact deployment approval and verify synthetic hosted delivery.
+- [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
+  and stop before M7. No dangerous-road testing or real-contact alerts.
+
 ## Out of scope for M6.1
 
 - Flutter auth/session UI, cloud sync, public profiles, friendships,
