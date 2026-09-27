@@ -153,3 +153,12 @@ The isolated experimental native evaluator and alert lifecycle are specified in
 `../technical/GUARDIAN_ALERTS_V1.md`. They are not yet connected to recording or
 enabled by pairing. Alert delivery remains unavailable until consent, persistence,
 server authorization, push delivery and physical validation gates pass.
+
+The foreground alert inbox is implemented: opening the pairing screen performs
+no request; Reload alerts explicitly calls the account-guarded list API. Each
+row distinguishes provider acceptance, device receipt and recipient opening.
+Opening an incoming alert reloads current access and requires a successful
+guarded view acknowledgement before displaying guidance. The driver cannot
+acknowledge the recipient's view. Expiry, backgrounding, account change and
+failed access clear cached details; the inbox has no disk cache. Empty results
+do not imply safety. This does not enable registration, evaluation or push.

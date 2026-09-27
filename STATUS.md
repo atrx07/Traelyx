@@ -10,6 +10,8 @@
 
 ## Working
 
+- M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Nineteen Guardian tests, analysis and the configured debug build pass. Physical inbox QA and actual push delivery remain pending; no alert registration or sending is enabled by this change.
+
 - Product direction defined.
 - Product/repository/Flutter identity and Android namespace/application ID resolved: `Traelyx`, `traelyx`, and `io.github.atrx07.traelyx`.
 - Initial governance/reference pack created.

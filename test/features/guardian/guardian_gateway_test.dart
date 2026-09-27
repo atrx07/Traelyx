@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/features/guardian/guardian_alerts.dart';
 import 'package:traelyx/features/guardian/guardian_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
 import '../summary_sync/summary_sync_test.dart' show userA, userB;
+import 'guardian_alerts_test.dart' show alertJson, deliveryId;
 import 'guardian_test.dart';
 
 void main() {
@@ -38,6 +40,8 @@ void main() {
         );
       } else {
         final response = switch (request.uri.path.split('/').last) {
+          'list_guardian_alerts_v1' => [alertJson(DateTime.now())],
+          'view_guardian_alert_v1' => true,
           'list_guardian_v1' => {
             'profile': {'username': 'my_name', 'display_name': 'My name'},
             'invite': null,
@@ -150,7 +154,20 @@ void main() {
       calls.last['requested_permissions'],
       const GuardianPermissions(crash: false).toJson(),
     );
+    final alerts = SupabaseGuardianAlertGateway(client);
+    expect((await alerts.load(userA)).single.id, deliveryId);
+    expect(calls.last, {
+      'path': '/rest/v1/rpc/list_guardian_alerts_v1',
+      'expected_user_id': userA,
+    });
+    expect(await alerts.open(userA, deliveryId), true);
+    expect(calls.last, {
+      'path': '/rest/v1/rpc/view_guardian_alert_v1',
+      'expected_user_id': userA,
+      'delivery': deliveryId,
+    });
     final count = calls.length;
+    await expectLater(alerts.load(userB), throwsA(isA<GuardianException>()));
     await expectLater(
       gateway.preview(userA, 'bad'),
       throwsA(isA<GuardianException>()),
@@ -158,6 +175,16 @@ void main() {
     await expectLater(gateway.load(userB), throwsA(isA<GuardianException>()));
     expect(calls, hasLength(count));
     error = '40001';
+    await expectLater(
+      alerts.load(userA),
+      throwsA(
+        isA<GuardianException>().having(
+          (e) => e.message,
+          'message',
+          isNot(contains(guardianTestToken)),
+        ),
+      ),
+    );
     await expectLater(
       gateway.load(userA),
       throwsA(
@@ -170,6 +197,8 @@ void main() {
     );
     error = null;
     afterRequest = () => signIn(userB);
+    await expectLater(alerts.load(userA), throwsA(isA<GuardianException>()));
+    await signIn(userA);
     await expectLater(
       gateway.create(userA, 'my_name', 'My name', guardianTestPermissions),
       throwsA(isA<GuardianException>()),

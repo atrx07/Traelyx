@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_inbox.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
 
 class GuardianScreen extends ConsumerWidget {
@@ -280,6 +281,8 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
             child: const Text('Cancel invite'),
           ),
         ],
+        const SizedBox(height: 24),
+        GuardianInboxPanel(owner: widget.owner),
         const SizedBox(height: 24),
         Text(
           'Become someone’s Guardian',

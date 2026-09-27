@@ -211,6 +211,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Keystore proof pass; existing raw files preserved. Runtime integration pending.
 - [ ] Implement provider-isolated Android push, consent and alert UI; validate
   account switching, offline/recovery and background/locked-device behavior.
+- [x] Add an explicit-load account-bound alert inbox with current-permission
+  recheck on opening, separate provider/receipt/view states, expiry and
+  background/account clearing. Nineteen Guardian tests, analysis and configured
+  debug build pass. Push/driver activation remains unavailable; physical inbox
+  QA and end-to-end delivery are still pending.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

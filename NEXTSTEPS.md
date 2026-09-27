@@ -24,6 +24,11 @@ storage passes 264 tests and isolated physical Keystore QA. Connect it to consen
 UI, recorder integration and Edge/FCM dispatch; those remain pending. Firebase client CI run 36316643251 is green; no registrations or
 alerts have been sent.
 
+The explicit-load alert inbox and guarded opening are implemented and pass 19
+Guardian tests, analysis and a configured debug build. Continue native consent
+activation/account teardown and dispatch integration; physical inbox QA remains
+pending. No push or driver activation is enabled by the inbox.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.
