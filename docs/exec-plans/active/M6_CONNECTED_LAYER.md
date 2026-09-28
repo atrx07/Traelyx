@@ -190,7 +190,9 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
 - [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
-- [ ] Configure backend dispatch credentials after concrete deployment review.
+- [ ] Complete backend FCM authentication after concrete deployment review. The
+  dedicated sender and worker secret are configured, but Google organization
+  policy blocks service-account JSON key creation; dispatch remains disabled.
 - [x] Implement an isolated Edge/FCM dispatch adapter with no runtime package:
   separate worker-secret authentication, bounded requests/responses, six claims
   with three concurrent sends, current target recheck, minimal data-only FCM
@@ -198,8 +200,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Deno tests pass, including the combined HTTP adapter flow; formatting, lint
   and entry-point type checks pass. CI now includes a pinned Deno 2.9.6 gate.
   Repository secret scanning covers the new JS/TS and SQL/TOML source types.
-  No function deployment, sender key, scheduler, registration or send occurred.
+  At this validation point no function deployment, sender key, scheduler,
+  registration or send occurred.
   Concrete setup/review is in `docs/reference/GUARDIAN_DISPATCH_SETUP.md`.
+- [x] After full source CI run 36336437458 passed, create the dedicated Google
+  service account and grant only the custom `cloudmessaging.messages.create`
+  role. Deploy `guardian-dispatch` with its own 256-bit worker secret and
+  `GUARDIAN_DISPATCH_ENABLED=false`; disable the legacy JWT gate only for this
+  function. Hosted empty-body calls returned 401 without the secret and 503
+  `dispatch_disabled` with it. Google rejected JSON key creation under
+  `iam.disableServiceAccountKeyCreation`; no key was downloaded or installed,
+  the policy was not changed, and no scheduler, device registration or alert
+  send occurred. Record this blocker before considering a new credential route.
 - [x] Prepare service-only scheduled retry RPCs in
   `20260927020000_guardian_dispatch_worker.sql`, resolving the gap after native
   backend acceptance. All eight local SQL suites and the exact atomic hosted

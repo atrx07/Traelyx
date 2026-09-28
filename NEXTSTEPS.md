@@ -35,11 +35,15 @@ build; connect it to Auth/bridge/consent and recording before exposing activatio
 The approved retry-worker migration `20260927020000_guardian_dispatch_worker.sql`
 is deployed after green CI run 36334866638 (`85ece8f`). All eight local SQL suites
 and the exact production rollback-fixture bundle pass, with all four checks true.
-The isolated Edge/FCM dispatch adapter now passes 18 synthetic Deno tests and
-format/lint/type checks. Review the restricted sender credential and disabled
-function deployment in `docs/reference/GUARDIAN_DISPATCH_SETUP.md` after CI passes.
-Scheduler setup, capability ingestion/receipt endpoints, native Auth/consent/
-recorder integration and physical end-to-end delivery remain required.
+The isolated Edge/FCM adapter passes 18 synthetic Deno tests and full CI run
+36336437458. Its deployed function remains disabled; hosted missing-secret and
+valid-secret calls returned 401 and 503 without claiming or sending. A dedicated
+one-permission Google sender exists, but organization policy
+`iam.disableServiceAccountKeyCreation` blocked its JSON key. Resolve backend FCM
+authentication with a reviewed method before enabling dispatch. No policy was
+weakened. See `docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
+capability ingestion/receipt endpoints, native Auth/consent/recorder integration
+and physical end-to-end delivery remain required.
 
 ## P1 — Preserve M5 boundaries
 

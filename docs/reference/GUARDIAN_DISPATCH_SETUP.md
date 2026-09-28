@@ -2,11 +2,25 @@
 
 ## Current state
 
-The SQL retry contract is deployed. `supabase/functions/guardian-dispatch/`
-implements the server worker and replaceable FCM HTTP v1 adapter, tested with
-synthetic responses and an ephemeral signing key. The Edge Function is **not
-deployed**, has no sender credentials, and is disabled unless explicitly enabled.
-No scheduler or real delivery is configured. M6.8 remains in progress.
+The SQL retry contract and `guardian-dispatch` Edge Function are deployed.
+`supabase/functions/guardian-dispatch/` implements the server worker and
+replaceable FCM HTTP v1 adapter, tested with synthetic responses and an
+ephemeral signing key. Production has `GUARDIAN_DISPATCH_ENABLED=false`, a
+separate 256-bit worker secret and the FCM project ID. The function's legacy
+JWT gate is off only for this function; its worker-secret gate is active.
+Hosted calls returned the worker's own `401 unauthorized` without that secret
+and `503 dispatch_disabled` with it. No scheduler or real delivery is configured.
+M6.8 remains in progress.
+
+Google Cloud project `traelyx-e28ff` has the dedicated
+`traelyx-guardian-sender` service account, granted only the custom
+`Traelyx Guardian Message Sender` role with
+`cloudmessaging.messages.create`. It has **no keys**. JSON key creation was
+rejected by organization policy `iam.disableServiceAccountKeyCreation` on
+2026-09-28. The policy was left intact. Consequently
+`GUARDIAN_FCM_SERVICE_ACCOUNT` is absent, and dispatch must stay disabled.
+The remaining credential route needs a separately reviewed design or a
+specifically approved, narrowly scoped policy exception.
 
 The entry point uses Supabase's existing Deno 2 runtime. The portable core uses
 only built-in fetch, Web Crypto and streams; it adds no runtime package or mobile
@@ -47,28 +61,36 @@ package. This does not change the hosted runtime version or app dependencies.
   logging of keys, routing tokens, SQL bodies or alert data. Platform HTTP logs
   may still record normal request metadata.
 
-## Required deployment review (not performed)
+## Deployment record and remaining gates
 
-1. Create a dedicated sender service account in Firebase project
-   `traelyx-e28ff`: `traelyx-guardian-sender`, with a custom project role containing
-   only `cloudmessaging.messages.create`. Do not use a broadly privileged default
-   Firebase Admin account. Approve the exact IAM role/key creation first.
-2. Store its JSON only as `GUARDIAN_FCM_SERVICE_ACCOUNT` in Supabase Edge secrets,
-   and set `GUARDIAN_FCM_PROJECT_ID=traelyx-e28ff`. Never put a server key in the
-   Android config, repository, chat or client build. Remove any temporary local
-   secret file after verified installation; retain a key identifier for revocation.
-3. Generate a separate 64-character lowercase hexadecimal worker secret and
-   store it as `GUARDIAN_WORKER_SECRET`. Keep dispatch disabled during deployment.
-   The existing service-role key is supplied only by the Edge environment.
-4. Deploy `guardian-dispatch` with the platform JWT gate disabled **only for this
-   function**, because its independent worker-secret gate authenticates it.
-   This is a reviewed security-sensitive deployment, not a mobile public API.
-   No `verify_jwt=false` change has been made in the current config.
-5. Verify unauthorized and disabled calls with secrets redacted. Only then
-   approve enabling `GUARDIAN_DISPATCH_ENABLED=true` and empty-queue checks. A separate
-   reviewed scheduler may invoke it once per minute with a secret stored in
-   server-side Vault. Keep that job paused until receiver/consent integration and
-   synthetic delivery testing are ready. Never embed credentials in SQL history.
+1. The dedicated sender account and one-permission custom role are present.
+   Do not use the broadly privileged default Firebase Admin account.
+2. `GUARDIAN_FCM_PROJECT_ID=traelyx-e28ff`, `GUARDIAN_WORKER_SECRET` and
+   `GUARDIAN_DISPATCH_ENABLED=false` are stored as Supabase Edge secrets. The
+   worker-secret digest matched the locally generated value before its ignored
+   temporary file was removed. The existing service-role key is supplied only
+   by the Edge environment. No FCM service-account JSON was installed because
+   the organization prohibits key creation. Never place a server key in the
+   Android config, repository, chat or client build.
+3. The deployed function uses `verify_jwt=false` in `supabase/config.toml` and
+   in the hosted function settings **only for `guardian-dispatch`**. The
+   independent worker-secret check runs before the disabled check. Hosted POST
+   `{}` results: missing secret → 401 `unauthorized`; matching secret → 503
+   `dispatch_disabled`. These calls made no claim, OAuth or provider request.
+   Ignored screenshots: `.dart_tool/m6_8_sender_iam.png` and
+   `.dart_tool/m6_8_dispatch_disabled_settings.png`.
+4. Resolve the FCM credential blocker with a reviewed backend-only method.
+   If a service-account JSON is ever approved, store it only as
+   `GUARDIAN_FCM_SERVICE_ACCOUNT` in Supabase Edge secrets, remove the exact
+   temporary local key file after verified installation and retain its key ID
+   for revocation. Do not weaken the organization policy without a separate
+   explicit approval.
+5. Only after credential, receiver/consent and synthetic delivery gates pass,
+   review enabling `GUARDIAN_DISPATCH_ENABLED=true` and empty-queue checks. A
+   separate reviewed scheduler may invoke it once per minute with a secret
+   stored in server-side Vault; rotate the worker secret when that job is
+   configured because the setup copy is removed locally. Keep the job paused
+   until integration is ready. Never embed credentials in SQL history.
 6. Validate synthetic end-to-end receipt, revocation, duplicate suppression,
    expiry, offline/recovery and locked-phone handling before M6.8 completion.
    No real-contact test alerts or dangerous-road tests.
@@ -96,4 +118,5 @@ Primary protocol references:
 - https://firebase.google.com/docs/cloud-messaging/error-codes
 - https://supabase.com/docs/guides/functions/auth
 - https://docs.cloud.google.com/iam/docs/roles-permissions/firebasecloudmessaging
+- https://docs.cloud.google.com/iam/docs/troubleshoot-org-policies
 - https://developers.google.com/identity/protocols/oauth2/service-account

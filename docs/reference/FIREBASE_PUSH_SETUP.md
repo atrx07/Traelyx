@@ -61,11 +61,13 @@ Primary references:
 - https://firebase.google.com/docs/cloud-messaging/android/get-started
 - https://firebase.google.com/docs/projects/billing/firebase-pricing-plans
 
-Backend sender credentials have not been created. They will belong only in
-Supabase Edge Function secrets after deployment review, never in this client file,
-the app, a repository commit, or chat.
-The isolated server adapter and concrete deployment boundary are documented in
-`GUARDIAN_DISPATCH_SETUP.md`; synthetic tests pass, but it is not deployed.
+The dedicated backend sender account exists with only FCM send permission, but
+Google organization policy blocks JSON key creation. No sender credential has
+been created. If a reviewed backend-only credential route is established, it
+belongs only in Supabase Edge secrets, never in this client file, the app, a
+repository commit or chat. The isolated server adapter is deployed **disabled**;
+synthetic tests and unauthorized/disabled hosted calls pass. See
+`GUARDIAN_DISPATCH_SETUP.md` for the deployment boundary and remaining gate.
 
 For an explicitly unconfigured local validation build, use Gradle property
 `-PtraelyxFirebaseEnabled=false`; no config file needs to be moved or deleted.
