@@ -206,9 +206,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Implement the separate capability ingestion/receipt Edge draft with exact
   request schemas, bounded bodies and deadlines, fixed service-role RPC routes,
   redacted errors and an explicit disabled flag. Eleven synthetic Deno tests,
-  formatting, lint and entry-point type checks pass. It is not deployed or
-  enabled; hosted and native integration gates remain. See
+  formatting, lint and entry-point type checks pass. Native integration and
+  enabled hosted checks remain. See
   `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
+- [x] After full source CI run 36572524947 passed, deploy
+  `guardian-capability` to production with processing disabled. The dashboard
+  staging matched both committed source hashes. The function-specific legacy
+  JWT gate was saved off and verified after reload. A direct unauthenticated
+  synthetic POST returned HTTP 503 `capability_disabled` on 2026-09-29.
+  No device registration, alert, scheduler or trip upload occurred.
 - [x] After full source CI run 36336437458 passed, create the dedicated Google
   service account and grant only the custom `cloudmessaging.messages.create`
   role. Deploy `guardian-dispatch` with its own 256-bit worker secret and

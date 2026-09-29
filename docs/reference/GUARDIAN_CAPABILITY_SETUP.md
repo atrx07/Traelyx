@@ -1,11 +1,15 @@
-# Guardian capability Edge boundary — M6.8 draft
+# Guardian capability Edge boundary — M6.8
 
 ## Current state
 
-`supabase/functions/guardian-capability/` is implemented and locally tested, but
-**not deployed or enabled**. It adds no device registration, activation, scheduler,
-FCM credential or alert send. The existing `guardian-dispatch` remains disabled.
-No physical phone is needed for the isolated Edge tests.
+`supabase/functions/guardian-capability/` is deployed to Traelyx production but
+**processing is disabled**. The function-specific legacy JWT gate is off so its
+scoped capability can authenticate native background requests when separately
+enabled. A direct unauthenticated synthetic POST on 2026-09-29 returned HTTP 503
+`{"error":"capability_disabled"}`. The deployment adds no device registration,
+activation, scheduler, FCM credential or alert send. The existing
+`guardian-dispatch` remains disabled. No physical phone was needed for this
+isolated hosted check.
 
 The function is intended to use `verify_jwt=false` because native background
 delivery cannot own Flutter's rotating Supabase Auth token. Its own authority is
@@ -37,15 +41,15 @@ Backend acceptance, device receipt and recipient view remain distinct states.
 
 `GUARDIAN_CAPABILITY_ENABLED` must be exactly `true` to process a request; any
 other value returns `503 capability_disabled` before parsing or SQL access.
-There is no default enabled state. The planned hosted disabled-state check must
-use a synthetic body and create no alert or registration.
+There is no default enabled state. The hosted disabled-state check used `{}`
+without credentials and created no alert or registration.
 
-## Before production deployment or enabling
+## Deployment and enablement gates
 
-1. Review the two source files and `verify_jwt=false` for this function only;
-   obtain exact production-access approval. Deploy with
-   `GUARDIAN_CAPABILITY_ENABLED=false` and verify a synthetic POST returns the
-   function's `503 capability_disabled`. No live capability should be used.
+1. Completed after exact production-access approval: both staged files matched
+   the committed SHA-256 hashes, `verify_jwt=false` was saved and verified for
+   this function only, and a synthetic unauthenticated POST returned the
+   function's `503 capability_disabled`. No live capability was used.
 2. Complete the signed-in driver activation and recipient opt-in UI, account
    change/teardown, encrypted capability storage, native outbox and guarded
    recorder integration. Keep local recording independent of cloud failures.

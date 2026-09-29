@@ -42,12 +42,13 @@ one-permission Google sender exists, but organization policy
 `iam.disableServiceAccountKeyCreation` blocked its JSON key. Resolve backend FCM
 authentication with a reviewed method before enabling dispatch. No policy was
 weakened. See `docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
-capability ingestion/receipt deployment, native Auth/consent/recorder integration
-and physical end-to-end delivery remain required.
+native Auth/consent/recorder integration and physical end-to-end delivery
+remain required.
 
-The separate capability Edge draft now passes eleven local Deno tests and fixed
-RPC/response checks. It stays undeployed and defaults disabled; obtain a
-concrete production review, then verify only the hosted disabled response.
+The separate capability Edge function passes eleven local Deno tests and fixed
+RPC/response checks, plus full CI run 36572524947. After concrete production
+approval, it was deployed with processing disabled and its own legacy JWT gate
+off. A direct unauthenticated synthetic POST returned 503 `capability_disabled`.
 Native activation, registration and synthetic receipt still precede any enable.
 See `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 
