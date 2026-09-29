@@ -95,10 +95,11 @@ package. This does not change the hosted runtime version or app dependencies.
    expiry, offline/recovery and locked-phone handling before M6.8 completion.
    No real-contact test alerts or dangerous-road tests.
 
-The worker does not implement the capability-based ingestion or receipt Edge
-endpoints, mobile account/consent integration, or recorder attachment. Those are
-still required. Six deliveries per invocation and free-tier limits bound capacity;
-this is best-effort notification, not emergency protection or a delivery guarantee.
+The separate capability ingestion/receipt Edge function is deployed with
+processing disabled. Mobile account/consent integration and recorder attachment
+are still required. Six deliveries per invocation and free-tier limits bound
+capacity; this is best-effort notification, not emergency protection or a
+delivery guarantee.
 
 ## Local checks
 
