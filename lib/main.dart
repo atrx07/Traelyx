@@ -5,6 +5,7 @@ import 'package:traelyx/app/traelyx_app.dart';
 import 'package:traelyx/app/traelyx_router.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/application/initialize_account.dart';
+import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +16,10 @@ Future<void> main() async {
   } catch (_) {
     // Missing link handling must not prevent accountless local startup.
   }
-  final accountGateway = await initializeAccount();
+  final accountGateway = GuardianBoundAccountGateway(
+    await initializeAccount(),
+    const MethodChannelGuardianOwnerPort(),
+  );
   final router = createTraelyxRouter(
     initialLocation: initialLocationForAccountLink(
       initialLink,

@@ -6,6 +6,7 @@ import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/domain/account_email.dart';
 import 'package:traelyx/features/account/domain/account_link_failure.dart';
+import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({super.key});
@@ -83,6 +84,13 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       setState(() {
         _isError = false;
         _message = 'Signed out on this device. Local trips are still here.';
+      });
+    } on GuardianLocalCleanupException {
+      if (!mounted) return;
+      setState(() {
+        _isError = true;
+        _message =
+            'Could not clear local Guardian access, so sign-out was cancelled. Try again.';
       });
     } catch (_) {
       if (!mounted) return;

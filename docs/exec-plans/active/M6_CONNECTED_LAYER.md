@@ -281,6 +281,13 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   equivalent API-compatible bounds check now has a boundary/overflow test.
   No scoring rule or version changed. No Flutter caller, recorder hook,
   provider registration or send is enabled.
+- [x] Bind the native Guardian owner to optional Flutter Auth without delaying
+  local startup. Serialized identity changes target the latest account;
+  sign-out waits for local cleanup and refuses to complete if it fails. Three
+  focused race/failure tests and all 284 Flutter tests pass; analysis and debug
+  APK build pass. No activation request, server session, device registration,
+  recorder hook or alert send is introduced. Physical account-change QA and
+  explicit consent/server-confirmed activation remain.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

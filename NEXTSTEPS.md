@@ -52,12 +52,13 @@ off. A direct unauthenticated synthetic POST returned 503 `capability_disabled`.
 Native activation, registration and synthetic receipt still precede any enable.
 See `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 
-A dormant Android activation bridge now serializes encrypted-vault calls on one
-process worker and checks the current boot count. All native unit tests, the
-debug APK build and Android lint pass. Next connect Auth identity, explicit
-driver consent and server-confirmed activation before attaching the recorder
-or enabling dispatch.
-Physical bridge and background behavior remain unverified.
+A dormant Android activation bridge serializes encrypted-vault calls on one
+process worker and checks the current boot count. Flutter Auth now binds the
+local owner on startup/account changes, and sign-out requires local cleanup.
+Native and all 284 Flutter tests, analysis, Android lint and the debug APK
+build pass. Next implement explicit driver consent and server-confirmed
+activation before attaching the recorder or enabling dispatch. Physical
+account-change and background behavior remain unverified.
 
 ## P1 — Preserve M5 boundaries
 

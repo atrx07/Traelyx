@@ -145,11 +145,15 @@ calls on one process worker, including across Activity recreation. It accepts
 exact request fields, returns the credential only from `begin`, and keeps
 status/commit replies redacted. Its clock uses wall time, elapsed time including
 sleep, and Android's boot count; missing boot count fails closed. The bridge is
-dormant until Flutter Auth and explicit consent call it. Server confirmation
-must be validated by that caller before `commit`; the bridge does not verify a
-server response itself. RecorderService, push and consent UI integration remain
-required before activation is available. The native bridge has not yet been
-smoke-tested on a physical device.
+bound to Flutter Auth identity changes but `begin` remains dormant until an
+explicit consent flow exists. Startup binding runs asynchronously so local
+trip startup does not wait for the vault. Sign-out first waits for local
+Guardian cleanup; if cleanup fails, sign-out is cancelled and account binding
+stays fail closed for that process. Server confirmation must be validated by
+the future caller before `commit`; the bridge does not verify a server response
+itself. RecorderService, push and consent UI integration remain required before
+activation is available. The native bridge has not yet been smoke-tested on a
+physical device.
 
 ### Integration still required
 
