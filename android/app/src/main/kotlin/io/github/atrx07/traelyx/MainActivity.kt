@@ -33,6 +33,8 @@ import io.github.atrx07.traelyx.recorder.tripDebugExportFailureMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import io.github.atrx07.traelyx.intelligence.LocalTripAnalysis
+import io.github.atrx07.traelyx.guardian.AndroidGuardianActivationRuntime
+import io.github.atrx07.traelyx.guardian.GuardianActivationBridge
 
 class MainActivity : FlutterActivity() {
     private val permissionGateway by lazy { AndroidRecorderPermissionGateway(this) }
@@ -79,6 +81,23 @@ class MainActivity : FlutterActivity() {
                                 onSuccess = { result.success(it) },
                                 onFailure = { result.error("analysis_unavailable",
                                     "Raw evidence is missing, invalid, or exceeds local analysis limits.", null) },
+                            )
+                        }
+                    }
+                }
+            }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, GuardianActivationBridge.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method !in GuardianActivationBridge.METHODS) {
+                    result.notImplemented()
+                } else {
+                    AndroidGuardianActivationRuntime.dispatch(applicationContext, call.method, call.arguments) { outcome ->
+                        runOnUiThread {
+                            if (!isDestroyed) outcome.fold(
+                                onSuccess = { result.success(it) },
+                                onFailure = { result.error("guardian_unavailable",
+                                    "Local Guardian activation could not be confirmed.", null) },
                             )
                         }
                     }

@@ -432,7 +432,10 @@ private fun roundedPositiveBigIntegerDivide(
     val roundUp = quotientAndRemainder[1].shiftLeft(1) >= denominator
     val result =
         if (roundUp) quotientAndRemainder[0].add(BigInteger.ONE) else quotientAndRemainder[0]
-    return result.longValueExact()
+    if (result.bitLength() > Long.SIZE_BITS - 1) {
+        throw ArithmeticException("Drive DNA quotient exceeds Long range")
+    }
+    return result.toLong()
 }
 
 private fun expectedDirectUnavailableReasons(

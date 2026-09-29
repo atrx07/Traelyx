@@ -14,6 +14,15 @@ import org.junit.Test
 
 class DriveDnaPipelineTest {
     @Test
+    fun `drive DNA integer conversion preserves rounding and rejects overflow`() {
+        assertEquals(1L, scaleDriveDnaDeviation(1L, 500))
+        assertEquals(Long.MAX_VALUE, scaleDriveDnaDeviation(Long.MAX_VALUE, 1_000))
+        assertThrows(ArithmeticException::class.java) {
+            scaleDriveDnaDeviation(Long.MAX_VALUE, 2_000)
+        }
+    }
+
+    @Test
     fun `drive DNA policy and dimension machine IDs are stable and versioned`() {
         val config = DriveDnaConfig()
 

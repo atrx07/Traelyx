@@ -271,7 +271,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Implement isolated two-stage native activation coordinator: account/mount
   binding, two-minute single-use proposal, bounded server-confirmed lease and
   fail-closed teardown. All 275 native tests and configured debug build pass.
-  Auth/bridge/consent/recorder integration is still pending; no activation enabled.
+  Auth/consent/recorder integration is still pending; no activation enabled.
+- [x] Add a dormant foreground Android bridge for the activation coordinator.
+  Three bridge tests cover exact request fields and redacted status/commit
+  replies. The Android runtime uses a single process worker and a fail-closed
+  boot-count clock; those platform properties still need physical QA. All
+  native unit tests, Android lint and the debug APK build pass. Lint exposed
+  an older API-31-only Drive DNA integer conversion despite minSdk 24; the
+  equivalent API-compatible bounds check now has a boundary/overflow test.
+  No scoring rule or version changed. No Flutter caller, recorder hook,
+  provider registration or send is enabled.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

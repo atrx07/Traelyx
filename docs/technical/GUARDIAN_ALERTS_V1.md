@@ -139,9 +139,17 @@ so network delay cannot extend consent. Replacement first removes old local
 authority. Account changes, sign-out, cancellation, reboot, clock rollback and
 failed cleanup invalidate pending activation; a late response cannot restore it.
 Failures to erase leave the coordinator unbound. Status never means monitoring
-or delivery is running. Nine unit regressions cover these boundaries (275 native
-tests total). The coordinator is still isolated: Auth/bridge/consent UI and
-RecorderService integration remain required before activation is available.
+or delivery is running. Nine unit regressions cover these boundaries. The
+foreground Android method bridge now serializes coordinator and encrypted-vault
+calls on one process worker, including across Activity recreation. It accepts
+exact request fields, returns the credential only from `begin`, and keeps
+status/commit replies redacted. Its clock uses wall time, elapsed time including
+sleep, and Android's boot count; missing boot count fails closed. The bridge is
+dormant until Flutter Auth and explicit consent call it. Server confirmation
+must be validated by that caller before `commit`; the bridge does not verify a
+server response itself. RecorderService, push and consent UI integration remain
+required before activation is available. The native bridge has not yet been
+smoke-tested on a physical device.
 
 ### Integration still required
 
