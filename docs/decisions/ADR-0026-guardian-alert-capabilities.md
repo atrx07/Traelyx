@@ -103,6 +103,12 @@ of its JSON key, so provider authentication remains unresolved. Credential/IAM
 review and subsequent integration gates are recorded in
 `../reference/GUARDIAN_DISPATCH_SETUP.md`.
 
+The separate `guardian-capability` Edge draft forwards only the exact minimized
+ingestion and device-receipt shapes to the two guarded service-role RPCs. Its
+body/deadline limits, disabled default and redacted errors pass eleven local Deno
+tests. It has not been deployed or enabled. Hosted and native integration gates
+are in `../reference/GUARDIAN_CAPABILITY_SETUP.md`.
+
 The migration adds empty private tables/RPCs. It neither registers Firebase
 devices nor sends alerts by itself. The isolated native encrypted lease/outbox
 passes unit and physical Keystore tests. Consent UI, account teardown/runtime

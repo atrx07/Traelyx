@@ -149,6 +149,9 @@ RecorderService integration remain required before activation is available.
   and account-change teardown; no duplicated Supabase refresh-token ownership.
 - Current server permission and connection-generation checks at ingest,
   dispatch, receipt and detail reads, with quotas and bounded retention.
+- The capability Edge draft provides exact bounded ingestion/receipt requests
+  to those guarded SQL transitions. It is locally tested but not deployed or
+  enabled; hosted authorization and native integration still need validation.
 - Replaceable push provider, opt-in device registration, generic lock-screen
   copy and authenticated details; distinct send/receipt/view semantics.
 - False-positive fixtures, lifecycle/retry/revocation tests, and background,

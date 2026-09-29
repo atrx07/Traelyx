@@ -386,6 +386,11 @@ deno_version = 2
 [functions.guardian-dispatch]
 verify_jwt = false
 
+# Auth is by server-stored, scoped capability inside the guarded SQL RPC. The
+# endpoint itself remains inert until the explicit M6.8 integration gate.
+[functions.guardian-capability]
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

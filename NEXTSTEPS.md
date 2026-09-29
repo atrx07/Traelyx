@@ -42,8 +42,14 @@ one-permission Google sender exists, but organization policy
 `iam.disableServiceAccountKeyCreation` blocked its JSON key. Resolve backend FCM
 authentication with a reviewed method before enabling dispatch. No policy was
 weakened. See `docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
-capability ingestion/receipt endpoints, native Auth/consent/recorder integration
+capability ingestion/receipt deployment, native Auth/consent/recorder integration
 and physical end-to-end delivery remain required.
+
+The separate capability Edge draft now passes eleven local Deno tests and fixed
+RPC/response checks. It stays undeployed and defaults disabled; obtain a
+concrete production review, then verify only the hosted disabled response.
+Native activation, registration and synthetic receipt still precede any enable.
+See `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 
 ## P1 — Preserve M5 boundaries
 

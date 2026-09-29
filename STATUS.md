@@ -10,7 +10,9 @@
 
 ## Working
 
-- M6.8's isolated Edge/FCM dispatch adapter passes 18 synthetic Deno tests, formatting, lint and entry-point type checks; full source CI run 36336437458 passed. The function is deployed with `GUARDIAN_DISPATCH_ENABLED=false` and its own secret gate; hosted unauthorized and disabled calls return 401 and 503. A dedicated Google sender has only `cloudmessaging.messages.create`, but organization policy blocks JSON key creation, so no FCM credential, scheduler or send path is configured. Ingestion/receipt endpoints and mobile runtime integration remain pending.
+- M6.8's separate capability ingestion/receipt Edge draft validates exact minimized requests and routes only to guarded service-role RPCs. Eleven synthetic Deno tests, formatting, lint and entry-point type checks pass. It is not deployed or enabled; no alert or registration has been submitted. Native consent/recorder integration, hosted synthetic checks and FCM authentication remain pending.
+
+- M6.8's isolated Edge/FCM dispatch adapter passes 18 synthetic Deno tests, formatting, lint and entry-point type checks; full source CI run 36336437458 passed. The function is deployed with `GUARDIAN_DISPATCH_ENABLED=false` and its own secret gate; hosted unauthorized and disabled calls return 401 and 503. A dedicated Google sender has only `cloudmessaging.messages.create`, but organization policy blocks JSON key creation, so no FCM credential, scheduler or send path is configured. Capability endpoint deployment and mobile runtime integration remain pending.
 
 - M6.8 scheduled retry SQL is deployed after approval and green CI run 36334866638 (`85ece8f`). All eight local SQL suites and the exact production rollback-fixture bundle pass: migration recorded, service-role-only execution, private RLS and fixture rollback are all true. No scheduler, sender credential or push was created; live dispatch and runtime integration remain pending.
 

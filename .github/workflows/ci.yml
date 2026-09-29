@@ -15,12 +15,14 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - name: Check and test isolated Guardian dispatch
+      - name: Check and test isolated Guardian Edge functions
         run: |
           npx --yes --package=deno@2.9.6 deno fmt --check supabase/functions
           npx --yes --package=deno@2.9.6 deno lint supabase/functions
           npx --yes --package=deno@2.9.6 deno check supabase/functions/guardian-dispatch/index.ts
+          npx --yes --package=deno@2.9.6 deno check supabase/functions/guardian-capability/index.ts
           npx --yes --package=deno@2.9.6 deno test --no-prompt supabase/functions/tests/guardian_dispatch.test.mjs
+          npx --yes --package=deno@2.9.6 deno test --no-prompt supabase/functions/tests/guardian_capability.test.mjs
 
   cloud-schema:
     runs-on: ubuntu-latest

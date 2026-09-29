@@ -203,6 +203,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   At this validation point no function deployment, sender key, scheduler,
   registration or send occurred.
   Concrete setup/review is in `docs/reference/GUARDIAN_DISPATCH_SETUP.md`.
+- [x] Implement the separate capability ingestion/receipt Edge draft with exact
+  request schemas, bounded bodies and deadlines, fixed service-role RPC routes,
+  redacted errors and an explicit disabled flag. Eleven synthetic Deno tests,
+  formatting, lint and entry-point type checks pass. It is not deployed or
+  enabled; hosted and native integration gates remain. See
+  `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 - [x] After full source CI run 36336437458 passed, create the dedicated Google
   service account and grant only the custom `cloudmessaging.messages.create`
   role. Deploy `guardian-dispatch` with its own 256-bit worker secret and
