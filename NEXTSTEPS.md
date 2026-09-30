@@ -56,9 +56,11 @@ A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.
 Native and all 284 Flutter tests, analysis, Android lint and the debug APK
-build pass. Next implement explicit driver consent and server-confirmed
-activation before attaching the recorder or enabling dispatch. Physical
-account-change and background behavior remain unverified.
+build pass; source CI run 36583140285 is green. A configured, data-preserving
+physical update and cold launch preserved sign-in and local trip history, with
+Guardian still inactive. Next implement explicit driver consent and
+server-confirmed activation before attaching the recorder or enabling dispatch.
+Physical account switching and background behavior remain unverified.
 
 ## P1 — Preserve M5 boundaries
 

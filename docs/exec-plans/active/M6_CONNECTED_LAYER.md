@@ -288,6 +288,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   APK build pass. No activation request, server session, device registration,
   recorder hook or alert send is introduced. Physical account-change QA and
   explicit consent/server-confirmed activation remain.
+- [x] Verify the configured account-binding APK on the physical Tecno LH8n
+  without clearing app data. The 2026-09-29 update-install and the 2026-09-30
+  cold launch both opened normally; Auth remained signed in, the recovered
+  45m27s trip remained in local history, and Guardian still disclosed that
+  alerts were unavailable. Android exposed a readable boot count; no app crash
+  or Guardian exception appeared in the checked process log. Source CI run
+  36583140285 passed. This does not exercise an account switch, native lease
+  begin/commit, recording hook or push delivery. No personal trip, device
+  registration or alert was sent by this check.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
