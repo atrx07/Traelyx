@@ -157,6 +157,18 @@ physical update and cold launch; `begin` and `commit` have not been exercised
 on a physical device. The account decorator delegates optional Supabase client
 access so existing cloud features remain reachable after wrapping Auth.
 
+The dormant Flutter `GuardianDriverActivationService` now coordinates the
+foreground two-stage call. It requires the current Auth owner and native owner
+binding, accepts only a reviewed forward axis, validates the exact native
+proposal and signed-in server response, and commits locally only after a
+matching, bounded server lease. Failure removes local authority and attempts
+an activation-matched server revoke. If a request finishes after account
+change or revocation cannot reach the server, the server session may remain
+until its eight-hour expiry, but the native capability is unavailable. The
+service has no UI caller yet; mount confirmation, recorder use, recipient push
+and physical `begin`/`commit` validation remain required. Six synthetic
+flow/bridge tests cover ordering, response shape and account races.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification

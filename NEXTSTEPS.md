@@ -70,6 +70,14 @@ read-only hosted reload with sign-in and local history intact. Full source CI
 run 36743035626 passed. Continue the activation UI; physical account-switch
 behavior remains open.
 
+The dormant two-stage Flutter activation service now validates the signed-in
+server lease before a local encrypted commit and fails closed on owner changes.
+Six synthetic tests, all 292 Flutter tests, analysis and a debug APK build pass.
+It has no UI caller or recorder hook. Verify CI, then connect an explicit
+mount/forward-axis consent flow and test native `begin`/`commit` on the phone
+without sending alerts. An old server session may live until its eight-hour
+expiry if a late request cannot be revoked; local authority remains unavailable.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

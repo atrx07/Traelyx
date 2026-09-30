@@ -20,6 +20,8 @@
 
 - The Auth decorator initially hid the concrete Supabase gateway from six optional cloud providers. A delegated client source restores profile/vehicle metadata, summary sync, Social, rankings, Guardian pairing and alert inbox without changing accountless behavior. The provider-graph regression, all 286 Flutter tests, analysis, a configured APK and full CI run 36743035626 pass. A data-preserving phone update completed Guardian's read-only hosted reload while retaining sign-in and local trips. No activation, device registration, alert or trip upload occurred.
 
+- A dormant Flutter activation service now enforces owner binding, a native proposal, exact signed-in server confirmation, bounded expiry and local lease commit in that order. Failures clear local authority and attempt an activation-matched server revoke. Six synthetic flow/bridge tests, all 292 Flutter tests, analysis and a debug APK build pass. It has no UI caller or recorder path; no hosted activation, device registration or alert send occurred. Physical `begin`/`commit` and full CI remain pending.
+
 - M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Twenty Guardian tests, analysis and the configured debug build pass, including a 20-second timeout and late-response rejection. Physical screen and hosted empty reload pass after restoring phone connectivity. Actual push delivery remains pending; no alert registration or sending is enabled by this change.
 
 - Product direction defined.

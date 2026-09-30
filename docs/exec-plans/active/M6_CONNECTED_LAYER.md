@@ -308,6 +308,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   history remained intact. No alert activation or personal trip upload occurred.
   Source CI run 36743035626 passed; account-switch behavior still requires
   physical validation.
+- [x] Add a dormant Flutter two-stage driver activation service. It checks the
+  current Auth owner, requests a native single-use proposal only after the
+  future explicit mount/axis consent, sends its transient capability to the
+  guarded signed-in session RPC, validates exact confirmation fields and a
+  bounded expiry, then commits the encrypted native lease. Failed/late or
+  account-changed attempts remove local authority and try a matching server
+  revoke; server TTL remains the fallback if a late request cannot be revoked.
+  Six synthetic flow/wire tests, all 292 Flutter tests, analysis and an Android
+  debug build pass. No UI caller, recorder hook, device registration, hosted
+  activation or alert send exists. Full CI and physical bridge methods remain
+  to be verified before any activation control is exposed.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
