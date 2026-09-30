@@ -297,6 +297,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   36583140285 passed. This does not exercise an account switch, native lease
   begin/commit, recording hook or push delivery. No personal trip, device
   registration or alert was sent by this check.
+- [x] Repair a cloud-provider regression exposed by the account decorator:
+  profile/vehicle metadata, summary sync, Social, rankings, Guardian pairing
+  and Guardian alert inbox selected Supabase transport by checking the concrete
+  account gateway type. The decorator hid that type. All six providers now
+  obtain the optional client through a delegated source interface, with an
+  accountless null path. A focused provider-graph regression, all 286 Flutter
+  tests, analysis and a configured debug APK pass. A data-preserving physical
+  update completed a read-only Guardian server reload; sign-in and local trip
+  history remained intact. No alert activation or personal trip upload occurred.
+  CI and account-switch behavior still require validation.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
 
@@ -26,7 +28,8 @@ final class GuardianLocalCleanupException implements Exception {
 }
 
 /// Keeps native Guardian authority aligned with Auth without delaying local trips.
-final class GuardianBoundAccountGateway implements AccountGateway {
+final class GuardianBoundAccountGateway
+    implements AccountGateway, SupabaseClientSource {
   GuardianBoundAccountGateway(this._account, this._guardian) {
     _subscription = _account.identityChanges.listen((_) => _updateOwner());
     _updateOwner();
@@ -34,6 +37,9 @@ final class GuardianBoundAccountGateway implements AccountGateway {
 
   final AccountGateway _account;
   final GuardianOwnerPort _guardian;
+
+  @override
+  SupabaseClient? get accountClient => accountClientOf(_account);
   late final StreamSubscription<AccountIdentity?> _subscription;
   Future<void> _tail = Future<void>.value();
   String? _desiredOwner;

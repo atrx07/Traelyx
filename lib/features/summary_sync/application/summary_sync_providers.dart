@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/core/database/database_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
-import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/summary_sync/application/summary_sync_service.dart';
 import 'package:traelyx/features/summary_sync/data/summary_sync_repository.dart';
 import 'package:traelyx/features/summary_sync/data/supabase_summary_gateway.dart';
 import 'package:traelyx/features/summary_sync/domain/compact_trip_summary.dart';
 
 final summaryCloudGatewayProvider = Provider<SummaryCloudGateway>((ref) {
-  final account = ref.watch(accountGatewayProvider);
-  return account is SupabaseAccountGateway
-      ? SupabaseSummaryGateway(account.client)
+  final client = accountClientOf(ref.watch(accountGatewayProvider));
+  return client != null
+      ? SupabaseSummaryGateway(client)
       : const UnavailableSummaryGateway();
 });
 

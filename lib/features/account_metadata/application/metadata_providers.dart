@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/core/database/database_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
-import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account_metadata/application/metadata_service.dart';
 import 'package:traelyx/features/account_metadata/data/metadata_repository.dart';
 import 'package:traelyx/features/account_metadata/data/supabase_metadata_gateway.dart';
 import 'package:traelyx/features/account_metadata/domain/account_metadata.dart';
 
 final metadataGatewayProvider = Provider<MetadataGateway>((ref) {
-  final account = ref.watch(accountGatewayProvider);
-  return account is SupabaseAccountGateway
-      ? SupabaseMetadataGateway(account.client)
+  final client = accountClientOf(ref.watch(accountGatewayProvider));
+  return client != null
+      ? SupabaseMetadataGateway(client)
       : const UnavailableMetadataGateway();
 });
 final metadataRepositoryProvider = Provider<MetadataRepository>(

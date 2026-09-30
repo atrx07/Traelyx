@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/core/database/app_database.dart';
 import 'package:traelyx/core/database/database_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
-import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/rankings/ranking_models.dart';
 
@@ -192,10 +192,8 @@ class RankingService {
 }
 
 final rankingGatewayProvider = Provider<RankingGateway?>((ref) {
-  final account = ref.watch(accountGatewayProvider);
-  return account is SupabaseAccountGateway
-      ? SupabaseRankingGateway(account.client)
-      : null;
+  final client = accountClientOf(ref.watch(accountGatewayProvider));
+  return client != null ? SupabaseRankingGateway(client) : null;
 });
 final rankingServiceProvider = Provider<RankingService>(
   (ref) => RankingService(

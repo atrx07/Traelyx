@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
-import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account_metadata/domain/account_metadata.dart';
 import 'package:traelyx/features/social/data/supabase_social_gateway.dart';
@@ -92,9 +92,9 @@ class SocialController extends StateNotifier<SocialState> {
 }
 
 final socialGatewayProvider = Provider<SocialGateway>((ref) {
-  final account = ref.watch(accountGatewayProvider);
-  return account is SupabaseAccountGateway
-      ? SupabaseSocialGateway(account.client)
+  final client = accountClientOf(ref.watch(accountGatewayProvider));
+  return client != null
+      ? SupabaseSocialGateway(client)
       : const UnavailableSocialGateway();
 });
 final socialControllerProvider = StateNotifierProvider.autoDispose

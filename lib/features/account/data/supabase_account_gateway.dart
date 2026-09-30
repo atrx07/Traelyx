@@ -1,15 +1,20 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/features/account/data/classify_account_link_failure.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
 import 'package:traelyx/features/account/domain/account_link_failure.dart';
 
-final class SupabaseAccountGateway implements AccountGateway {
+final class SupabaseAccountGateway
+    implements AccountGateway, SupabaseClientSource {
   const SupabaseAccountGateway(this.client);
 
   static const callbackUrl = 'io.github.atrx07.traelyx://auth-callback/';
 
   final SupabaseClient client;
+
+  @override
+  SupabaseClient get accountClient => client;
 
   @override
   bool get isAvailable => true;

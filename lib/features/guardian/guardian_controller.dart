@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
-import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
@@ -196,10 +196,8 @@ class GuardianController extends StateNotifier<GuardianState> {
 }
 
 final guardianGatewayProvider = Provider<GuardianGateway?>((ref) {
-  final account = ref.watch(accountGatewayProvider);
-  return account is SupabaseAccountGateway
-      ? SupabaseGuardianGateway(account.client)
-      : null;
+  final client = accountClientOf(ref.watch(accountGatewayProvider));
+  return client != null ? SupabaseGuardianGateway(client) : null;
 });
 final guardianControllerProvider = StateNotifierProvider.autoDispose
     .family<GuardianController, GuardianState, String>(

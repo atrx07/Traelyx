@@ -62,6 +62,13 @@ Guardian still inactive. Next implement explicit driver consent and
 server-confirmed activation before attaching the recorder or enabling dispatch.
 Physical account switching and background behavior remain unverified.
 
+The Auth decorator briefly made six optional cloud providers unavailable
+because they required the concrete Supabase gateway type. A delegated optional
+client source fixes their provider graph. All 286 Flutter tests, analysis and a
+configured APK pass; a data-preserving phone update completed Guardian's
+read-only hosted reload with sign-in and local history intact. Verify source CI
+before continuing the activation UI; account-switch behavior remains open.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

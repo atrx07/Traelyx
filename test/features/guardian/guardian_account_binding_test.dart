@@ -1,9 +1,24 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/features/account/application/account_providers.dart';
+import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
+import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
+import 'package:traelyx/features/account_metadata/application/metadata_providers.dart';
+import 'package:traelyx/features/account_metadata/data/supabase_metadata_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
+import 'package:traelyx/features/guardian/guardian_alerts.dart';
+import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_gateway.dart';
+import 'package:traelyx/features/rankings/ranking_service.dart';
+import 'package:traelyx/features/social/application/social_controller.dart';
+import 'package:traelyx/features/social/data/supabase_social_gateway.dart';
+import 'package:traelyx/features/summary_sync/application/summary_sync_providers.dart';
+import 'package:traelyx/features/summary_sync/data/supabase_summary_gateway.dart';
 
 const ownerA = AccountIdentity(
   userId: '11111111-1111-4111-8111-111111111111',
@@ -60,6 +75,57 @@ final class FakeOwnerPort implements GuardianOwnerPort {
 }
 
 void main() {
+  test('decorated Auth keeps every optional cloud gateway available', () async {
+    final client = SupabaseClient(
+      'https://example.supabase.co',
+      'publishable-test-key',
+    );
+    final bound = GuardianBoundAccountGateway(
+      SupabaseAccountGateway(client),
+      FakeOwnerPort(),
+    );
+    final container = ProviderContainer(
+      overrides: [accountGatewayProvider.overrideWithValue(bound)],
+    );
+    addTearDown(() async {
+      container.dispose();
+      await bound.dispose();
+      await client.dispose();
+    });
+
+    expect(accountClientOf(bound), same(client));
+    expect(
+      container.read(metadataGatewayProvider),
+      isA<SupabaseMetadataGateway>(),
+    );
+    expect(
+      container.read(summaryCloudGatewayProvider),
+      isA<SupabaseSummaryGateway>(),
+    );
+    expect(
+      container.read(guardianGatewayProvider),
+      isA<SupabaseGuardianGateway>(),
+    );
+    expect(
+      container.read(guardianAlertGatewayProvider),
+      isA<SupabaseGuardianAlertGateway>(),
+    );
+    expect(container.read(socialGatewayProvider), isA<SupabaseSocialGateway>());
+    expect(
+      container.read(rankingGatewayProvider),
+      isA<SupabaseRankingGateway>(),
+    );
+  });
+
+  test('accountless decorator exposes no cloud client', () async {
+    final bound = GuardianBoundAccountGateway(
+      const UnavailableAccountGateway(),
+      FakeOwnerPort(),
+    );
+    addTearDown(bound.dispose);
+    expect(accountClientOf(bound), isNull);
+  });
+
   test(
     'startup and rapid account changes bind only the latest queued owner',
     () async {

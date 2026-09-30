@@ -152,8 +152,10 @@ Guardian cleanup; if cleanup fails, sign-out is cancelled and account binding
 stays fail closed for that process. Server confirmation must be validated by
 the future caller before `commit`; the bridge does not verify a server response
 itself. RecorderService, push and consent UI integration remain required before
-activation is available. The native bridge has not yet been smoke-tested on a
-physical device.
+activation is available. Its startup owner binding passed a data-preserving
+physical update and cold launch; `begin` and `commit` have not been exercised
+on a physical device. The account decorator delegates optional Supabase client
+access so existing cloud features remain reachable after wrapping Auth.
 
 ### Integration still required
 
