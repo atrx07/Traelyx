@@ -153,8 +153,8 @@ stays fail closed for that process. Server confirmation must be validated by
 the future caller before `commit`; the bridge does not verify a server response
 itself. RecorderService, push and consent UI integration remain required before
 activation is available. Its startup owner binding passed a data-preserving
-physical update and cold launch; `begin` and `commit` have not been exercised
-on a physical device. The account decorator delegates optional Supabase client
+physical update and cold launch; `begin` and `commit` passed only in an isolated
+physical test namespace. The account decorator delegates optional Supabase client
 access so existing cloud features remain reachable after wrapping Auth.
 
 The dormant Flutter `GuardianDriverActivationService` now coordinates the
@@ -166,8 +166,12 @@ an activation-matched server revoke. If a request finishes after account
 change or revocation cannot reach the server, the server session may remain
 until its eight-hour expiry, but the native capability is unavailable. The
 service has no UI caller yet; mount confirmation, recorder use, recipient push
-and physical `begin`/`commit` validation remain required. Six synthetic
-flow/bridge tests cover ordering, response shape and account races.
+and full end-to-end validation remain required. Six synthetic flow/bridge tests
+cover ordering, response shape and account races. A separate physical Android
+instrumentation proof exercises the native bridge and encrypted vault with a
+random test namespace and synthetic confirmation, then destroys its key and
+ciphertext. It does not exercise the production MethodChannel, hosted session
+or user consent.
 
 ### Integration still required
 

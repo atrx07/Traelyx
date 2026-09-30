@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import io.github.atrx07.traelyx.MainActivity
 import java.io.File
 import java.util.UUID
@@ -32,6 +33,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 when (instrumentationArguments?.getString("mode")) {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-provider" -> runGuardianProviderProof()
+                    "guardian-activation" -> runGuardianActivationProof()
                     "index" ->
                         runIndexProof(
                             requireNotNull(instrumentationArguments?.getString("tripId")),
@@ -119,6 +121,49 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 encrypted vault proof passed: Keystore AES-GCM, restore/reservation, tamper rejection, " +
             "key destruction and scoped cleanup; Firebase inactive, trip/session storage untouched."
+    }
+
+    private fun runGuardianActivationProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/$namespace.vault")
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
+        val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault)
+        val bridge = io.github.atrx07.traelyx.guardian.GuardianActivationBridge(
+            io.github.atrx07.traelyx.guardian.GuardianActivationCoordinator(outbox, clock = {
+                val boot = Settings.Global.getInt(context.contentResolver, Settings.Global.BOOT_COUNT, -1)
+                check(boot >= 0) { "Boot identity unavailable." }
+                io.github.atrx07.traelyx.guardian.GuardianClock(
+                    System.currentTimeMillis(), SystemClock.elapsedRealtime(), "boot:$boot")
+            }),
+        )
+        val owner = UUID.randomUUID().toString()
+        try {
+            bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
+            val proposal = bridge.dispatch("begin", mapOf(
+                "ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)) as Map<*, *>
+            check(proposal.keys == setOf("ownerId", "activationId", "credential", "forwardAxis"))
+            check(proposal["ownerId"] == owner && proposal["forwardAxis"] == "+y")
+            val activation = proposal["activationId"] as String
+            val credential = proposal["credential"] as String
+            check(credential.matches(Regex("[a-f0-9]{64}")))
+            check(!file.exists()) { "Proposal persisted before confirmation." }
+            val confirmation = bridge.dispatch("commit", mapOf(
+                "ownerId" to owner, "activationId" to activation,
+                "serverExpiresEpochMillis" to System.currentTimeMillis() + 60_000L)) as Map<*, *>
+            check(confirmation.keys == setOf("localLeasePresent", "expiresEpochMillis"))
+            check(confirmation["localLeasePresent"] == true)
+            check(file.isFile && !file.readText(Charsets.ISO_8859_1).contains(credential))
+            val present = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
+            check(present["localLeasePresent"] == true)
+            bridge.dispatch("disable", mapOf("ownerId" to owner))
+            val absent = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
+            check(absent["localLeasePresent"] == false && !file.exists())
+        } finally { vault.erase() }
+        check(!file.exists())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 synthetic activation proof passed: boot clock, native proposal/commit/disable, " +
+            "encrypted scoped cleanup; no hosted session, Firebase initialization or trip change."
     }
 
     private fun runCleanupProof(tripId: String): String {

@@ -318,7 +318,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Six synthetic flow/wire tests, all 292 Flutter tests, analysis and an Android
   debug build pass. No UI caller, recorder hook, device registration, hosted
   activation or alert send exists. Full CI run 36747071540 passed. Physical
-  bridge methods remain to be verified before any activation control is exposed.
+  production MethodChannel remains to be verified before any activation
+  control is exposed.
+- [x] Run an isolated physical Android activation proof on the Tecno LH8n.
+  Instrumentation uses a random proof namespace and actual boot-count clock,
+  checks `bindOwner`/`begin`/`commit`/`snapshot`/`disable`, confirms ciphertext
+  contains no capability, and destroys the scoped test key/file. The test APK
+  builds and the proof passes; app-private storage remains 187,943 KiB before
+  and after. This uses a synthetic confirmation, no production Auth/session,
+  alert, Firebase initialization or trip change. MainActivity MethodChannel,
+  real consent and hosted activation remain unverified.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
