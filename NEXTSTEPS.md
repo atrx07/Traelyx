@@ -72,8 +72,8 @@ behavior remains open.
 
 The dormant two-stage Flutter activation service now validates the signed-in
 server lease before a local encrypted commit and fails closed on owner changes.
-Six synthetic tests, all 292 Flutter tests, analysis and a debug APK build pass.
-It has no UI caller or recorder hook. Verify CI, then connect an explicit
+Six synthetic tests, all 292 Flutter tests, analysis, a debug APK and full CI
+run 36747071540 pass. It has no UI caller or recorder hook. Connect an explicit
 mount/forward-axis consent flow and test native `begin`/`commit` on the phone
 without sending alerts. An old server session may live until its eight-hour
 expiry if a late request cannot be revoked; local authority remains unavailable.

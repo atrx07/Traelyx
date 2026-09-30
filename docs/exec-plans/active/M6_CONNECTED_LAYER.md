@@ -317,8 +317,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   revoke; server TTL remains the fallback if a late request cannot be revoked.
   Six synthetic flow/wire tests, all 292 Flutter tests, analysis and an Android
   debug build pass. No UI caller, recorder hook, device registration, hosted
-  activation or alert send exists. Full CI and physical bridge methods remain
-  to be verified before any activation control is exposed.
+  activation or alert send exists. Full CI run 36747071540 passed. Physical
+  bridge methods remain to be verified before any activation control is exposed.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
