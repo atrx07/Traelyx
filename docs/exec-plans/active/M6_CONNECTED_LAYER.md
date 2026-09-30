@@ -325,8 +325,9 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   checks `bindOwner`/`begin`/`commit`/`snapshot`/`disable`, confirms ciphertext
   contains no capability, and destroys the scoped test key/file. The test APK
   builds and the proof passes; app-private storage remains 187,943 KiB before
-  and after. This uses a synthetic confirmation, no production Auth/session,
-  alert, Firebase initialization or trip change. MainActivity MethodChannel,
+  and after; full CI run 36750081398 passed. This uses a synthetic
+  confirmation, no production Auth/session, alert, Firebase initialization or
+  trip change. MainActivity MethodChannel,
   real consent and hosted activation remain unverified.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.

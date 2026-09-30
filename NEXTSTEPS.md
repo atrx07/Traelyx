@@ -75,10 +75,10 @@ server lease before a local encrypted commit and fails closed on owner changes.
 Six synthetic tests, all 292 Flutter tests, analysis, a debug APK and full CI
 run 36747071540 pass. It has no UI caller or recorder hook. An isolated physical
 proof passed native `begin`/`commit`/`disable` against a temporary encrypted
-vault with no server call. Connect an explicit mount/forward-axis consent flow,
-then test the production MethodChannel without sending alerts. An old server
-session may live until its eight-hour
-expiry if a late request cannot be revoked; local authority remains unavailable.
+vault with no server call; full CI run 36750081398 passed. Connect an explicit
+mount/forward-axis consent flow, then test the production MethodChannel without
+sending alerts. An old server session may live until its eight-hour expiry if
+a late request cannot be revoked; local authority remains unavailable.
 
 ## P1 — Preserve M5 boundaries
 
