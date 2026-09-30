@@ -66,8 +66,9 @@ The Auth decorator briefly made six optional cloud providers unavailable
 because they required the concrete Supabase gateway type. A delegated optional
 client source fixes their provider graph. All 286 Flutter tests, analysis and a
 configured APK pass; a data-preserving phone update completed Guardian's
-read-only hosted reload with sign-in and local history intact. Verify source CI
-before continuing the activation UI; account-switch behavior remains open.
+read-only hosted reload with sign-in and local history intact. Full source CI
+run 36743035626 passed. Continue the activation UI; physical account-switch
+behavior remains open.
 
 ## P1 — Preserve M5 boundaries
 

@@ -306,7 +306,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   tests, analysis and a configured debug APK pass. A data-preserving physical
   update completed a read-only Guardian server reload; sign-in and local trip
   history remained intact. No alert activation or personal trip upload occurred.
-  CI and account-switch behavior still require validation.
+  Source CI run 36743035626 passed; account-switch behavior still requires
+  physical validation.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
