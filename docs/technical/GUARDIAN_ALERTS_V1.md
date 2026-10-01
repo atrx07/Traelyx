@@ -170,8 +170,11 @@ and full end-to-end validation remain required. Six synthetic flow/bridge tests
 cover ordering, response shape and account races. A separate physical Android
 instrumentation proof exercises the native bridge and encrypted vault with a
 random test namespace and synthetic confirmation, then destroys its key and
-ciphertext. It does not exercise the production MethodChannel, hosted session
-or user consent.
+ciphertext. A later physical Flutter alternate entrypoint exercises the
+production `MainActivity` MethodChannel with a random synthetic owner,
+proposal, inactive snapshot and abort; the normal app and sign-in were restored
+without changing recorder storage. Neither proof exercises a hosted session,
+real user consent or alert delivery.
 
 ### Integration still required
 

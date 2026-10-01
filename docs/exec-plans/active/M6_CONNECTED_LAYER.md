@@ -329,6 +329,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   confirmation, no production Auth/session, alert, Firebase initialization or
   trip change. MainActivity MethodChannel,
   real consent and hosted activation remain unverified.
+- [x] Verify the production Flutter-to-Android MethodChannel on the physical
+  phone with `tool/guardian_channel_probe.dart` as a temporary entrypoint. The
+  normal Guardian vault was empty before the test. A random synthetic owner
+  bound through `MainActivity`, began a single-use proposal, returned an
+  inactive snapshot, aborted, and cleared its binding; the probe displayed
+  PASS on 2026-09-30. The probe made no Supabase RPC, FCM registration/send,
+  recorder hook, alert or user-consent call. The normal configured APK was restored
+  with `adb install -r`: it opens, the account remains signed in, the recovered
+  45m27s trip remains visible, recorder storage stays 94,251 KiB, and the
+  Guardian vault is empty. This verifies proposal/abort wiring, not hosted
+  activation, commit through this channel, or end-to-end delivery.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
