@@ -85,6 +85,13 @@ recording. An old server session
 may live until its eight-hour expiry if a late request cannot be revoked; local
 authority remains unavailable.
 
+A dormant review dialog now collects a selected device-forward axis and three
+separate confirmations for a rigid mount, detection limits and limited sharing.
+The activation service rejects incomplete, stale or future review before native
+proposal. All 294 Flutter tests, analysis and a configured debug build pass.
+It is not connected to the Guardian screen or server yet; add an honest
+activation control only after recipient opt-in and delivery gates are ready.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
+import 'package:traelyx/features/guardian/guardian_driver_consent.dart';
 
-const guardianForwardAxes = {'+x', '-x', '+y', '-y', '+z', '-z'};
 final _uuid = RegExp(r'^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$');
 final _credential = RegExp(r'^[a-f0-9]{64}$');
 
@@ -214,11 +214,12 @@ final class GuardianDriverActivationService {
   final GuardianDriverSessionGateway server;
 
   Future<DateTime> prepareAfterExplicitConsent(
-    String owner,
-    String forwardAxis,
+    GuardianDriverConsent consent,
   ) async {
+    final owner = consent.ownerId;
+    final forwardAxis = consent.forwardAxis;
     if (!_uuid.hasMatch(owner) ||
-        !guardianForwardAxes.contains(forwardAxis) ||
+        !consent.isFreshAt(DateTime.now().toUtc()) ||
         account.currentIdentity?.userId != owner ||
         !await account.ensureCurrentOwnerBound()) {
       throw const GuardianActivationException('Guardian account unavailable.');

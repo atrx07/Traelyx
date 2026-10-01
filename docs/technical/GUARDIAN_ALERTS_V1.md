@@ -176,6 +176,14 @@ proposal/abort, synthetic local commit, active snapshot and disable; the normal
 app and sign-in were restored without changing recorder storage. Neither proof
 exercises a hosted session, real user consent or alert delivery.
 
+The dormant Flutter review component collects a phone-forward axis and separate
+rigid-mount, false-alarm/missed-event and limited-recipient-sharing
+acknowledgements. Its result is ephemeral. The activation service rejects a
+review older than two minutes, from the future or missing any acknowledgement
+before asking native code for a proposal. Cancelling returns no review. The
+component is not reachable from the production Guardian screen until delivery
+gates pass; it has no hosted activation or device-registration side effect.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification

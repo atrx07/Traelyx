@@ -348,6 +348,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   restored without clearing data; Drive opens, Account is signed in, and the
   recovered trip remains visible. This synthetic confirmation did not create a
   hosted session, register a device, dispatch an alert or validate real consent.
+  Full CI run 36859977077 passed.
+- [x] Add a dormant explicit driver consent review component. It requires a
+  selected Android device-forward axis and separate rigid-mount, uncertainty
+  and limited-recipient-sharing acknowledgements; cancel returns no consent.
+  The activation service now rejects an incomplete, future or over-two-minute
+  review before any native proposal. A widget cancellation/gating regression,
+  a service rejection regression, all 294 Flutter tests, full analysis and the
+  configured debug APK pass. The dialog has no production route or caller; it
+  does not activate a hosted/local session or register a device.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

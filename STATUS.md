@@ -24,6 +24,8 @@
 
 - An isolated Android instrumentation proof now passes on the physical phone using a random encrypted-vault namespace and synthetic confirmation. It verifies native proposal, commit, snapshot and disable with the actual boot clock, then removes the test key/file; app-private storage size remains unchanged. Full CI run 36750081398 passed. This does not test the production MethodChannel, hosted activation, consent or delivery.
 
+- M6.8's dormant explicit driver review requires a forward axis plus rigid-mount, uncertainty and limited-sharing acknowledgements. The activation service rejects missing, stale or future review before contacting native code. Cancel and gating widget tests, all 294 Flutter tests, analysis and a configured debug APK pass. The review has no production caller; no hosted session, device registration or alert was enabled. The expanded physical MethodChannel proof passed full CI run 36859977077.
+
 - M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Twenty Guardian tests, analysis and the configured debug build pass, including a 20-second timeout and late-response rejection. Physical screen and hosted empty reload pass after restoring phone connectivity. Actual push delivery remains pending; no alert registration or sending is enabled by this change.
 
 - Product direction defined.

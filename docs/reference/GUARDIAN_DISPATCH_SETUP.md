@@ -22,6 +22,16 @@ rejected by organization policy `iam.disableServiceAccountKeyCreation` on
 The remaining credential route needs a separately reviewed design or a
 specifically approved, narrowly scoped policy exception.
 
+Read-only console recheck on 2026-10-01: the legacy
+`iam.disableServiceAccountKeyCreation` policy is still active and inherited;
+the newer managed key-creation constraint is inactive. The dedicated sender
+still has no keys, and no Workload Identity Pool is configured. Supabase Auth's
+current signing key is asymmetric ECC P-256, but its documented OAuth server
+supports authorization-code and refresh grants, not a machine
+`client_credentials` grant. A dedicated, restricted worker identity would be
+needed before considering Google Workload Identity Federation. No IAM,
+signing-key, Edge secret or dispatch setting was changed in this recheck.
+
 The entry point uses Supabase's existing Deno 2 runtime. The portable core uses
 only built-in fetch, Web Crypto and streams; it adds no runtime package or mobile
 SDK. Deno 2.9.6 is a pinned development/CI CLI fetched from its official npm
@@ -121,3 +131,5 @@ Primary protocol references:
 - https://docs.cloud.google.com/iam/docs/roles-permissions/firebasecloudmessaging
 - https://docs.cloud.google.com/iam/docs/troubleshoot-org-policies
 - https://developers.google.com/identity/protocols/oauth2/service-account
+- https://docs.cloud.google.com/iam/docs/workload-identity-federation
+- https://supabase.com/docs/guides/auth/oauth-server/oauth-flows

@@ -6,12 +6,26 @@ import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 import 'package:traelyx/features/guardian/guardian_driver_activation.dart';
+import 'package:traelyx/features/guardian/guardian_driver_consent.dart';
 
 const ownerA = '11111111-1111-4111-8111-111111111111';
 const ownerB = '22222222-2222-4222-8222-222222222222';
 const activation = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const capability =
     '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+
+GuardianDriverConsent reviewed(
+  String axis, {
+  DateTime? at,
+  bool mounted = true,
+}) => GuardianDriverConsent(
+  ownerId: ownerA,
+  forwardAxis: axis,
+  rigidMountConfirmed: mounted,
+  safetyLimitsAcknowledged: true,
+  recipientSharingAcknowledged: true,
+  reviewedAt: at ?? DateTime.now().toUtc(),
+);
 
 final class TestAccount implements AccountGateway {
   final changes = StreamController<AccountIdentity?>.broadcast();
@@ -191,11 +205,58 @@ void main() {
       bound,
       native,
       server,
-    ).prepareAfterExplicitConsent(ownerA, '+y');
+    ).prepareAfterExplicitConsent(reviewed('+y'));
     expect(expiry.isAfter(DateTime.now()), isTrue);
     expect(events, ['begin', 'server', 'commit']);
     expect(native.disables, 0);
     expect(server.revokes, 0);
+  });
+
+  test('stale or incomplete review cannot reach the native proposal', () async {
+    final events = <String>[];
+    final account = TestAccount();
+    final bound = GuardianBoundAccountGateway(account, OwnerPort());
+    final native = NativePort(events);
+    final server = Server(events);
+    addTearDown(() async {
+      await bound.dispose();
+      await account.changes.close();
+    });
+
+    for (final consent in [
+      reviewed(
+        '+y',
+        at: DateTime.now().toUtc().subtract(const Duration(minutes: 3)),
+      ),
+      reviewed('+y', mounted: false),
+      GuardianDriverConsent(
+        ownerId: ownerA,
+        forwardAxis: '+y',
+        rigidMountConfirmed: true,
+        safetyLimitsAcknowledged: false,
+        recipientSharingAcknowledged: true,
+        reviewedAt: DateTime.now().toUtc(),
+      ),
+      GuardianDriverConsent(
+        ownerId: ownerA,
+        forwardAxis: '+y',
+        rigidMountConfirmed: true,
+        safetyLimitsAcknowledged: true,
+        recipientSharingAcknowledged: false,
+        reviewedAt: DateTime.now().toUtc(),
+      ),
+    ]) {
+      await expectLater(
+        GuardianDriverActivationService(
+          bound,
+          native,
+          server,
+        ).prepareAfterExplicitConsent(consent),
+        throwsA(isA<GuardianActivationException>()),
+      );
+    }
+    expect(events, isEmpty);
+    expect(reviewed('+y').toString(), isNot(contains(ownerA)));
   });
 
   test(
@@ -217,7 +278,7 @@ void main() {
           bound,
           native,
           server,
-        ).prepareAfterExplicitConsent(ownerA, '+x'),
+        ).prepareAfterExplicitConsent(reviewed('+x')),
         throwsA(isA<GuardianActivationException>()),
       );
       expect(events, ['begin', 'server', 'disable', 'revoke']);
@@ -243,7 +304,7 @@ void main() {
         bound,
         native,
         server,
-      ).prepareAfterExplicitConsent(ownerA, '+z');
+      ).prepareAfterExplicitConsent(reviewed('+z'));
       await Future<void>.delayed(Duration.zero);
       account.change(ownerB);
       reply.complete(
@@ -278,7 +339,7 @@ void main() {
           bound,
           native,
           server,
-        ).prepareAfterExplicitConsent(ownerA, '-x'),
+        ).prepareAfterExplicitConsent(reviewed('-x')),
         throwsA(isA<GuardianActivationException>()),
       );
       expect(native.commits, 1);
