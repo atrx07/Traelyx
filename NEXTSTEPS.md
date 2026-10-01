@@ -77,12 +77,13 @@ run 36747071540 pass. It has no UI caller or recorder hook. An isolated physical
 proof passed native `begin`/`commit`/`disable` against a temporary encrypted
 vault with no server call; full CI run 36750081398 passed. A separate physical
 alternate-entrypoint probe passed production Flutter-to-Android binding,
-proposal, inactive snapshot and abort without a server call. The normal
-configured app was restored with sign-in and the recovered trip present;
-Guardian remains inactive. Connect explicit mount/forward-axis consent, then
-validate hosted confirmation and production-channel commit before attaching
-recording. An old server session may live until its eight-hour expiry if
-a late request cannot be revoked; local authority remains unavailable.
+proposal/abort, synthetic local commit, active snapshot and disable without a
+server call. The normal configured app was restored with sign-in and the
+recovered trip present; Guardian remains inactive. Connect explicit
+mount/forward-axis consent, then validate hosted confirmation before attaching
+recording. An old server session
+may live until its eight-hour expiry if a late request cannot be revoked; local
+authority remains unavailable.
 
 ## P1 — Preserve M5 boundaries
 

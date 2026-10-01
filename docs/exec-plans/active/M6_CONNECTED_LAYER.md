@@ -339,7 +339,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   with `adb install -r`: it opens, the account remains signed in, the recovered
   45m27s trip remains visible, recorder storage stays 94,251 KiB, and the
   Guardian vault is empty. This verifies proposal/abort wiring, not hosted
-  activation, commit through this channel, or end-to-end delivery.
+  activation, commit through this channel, or end-to-end delivery. Full CI run
+  36858643612 passed.
+- [x] Extend the physical production-channel proof on 2026-10-01 with a
+  second synthetic proposal, a five-minute local commit, an active snapshot,
+  disable and an inactive snapshot. It displayed PASS, left the Guardian vault
+  empty and recorder storage at 94,251 KiB. The normal configured APK was
+  restored without clearing data; Drive opens, Account is signed in, and the
+  recovered trip remains visible. This synthetic confirmation did not create a
+  hosted session, register a device, dispatch an alert or validate real consent.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

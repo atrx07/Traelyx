@@ -44,6 +44,38 @@ Future<void> main() async {
     }
     await native.abort(owner, draft.activationId);
     draft = null;
+
+    // A synthetic confirmation tests the production commit wire without a
+    // server session. No recorder or dispatch path consumes this short lease.
+    draft = await native.begin(owner, '+y');
+    final syntheticExpiry = DateTime.now().toUtc().add(
+      const Duration(minutes: 5),
+    );
+    final localExpiry = await native.commit(
+      owner,
+      draft.activationId,
+      syntheticExpiry,
+    );
+    draft = null;
+    final active = await _channel.invokeMethod<Object?>('snapshot', {
+      'ownerId': owner,
+    });
+    if (active is! Map ||
+        active.length != 2 ||
+        active['localLeasePresent'] != true ||
+        active['expiresEpochMillis'] != localExpiry.millisecondsSinceEpoch) {
+      throw const FormatException('Guardian synthetic lease not present');
+    }
+    await native.disable(owner);
+    final disabled = await _channel.invokeMethod<Object?>('snapshot', {
+      'ownerId': owner,
+    });
+    if (disabled is! Map ||
+        disabled.length != 2 ||
+        disabled['localLeasePresent'] != false ||
+        disabled['expiresEpochMillis'] != null) {
+      throw const FormatException('Guardian synthetic lease not removed');
+    }
     passed = true;
   } catch (_) {
     // A generic result only: never print the proposal or platform arguments.
@@ -54,6 +86,11 @@ Future<void> main() async {
       } catch (_) {
         passed = false;
       }
+    }
+    try {
+      await native.disable(owner);
+    } catch (_) {
+      passed = false;
     }
     try {
       await binding.bindOwner(null);
