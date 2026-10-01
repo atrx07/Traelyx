@@ -184,6 +184,13 @@ before asking native code for a proposal. Cancelling returns no review. The
 component is not reachable from the production Guardian screen until delivery
 gates pass; it has no hosted activation or device-registration side effect.
 
+The separate recipient review is also dormant. It requires explicit
+acknowledgement of experimental detection/delivery limits and of Firebase
+installation/device metadata transfer plus private routing-token registration.
+It returns a foreground-only, account-labelled result valid for less than two
+minutes; cancellation returns none. It does not initialize Firebase, request
+Android notification permission, register a token or mutate server state.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification

@@ -89,8 +89,17 @@ A dormant review dialog now collects a selected device-forward axis and three
 separate confirmations for a rigid mount, detection limits and limited sharing.
 The activation service rejects incomplete, stale or future review before native
 proposal. All 294 Flutter tests, analysis and a configured debug build pass.
+Full CI run 36861945539 passed.
 It is not connected to the Guardian screen or server yet; add an honest
 activation control only after recipient opt-in and delivery gates are ready.
+
+A separate dormant recipient notification review now requires acknowledgement
+of experimental detection/delivery limits and Firebase registration disclosure.
+It returns only short-lived foreground consent; it does not initialize Firebase
+or register a device. All 296 Flutter tests, analysis and a configured debug
+build pass. Next connect account-bound recipient opt-in to native token lifecycle
+and guarded server registration, then validate account switching, background
+receipt and revocation before exposing the control.
 
 ## P1 — Preserve M5 boundaries
 

@@ -356,7 +356,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   review before any native proposal. A widget cancellation/gating regression,
   a service rejection regression, all 294 Flutter tests, full analysis and the
   configured debug APK pass. The dialog has no production route or caller; it
-  does not activate a hosted/local session or register a device.
+  does not activate a hosted/local session or register a device. Full CI run
+  36861945539 passed.
+- [x] Add a separate, dormant recipient notification review. It explains the
+  experimental detection/delivery limits and Firebase registration disclosure;
+  both acknowledgements are required, cancellation returns no consent, and a
+  review expires after two minutes. Two focused tests, all 296 Flutter tests,
+  analysis and a configured debug APK pass. No production caller, Firebase
+  initialization, permission prompt, device registration or alert send exists.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
