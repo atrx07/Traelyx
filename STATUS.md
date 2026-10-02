@@ -26,6 +26,8 @@
 
 - M6.8's dormant explicit driver review requires a forward axis plus rigid-mount, uncertainty and limited-sharing acknowledgements. The activation service rejects missing, stale or future review before contacting native code. Cancel and gating widget tests, all 294 Flutter tests, analysis and a configured debug APK pass. The review has no production caller; no hosted session, device registration or alert was enabled. The expanded physical MethodChannel proof passed full CI run 36859977077.
 
+- M6.8's isolated Android push-envelope parser accepts only the exact data-only version-1 fields and rejects notification content, extra fields and malformed identifiers. The full native unit suite passes. It has no receiver service or runtime caller, and does not register a device or show an alert.
+
 - M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Twenty Guardian tests, analysis and the configured debug build pass, including a 20-second timeout and late-response rejection. Physical screen and hosted empty reload pass after restoring phone connectivity. Actual push delivery remains pending; no alert registration or sending is enabled by this change.
 
 - Product direction defined.

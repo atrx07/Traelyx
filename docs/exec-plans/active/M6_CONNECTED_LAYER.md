@@ -371,6 +371,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   review expires after two minutes. Two focused tests, all 296 Flutter tests,
   analysis and a configured debug APK pass. No production caller, Firebase
   initialization, permission prompt, device registration or alert send exists.
+- [x] Add an isolated Android parser for the fixed data-only FCM envelope.
+  It rejects notification content, schema drift, extra fields and malformed
+  identifiers before any future authority check. The full native unit suite
+  passes. No receiver service or runtime caller is connected; no registration,
+  notification or receipt is enabled.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

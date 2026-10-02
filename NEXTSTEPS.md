@@ -104,6 +104,11 @@ build pass. Next connect account-bound recipient opt-in to native token lifecycl
 and guarded server registration, then validate account switching, background
 receipt and revocation before exposing the control.
 
+An isolated Android parser now rejects push envelopes outside the exact
+data-only version-1 contract; the full native unit suite passes. It has no
+runtime receiver or notification side effect. The next integration must check
+local account/device generation and current server authority before receipt.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.
