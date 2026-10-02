@@ -192,7 +192,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
 - [ ] Complete backend FCM authentication after concrete deployment review. The
   dedicated sender and worker secret are configured, but Google organization
-  policy blocks service-account JSON key creation; dispatch remains disabled.
+  policy normally blocks service-account JSON key creation. An approved
+  temporary project exception created one key on 2026-10-01, but its one-time
+  browser download stopped. The maintainer reported revoking the unused key;
+  independent final key-inventory verification was blocked by browser failure. Inherited
+  enforcement and original organization IAM access were restored and verified;
+  the temporary Supabase CLI token was removed locally and its server-side
+  revocation was reported by the maintainer. No FCM credential was installed;
+  dispatch remains disabled.
 - [x] Implement an isolated Edge/FCM dispatch adapter with no runtime package:
   separate worker-secret authentication, bounded requests/responses, six claims
   with three concurrent sends, current target recheck, minimal data-only FCM

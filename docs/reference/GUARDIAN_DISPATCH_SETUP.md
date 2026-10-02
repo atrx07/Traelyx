@@ -15,14 +15,23 @@ M6.8 remains in progress.
 Google Cloud project `traelyx-e28ff` has the dedicated
 `traelyx-guardian-sender` service account, granted only the custom
 `Traelyx Guardian Message Sender` role with
-`cloudmessaging.messages.create`. It has **no keys**. JSON key creation was
-rejected by organization policy `iam.disableServiceAccountKeyCreation` on
-2026-09-28. The policy was left intact. Consequently
+`cloudmessaging.messages.create`. It has **no intended active keys**. JSON key creation
+was rejected by organization policy `iam.disableServiceAccountKeyCreation` on
+2026-09-28. A separately approved, temporary project exception on 2026-10-01
+allowed one key to be created, but its one-time browser download stopped before
+the JSON reached the Windows workspace. The maintainer reported revoking the
+unused key on 2026-10-02; that final key inventory could not be independently
+rechecked because browser control failed. The project returned to inherited,
+effectively enforced policy,
+and the temporary organization policy administrator role was removed and
+verified absent. The temporary Supabase CLI token was removed locally and the
+maintainer reported server-side revocation; only local logout was independently
+verified. Consequently
 `GUARDIAN_FCM_SERVICE_ACCOUNT` is absent, and dispatch must stay disabled.
-The remaining credential route needs a separately reviewed design or a
+The remaining credential route needs a separately reviewed design or a new,
 specifically approved, narrowly scoped policy exception.
 
-Read-only console recheck on 2026-10-01: the legacy
+Earlier read-only console recheck on 2026-10-01: the legacy
 `iam.disableServiceAccountKeyCreation` policy is still active and inherited;
 the newer managed key-creation constraint is inactive. The dedicated sender
 still has no keys, and no Workload Identity Pool is configured. Supabase Auth's
@@ -79,9 +88,8 @@ package. This does not change the hosted runtime version or app dependencies.
    `GUARDIAN_DISPATCH_ENABLED=false` are stored as Supabase Edge secrets. The
    worker-secret digest matched the locally generated value before its ignored
    temporary file was removed. The existing service-role key is supplied only
-   by the Edge environment. No FCM service-account JSON was installed because
-   the organization prohibits key creation. Never place a server key in the
-   Android config, repository, chat or client build.
+   by the Edge environment. No FCM service-account JSON was installed. Never
+   place a server key in the Android config, repository, chat or client build.
 3. The deployed function uses `verify_jwt=false` in `supabase/config.toml` and
    in the hosted function settings **only for `guardian-dispatch`**. The
    independent worker-secret check runs before the disabled check. Hosted POST

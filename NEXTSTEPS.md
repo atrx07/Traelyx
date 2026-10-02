@@ -39,9 +39,12 @@ The isolated Edge/FCM adapter passes 18 synthetic Deno tests and full CI run
 36336437458. Its deployed function remains disabled; hosted missing-secret and
 valid-secret calls returned 401 and 503 without claiming or sending. A dedicated
 one-permission Google sender exists, but organization policy
-`iam.disableServiceAccountKeyCreation` blocked its JSON key. Resolve backend FCM
-authentication with a reviewed method before enabling dispatch. No policy was
-weakened. See `docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
+`iam.disableServiceAccountKeyCreation` normally blocks its JSON key. A temporary
+approved project exception created one key, but the one-time download stopped;
+the maintainer reported revoking that unused key. Inherited enforcement and the original
+organization access were restored. Resolve backend FCM authentication with a
+new reviewed method before enabling dispatch. See
+`docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
 native Auth/consent/recorder integration and physical end-to-end delivery
 remain required.
 
