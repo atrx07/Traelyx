@@ -60,6 +60,12 @@ configured debug build. It has no caller. Next bind explicit recipient consent
 to encrypted native device state and Firebase token registration, with fail-closed
 account-change cleanup, before wiring the receiver or enabling delivery.
 
+The separate native recipient receipt vault now passes seven focused tests and
+an isolated physical Keystore proof, with no production caller or device row.
+Next connect the short-lived recipient review, signed-in server gateway and
+opt-in Firebase token lifecycle; erase native authority and delete the token
+on account change/opt-out before any receiver or notification is enabled.
+
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.

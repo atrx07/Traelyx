@@ -195,7 +195,19 @@ The recipient device RPC gateway is also dormant. It validates canonical
 account/device/generation identities and bounded credentials, checks the current
 Auth owner before and after each guarded registration or revocation call, and
 never logs its routing token or credential. No UI or native caller is connected;
-recipient credential persistence and account-change cleanup are still required.
+recipient credential storage integration and account-change cleanup are still required.
+
+Recipient receipt authority now has an isolated native storage boundary: a
+version-1, bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
+with its own Android Keystore alias and encryption domain, separate from the
+driver lease/outbox. It binds the account, opaque device and generation to a
+lowercase 256-bit capability and a maximum 30-day local lifetime. Reads return
+no authority for a different account/generation, before registration time or
+at expiry; corruption, missing keys and uncertain writes fail closed. The
+record contains no routing token or Auth credential. A synthetic physical
+Keystore proof uses a random namespace and erases its key/file afterward.
+There is still no runtime caller: consent, server-confirmed registration,
+account-change erasure, token deletion, receipt and notification remain gates.
 
 ### Integration still required
 

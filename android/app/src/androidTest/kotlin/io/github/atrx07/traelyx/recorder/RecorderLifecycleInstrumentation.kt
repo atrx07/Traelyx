@@ -32,6 +32,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             val stream =
                 when (instrumentationArguments?.getString("mode")) {
                     "guardian-vault" -> runGuardianVaultProof()
+                    "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
                     "index" ->
@@ -121,6 +122,43 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 encrypted vault proof passed: Keystore AES-GCM, restore/reservation, tamper rejection, " +
             "key destruction and scoped cleanup; Firebase inactive, trip/session storage untouched."
+    }
+
+    private fun runGuardianRecipientVaultProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/recipient-$namespace.vault")
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+        val owner = UUID.randomUUID().toString()
+        val deviceId = UUID.randomUUID().toString()
+        val generation = UUID.randomUUID().toString()
+        val now = System.currentTimeMillis()
+        val recipient = io.github.atrx07.traelyx.guardian.GuardianRecipientDevice(
+            owner, deviceId, generation, "a".repeat(64), now, now + 60_000,
+        )
+        try {
+            check(vault.readBound(owner, generation, now) == null)
+            vault.write(recipient)
+            check(file.isFile)
+            check(!file.readText(Charsets.ISO_8859_1).contains(owner))
+            check(!file.readText(Charsets.ISO_8859_1).contains(recipient.credential))
+            val restored = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+            check(restored.readBound(owner, generation, now + 1) == recipient)
+            check(restored.readBound(UUID.randomUUID().toString(), generation, now + 1) == null)
+            check(restored.readBound(owner, UUID.randomUUID().toString(), now + 1) == null)
+            val original = file.readBytes()
+            file.writeBytes(original.copyOf().also { it[it.lastIndex] = (it.last().toInt() xor 1).toByte() })
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+                .readBound(owner, generation, now + 1) }.isFailure)
+            vault.erase()
+            file.writeBytes(original)
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+                .readBound(owner, generation, now + 1) }.isFailure)
+        } finally { vault.erase() }
+        check(!file.exists())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
+            "tamper rejection and key destruction; Firebase inactive, trip/session storage untouched."
     }
 
     private fun runGuardianActivationProof(): String {

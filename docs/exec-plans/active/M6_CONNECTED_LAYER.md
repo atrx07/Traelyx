@@ -388,8 +388,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   sends no routing token or credential. Six adversarial gateway tests, all 302
   Flutter tests, analysis, a configured Android debug build and repository
   validation pass. It has no runtime caller; no Firebase registration, server
-  device row, notification or alert was created. Encrypted recipient device
-  state, consent orchestration, cleanup and receiver authority remain pending.
+  device row, notification or alert was created. Integration with encrypted
+  recipient state, consent orchestration, cleanup and receiver authority remain pending.
+- [x] Add separate, dormant native recipient receipt storage. A bounded
+  version-1 record binds owner/device/generation and a 256-bit capability to
+  at most 30 days, in its own no-backup file, Keystore alias and AES-GCM domain.
+  Seven new unit tests cover restoration, account/generation/expiry denial,
+  tampering, schema rejection, uncertain writes and failed erasure. The native
+  app suite and scoped physical Keystore proof pass; the existing driver-vault
+  physical proof also passes after the shared cipher gained a domain argument.
+  The proof used a random namespace, cleaned its key/file, and left private
+  directory sizes unchanged. No runtime caller, registration or alert exists;
+  consent orchestration, account cleanup and receiver authority remain pending.
 - [x] Add an isolated Android parser for the fixed data-only FCM envelope.
   It rejects notification content, schema drift, extra fields and malformed
   identifiers before any future authority check. The full native unit suite
