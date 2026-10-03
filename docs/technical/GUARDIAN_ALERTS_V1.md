@@ -229,9 +229,21 @@ An explicit cleanup can initialize Firebase after a process restart even though
 automatic initialization stays disabled. Construction and owner binding do not
 initialize Firebase. A scoped Android 14 proof verified marker persistence,
 interrupted-write detection and erasure without requesting a token; the normal
-app opened afterward with private storage sizes unchanged. The recipient owner
-runtime does not invoke provider cleanup yet, so account switch, sign-out and
-opt-out cannot be claimed to delete a token. No production caller can request one.
+app opened afterward with private storage sizes unchanged. No production caller
+can request a token yet.
+
+The native owner bridge now invokes that explicit provider deletion when its
+marker exists and the next owner is absent, different, expired or has no matching
+local receipt record. It erases local receipt authority before waiting up to 25
+seconds for deletion and refuses the new owner if deletion fails or times out.
+A same-owner restart with a valid local receipt preserves the provider token;
+an unmarked receipt is discarded. With no marker, owner binding and sign-out
+remain Firebase-inert. This is local provider cleanup only. Authenticated server
+device revocation, opt-out orchestration and unexpected account-loss recovery
+still need to be implemented before live registration is exposed. A guarded
+Android 14 proof ran the production owner runtime with an empty marker/vault:
+it completed a null-owner bind without initializing Firebase or requesting a
+token, then the normal app reopened with private storage sizes unchanged.
 
 ### Integration still required
 

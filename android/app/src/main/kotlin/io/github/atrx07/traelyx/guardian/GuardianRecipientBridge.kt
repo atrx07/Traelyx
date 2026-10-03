@@ -1,7 +1,10 @@
 package io.github.atrx07.traelyx.guardian
 
 /** Foreground-only bridge; commit arguments contain a secret and must never be logged. */
-class GuardianRecipientBridge(private val coordinator: GuardianRecipientCoordinator) {
+class GuardianRecipientBridge(
+    private val coordinator: GuardianRecipientCoordinator,
+    private val bindOwner: (String?) -> Unit = coordinator::bindOwner,
+) {
     fun dispatch(method: String, rawArguments: Any?): Any? {
         val arguments = rawArguments as? Map<*, *> ?: throw IllegalArgumentException("Invalid Guardian recipient request")
         fun exact(vararg names: String) { require(arguments.keys == names.toSet()) }
@@ -10,7 +13,7 @@ class GuardianRecipientBridge(private val coordinator: GuardianRecipientCoordina
             BIND_OWNER -> {
                 exact("ownerId")
                 require(arguments["ownerId"] == null || arguments["ownerId"] is String)
-                coordinator.bindOwner(arguments["ownerId"] as String?)
+                bindOwner(arguments["ownerId"] as String?)
                 null
             }
             COMMIT -> {

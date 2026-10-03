@@ -12,9 +12,16 @@ object AndroidGuardianRecipientRuntime {
         val app = context.applicationContext
         worker.execute {
             val result = runCatching {
-                val current = bridge ?: GuardianRecipientBridge(
-                    GuardianRecipientCoordinator(AndroidGuardianRecipientVault(app), System::currentTimeMillis),
-                ).also { bridge = it }
+                val current = bridge ?: run {
+                    val vault = AndroidGuardianRecipientVault(app)
+                    val coordinator = GuardianRecipientCoordinator(vault, System::currentTimeMillis)
+                    val marker = AndroidGuardianProviderMarker(app)
+                    val ownerLifecycle = GuardianRecipientOwnerLifecycle(
+                        coordinator, vault, marker, FirebaseGuardianRegistration.get(app),
+                        System::currentTimeMillis,
+                    )
+                    GuardianRecipientBridge(coordinator, ownerLifecycle::bindOwner).also { bridge = it }
+                }
                 current.dispatch(method, arguments)
             }
             complete(result)

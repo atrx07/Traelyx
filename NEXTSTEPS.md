@@ -76,6 +76,12 @@ requesting a token. Next attach provider cleanup to owner changes/sign-out and
 complete the consented register/revoke transaction with the guarded server RPC;
 the second phone is needed only for later two-account delivery validation.
 
+Native owner binding now waits for marker-aware Firebase deletion when leaving
+an opted-in owner, while preserving a valid same-owner restart. Tests cover
+switching, failed deletion, orphaned state and timeout; the first-phone startup
+remains inert. Next implement server revocation before explicit sign-out, safe
+reconciliation after unexpected Auth loss, and the reviewed opt-in transaction.
+
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.

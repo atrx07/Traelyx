@@ -34,6 +34,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
+                    "guardian-recipient-owner-inert" -> runGuardianRecipientOwnerInertProof()
                     "guardian-provider-marker" -> runGuardianProviderMarkerProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
@@ -83,6 +84,31 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         }
         return "M6.8 provider proof passed: configured=$expectedConfigured, Firebase initialized=false, " +
             "registration requested=false, trip/session storage untouched."
+    }
+
+    private fun runGuardianRecipientOwnerInertProof(): String {
+        val context = targetContext.applicationContext
+        check(!io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present()) {
+            "Production provider marker exists; refusing inert owner proof."
+        }
+        check(io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context).readStored() == null) {
+            "Production recipient authority exists; refusing inert owner proof."
+        }
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        val finished = java.util.concurrent.CountDownLatch(1)
+        var outcome: Result<Any?>? = null
+        io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRuntime.dispatch(
+            context, io.github.atrx07.traelyx.guardian.GuardianRecipientBridge.BIND_OWNER,
+            mapOf("ownerId" to null),
+        ) { result -> outcome = result; finished.countDown() }
+        check(finished.await(5, java.util.concurrent.TimeUnit.SECONDS)) { "Recipient owner bind timed out." }
+        outcome!!.getOrThrow()
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty()) {
+            "Inert recipient owner binding initialized Firebase."
+        }
+        check(!io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present())
+        return "M6.8 recipient owner proof passed: empty production authority, inert sign-out bind, " +
+            "Firebase uninitialized, no token request."
     }
 
     private fun runGuardianVaultProof(): String {

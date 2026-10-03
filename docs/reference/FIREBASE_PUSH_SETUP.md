@@ -24,9 +24,14 @@ forcing Play services installation. Supabase remains the account provider.
 A separate no-backup marker now records cleanup intent before an explicit token
 request. A later explicit deletion initializes Firebase if needed, deletes its
 Messaging token and installation, and clears the marker only after both succeed.
-The marker contains no account ID or token. It is a prerequisite: the current
-owner runtime has no provider cleanup hook or opt-in registration caller, so
-there is still no live token lifecycle or device registration.
+The marker contains no account ID or token. There is no opt-in registration
+caller yet, so there is still no live token lifecycle or device registration.
+
+The native recipient owner bridge now uses the marker to invoke provider
+deletion on sign-out, owner change or orphaned/expired local receipt state. It
+preserves a valid same-owner registration across restart, and refuses a new
+owner when cleanup fails or times out. It still has no opt-in caller; server
+device revocation and account-loss reconciliation remain separate gates.
 
 Firebase's current Android and HTTP v1 references describe a transition to
 Firebase Installation IDs (FIDs). The pinned 25.0.1 AAR was inspected on

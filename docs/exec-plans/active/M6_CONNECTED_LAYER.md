@@ -424,6 +424,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   configured APK and scoped Android 14 proofs pass; the normal app opens with
   private storage sizes unchanged. The owner runtime still lacks provider
   cleanup and no registration caller exists, so no token was requested.
+- [x] Connect marker-aware provider deletion to native recipient owner binding.
+  A valid same-owner restart preserves receipt authority; sign-out, switching,
+  expired or orphaned state erase local authority and wait for confirmed
+  provider deletion before binding. Failure/timeout denies the new owner;
+  absent marker remains Firebase-inert. Native tests, lint, configured APK,
+  data-preserving first-phone startup and a guarded production-runtime inert
+  owner-bind proof pass. Server revocation and unexpected
+  Auth-loss reconciliation are still required before opt-in is exposed.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

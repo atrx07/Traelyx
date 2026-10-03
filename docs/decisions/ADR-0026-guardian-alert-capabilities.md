@@ -26,6 +26,16 @@ old delivery generations; opt-out deletes the row and its deliveries. The FCM
 token is a routing address, not authorization to read event details. The native
 adapter must delete token/installation registration after local opt-out.
 
+The native provider boundary writes a no-backup cleanup marker before any token
+request. It records no account or token. Owner binding preserves a valid
+same-owner receipt across restart; sign-out, replacement, expiry or an orphaned
+marker first erase local receipt authority, then require confirmed deletion of
+the Messaging token and Firebase installation before another owner binds.
+Deletion failure retains the marker and fails closed. The server row must also
+be revoked while its owner is authenticated; local provider deletion alone is
+not complete opt-out. Unexpected Auth loss needs a separate reconciliation path
+before live device registration is exposed.
+
 Events carry no trip ID, coordinates, speed, raw samples, name, or arbitrary text.
 They are explicitly **experimental client-reported signals**, not server-verified
 crashes. The server validates the exact versioned envelope, at least 30 seconds
