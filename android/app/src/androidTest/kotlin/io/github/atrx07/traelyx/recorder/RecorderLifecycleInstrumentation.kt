@@ -34,6 +34,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
+                    "guardian-provider-marker" -> runGuardianProviderMarkerProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
                     "index" ->
@@ -160,6 +161,29 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
             "tamper rejection and key destruction; Firebase inactive, trip/session storage untouched."
+    }
+
+    private fun runGuardianProviderMarkerProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/recipient-provider-$namespace.v1")
+        val marker = io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context, namespace)
+        try {
+            check(!marker.present())
+            marker.mark()
+            check(file.isFile && file.readBytes().contentEquals(byteArrayOf(1)))
+            check(io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context, namespace).present())
+            file.writeBytes(byteArrayOf(9))
+            check(marker.present()) { "Corrupt marker must still demand provider cleanup." }
+            marker.clear()
+            check(!marker.present())
+            File(file.path + ".new").writeBytes(byteArrayOf(1))
+            check(marker.present()) { "Interrupted marker write must still demand provider cleanup." }
+        } finally { marker.clear() }
+        check(!marker.present())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 provider cleanup marker proof passed: durable presence, restart, corruption and " +
+            "interrupted-write detection, scoped erasure; Firebase inactive, no token request."
     }
 
     private fun runGuardianRecipientBridgeProof(): String {

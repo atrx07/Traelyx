@@ -21,6 +21,13 @@ bound notification consent, the Android notification permission where required,
 and available Google Play services. The adapter reports unavailable without
 forcing Play services installation. Supabase remains the account provider.
 
+A separate no-backup marker now records cleanup intent before an explicit token
+request. A later explicit deletion initializes Firebase if needed, deletes its
+Messaging token and installation, and clears the marker only after both succeed.
+The marker contains no account ID or token. It is a prerequisite: the current
+owner runtime has no provider cleanup hook or opt-in registration caller, so
+there is still no live token lifecycle or device registration.
+
 Firebase's current Android and HTTP v1 references describe a transition to
 Firebase Installation IDs (FIDs). The pinned 25.0.1 AAR was inspected on
 2026-10-03: its `FirebaseMessaging` class exposes `getToken`/`deleteToken` but

@@ -417,6 +417,13 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   identifiers before any future authority check. The full native unit suite
   passes. No receiver service or runtime caller is connected; no registration,
   notification or receipt is enabled.
+- [x] Add a durable, account-free no-backup cleanup marker around the dormant
+  Firebase registration adapter. It precedes every token request, survives
+  restart/interrupted writes, and clears only after explicit token and
+  installation deletion succeeds. Focused and full native tests, lint,
+  configured APK and scoped Android 14 proofs pass; the normal app opens with
+  private storage sizes unchanged. The owner runtime still lacks provider
+  cleanup and no registration caller exists, so no token was requested.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

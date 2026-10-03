@@ -69,6 +69,13 @@ recipient review, signed-in server gateway and opt-in Firebase token lifecycle;
 revoke the server device and delete the provider token on account change/opt-out
 before any receiver or notification is enabled.
 
+The dormant Firebase adapter now has a durable, account-free cleanup marker
+before token acquisition and explicit restart-safe token/installation deletion.
+Native tests, lint, configured build and scoped first-phone proof pass without
+requesting a token. Next attach provider cleanup to owner changes/sign-out and
+complete the consented register/revoke transaction with the guarded server RPC;
+the second phone is needed only for later two-account delivery validation.
+
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.

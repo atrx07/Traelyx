@@ -17,11 +17,27 @@ import io.github.atrx07.traelyx.R
 object FirebaseGuardianRegistration {
     private var instance: GuardianPushRegistration? = null
     @Synchronized fun get(context: Context): GuardianPushRegistration = instance
-        ?: ConsentBoundGuardianRegistration(FirebaseRegistrationBackend(context.applicationContext)).also { instance = it }
+        ?: MarkedGuardianPushRegistration(
+            AndroidGuardianProviderMarker(context.applicationContext),
+            ConsentBoundGuardianRegistration(FirebaseRegistrationBackend(context.applicationContext)),
+        ).also { instance = it }
 }
 
 private class FirebaseRegistrationBackend(private val context: Context) : GuardianRegistrationBackend {
     override val configured get() = context.getString(R.string.traelyx_firebase_app_id).isNotEmpty()
+
+    private fun app(): FirebaseApp {
+        check(configured) { "Guardian push provider is not configured" }
+        val app = FirebaseApp.getApps(context).firstOrNull { it.name == FirebaseApp.DEFAULT_APP_NAME }
+            ?: requireNotNull(FirebaseApp.initializeApp(context, FirebaseOptions.Builder()
+                .setApplicationId(context.getString(R.string.traelyx_firebase_app_id))
+                .setProjectId(context.getString(R.string.traelyx_firebase_project_id))
+                .setGcmSenderId(context.getString(R.string.traelyx_firebase_sender_id))
+                .setApiKey(context.getString(R.string.traelyx_firebase_client_key))
+                .build()))
+        app.setDataCollectionDefaultEnabled(false)
+        return app
+    }
 
     override fun unavailableReason(): String? {
         if (!context.getSystemService(NotificationManager::class.java).areNotificationsEnabled()) {
@@ -37,14 +53,7 @@ private class FirebaseRegistrationBackend(private val context: Context) : Guardi
     }
 
     override fun acquire(complete: (String?) -> Unit) {
-        val app = FirebaseApp.getApps(context).firstOrNull { it.name == FirebaseApp.DEFAULT_APP_NAME }
-            ?: requireNotNull(FirebaseApp.initializeApp(context, FirebaseOptions.Builder()
-                .setApplicationId(context.getString(R.string.traelyx_firebase_app_id))
-                .setProjectId(context.getString(R.string.traelyx_firebase_project_id))
-                .setGcmSenderId(context.getString(R.string.traelyx_firebase_sender_id))
-                .setApiKey(context.getString(R.string.traelyx_firebase_client_key))
-                .build()))
-        app.setDataCollectionDefaultEnabled(false)
+        app()
         val messaging = FirebaseMessaging.getInstance()
         messaging.isAutoInitEnabled = false
         messaging.setDeliveryMetricsExportToBigQuery(false)
@@ -52,10 +61,9 @@ private class FirebaseRegistrationBackend(private val context: Context) : Guardi
     }
 
     override fun delete(complete: (Boolean) -> Unit) {
-        if (FirebaseApp.getApps(context).none { it.name == FirebaseApp.DEFAULT_APP_NAME }) {
-            complete(true)
-            return
-        }
+        // A durable marker can outlive this process. Initialize only for explicit cleanup,
+        // then delete the prior installation even when auto-init has stayed disabled.
+        app()
         val messaging = FirebaseMessaging.getInstance()
         messaging.isAutoInitEnabled = false
         messaging.deleteToken().addOnCompleteListener { tokenDeletion ->

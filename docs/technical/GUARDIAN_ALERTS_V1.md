@@ -221,6 +221,18 @@ reporting success. This bridge has no consent or registration caller yet, and
 it never initializes Firebase. Server revocation and token deletion still need
 to be attached before a recipient control is exposed.
 
+The dormant push adapter now writes an account-free, no-backup provider cleanup
+marker before any explicit Firebase token request. Marker presence blocks another
+request until deletion of both the Firebase Messaging token and installation
+completes; deletion failure or an interrupted marker write retains cleanup intent.
+An explicit cleanup can initialize Firebase after a process restart even though
+automatic initialization stays disabled. Construction and owner binding do not
+initialize Firebase. A scoped Android 14 proof verified marker persistence,
+interrupted-write detection and erasure without requesting a token; the normal
+app opened afterward with private storage sizes unchanged. The recipient owner
+runtime does not invoke provider cleanup yet, so account switch, sign-out and
+opt-out cannot be claimed to delete a token. No production caller can request one.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification
