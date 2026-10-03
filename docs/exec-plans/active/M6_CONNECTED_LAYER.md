@@ -256,6 +256,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Implement isolated native rules/lifecycle prerequisite: 24 new tests, 246 total native tests pass; debug build and repository validation pass. Rules are not connected to recording or enabled in the app. See ADR-0025 and `GUARDIAN_ALERTS_V1.md`.
 - [x] Verify native foundation CI run 36315748455 (`04a1836`) passes all gates.
 - [x] Add optional Firebase Messaging 25.0.1 registration adapter with consent-race tests; configured/unconfigured builds, release build, 253 native tests and physical inert-startup proof pass. SDK review is in `FIREBASE_PUSH_SETUP.md`. Registration/delivery are not enabled.
+- [x] Recheck the provider target contract before wiring recipient registration
+  (2026-10-03). Current Firebase docs prefer FIDs, but the pinned 25.0.1 AAR
+  exposes only the legacy token registration methods. The disabled worker and
+  client still use the supported token path. A coordinated SDK/server migration
+  to FIDs requires separate validation before production delivery; see
+  `FIREBASE_PUSH_SETUP.md`.
 - [ ] Implement minimized outbox, guarded cloud transitions, deduplication,
   expiry, revocation and explicit send/receipt states with adversarial tests.
 - [x] Prepare private alert delivery migration and adversarial SQL tests; local

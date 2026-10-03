@@ -21,6 +21,15 @@ bound notification consent, the Android notification permission where required,
 and available Google Play services. The adapter reports unavailable without
 forcing Play services installation. Supabase remains the account provider.
 
+Firebase's current Android and HTTP v1 references describe a transition to
+Firebase Installation IDs (FIDs). The pinned 25.0.1 AAR was inspected on
+2026-10-03: its `FirebaseMessaging` class exposes `getToken`/`deleteToken` but
+not `register`/`unregister`. The current adapter and disabled server draft use
+the supported registration-token path. Before enabling delivery, verify the
+actual client/server target contract together; adopt FIDs only with a reviewed
+SDK and server change. The HTTP v1 `token` target is deprecated but documented
+as accepted during the transition.
+
 ## Dependency review (2026-09-27)
 
 - Purpose: Android background push cannot be supplied by a foreground Dart
@@ -60,6 +69,8 @@ Primary references:
 - https://github.com/firebase/firebase-android-sdk/security/advisories
 - https://firebase.google.com/support/release-notes/android
 - https://firebase.google.com/docs/cloud-messaging/android/get-started
+- https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging
+- https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
 - https://firebase.google.com/docs/projects/billing/firebase-pricing-plans
 
 The dedicated backend sender account has only FCM send permission. Its
