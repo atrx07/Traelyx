@@ -54,6 +54,12 @@ off. A direct unauthenticated synthetic POST returned 503 `capability_disabled`.
 Native activation, registration and synthetic receipt still precede any enable.
 See `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 
+The isolated signed-in recipient device RPC gateway now passes adversarial
+account-race and contract tests, the 302-test Flutter suite, analysis and a
+configured debug build. It has no caller. Next bind explicit recipient consent
+to encrypted native device state and Firebase token registration, with fail-closed
+account-change cleanup, before wiring the receiver or enabling delivery.
+
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.

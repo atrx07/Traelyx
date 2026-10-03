@@ -375,6 +375,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   review expires after two minutes. Two focused tests, all 296 Flutter tests,
   analysis and a configured debug APK pass. No production caller, Firebase
   initialization, permission prompt, device registration or alert send exists.
+- [x] Add the dormant account-guarded recipient device RPC gateway. It accepts
+  only canonical device/account/generation IDs, a bounded printable routing
+  token and a 256-bit lowercase-hex credential; rechecks the signed-in owner
+  before and after the guarded `set_guardian_push_device_v1` call. Revocation
+  sends no routing token or credential. Six adversarial gateway tests, all 302
+  Flutter tests, analysis, a configured Android debug build and repository
+  validation pass. It has no runtime caller; no Firebase registration, server
+  device row, notification or alert was created. Encrypted recipient device
+  state, consent orchestration, cleanup and receiver authority remain pending.
 - [x] Add an isolated Android parser for the fixed data-only FCM envelope.
   It rejects notification content, schema drift, extra fields and malformed
   identifiers before any future authority check. The full native unit suite

@@ -28,6 +28,8 @@
 
 - M6.8's isolated Android push-envelope parser accepts only the exact data-only version-1 fields and rejects notification content, extra fields and malformed identifiers. The full native unit suite passes. It has no receiver service or runtime caller, and does not register a device or show an alert.
 
+- M6.8's dormant recipient device RPC gateway validates exact account/device/generation identities and bounded private credentials, checks the signed-in owner before and after registration/revocation, and sends no routing secret on revoke. Six focused tests, all 302 Flutter tests, analysis, a configured debug APK and repository validation pass. There is no runtime caller, persisted recipient authority, Firebase registration or hosted device row.
+
 - M6.8 now includes a foreground Guardian alert inbox using the deployed guarded list/view APIs. Opening rechecks permission; cached details clear on background, expiry and account change. Provider acceptance, device receipt and opening are distinct. Twenty Guardian tests, analysis and the configured debug build pass, including a 20-second timeout and late-response rejection. Physical screen and hosted empty reload pass after restoring phone connectivity. Actual push delivery remains pending; no alert registration or sending is enabled by this change.
 
 - Product direction defined.

@@ -4,7 +4,8 @@
 
 Firebase Messaging 25.0.1 is a replaceable native registration adapter for M6.8.
 It is not called by startup or the current UI. No registration or alert occurs
-just because this dependency is present. Full delivery remains unimplemented.
+just because this dependency is present. A separate signed-in device RPC
+gateway exists but has no caller. Full delivery remains unimplemented.
 
 The ignored `.dart_tool/firebase/google-services.json` contains Android **client**
 configuration for `traelyx-e28ff`, package `io.github.atrx07.traelyx`. Gradle selects

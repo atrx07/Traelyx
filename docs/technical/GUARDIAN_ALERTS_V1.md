@@ -191,6 +191,12 @@ It returns a foreground-only, account-labelled result valid for less than two
 minutes; cancellation returns none. It does not initialize Firebase, request
 Android notification permission, register a token or mutate server state.
 
+The recipient device RPC gateway is also dormant. It validates canonical
+account/device/generation identities and bounded credentials, checks the current
+Auth owner before and after each guarded registration or revocation call, and
+never logs its routing token or credential. No UI or native caller is connected;
+recipient credential persistence and account-change cleanup are still required.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification
