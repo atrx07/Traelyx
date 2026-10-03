@@ -132,4 +132,11 @@ temporary service failures, rejected requests, and unknown local errors.
 Only transport failures suggest checking the connection. Raw provider error
 bodies, email addresses, and tokens are not exposed in diagnostics.
 
+M6.8 explicit sign-out checks for an opted-in Guardian recipient device before
+removing Auth. If one exists, it first requires a confirmed signed-in server
+device revoke, then local provider deletion; failure cancels sign-out and
+preserves a retry path. No device is registered by this check. Unexpected
+session loss or replacement still needs reconciliation before Guardian
+registration can be enabled.
+
 Future optional MFA can be added if useful.

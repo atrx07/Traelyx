@@ -36,6 +36,13 @@ be revoked while its owner is authenticated; local provider deletion alone is
 not complete opt-out. Unexpected Auth loss needs a separate reconciliation path
 before live device registration is exposed.
 
+Explicit app sign-out now reads the native device identity and performs its
+guarded server revoke while the old Auth owner is still signed in. Only then
+does it clear native/provider authority and remove the local Auth session.
+Offline server failure leaves that Auth owner and local binding available for
+retry; a failure after confirmed server revoke retries local cleanup without
+repeating the RPC. This does not reconcile unexpected account replacement.
+
 Events carry no trip ID, coordinates, speed, raw samples, name, or arbitrary text.
 They are explicitly **experimental client-reported signals**, not server-verified
 crashes. The server validates the exact versioned envelope, at least 30 seconds

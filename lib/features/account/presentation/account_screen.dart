@@ -90,7 +90,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       setState(() {
         _isError = true;
         _message =
-            'Could not clear local Guardian access, so sign-out was cancelled. Try again.';
+            'Could not finish Guardian cleanup, so sign-out was cancelled. Try again.';
       });
     } catch (_) {
       if (!mounted) return;

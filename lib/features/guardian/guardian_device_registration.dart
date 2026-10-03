@@ -44,6 +44,10 @@ abstract interface class GuardianDeviceRpcTransport {
   Future<Object?> call(String name, Map<String, Object?> parameters);
 }
 
+abstract interface class GuardianDeviceRevoker {
+  Future<void> revoke(String owner, String device, String generation);
+}
+
 final class SupabaseGuardianDeviceRpcTransport
     implements GuardianDeviceRpcTransport {
   const SupabaseGuardianDeviceRpcTransport(this.client);
@@ -58,8 +62,9 @@ final class SupabaseGuardianDeviceRpcTransport
       client.rpc<Object?>(name, params: parameters);
 }
 
-/// Guarded server half of recipient opt-in. No caller is connected yet.
-final class GuardianDeviceServerGateway {
+/// Guarded server half of recipient opt-in. Explicit sign-out uses revocation;
+/// registration still has no production caller.
+final class GuardianDeviceServerGateway implements GuardianDeviceRevoker {
   const GuardianDeviceServerGateway(this.transport);
 
   final GuardianDeviceRpcTransport transport;
@@ -92,6 +97,7 @@ final class GuardianDeviceServerGateway {
   }
 
   /// Requires the same signed-in owner; local token deletion is a separate step.
+  @override
   Future<void> revoke(String owner, String device, String generation) async {
     if (!_guardianUuid.hasMatch(device) ||
         !_guardianUuid.hasMatch(generation)) {

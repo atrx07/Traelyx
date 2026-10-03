@@ -14,6 +14,7 @@ import 'package:traelyx/features/account_metadata/data/supabase_metadata_gateway
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 import 'package:traelyx/features/guardian/guardian_alerts.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_device_registration.dart';
 import 'package:traelyx/features/guardian/guardian_gateway.dart';
 import 'package:traelyx/features/rankings/ranking_service.dart';
 import 'package:traelyx/features/social/application/social_controller.dart';
@@ -64,6 +65,14 @@ final class FakeOwnerPort implements GuardianOwnerPort {
   final calls = <String?>[];
   Completer<void>? nextCall;
   bool failCleanup = false;
+  GuardianRecipientLocalStatus? status;
+  int statusCalls = 0;
+
+  @override
+  Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId) async {
+    statusCalls++;
+    return status;
+  }
 
   @override
   Future<void> bindOwner(String? ownerId) async {
@@ -72,6 +81,19 @@ final class FakeOwnerPort implements GuardianOwnerPort {
     final blocked = nextCall;
     nextCall = null;
     await blocked?.future;
+  }
+}
+
+final class FakeDeviceRevoker implements GuardianDeviceRevoker {
+  final calls = <(String, String, String)>[];
+  Completer<void>? nextCall;
+  bool fail = false;
+
+  @override
+  Future<void> revoke(String owner, String device, String generation) async {
+    calls.add((owner, device, generation));
+    if (fail) throw StateError('offline');
+    await nextCall?.future;
   }
 }
 
@@ -147,6 +169,41 @@ void main() {
         throwsA(isA<PlatformException>()),
       );
       expect(driverCalls, 0);
+    },
+  );
+
+  test(
+    'production recipient snapshot exposes only bounded device identity',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const recipient = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_recipient',
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      Object? reply = {
+        'deviceId': '33333333-3333-4333-8333-333333333333',
+        'generation': '44444444-4444-4444-8444-444444444444',
+        'expiresAtEpochMillis': 1800000000000,
+      };
+      messenger.setMockMethodCallHandler(recipient, (call) async {
+        expect(call.method, 'snapshot');
+        expect(call.arguments, {'ownerId': ownerA.userId});
+        return reply;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(recipient, null));
+
+      const port = MethodChannelGuardianOwnerPort();
+      final status = await port.recipientStatus(ownerA.userId);
+      expect(status?.deviceId, '33333333-3333-4333-8333-333333333333');
+      expect(status?.generation, '44444444-4444-4444-8444-444444444444');
+      reply = {...(reply as Map), 'credential': 'must-not-cross-channel'};
+      await expectLater(
+        port.recipientStatus(ownerA.userId),
+        throwsA(isA<FormatException>()),
+      );
+      reply = null;
+      expect(await port.recipientStatus(ownerA.userId), isNull);
     },
   );
 
@@ -270,4 +327,205 @@ void main() {
     expect(port.calls.last, null);
     expect(await bound.ensureCurrentOwnerBound(), isFalse);
   });
+
+  test(
+    'explicit sign-out revokes a stored device before local cleanup',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort()
+        ..status = const GuardianRecipientLocalStatus(
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        );
+      final revoker = FakeDeviceRevoker();
+      final pending = Completer<void>();
+      revoker.nextCall = pending;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+
+      final signingOut = bound.signOut();
+      await Future<void>.delayed(Duration.zero);
+      expect(revoker.calls, [
+        (
+          ownerA.userId,
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        ),
+      ]);
+      expect(port.calls.last, ownerA.userId);
+      expect(account.signOutCount, 0);
+      pending.complete();
+      await signingOut;
+      expect(port.calls.last, null);
+      expect(account.signOutCount, 1);
+    },
+  );
+
+  test(
+    'offline server revoke leaves Auth and local binding for retry',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort()
+        ..status = const GuardianRecipientLocalStatus(
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        );
+      final revoker = FakeDeviceRevoker()..fail = true;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+
+      await expectLater(
+        bound.signOut(),
+        throwsA(isA<GuardianLocalCleanupException>()),
+      );
+      expect(account.signOutCount, 0);
+      expect(account.currentIdentity, ownerA);
+      expect(port.calls.last, ownerA.userId);
+      revoker.fail = false;
+      await bound.signOut();
+      expect(revoker.calls.length, 2);
+      expect(account.signOutCount, 1);
+    },
+  );
+
+  test('missing server revoker blocks sign-out with a stored device', () async {
+    final account = FakeAccount(ownerA);
+    final port = FakeOwnerPort()
+      ..status = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+    final bound = GuardianBoundAccountGateway(account, port);
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    expect(await bound.ensureCurrentOwnerBound(), isTrue);
+    await expectLater(
+      bound.signOut(),
+      throwsA(isA<GuardianLocalCleanupException>()),
+    );
+    expect(account.signOutCount, 0);
+    expect(port.calls.last, ownerA.userId);
+  });
+
+  test(
+    'retry after local deletion failure does not require a second server revoke',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort()
+        ..status = const GuardianRecipientLocalStatus(
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        );
+      final revoker = FakeDeviceRevoker();
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      port.failCleanup = true;
+
+      await expectLater(
+        bound.signOut(),
+        throwsA(isA<GuardianLocalCleanupException>()),
+      );
+      expect(revoker.calls.length, 1);
+      expect(account.signOutCount, 0);
+      port.failCleanup = false;
+      await bound.signOut();
+      expect(revoker.calls.length, 1);
+      expect(account.signOutCount, 1);
+    },
+  );
+
+  test('concurrent sign-out cannot start a second device revocation', () async {
+    final account = FakeAccount(ownerA);
+    final port = FakeOwnerPort()
+      ..status = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+    final revoker = FakeDeviceRevoker();
+    final pending = Completer<void>();
+    revoker.nextCall = pending;
+    final bound = GuardianBoundAccountGateway(
+      account,
+      port,
+      deviceRevoker: revoker,
+    );
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    expect(await bound.ensureCurrentOwnerBound(), isTrue);
+
+    final first = bound.signOut();
+    await Future<void>.delayed(Duration.zero);
+    await expectLater(
+      bound.signOut(),
+      throwsA(isA<GuardianLocalCleanupException>()),
+    );
+    expect(revoker.calls.length, 1);
+    pending.complete();
+    await first;
+    expect(account.signOutCount, 1);
+  });
+
+  test(
+    'account replacement during revoke cannot sign out the new owner',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort()
+        ..status = const GuardianRecipientLocalStatus(
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        );
+      final revoker = FakeDeviceRevoker();
+      final pending = Completer<void>();
+      revoker.nextCall = pending;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+
+      final signingOut = bound.signOut();
+      await Future<void>.delayed(Duration.zero);
+      account.emit(ownerB);
+      pending.complete();
+      await expectLater(
+        signingOut,
+        throwsA(isA<GuardianLocalCleanupException>()),
+      );
+      expect(account.signOutCount, 0);
+      expect(account.currentIdentity, ownerB);
+    },
+  );
 }

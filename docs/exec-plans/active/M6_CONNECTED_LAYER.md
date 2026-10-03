@@ -432,6 +432,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   data-preserving first-phone startup and a guarded production-runtime inert
   owner-bind proof pass. Server revocation and unexpected
   Auth-loss reconciliation are still required before opt-in is exposed.
+- [x] Guard explicit recipient sign-out with the existing signed-in server
+  device revocation RPC. Native status exposes only device/generation IDs;
+  server revocation completes before local provider deletion and Auth release.
+  Offline/malformed/missing transport denies sign-out; a confirmed server
+  revoke followed by local deletion failure can retry locally. Concurrent
+  sign-out and account replacement cannot release the wrong owner. All 311 Flutter
+  tests, analysis, configured debug APK and a data-preserving first-phone
+  startup pass. No production recipient device exists, so hosted revoke and
+  physical registered-device sign-out remain untested. Unexpected Auth loss,
+  reviewed opt-in and delivery remain gates.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

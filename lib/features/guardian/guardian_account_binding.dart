@@ -5,9 +5,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
+import 'package:traelyx/features/guardian/guardian_device_registration.dart';
+
+final _recipientUuid = RegExp(r'^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$');
+
+final class GuardianRecipientLocalStatus {
+  const GuardianRecipientLocalStatus(this.deviceId, this.generation);
+
+  final String deviceId;
+  final String generation;
+}
 
 abstract interface class GuardianOwnerPort {
   Future<void> bindOwner(String? ownerId);
+  Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId);
 }
 
 final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
@@ -28,6 +39,34 @@ final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
     });
     await _driverChannel.invokeMethod<void>('bindOwner', {'ownerId': ownerId});
   }
+
+  @override
+  Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId) async {
+    if (!_recipientUuid.hasMatch(ownerId)) throw const FormatException();
+    final raw = await _recipientChannel.invokeMethod<Object?>('snapshot', {
+      'ownerId': ownerId,
+    });
+    if (raw == null) return null;
+    if (raw is! Map ||
+        raw.length != 3 ||
+        !raw.containsKey('deviceId') ||
+        !raw.containsKey('generation') ||
+        !raw.containsKey('expiresAtEpochMillis')) {
+      throw const FormatException('Invalid Guardian recipient status');
+    }
+    final device = raw['deviceId'];
+    final generation = raw['generation'];
+    final expiresAt = raw['expiresAtEpochMillis'];
+    if (device is! String ||
+        generation is! String ||
+        !_recipientUuid.hasMatch(device) ||
+        !_recipientUuid.hasMatch(generation) ||
+        expiresAt is! int ||
+        expiresAt <= 0) {
+      throw const FormatException('Invalid Guardian recipient status');
+    }
+    return GuardianRecipientLocalStatus(device, generation);
+  }
 }
 
 final class GuardianLocalCleanupException implements Exception {
@@ -37,13 +76,18 @@ final class GuardianLocalCleanupException implements Exception {
 /// Keeps native Guardian authority aligned with Auth without delaying local trips.
 final class GuardianBoundAccountGateway
     implements AccountGateway, SupabaseClientSource {
-  GuardianBoundAccountGateway(this._account, this._guardian) {
+  GuardianBoundAccountGateway(
+    this._account,
+    this._guardian, {
+    this.deviceRevoker,
+  }) {
     _subscription = _account.identityChanges.listen((_) => _updateOwner());
     _updateOwner();
   }
 
   final AccountGateway _account;
   final GuardianOwnerPort _guardian;
+  final GuardianDeviceRevoker? deviceRevoker;
 
   @override
   SupabaseClient? get accountClient => accountClientOf(_account);
@@ -51,7 +95,11 @@ final class GuardianBoundAccountGateway
   Future<void> _tail = Future<void>.value();
   String? _desiredOwner;
   bool _signingOut = false;
+  bool _preparingSignOut = false;
   bool _localCleanupRequired = false;
+  String? _cleanupOwnerId;
+  bool _hasBoundOwner = false;
+  String? _boundOwner;
 
   void _updateOwner() {
     _desiredOwner = _signingOut || _localCleanupRequired
@@ -65,10 +113,14 @@ final class GuardianBoundAccountGateway
   Future<bool> _queueBind() {
     final result = Completer<bool>();
     _tail = _tail.then((_) async {
+      final target = _desiredOwner;
       try {
-        await _guardian.bindOwner(_desiredOwner);
+        await _guardian.bindOwner(target);
+        _boundOwner = target;
+        _hasBoundOwner = true;
         result.complete(true);
       } catch (_) {
+        _hasBoundOwner = false;
         result.complete(false);
       }
     });
@@ -101,13 +153,64 @@ final class GuardianBoundAccountGateway
 
   @override
   Future<void> signOut() async {
+    if (_preparingSignOut || _signingOut) {
+      throw const GuardianLocalCleanupException();
+    }
+    _preparingSignOut = true;
+    try {
+      await _signOutGuarded();
+    } finally {
+      _preparingSignOut = false;
+    }
+  }
+
+  Future<void> _signOutGuarded() async {
+    final owner = _account.currentIdentity?.userId;
+    if (_localCleanupRequired && owner != _cleanupOwnerId) {
+      throw const GuardianLocalCleanupException();
+    }
+    if (!_localCleanupRequired && owner != null) {
+      await _tail;
+      if (_account.currentIdentity?.userId != owner ||
+          _desiredOwner != owner ||
+          !_hasBoundOwner ||
+          _boundOwner != owner) {
+        throw const GuardianLocalCleanupException();
+      }
+      final GuardianRecipientLocalStatus? status;
+      try {
+        status = await _guardian.recipientStatus(owner);
+      } catch (_) {
+        throw const GuardianLocalCleanupException();
+      }
+      if (_account.currentIdentity?.userId != owner) {
+        throw const GuardianLocalCleanupException();
+      }
+      if (status != null) {
+        final revoker = deviceRevoker;
+        if (revoker == null) throw const GuardianLocalCleanupException();
+        try {
+          await revoker.revoke(owner, status.deviceId, status.generation);
+        } catch (_) {
+          throw const GuardianLocalCleanupException();
+        }
+        if (_account.currentIdentity?.userId != owner) {
+          throw const GuardianLocalCleanupException();
+        }
+      }
+    }
     _signingOut = true;
     _localCleanupRequired = true;
+    _cleanupOwnerId = owner;
     _desiredOwner = null;
     try {
       if (!await _queueBind()) throw const GuardianLocalCleanupException();
+      if (_account.currentIdentity?.userId != owner) {
+        throw const GuardianLocalCleanupException();
+      }
       await _account.signOut();
       _localCleanupRequired = false;
+      _cleanupOwnerId = null;
     } finally {
       _signingOut = false;
       _updateOwner();

@@ -57,6 +57,10 @@ final class OwnerPort implements GuardianOwnerPort {
   final owners = <String?>[];
   @override
   Future<void> bindOwner(String? ownerId) async => owners.add(ownerId);
+
+  @override
+  Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId) async =>
+      null;
 }
 
 final class NativePort implements GuardianNativeActivationPort {

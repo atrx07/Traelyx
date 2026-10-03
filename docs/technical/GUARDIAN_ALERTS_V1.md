@@ -194,8 +194,9 @@ Android notification permission, register a token or mutate server state.
 The recipient device RPC gateway is also dormant. It validates canonical
 account/device/generation identities and bounded credentials, checks the current
 Auth owner before and after each guarded registration or revocation call, and
-never logs its routing token or credential. No UI or native caller is connected;
-recipient credential storage integration and account-change cleanup are still required.
+never logs its routing token or credential. Explicit sign-out now invokes its
+revocation method when local recipient status exists. Registration still has
+no UI or native caller; unexpected account-loss reconciliation remains required.
 
 Recipient receipt authority now has an isolated native storage boundary: a
 version-1, bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
@@ -207,7 +208,7 @@ at expiry; corruption, missing keys and uncertain writes fail closed. The
 record contains no routing token or Auth credential. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
 There is still no consent or registration caller: server-confirmed registration,
-server revocation, token deletion, receipt and notification remain gates.
+unexpected account-loss reconciliation, receipt and notification remain gates.
 
 The native recipient coordinator now binds the Auth owner and validates local
 commit timing. A future foreground caller must confirm guarded server
@@ -217,17 +218,16 @@ commit timestamps, and exposes only opaque device/generation IDs plus expiry
 in status. A separate foreground MethodChannel serializes its operations on a
 single process worker. Flutter Auth binding calls recipient cleanup before
 driver binding and waits for both on sign-out; a failure prevents sign-out from
-reporting success. This bridge has no consent or registration caller yet, and
-it never initializes Firebase. Server revocation and token deletion still need
-to be attached before a recipient control is exposed.
+reporting success. This bridge has no consent or registration caller yet;
+marker-free binding does not initialize Firebase.
 
 The dormant push adapter now writes an account-free, no-backup provider cleanup
 marker before any explicit Firebase token request. Marker presence blocks another
 request until deletion of both the Firebase Messaging token and installation
 completes; deletion failure or an interrupted marker write retains cleanup intent.
 An explicit cleanup can initialize Firebase after a process restart even though
-automatic initialization stays disabled. Construction and owner binding do not
-initialize Firebase. A scoped Android 14 proof verified marker persistence,
+automatic initialization stays disabled. Construction and marker-free owner
+binding do not initialize Firebase. A scoped Android 14 proof verified marker persistence,
 interrupted-write detection and erasure without requesting a token; the normal
 app opened afterward with private storage sizes unchanged. No production caller
 can request a token yet.
@@ -238,12 +238,24 @@ local receipt record. It erases local receipt authority before waiting up to 25
 seconds for deletion and refuses the new owner if deletion fails or times out.
 A same-owner restart with a valid local receipt preserves the provider token;
 an unmarked receipt is discarded. With no marker, owner binding and sign-out
-remain Firebase-inert. This is local provider cleanup only. Authenticated server
-device revocation, opt-out orchestration and unexpected account-loss recovery
+remain Firebase-inert. Unexpected account-loss recovery and opt-out orchestration
 still need to be implemented before live registration is exposed. A guarded
 Android 14 proof ran the production owner runtime with an empty marker/vault:
 it completed a null-owner bind without initializing Firebase or requesting a
 token, then the normal app reopened with private storage sizes unchanged.
+
+For explicit sign-out, Flutter first reads the native account-bound status. If
+it reports a device, the signed-in owner invokes the guarded server revocation
+RPC and waits for confirmation before native provider deletion and Auth sign-out.
+Offline or rejected revocation cancels sign-out without clearing the local
+registration, so the same owner can retry. If server revocation succeeded but
+local deletion fails, a retry resumes local cleanup without repeating the
+server call. Missing server transport or malformed native status fails closed.
+Concurrent sign-out is serialized, and an account replacement during the
+server request cannot sign out the replacement account.
+This path is dormant on existing installations because no production recipient
+device has been registered. A data-preserving first-phone update opened the app;
+no physical sign-out with a registered device, hosted revoke or push was tested.
 
 ### Integration still required
 

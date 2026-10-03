@@ -56,7 +56,8 @@ See `docs/reference/GUARDIAN_CAPABILITY_SETUP.md`.
 
 The isolated signed-in recipient device RPC gateway now passes adversarial
 account-race and contract tests, the 302-test Flutter suite, analysis and a
-configured debug build. It has no caller. Next bind explicit recipient consent
+configured debug build. Its registration path still has no caller; explicit
+sign-out now uses its revocation path. Next bind recipient consent
 to encrypted native device state and Firebase token registration, with fail-closed
 account-change cleanup, before wiring the receiver or enabling delivery.
 
@@ -72,15 +73,23 @@ before any receiver or notification is enabled.
 The dormant Firebase adapter now has a durable, account-free cleanup marker
 before token acquisition and explicit restart-safe token/installation deletion.
 Native tests, lint, configured build and scoped first-phone proof pass without
-requesting a token. Next attach provider cleanup to owner changes/sign-out and
+requesting a token. Provider cleanup is now attached to native owner changes;
 complete the consented register/revoke transaction with the guarded server RPC;
 the second phone is needed only for later two-account delivery validation.
 
 Native owner binding now waits for marker-aware Firebase deletion when leaving
 an opted-in owner, while preserving a valid same-owner restart. Tests cover
 switching, failed deletion, orphaned state and timeout; the first-phone startup
-remains inert. Next implement server revocation before explicit sign-out, safe
-reconciliation after unexpected Auth loss, and the reviewed opt-in transaction.
+remains inert. Explicit sign-out revocation is addressed below; unexpected
+Auth-loss reconciliation and the reviewed opt-in transaction remain pending.
+
+Explicit sign-out now revokes a stored recipient device through the signed-in
+server RPC before native cleanup and Auth release. Offline revocation cancels
+sign-out; a later local deletion retry does not repeat a confirmed server
+revoke. Concurrent sign-out and account replacement fail closed. All 311 Flutter
+tests, analysis, configured build and first-phone inert
+startup pass. Next solve unexpected Auth-loss reconciliation and the reviewed
+opt-in transaction before any production device can register or receive push.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
