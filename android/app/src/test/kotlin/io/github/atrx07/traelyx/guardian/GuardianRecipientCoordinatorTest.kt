@@ -36,12 +36,12 @@ class GuardianRecipientCoordinatorTest {
 
     @Test fun `same owner binding preserves a valid registration without exposing its secret`() {
         val vault = MemoryVault()
-        val first = GuardianRecipientCoordinator(vault) { now }
+        val first = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         first.bindOwner(ownerA)
         val status = first.commit(ownerA, device())
         assertEquals(deviceId, status.deviceId)
         assertFalse(status.toString().contains(device().credential))
-        val restarted = GuardianRecipientCoordinator(vault) { now + 1 }
+        val restarted = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now + 1 }
         restarted.bindOwner(ownerA)
         assertEquals(status, restarted.snapshot(ownerA))
         assertEquals(0, vault.erased)
@@ -49,7 +49,7 @@ class GuardianRecipientCoordinatorTest {
 
     @Test fun `account switch and sign out erase local receipt authority before binding`() {
         val vault = MemoryVault()
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         coordinator.commit(ownerA, device())
         coordinator.bindOwner(ownerB)
@@ -62,9 +62,69 @@ class GuardianRecipientCoordinatorTest {
         denied { coordinator.snapshot(ownerB) }
     }
 
+    @Test fun `owner switch records exact server revoke intent before erasing receipt`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        coordinator.commit(ownerA, device())
+        coordinator.bindOwner(ownerB)
+        assertEquals(listOf(GuardianRecipientRevokeTicket(ownerA, deviceId, generation)), journal.pending())
+        assertNull(vault.stored)
+        coordinator.bindOwner(null)
+        assertEquals(1, journal.pending().size)
+    }
+
+    @Test fun `journal write failure blocks new owner and preserves receipt for retry`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        coordinator.commit(ownerA, device())
+        journal.failRecord = true
+        denied { coordinator.bindOwner(ownerB) }
+        assertEquals(device(), vault.stored)
+        denied { coordinator.snapshot(ownerA) }
+        denied { coordinator.commit(ownerB, device(ownerB)) }
+        journal.failRecord = false
+        coordinator.bindOwner(ownerB)
+        assertNull(vault.stored)
+        assertEquals(1, journal.pending().size)
+    }
+
+    @Test fun `replacement receipt journals prior device before overwrite`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        coordinator.commit(ownerA, device())
+        val replacement = device().copy(deviceId = "55555555-5555-4555-8555-555555555555")
+        journal.failRecord = true
+        denied { coordinator.commit(ownerA, replacement) }
+        assertEquals(device(), vault.stored)
+        journal.failRecord = false
+        coordinator.commit(ownerA, replacement)
+        assertEquals(replacement, vault.stored)
+        assertEquals(listOf(GuardianRecipientRevokeTicket(ownerA, deviceId, generation)), journal.pending())
+    }
+
+    @Test fun `expired snapshot and explicit disable retain revoke IDs`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        vault.stored = device(started = now - GuardianRecipientCoordinator.LOCAL_MAX_LIFETIME_MILLIS)
+        assertNull(coordinator.snapshot(ownerA))
+        assertEquals(1, journal.pending().size)
+        coordinator.commit(ownerA, device())
+        coordinator.disable(ownerA)
+        assertEquals(1, journal.pending().size)
+        assertNull(vault.stored)
+    }
+
     @Test fun `failed erasure blocks rebind and stale commit`() {
         val vault = MemoryVault()
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         coordinator.commit(ownerA, device())
         vault.failErase = true
@@ -78,7 +138,7 @@ class GuardianRecipientCoordinatorTest {
 
     @Test fun `malformed replacement owner clears local authority and refuses operations`() {
         val vault = MemoryVault()
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         coordinator.commit(ownerA, device())
         denied { coordinator.bindOwner("invalid-owner") }
@@ -89,7 +149,7 @@ class GuardianRecipientCoordinatorTest {
     @Test fun `corruption is erased before a new owner is bound`() {
         val vault = MemoryVault()
         vault.failRead = true
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         assertEquals(1, vault.erased)
         assertNull(coordinator.snapshot(ownerA))
@@ -97,7 +157,7 @@ class GuardianRecipientCoordinatorTest {
 
     @Test fun `old future and expired confirmations cannot commit or survive restart`() {
         val vault = MemoryVault()
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         denied { coordinator.commit(ownerA, device(started = now - GuardianRecipientCoordinator.REVIEW_TTL_MILLIS)) }
         denied { coordinator.commit(ownerA, device(started = now + 1)) }
@@ -110,7 +170,7 @@ class GuardianRecipientCoordinatorTest {
 
     @Test fun `bridge validates exact fields and never returns a credential`() {
         val vault = MemoryVault()
-        val bridge = GuardianRecipientBridge(GuardianRecipientCoordinator(vault) { now })
+        val bridge = GuardianRecipientBridge(GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now })
         bridge.dispatch("bindOwner", mapOf("ownerId" to ownerA))
         val args = mapOf(
             "ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation,

@@ -94,8 +94,12 @@ opt-in transaction before any production device can register or receive push.
 An isolated encrypted native revoke journal now preserves only exact server-row
 IDs for a later same-owner retry after unexpected Auth loss. Bounded capacity,
 restart/tamper behavior, Android lint, configured build and a first-phone proof
-pass. Connect it to account-change capture and guarded signed-in reconciliation;
-it is currently dormant and has not registered a device or requested a token.
+pass. Native account-change capture is now connected below; guarded signed-in
+reconciliation is still missing. No device registration or token was requested.
+Native owner cleanup now writes the journal before erasing a receipt; failed
+writes deny rebinding, and replacement receipts also retain the previous row
+identity. First-phone proofs pass; finish CI, then connect signed-in same-owner
+server reconciliation and exact ticket confirmation before enabling opt-in.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

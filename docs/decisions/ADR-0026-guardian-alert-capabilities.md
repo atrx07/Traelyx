@@ -104,8 +104,9 @@ only the owner, device and generation IDs needed for a later same-owner retry in
 a separate encrypted, no-backup native journal. Keep the journal bounded and
 never silently evict an unconfirmed row based on the local clock; refuse new
 registration when capacity or journal integrity is uncertain. The journal is
-currently dormant. Runtime capture/reconciliation remains a separate gate before
-device registration can be exposed.
+now captures IDs before native local receipt erasure. Signed-in same-owner
+server reconciliation remains a separate gate before device registration can be
+exposed.
 
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain

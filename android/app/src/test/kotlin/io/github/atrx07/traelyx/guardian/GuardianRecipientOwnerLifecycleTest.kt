@@ -50,14 +50,14 @@ class GuardianRecipientOwnerLifecycleTest {
 
     private fun lifecycle(vault: Vault, marker: Marker, push: Push, timeout: Long = 1_000) =
         GuardianRecipientOwnerLifecycle(
-            GuardianRecipientCoordinator(vault) { now }, vault, marker, push, { now }, timeout,
+            GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }, vault, marker, push, { now }, timeout,
         )
 
     @Test fun `same owner restart preserves active authority without deleting provider`() {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker(true)
         val push = Push(marker)
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }).bindOwner(ownerA)
         assertEquals(device().deviceId, coordinator.snapshot(ownerA)?.deviceId)
         assertEquals(0, vault.erasures)
@@ -69,7 +69,7 @@ class GuardianRecipientOwnerLifecycleTest {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker(true)
         val push = Push(marker)
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         val lifecycle = GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now })
         val finished = CountDownLatch(1)
@@ -97,13 +97,34 @@ class GuardianRecipientOwnerLifecycleTest {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker(true)
         val push = Push(marker).also { it.autoComplete = false }
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         val lifecycle = GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now })
         assertThrows(IllegalStateException::class.java) { lifecycle.bindOwner(ownerB) }
         assertTrue(marker.marked)
         assertNull(vault.stored)
         assertThrows(IllegalArgumentException::class.java) { coordinator.snapshot(ownerA) }
+    }
+
+    @Test fun `failed revoke journal blocks provider teardown and new owner`() {
+        val vault = Vault().also { it.stored = device() }
+        val journal = MemoryGuardianRecipientRevokeJournal().also { it.failRecord = true }
+        val marker = Marker(true)
+        val push = Push(marker)
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        assertThrows(GuardianVaultUnavailable::class.java) {
+            GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }).bindOwner(ownerB)
+        }
+        assertEquals(device(), vault.stored)
+        assertTrue(marker.marked)
+        assertEquals(0, push.deletions)
+        assertThrows(IllegalArgumentException::class.java) { coordinator.snapshot(ownerA) }
+        journal.failRecord = false
+        push.autoComplete = true
+        GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }).bindOwner(ownerB)
+        assertNull(vault.stored)
+        assertEquals(1, journal.pending().size)
     }
 
     @Test fun `orphan marker after restart requires deletion before binding`() {
@@ -120,7 +141,7 @@ class GuardianRecipientOwnerLifecycleTest {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker()
         val push = Push(marker)
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }).bindOwner(ownerA)
         assertNull(coordinator.snapshot(ownerA))
         assertEquals(0, push.deletions)
@@ -138,7 +159,7 @@ class GuardianRecipientOwnerLifecycleTest {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker(true).also { it.failRead = true }
         val push = Push(marker)
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         assertThrows(IllegalStateException::class.java) {
             GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }).bindOwner(ownerB)
@@ -152,7 +173,7 @@ class GuardianRecipientOwnerLifecycleTest {
         val vault = Vault().also { it.stored = device() }
         val marker = Marker(true)
         val push = Push(marker)
-        val coordinator = GuardianRecipientCoordinator(vault) { now }
+        val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
         assertThrows(IllegalStateException::class.java) {
             GuardianRecipientOwnerLifecycle(coordinator, vault, marker, push, { now }, 10).bindOwner(ownerB)

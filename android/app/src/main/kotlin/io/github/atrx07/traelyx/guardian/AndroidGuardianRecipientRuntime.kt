@@ -14,7 +14,8 @@ object AndroidGuardianRecipientRuntime {
             val result = runCatching {
                 val current = bridge ?: run {
                     val vault = AndroidGuardianRecipientVault(app)
-                    val coordinator = GuardianRecipientCoordinator(vault, System::currentTimeMillis)
+                    val journal = AndroidGuardianRecipientRevokeJournal(app)
+                    val coordinator = GuardianRecipientCoordinator(vault, journal, System::currentTimeMillis)
                     val marker = AndroidGuardianProviderMarker(app)
                     val ownerLifecycle = GuardianRecipientOwnerLifecycle(
                         coordinator, vault, marker, FirebaseGuardianRegistration.get(app),

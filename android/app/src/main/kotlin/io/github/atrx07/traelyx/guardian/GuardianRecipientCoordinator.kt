@@ -8,6 +8,7 @@ data class GuardianRecipientStatus(val deviceId: String, val generation: String,
 /** Serial, account-bound local receipt authority. Server confirmation is a separate foreground gate. */
 class GuardianRecipientCoordinator(
     private val vault: GuardianRecipientVault,
+    private val revokeJournal: GuardianRecipientRevokeJournal,
     private val epochMillis: () -> Long,
 ) {
     private var owner: String? = null
@@ -18,17 +19,20 @@ class GuardianRecipientCoordinator(
         owner = null
         bound = false
         try { nextOwner?.let(::guardianUuid) } catch (error: IllegalArgumentException) {
-            vault.erase()
+            dropStored()
             throw error
         }
         if (nextOwner == null) {
-            vault.erase()
+            dropStored()
         } else {
             val stored = try { vault.readStored() } catch (_: GuardianVaultUnavailable) {
                 vault.erase()
                 null
             }
-            if (stored != null && !stored.validFor(nextOwner, stored.generation, epochMillis())) vault.erase()
+            if (stored != null && !stored.validFor(nextOwner, stored.generation, epochMillis())) {
+                recordBeforeErase(stored)
+                vault.erase()
+            }
         }
         owner = nextOwner
         bound = true
@@ -42,6 +46,7 @@ class GuardianRecipientCoordinator(
             now - device.registeredAtEpochMillis < REVIEW_TTL_MILLIS &&
             device.expiresAtEpochMillis > now &&
             device.expiresAtEpochMillis - device.registeredAtEpochMillis <= LOCAL_MAX_LIFETIME_MILLIS)
+        vault.readStored()?.takeIf { it != device }?.let(::recordBeforeErase)
         vault.write(device)
         return GuardianRecipientStatus(device.deviceId, device.generation, device.expiresAtEpochMillis)
     }
@@ -50,6 +55,7 @@ class GuardianRecipientCoordinator(
         require(bound && owner == expectedOwner)
         val stored = vault.readStored() ?: return null
         if (!stored.validFor(expectedOwner, stored.generation, epochMillis())) {
+            recordBeforeErase(stored)
             vault.erase()
             return null
         }
@@ -58,7 +64,20 @@ class GuardianRecipientCoordinator(
 
     @Synchronized fun disable(expectedOwner: String) {
         require(bound && owner == expectedOwner)
+        dropStored()
+    }
+
+    private fun dropStored() {
+        val stored = try { vault.readStored() } catch (_: GuardianVaultUnavailable) {
+            vault.erase()
+            return
+        }
+        if (stored != null) recordBeforeErase(stored)
         vault.erase()
+    }
+
+    private fun recordBeforeErase(stored: GuardianRecipientDevice) {
+        revokeJournal.record(GuardianRecipientRevokeTicket(stored.ownerId, stored.deviceId, stored.generation))
     }
 
     companion object {

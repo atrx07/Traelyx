@@ -253,8 +253,9 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         val namespace = "proof-${UUID.randomUUID()}"
         val file = File(context.noBackupFilesDir, "guardian/recipient-$namespace.vault")
         val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
         val bridge = io.github.atrx07.traelyx.guardian.GuardianRecipientBridge(
-            io.github.atrx07.traelyx.guardian.GuardianRecipientCoordinator(vault, System::currentTimeMillis),
+            io.github.atrx07.traelyx.guardian.GuardianRecipientCoordinator(vault, journal, System::currentTimeMillis),
         )
         val owner = UUID.randomUUID().toString()
         val generation = UUID.randomUUID().toString()
@@ -274,8 +275,9 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(bridge.dispatch("snapshot", mapOf("ownerId" to owner)) == committed)
             bridge.dispatch("bindOwner", mapOf("ownerId" to UUID.randomUUID().toString()))
             check(!file.exists())
+            check(journal.pending() == listOf(io.github.atrx07.traelyx.guardian.GuardianRecipientRevokeTicket(owner, device, generation)))
             check(runCatching { bridge.dispatch("snapshot", mapOf("ownerId" to owner)) }.isFailure)
-        } finally { vault.erase() }
+        } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient bridge proof passed: scoped commit, redacted status, account-switch erasure; " +

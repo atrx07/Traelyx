@@ -448,9 +448,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   or corrupt/missing/uncertain state fails closed rather than discarding a ticket.
   Six focused tests, full native unit suite, Android lint, configured APK and a
   random-namespace first-phone Keystore proof pass. The proof removed its key
-  and file; Firebase stayed inactive. No runtime writes or server retry caller
-  exist yet. Connect account-change capture and same-owner reconciliation before
-  permitting consented registration.
+  and file; Firebase stayed inactive. The initial isolated unit had no runtime
+  writes. Full CI run 37134160751 (`1b6bce6`) passed. Same-owner
+  reconciliation remains required before registration.
+- [x] Capture recipient revoke IDs before native owner-switch, sign-out,
+  expiry, explicit disable or replacement erases the old receipt. Journal write
+  failure blocks a new owner or replacement and retains the old receipt and
+  provider cleanup marker for retry. The exact-ID ticket is idempotent. Focused
+  coordinator/lifecycle tests, the full native unit suite, Android lint,
+  repository validation and a configured debug APK pass. Scoped first-phone
+  bridge and production inert-owner proofs pass; the production journal remains
+  absent and normal app startup succeeds after a data-preserving update. Full
+  CI is pending. The signed-in same-owner server retry/confirmation bridge is
+  still pending; no real device registered.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
