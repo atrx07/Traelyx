@@ -13,13 +13,20 @@ abstract interface class GuardianOwnerPort {
 final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
   const MethodChannelGuardianOwnerPort();
 
-  static const _channel = MethodChannel(
+  static const _driverChannel = MethodChannel(
     'io.github.atrx07.traelyx/guardian_activation',
+  );
+  static const _recipientChannel = MethodChannel(
+    'io.github.atrx07.traelyx/guardian_recipient',
   );
 
   @override
   Future<void> bindOwner(String? ownerId) async {
-    await _channel.invokeMethod<void>('bindOwner', {'ownerId': ownerId});
+    // Sign-out waits for both local authorities to be cleared before Auth exits.
+    await _recipientChannel.invokeMethod<void>('bindOwner', {
+      'ownerId': ownerId,
+    });
+    await _driverChannel.invokeMethod<void>('bindOwner', {'ownerId': ownerId});
   }
 }
 

@@ -62,28 +62,37 @@ internal object GuardianRecipientVaultCodec {
     }
 }
 
+/** Native-only receipt authority. Callers must first bind the current Auth owner. */
+interface GuardianRecipientVault {
+    fun readStored(): GuardianRecipientDevice?
+    fun write(device: GuardianRecipientDevice)
+    fun erase()
+
+    fun readBound(owner: String, generation: String, nowEpochMillis: Long): GuardianRecipientDevice? =
+        readStored()?.takeIf { it.validFor(owner, generation, nowEpochMillis) }
+}
+
 /** Missing state is inert. Corruption and uncertain writes disable this instance. */
 class EncryptedGuardianRecipientVault(
     private val storage: GuardianSealedStorage,
     private val cipher: GuardianVaultCipher,
     private val destroyKey: () -> Unit,
-) {
+) : GuardianRecipientVault {
     private var failed = false
 
-    @Synchronized fun readBound(owner: String, generation: String, nowEpochMillis: Long): GuardianRecipientDevice? {
+    @Synchronized override fun readStored(): GuardianRecipientDevice? {
         if (failed) throw GuardianVaultUnavailable()
         try {
             val sealed = storage.read() ?: return null
             val plain = cipher.open(sealed)
-            val device = try { GuardianRecipientVaultCodec.decode(plain) } finally { plain.fill(0) }
-            return device.takeIf { it.validFor(owner, generation, nowEpochMillis) }
+            return try { GuardianRecipientVaultCodec.decode(plain) } finally { plain.fill(0) }
         } catch (_: Exception) {
             failed = true
             throw GuardianVaultUnavailable()
         }
     }
 
-    @Synchronized fun write(device: GuardianRecipientDevice) {
+    @Synchronized override fun write(device: GuardianRecipientDevice) {
         if (failed) throw GuardianVaultUnavailable()
         try {
             val plain = GuardianRecipientVaultCodec.encode(device)
@@ -98,7 +107,7 @@ class EncryptedGuardianRecipientVault(
         }
     }
 
-    @Synchronized fun erase() {
+    @Synchronized override fun erase() {
         failed = true
         try {
             val keyResult = runCatching { destroyKey() }

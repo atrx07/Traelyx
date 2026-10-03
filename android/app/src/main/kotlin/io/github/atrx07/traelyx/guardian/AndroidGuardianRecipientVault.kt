@@ -11,7 +11,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
 /** Separate Keystore key and no-backup file for recipient receipt authority. */
-class AndroidGuardianRecipientVault(context: Context, namespace: String = "primary") {
+class AndroidGuardianRecipientVault(context: Context, namespace: String = "primary") : GuardianRecipientVault {
     private val delegate: EncryptedGuardianRecipientVault
 
     init {
@@ -79,11 +79,9 @@ class AndroidGuardianRecipientVault(context: Context, namespace: String = "prima
         delegate = EncryptedGuardianRecipientVault(storage, cipher) { keyStore().deleteEntry(alias) }
     }
 
-    fun readBound(owner: String, generation: String, nowEpochMillis: Long): GuardianRecipientDevice? =
-        synchronized(LOCK) { delegate.readBound(owner, generation, nowEpochMillis) }
-
-    fun write(device: GuardianRecipientDevice) = synchronized(LOCK) { delegate.write(device) }
-    fun erase() = synchronized(LOCK) { delegate.erase() }
+    override fun readStored(): GuardianRecipientDevice? = synchronized(LOCK) { delegate.readStored() }
+    override fun write(device: GuardianRecipientDevice) = synchronized(LOCK) { delegate.write(device) }
+    override fun erase() = synchronized(LOCK) { delegate.erase() }
 
     companion object { private val LOCK = Any() }
 }

@@ -399,7 +399,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   physical proof also passes after the shared cipher gained a domain argument.
   The proof used a random namespace, cleaned its key/file, and left private
   directory sizes unchanged. No runtime caller, registration or alert exists;
-  consent orchestration, account cleanup and receiver authority remain pending.
+  consent orchestration, server/provider cleanup and receiver authority remain pending.
+- [x] Bind the dormant native recipient vault to the current Auth owner. A
+  serialized coordinator/foreground bridge retains only same-account unexpired
+  state, clears it on account switch/sign-out and rejects stale or future local
+  commits. Flutter's owner port now waits for recipient and driver cleanup,
+  refusing sign-out success if either fails. Seven native coordinator/bridge tests,
+  two Flutter channel tests, the full native and 304-test Flutter suites,
+  analysis and configured debug build pass. A scoped physical Keystore bridge
+  proof and production Flutter-to-Android synthetic owner-binding probe pass;
+  the normal app was restored without clearing data, and no production
+  recipient credential or server device row was created. Consent, FCM token
+  acquisition/deletion, server registration/revocation, receiver and alert UI
+  remain pending.
 - [x] Add an isolated Android parser for the fixed data-only FCM envelope.
   It rejects notification content, schema drift, extra fields and malformed
   identifiers before any future authority check. The full native unit suite

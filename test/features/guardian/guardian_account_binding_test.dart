@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -75,6 +76,80 @@ final class FakeOwnerPort implements GuardianOwnerPort {
 }
 
 void main() {
+  test(
+    'production owner port binds recipient before driver and clears both',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const recipient = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_recipient',
+      );
+      const driver = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_activation',
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final calls = <String>[];
+      messenger.setMockMethodCallHandler(recipient, (call) async {
+        expect(call.method, 'bindOwner');
+        calls.add('recipient:${(call.arguments as Map)['ownerId']}');
+        return null;
+      });
+      messenger.setMockMethodCallHandler(driver, (call) async {
+        expect(call.method, 'bindOwner');
+        calls.add('driver:${(call.arguments as Map)['ownerId']}');
+        return null;
+      });
+      addTearDown(() {
+        messenger.setMockMethodCallHandler(recipient, null);
+        messenger.setMockMethodCallHandler(driver, null);
+      });
+
+      const port = MethodChannelGuardianOwnerPort();
+      await port.bindOwner(ownerA.userId);
+      await port.bindOwner(null);
+      expect(calls, [
+        'recipient:${ownerA.userId}',
+        'driver:${ownerA.userId}',
+        'recipient:null',
+        'driver:null',
+      ]);
+    },
+  );
+
+  test(
+    'recipient cleanup failure prevents the driver bind from claiming success',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const recipient = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_recipient',
+      );
+      const driver = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_activation',
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      var driverCalls = 0;
+      messenger.setMockMethodCallHandler(
+        recipient,
+        (_) async => throw PlatformException(code: 'cleanup_failed'),
+      );
+      messenger.setMockMethodCallHandler(driver, (_) async {
+        driverCalls++;
+        return null;
+      });
+      addTearDown(() {
+        messenger.setMockMethodCallHandler(recipient, null);
+        messenger.setMockMethodCallHandler(driver, null);
+      });
+
+      await expectLater(
+        const MethodChannelGuardianOwnerPort().bindOwner(null),
+        throwsA(isA<PlatformException>()),
+      );
+      expect(driverCalls, 0);
+    },
+  );
+
   test('decorated Auth keeps every optional cloud gateway available', () async {
     final client = SupabaseClient(
       'https://example.supabase.co',

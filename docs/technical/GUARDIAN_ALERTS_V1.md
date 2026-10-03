@@ -206,8 +206,20 @@ no authority for a different account/generation, before registration time or
 at expiry; corruption, missing keys and uncertain writes fail closed. The
 record contains no routing token or Auth credential. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
-There is still no runtime caller: consent, server-confirmed registration,
-account-change erasure, token deletion, receipt and notification remain gates.
+There is still no consent or registration caller: server-confirmed registration,
+server revocation, token deletion, receipt and notification remain gates.
+
+The native recipient coordinator now binds the Auth owner and validates local
+commit timing. A future foreground caller must confirm guarded server
+registration before invoking that commit. It preserves an unexpired record only for
+that owner, erases on sign-out/account switch or expiry, rejects stale/future
+commit timestamps, and exposes only opaque device/generation IDs plus expiry
+in status. A separate foreground MethodChannel serializes its operations on a
+single process worker. Flutter Auth binding calls recipient cleanup before
+driver binding and waits for both on sign-out; a failure prevents sign-out from
+reporting success. This bridge has no consent or registration caller yet, and
+it never initializes Firebase. Server revocation and token deletion still need
+to be attached before a recipient control is exposed.
 
 ### Integration still required
 

@@ -33,6 +33,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 when (instrumentationArguments?.getString("mode")) {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
+                    "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
                     "index" ->
@@ -159,6 +160,40 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
             "tamper rejection and key destruction; Firebase inactive, trip/session storage untouched."
+    }
+
+    private fun runGuardianRecipientBridgeProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/recipient-$namespace.vault")
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
+        val bridge = io.github.atrx07.traelyx.guardian.GuardianRecipientBridge(
+            io.github.atrx07.traelyx.guardian.GuardianRecipientCoordinator(vault, System::currentTimeMillis),
+        )
+        val owner = UUID.randomUUID().toString()
+        val generation = UUID.randomUUID().toString()
+        val device = UUID.randomUUID().toString()
+        val credential = "a".repeat(64)
+        try {
+            bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
+            val start = System.currentTimeMillis()
+            val committed = bridge.dispatch("commit", mapOf(
+                "ownerId" to owner, "deviceId" to device, "generation" to generation,
+                "credential" to credential, "registeredAtEpochMillis" to start,
+                "expiresAtEpochMillis" to start + 60_000L,
+            )) as Map<*, *>
+            check(committed.keys == setOf("deviceId", "generation", "expiresAtEpochMillis"))
+            check(!committed.toString().contains(credential))
+            check(file.isFile && !file.readText(Charsets.ISO_8859_1).contains(credential))
+            check(bridge.dispatch("snapshot", mapOf("ownerId" to owner)) == committed)
+            bridge.dispatch("bindOwner", mapOf("ownerId" to UUID.randomUUID().toString()))
+            check(!file.exists())
+            check(runCatching { bridge.dispatch("snapshot", mapOf("ownerId" to owner)) }.isFailure)
+        } finally { vault.erase() }
+        check(!file.exists())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 recipient bridge proof passed: scoped commit, redacted status, account-switch erasure; " +
+            "Firebase inactive, no server registration or trip change."
     }
 
     private fun runGuardianActivationProof(): String {

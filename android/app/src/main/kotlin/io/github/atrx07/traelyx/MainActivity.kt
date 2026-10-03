@@ -35,6 +35,8 @@ import java.util.concurrent.Executors
 import io.github.atrx07.traelyx.intelligence.LocalTripAnalysis
 import io.github.atrx07.traelyx.guardian.AndroidGuardianActivationRuntime
 import io.github.atrx07.traelyx.guardian.GuardianActivationBridge
+import io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRuntime
+import io.github.atrx07.traelyx.guardian.GuardianRecipientBridge
 
 class MainActivity : FlutterActivity() {
     private val permissionGateway by lazy { AndroidRecorderPermissionGateway(this) }
@@ -98,6 +100,23 @@ class MainActivity : FlutterActivity() {
                                 onSuccess = { result.success(it) },
                                 onFailure = { result.error("guardian_unavailable",
                                     "Local Guardian activation could not be confirmed.", null) },
+                            )
+                        }
+                    }
+                }
+            }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, GuardianRecipientBridge.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method !in GuardianRecipientBridge.METHODS) {
+                    result.notImplemented()
+                } else {
+                    AndroidGuardianRecipientRuntime.dispatch(applicationContext, call.method, call.arguments) { outcome ->
+                        runOnUiThread {
+                            if (!isDestroyed) outcome.fold(
+                                onSuccess = { result.success(it) },
+                                onFailure = { result.error("guardian_recipient_unavailable",
+                                    "Local Guardian notification registration could not be confirmed.", null) },
                             )
                         }
                     }
