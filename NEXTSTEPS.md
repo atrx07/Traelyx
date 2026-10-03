@@ -91,6 +91,12 @@ tests, analysis, configured build and first-phone inert
 startup pass. Next solve unexpected Auth-loss reconciliation and the reviewed
 opt-in transaction before any production device can register or receive push.
 
+An isolated encrypted native revoke journal now preserves only exact server-row
+IDs for a later same-owner retry after unexpected Auth loss. Bounded capacity,
+restart/tamper behavior, Android lint, configured build and a first-phone proof
+pass. Connect it to account-change capture and guarded signed-in reconciliation;
+it is currently dormant and has not registered a device or requested a token.
+
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
 local owner on startup/account changes, and sign-out requires local cleanup.

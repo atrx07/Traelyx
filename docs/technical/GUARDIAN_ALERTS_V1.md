@@ -257,6 +257,17 @@ This path is dormant on existing installations because no production recipient
 device has been registered. A data-preserving first-phone update opened the app;
 no physical sign-out with a registered device, hosted revoke or push was tested.
 
+A separate dormant native revoke journal can persist up to eight exact
+owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
+stores no routing token or credential. It does not drop pending IDs based only
+on local time: the server row can remain live for 30 days and local clock or
+refresh timing can differ. Exact confirmed revocation removes a ticket; full,
+corrupt, missing-keyed-file or uncertain storage denies further journal mutations. An isolated
+Android 14 proof verified restart, tamper/loss rejection and proof-only cleanup,
+without touching the production namespace. Account-change capture and signed-in
+same-owner server reconciliation are not yet connected, so this journal is not
+currently a guarantee of unexpected Auth-loss cleanup.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification

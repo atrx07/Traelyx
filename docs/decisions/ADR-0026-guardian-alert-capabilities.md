@@ -99,6 +99,14 @@ produce duplicate generic pushes. The receiving app must deduplicate delivery
 IDs. Revocation racing with an already in-flight provider call cannot retract
 its generic notification; receipt and details still recheck permission.
 
+Unexpected Auth loss cannot call the signed-in device revocation RPC. Preserve
+only the owner, device and generation IDs needed for a later same-owner retry in
+a separate encrypted, no-backup native journal. Keep the journal bounded and
+never silently evict an unconfirmed row based on the local clock; refuse new
+registration when capacity or journal integrity is uncertain. The journal is
+currently dormant. Runtime capture/reconciliation remains a separate gate before
+device registration can be exposed.
+
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain
 integration gates. All eight local SQL suites pass. Following the maintainer's

@@ -33,6 +33,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 when (instrumentationArguments?.getString("mode")) {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
+                    "guardian-recipient-revoke-journal" -> runGuardianRecipientRevokeJournalProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
                     "guardian-recipient-owner-inert" -> runGuardianRecipientOwnerInertProof()
                     "guardian-provider-marker" -> runGuardianProviderMarkerProof()
@@ -187,6 +188,41 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
             "tamper rejection and key destruction; Firebase inactive, trip/session storage untouched."
+    }
+
+    private fun runGuardianRecipientRevokeJournalProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val file = File(context.noBackupFilesDir, "guardian/revoke-$namespace.vault")
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+        val ticket = io.github.atrx07.traelyx.guardian.GuardianRecipientRevokeTicket(
+            UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        try {
+            check(journal.pending().isEmpty())
+            journal.record(ticket)
+            check(file.isFile && !file.readText(Charsets.ISO_8859_1).contains(ticket.ownerId))
+            val restored = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+            check(restored.pending() == listOf(ticket))
+            restored.record(ticket)
+            check(restored.pending() == listOf(ticket))
+            val original = file.readBytes()
+            file.writeBytes(original.copyOf().also { it[it.lastIndex] = (it.last().toInt() xor 1).toByte() })
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+                .pending() }.isFailure)
+            file.writeBytes(original)
+            check(file.delete())
+            check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+                .pending() }.isFailure) { "Missing ciphertext with an existing key must fail closed." }
+            file.writeBytes(original)
+            io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+                .confirm(ticket)
+            check(io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context, namespace)
+                .pending().isEmpty())
+        } finally { journal.eraseProofState() }
+        check(!file.exists())
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 revoke journal proof passed: scoped Keystore encryption, restart, exact confirmation, " +
+            "tamper/missing-file rejection and proof-only cleanup; Firebase inactive, trip/session storage untouched."
     }
 
     private fun runGuardianProviderMarkerProof(): String {

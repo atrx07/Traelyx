@@ -442,6 +442,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   startup pass. No production recipient device exists, so hosted revoke and
   physical registered-device sign-out remain untested. Unexpected Auth loss,
   reviewed opt-in and delivery remain gates.
+- [x] Add a dormant, ID-only native revoke journal for unexpected Auth loss.
+  It keeps at most eight exact owner/device/generation tickets in a separate
+  no-backup AES-GCM/Keystore domain until confirmed server revocation; capacity
+  or corrupt/missing/uncertain state fails closed rather than discarding a ticket.
+  Six focused tests, full native unit suite, Android lint, configured APK and a
+  random-namespace first-phone Keystore proof pass. The proof removed its key
+  and file; Firebase stayed inactive. No runtime writes or server retry caller
+  exist yet. Connect account-change capture and same-owner reconciliation before
+  permitting consented registration.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
