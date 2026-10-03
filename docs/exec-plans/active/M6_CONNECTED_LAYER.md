@@ -190,16 +190,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 
 - [x] Inspect current safety/event, recorder, sync and pairing boundaries.
 - [x] Resolve prerequisite scope: include live evaluation and background push. Firebase project and Android registration are ready; client configuration is staged locally.
-- [ ] Complete backend FCM authentication after concrete deployment review. The
-  dedicated sender and worker secret are configured, but Google organization
-  policy normally blocks service-account JSON key creation. An approved
-  temporary project exception created one key on 2026-10-01, but its one-time
-  browser download stopped. The maintainer reported revoking the unused key;
-  independent final key-inventory verification was blocked by browser failure. Inherited
-  enforcement and original organization IAM access were restored and verified;
-  the temporary Supabase CLI token was removed locally and its server-side
-  revocation was reported by the maintainer. No FCM credential was installed;
-  dispatch remains disabled.
+- [x] Complete backend FCM credential installation after concrete deployment
+  review (2026-10-03). The dedicated sender has only
+  `cloudmessaging.messages.create`. An approved temporary project key-creation
+  exception and organization policy administrator role allowed one replacement
+  JSON key to be written directly to an ignored local file. The inherited
+  policy was restored and verified enforced; the temporary role was removed
+  and verified absent. The exact JSON was installed as Supabase Edge secret
+  `GUARDIAN_FCM_SERVICE_ACCOUNT`; its hosted digest matched the local upload.
+  The local JSON and transfer files were deleted. A 24-hour, project-scoped
+  Supabase token with only Edge Function Secrets Read-write was used once and
+  independently verified revoked; the older legacy token was untouched.
+  Google IAM showed only the replacement sender key. Both Guardian functions
+  remain disabled; no OAuth, FCM send, registration or alert occurred. Live
+  authentication and delivery remain separate gates.
 - [x] Implement an isolated Edge/FCM dispatch adapter with no runtime package:
   separate worker-secret authentication, bounded requests/responses, six claims
   with three concurrent sends, current target recheck, minimal data-only FCM

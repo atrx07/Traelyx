@@ -14,7 +14,7 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
 3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Physical inert opening, live reload, defaults and cancelled invite review pass. Sign-in is preserved; no real invitation, alert or trip upload was created. M6.7 is complete. M6.8 was subsequently authorized.
 
-4. The isolated experimental evaluator/lifecycle and optional Firebase adapter pass 253 native tests, builds and physical inert-startup QA. Complete consent, durable persistence, recorder integration and background push before enabling it. Firebase `traelyx-e28ff` exists under `atrx07` on Spark with the Android app registered and FCM v1 enabled. The verified client config is staged at `.dart_tool/firebase/google-services.json` and Git-ignored; backend credentials remain pending. See the active plan for delivery/privacy gates.
+4. The isolated experimental evaluator/lifecycle and optional Firebase adapter pass 253 native tests, builds and physical inert-startup QA. Complete consent, durable persistence, recorder integration and background push before enabling it. Firebase `traelyx-e28ff` exists under `atrx07` on Spark with the Android app registered and FCM v1 enabled. The verified client config is staged at `.dart_tool/firebase/google-services.json` and Git-ignored; the restricted backend sender credential is installed. See the active plan for delivery/privacy gates.
 
 The M6.8 server draft now passes local SQL suites for owner/device capabilities,
 current permissions, deduplication, quota/expiry, retry exhaustion and revocation.
@@ -38,12 +38,11 @@ and the exact production rollback-fixture bundle pass, with all four checks true
 The isolated Edge/FCM adapter passes 18 synthetic Deno tests and full CI run
 36336437458. Its deployed function remains disabled; hosted missing-secret and
 valid-secret calls returned 401 and 503 without claiming or sending. A dedicated
-one-permission Google sender exists, but organization policy
-`iam.disableServiceAccountKeyCreation` normally blocks its JSON key. A temporary
-approved project exception created one key, but the one-time download stopped;
-the maintainer reported revoking that unused key. Inherited enforcement and the original
-organization access were restored. Resolve backend FCM authentication with a
-new reviewed method before enabling dispatch. See
+one-permission Google sender exists. Its replacement key was installed in
+Supabase Edge secrets on 2026-10-03 with a matching hosted digest. The
+temporary local file and scoped Supabase token were removed, and inherited
+Google key-creation enforcement and original organization access were restored.
+Both functions remain disabled; live OAuth and delivery are untested. See
 `docs/reference/GUARDIAN_DISPATCH_SETUP.md`. Scheduler setup,
 native Auth/consent/recorder integration and physical end-to-end delivery
 remain required.

@@ -15,26 +15,27 @@ M6.8 remains in progress.
 Google Cloud project `traelyx-e28ff` has the dedicated
 `traelyx-guardian-sender` service account, granted only the custom
 `Traelyx Guardian Message Sender` role with
-`cloudmessaging.messages.create`. It has **no intended active keys**. JSON key creation
-was rejected by organization policy `iam.disableServiceAccountKeyCreation` on
-2026-09-28. A separately approved, temporary project exception on 2026-10-01
-allowed one key to be created, but its one-time browser download stopped before
-the JSON reached the Windows workspace. The maintainer reported revoking the
-unused key on 2026-10-02; that final key inventory could not be independently
-rechecked because browser control failed. The project returned to inherited,
-effectively enforced policy,
-and the temporary organization policy administrator role was removed and
-verified absent. The temporary Supabase CLI token was removed locally and the
-maintainer reported server-side revocation; only local logout was independently
-verified. Consequently
-`GUARDIAN_FCM_SERVICE_ACCOUNT` is absent, and dispatch must stay disabled.
-The remaining credential route needs a separately reviewed design or a new,
-specifically approved, narrowly scoped policy exception.
+`cloudmessaging.messages.create`. On 2026-10-03, one dedicated sender key was
+installed as Supabase Edge secret `GUARDIAN_FCM_SERVICE_ACCOUNT`. The hosted
+secret digest matched the exact local JSON uploaded. The ignored local key file
+was deleted after verification; the key remains active in Google IAM and in
+Supabase Edge secrets. No OAuth or FCM send has been attempted with it.
+
+Creation required a separately approved, temporary project exception to the
+inherited `iam.disableServiceAccountKeyCreation` policy and a temporary
+organization policy administrator role. The inherited policy was restored and
+verified enforced, and the temporary role was removed and verified absent. The
+one-time Supabase token was limited to this project and Edge Function Secrets
+Read-write, then independently verified revoked after upload. An older legacy
+`traelyx-m6` token was left untouched. The first browser-downloaded key was
+revoked; the final Google key inventory showed only the replacement sender key.
+The hosted digest for `GUARDIAN_DISPATCH_ENABLED` matches the literal `false`.
+Dispatch remains disabled pending the remaining M6.8 gates.
 
 Earlier read-only console recheck on 2026-10-01: the legacy
 `iam.disableServiceAccountKeyCreation` policy is still active and inherited;
 the newer managed key-creation constraint is inactive. The dedicated sender
-still has no keys, and no Workload Identity Pool is configured. Supabase Auth's
+had no keys at that time, and no Workload Identity Pool was configured. Supabase Auth's
 current signing key is asymmetric ECC P-256, but its documented OAuth server
 supports authorization-code and refresh grants, not a machine
 `client_credentials` grant. A dedicated, restricted worker identity would be
@@ -88,7 +89,9 @@ package. This does not change the hosted runtime version or app dependencies.
    `GUARDIAN_DISPATCH_ENABLED=false` are stored as Supabase Edge secrets. The
    worker-secret digest matched the locally generated value before its ignored
    temporary file was removed. The existing service-role key is supplied only
-   by the Edge environment. No FCM service-account JSON was installed. Never
+   by the Edge environment. `GUARDIAN_FCM_SERVICE_ACCOUNT` is installed as an
+   Edge secret; its hosted digest matched the uploaded JSON, and the temporary
+   local JSON and scoped CLI token were removed. Never
    place a server key in the Android config, repository, chat or client build.
 3. The deployed function uses `verify_jwt=false` in `supabase/config.toml` and
    in the hosted function settings **only for `guardian-dispatch`**. The
@@ -97,12 +100,11 @@ package. This does not change the hosted runtime version or app dependencies.
    `dispatch_disabled`. These calls made no claim, OAuth or provider request.
    Ignored screenshots: `.dart_tool/m6_8_sender_iam.png` and
    `.dart_tool/m6_8_dispatch_disabled_settings.png`.
-4. Resolve the FCM credential blocker with a reviewed backend-only method.
-   If a service-account JSON is ever approved, store it only as
-   `GUARDIAN_FCM_SERVICE_ACCOUNT` in Supabase Edge secrets, remove the exact
-   temporary local key file after verified installation and retain its key ID
-   for revocation. Do not weaken the organization policy without a separate
-   explicit approval.
+4. The backend FCM credential gate is complete, but no live send has been
+   tested. Keep the sender key in Supabase Edge secrets only. For rotation or
+   revocation, identify the active key under the dedicated Google service
+   account; never place a server key in the app, Git, chat or SQL history.
+   Do not weaken the organization policy without separate explicit approval.
 5. Only after credential, receiver/consent and synthetic delivery gates pass,
    review enabling `GUARDIAN_DISPATCH_ENABLED=true` and empty-queue checks. A
    separate reviewed scheduler may invoke it once per minute with a secret
