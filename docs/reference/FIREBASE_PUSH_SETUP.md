@@ -61,11 +61,12 @@ Primary references:
 - https://firebase.google.com/docs/cloud-messaging/android/get-started
 - https://firebase.google.com/docs/projects/billing/firebase-pricing-plans
 
-The dedicated backend sender account exists with only FCM send permission, but
-Google organization policy blocks JSON key creation. No sender credential has
-been created. If a reviewed backend-only credential route is established, it
+The dedicated backend sender account has only FCM send permission. Its
+separately approved replacement key was installed in Supabase Edge secrets on
+2026-10-03, with a matching hosted digest; the ignored local JSON was deleted.
+The inherited Google key-creation restriction was restored. The credential
 belongs only in Supabase Edge secrets, never in this client file, the app, a
-repository commit or chat. The isolated server adapter is deployed **disabled**;
+repository commit or chat. The isolated server adapter remains **disabled**;
 synthetic tests and unauthorized/disabled hosted calls pass. See
 `GUARDIAN_DISPATCH_SETUP.md` for the deployment boundary and remaining gate.
 
