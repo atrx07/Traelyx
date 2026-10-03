@@ -67,6 +67,37 @@ final class FakeOwnerPort implements GuardianOwnerPort {
   bool failCleanup = false;
   GuardianRecipientLocalStatus? status;
   int statusCalls = 0;
+  final pending = <GuardianRecipientLocalStatus>[];
+  String? pendingOwnerId;
+  final confirmed = <(String, String, String)>[];
+  final disabled = <(String, String, String)>[];
+  bool failConfirm = false;
+
+  @override
+  Future<List<GuardianRecipientLocalStatus>> pendingRevokes(
+    String ownerId,
+  ) async => pendingOwnerId == null || pendingOwnerId == ownerId
+      ? List.of(pending)
+      : [];
+
+  @override
+  Future<void> confirmPendingRevoke(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {
+    if (failConfirm) throw StateError('local journal unavailable');
+    confirmed.add((ownerId, status.deviceId, status.generation));
+    pending.remove(status);
+  }
+
+  @override
+  Future<void> disableConfirmedRecipient(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {
+    disabled.add((ownerId, status.deviceId, status.generation));
+    this.status = null;
+  }
 
   @override
   Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId) async {
@@ -206,6 +237,172 @@ void main() {
       expect(await port.recipientStatus(ownerA.userId), isNull);
     },
   );
+
+  test(
+    'production pending revoke parser rejects extra fields and duplicates',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const recipient = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_recipient',
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      const row = {
+        'deviceId': '33333333-3333-4333-8333-333333333333',
+        'generation': '44444444-4444-4444-8444-444444444444',
+      };
+      Object? reply = [row];
+      messenger.setMockMethodCallHandler(recipient, (call) async {
+        expect(call.method, 'pendingRevokes');
+        expect(call.arguments, {'ownerId': ownerA.userId});
+        return reply;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(recipient, null));
+      const port = MethodChannelGuardianOwnerPort();
+      expect(
+        (await port.pendingRevokes(ownerA.userId)).single.deviceId,
+        row['deviceId'],
+      );
+      reply = [
+        {...row, 'credential': 'must-not-cross-channel'},
+      ];
+      await expectLater(
+        port.pendingRevokes(ownerA.userId),
+        throwsA(isA<FormatException>()),
+      );
+      reply = [row, row];
+      await expectLater(
+        port.pendingRevokes(ownerA.userId),
+        throwsA(isA<FormatException>()),
+      );
+    },
+  );
+
+  test('production revoke confirmation sends only exact device IDs', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const recipient = MethodChannel(
+      'io.github.atrx07.traelyx/guardian_recipient',
+    );
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final calls = <String>[];
+    messenger.setMockMethodCallHandler(recipient, (call) async {
+      expect(call.arguments, {
+        'ownerId': ownerA.userId,
+        'deviceId': '33333333-3333-4333-8333-333333333333',
+        'generation': '44444444-4444-4444-8444-444444444444',
+      });
+      calls.add(call.method);
+      return null;
+    });
+    addTearDown(() => messenger.setMockMethodCallHandler(recipient, null));
+    const port = MethodChannelGuardianOwnerPort();
+    const status = GuardianRecipientLocalStatus(
+      '33333333-3333-4333-8333-333333333333',
+      '44444444-4444-4444-8444-444444444444',
+    );
+    await port.confirmPendingRevoke(ownerA.userId, status);
+    await port.disableConfirmedRecipient(ownerA.userId, status);
+    expect(calls, ['confirmRevoke', 'disableConfirmed']);
+  });
+
+  test(
+    'offline pending revoke retries under the same signed-in owner',
+    () async {
+      final account = FakeAccount(ownerA);
+      final ticket = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+      final port = FakeOwnerPort()..pending.add(ticket);
+      port.pendingOwnerId = ownerA.userId;
+      final revoker = FakeDeviceRevoker()..fail = true;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isFalse);
+      expect(port.pending, [ticket]);
+      expect(port.confirmed, isEmpty);
+      final failedCalls = revoker.calls.length;
+      revoker.fail = false;
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      expect(revoker.calls.length, failedCalls + 1);
+      expect(port.confirmed, [
+        (ownerA.userId, ticket.deviceId, ticket.generation),
+      ]);
+      expect(port.pending, isEmpty);
+    },
+  );
+
+  test(
+    'owner change during pending revoke keeps ticket for later retry',
+    () async {
+      final account = FakeAccount(ownerA);
+      final ticket = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+      final port = FakeOwnerPort()..pending.add(ticket);
+      port.pendingOwnerId = ownerA.userId;
+      final revoker = FakeDeviceRevoker();
+      final waiting = Completer<void>();
+      revoker.nextCall = waiting;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      await Future<void>.delayed(Duration.zero);
+      expect(revoker.calls, [
+        (ownerA.userId, ticket.deviceId, ticket.generation),
+      ]);
+      account.emit(ownerB);
+      waiting.complete();
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      expect(port.confirmed, isEmpty);
+      expect(port.pending, [ticket]);
+      expect(port.calls.last, ownerB.userId);
+    },
+  );
+
+  test('failed local ticket confirmation retries the server revoke', () async {
+    final account = FakeAccount(ownerA);
+    final ticket = const GuardianRecipientLocalStatus(
+      '33333333-3333-4333-8333-333333333333',
+      '44444444-4444-4444-8444-444444444444',
+    );
+    final port = FakeOwnerPort()..pending.add(ticket);
+    port.pendingOwnerId = ownerA.userId;
+    port.failConfirm = true;
+    final revoker = FakeDeviceRevoker();
+    final bound = GuardianBoundAccountGateway(
+      account,
+      port,
+      deviceRevoker: revoker,
+    );
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    expect(await bound.ensureCurrentOwnerBound(), isFalse);
+    expect(port.pending, [ticket]);
+    expect(port.confirmed, isEmpty);
+    final sent = revoker.calls.length;
+    port.failConfirm = false;
+    expect(await bound.ensureCurrentOwnerBound(), isTrue);
+    expect(revoker.calls.length, sent + 1);
+    expect(port.pending, isEmpty);
+  });
 
   test('decorated Auth keeps every optional cloud gateway available', () async {
     final client = SupabaseClient(
@@ -365,6 +562,13 @@ void main() {
       pending.complete();
       await signingOut;
       expect(port.calls.last, null);
+      expect(port.disabled, [
+        (
+          ownerA.userId,
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        ),
+      ]);
       expect(account.signOutCount, 1);
     },
   );

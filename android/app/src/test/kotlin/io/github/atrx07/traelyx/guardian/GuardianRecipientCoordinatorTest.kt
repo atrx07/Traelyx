@@ -122,6 +122,37 @@ class GuardianRecipientCoordinatorTest {
         assertNull(vault.stored)
     }
 
+    @Test fun `pending retry exposes only bound owner and exact confirmation removes ticket`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        val own = GuardianRecipientRevokeTicket(ownerA, deviceId, generation)
+        val other = own.copy(ownerId = ownerB)
+        journal.record(own)
+        journal.record(other)
+        coordinator.bindOwner(ownerA)
+        assertEquals(listOf(own), coordinator.pendingRevokes(ownerA))
+        denied { coordinator.pendingRevokes(ownerB) }
+        denied { coordinator.confirmPendingRevoke(other) }
+        coordinator.confirmPendingRevoke(own)
+        coordinator.confirmPendingRevoke(own)
+        assertEquals(listOf(other), journal.pending())
+    }
+
+    @Test fun `confirmed server revoke erases exact local row without creating a ticket`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        coordinator.bindOwner(ownerA)
+        coordinator.commit(ownerA, device())
+        denied { coordinator.disableConfirmed(ownerA, deviceId, "55555555-5555-4555-8555-555555555555") }
+        assertEquals(device(), vault.stored)
+        coordinator.disableConfirmed(ownerA, deviceId, generation)
+        coordinator.bindOwner(null)
+        assertTrue(journal.pending().isEmpty())
+        assertNull(vault.stored)
+    }
+
     @Test fun `failed erasure blocks rebind and stale commit`() {
         val vault = MemoryVault()
         val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
@@ -185,5 +216,10 @@ class GuardianRecipientCoordinatorTest {
         assertEquals(committed, bridge.dispatch("snapshot", mapOf("ownerId" to ownerA)))
         bridge.dispatch("disable", mapOf("ownerId" to ownerA))
         assertNull(bridge.dispatch("snapshot", mapOf("ownerId" to ownerA)))
+        assertEquals(listOf(mapOf("deviceId" to deviceId, "generation" to generation)),
+            bridge.dispatch("pendingRevokes", mapOf("ownerId" to ownerA)))
+        denied { bridge.dispatch("confirmRevoke", mapOf("ownerId" to ownerB, "deviceId" to deviceId, "generation" to generation)) }
+        bridge.dispatch("confirmRevoke", mapOf("ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation))
+        assertEquals(emptyList<Any>(), bridge.dispatch("pendingRevokes", mapOf("ownerId" to ownerA)))
     }
 }

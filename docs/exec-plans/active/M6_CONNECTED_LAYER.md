@@ -459,8 +459,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   repository validation and a configured debug APK pass. Scoped first-phone
   bridge and production inert-owner proofs pass; the production journal remains
   absent and normal app startup succeeds after a data-preserving update. Full
-  CI is pending. The signed-in same-owner server retry/confirmation bridge is
-  still pending; no real device registered.
+  CI run 37135490530 (`8a0ffde`) passed. The signed-in same-owner server
+  retry/confirmation bridge was still pending in this unit; no real device registered.
+- [x] Wire signed-in, same-owner revoke reconciliation. The native bridge
+  exposes only the bound owner's bounded device/generation IDs. Flutter checks
+  Auth before and after each guarded server revoke and confirms the exact
+  local ticket only afterward. Offline, account changes, malformed responses
+  and failed local confirmation leave the ticket for retry. Explicit sign-out
+  now erases a server-confirmed local receipt without creating a redundant
+  ticket. All 316 Flutter tests, analysis, the native unit suite, Android lint,
+  repository validation and the configured debug APK pass. A scoped first-phone
+  bridge proof verifies owner filtering and exact ticket confirmation; production
+  inert binding and normal startup pass after a data-preserving update. The
+  production journal is absent. Full CI is pending. No production ticket,
+  token or server device exists yet; hosted same-owner retry is untested.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

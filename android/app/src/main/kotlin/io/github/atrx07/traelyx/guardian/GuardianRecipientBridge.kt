@@ -36,6 +36,23 @@ class GuardianRecipientBridge(
                 coordinator.disable(owner())
                 null
             }
+            PENDING_REVOKES -> {
+                exact("ownerId")
+                coordinator.pendingRevokes(owner()).map { mapOf("deviceId" to it.deviceId, "generation" to it.generation) }
+            }
+            CONFIRM_REVOKE -> {
+                exact("ownerId", "deviceId", "generation")
+                coordinator.confirmPendingRevoke(GuardianRecipientRevokeTicket(
+                    owner(), requireNotNull(arguments["deviceId"] as? String),
+                    requireNotNull(arguments["generation"] as? String)))
+                null
+            }
+            DISABLE_CONFIRMED -> {
+                exact("ownerId", "deviceId", "generation")
+                coordinator.disableConfirmed(owner(), requireNotNull(arguments["deviceId"] as? String),
+                    requireNotNull(arguments["generation"] as? String))
+                null
+            }
             else -> throw IllegalArgumentException("Unknown Guardian recipient request")
         }
     }
@@ -52,6 +69,9 @@ class GuardianRecipientBridge(
         const val COMMIT = "commit"
         const val SNAPSHOT = "snapshot"
         const val DISABLE = "disable"
-        val METHODS = setOf(BIND_OWNER, COMMIT, SNAPSHOT, DISABLE)
+        const val PENDING_REVOKES = "pendingRevokes"
+        const val CONFIRM_REVOKE = "confirmRevoke"
+        const val DISABLE_CONFIRMED = "disableConfirmed"
+        val METHODS = setOf(BIND_OWNER, COMMIT, SNAPSHOT, DISABLE, PENDING_REVOKES, CONFIRM_REVOKE, DISABLE_CONFIRMED)
     }
 }

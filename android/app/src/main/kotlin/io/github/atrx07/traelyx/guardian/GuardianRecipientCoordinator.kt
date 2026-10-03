@@ -67,6 +67,28 @@ class GuardianRecipientCoordinator(
         dropStored()
     }
 
+    /** Expose only bound-owner IDs; Flutter separately checks signed-in Auth before server use. */
+    @Synchronized fun pendingRevokes(expectedOwner: String): List<GuardianRecipientRevokeTicket> {
+        require(bound && owner == expectedOwner)
+        return revokeJournal.pending().filter { it.ownerId == expectedOwner }
+    }
+
+    /** Called after the server confirms this exact row is revoked. */
+    @Synchronized fun confirmPendingRevoke(ticket: GuardianRecipientRevokeTicket) {
+        require(bound && owner == ticket.ownerId)
+        revokeJournal.confirm(ticket)
+    }
+
+    /** Explicit sign-out has already revoked this exact local row on the server. */
+    @Synchronized fun disableConfirmed(expectedOwner: String, deviceId: String, generation: String) {
+        require(bound && owner == expectedOwner)
+        guardianUuid(deviceId); guardianUuid(generation)
+        val stored = vault.readStored() ?: return
+        require(stored.ownerId == expectedOwner && stored.deviceId == deviceId && stored.generation == generation)
+        revokeJournal.confirm(GuardianRecipientRevokeTicket(expectedOwner, deviceId, generation))
+        vault.erase()
+    }
+
     private fun dropStored() {
         val stored = try { vault.readStored() } catch (_: GuardianVaultUnavailable) {
             vault.erase()

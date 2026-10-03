@@ -265,12 +265,17 @@ refresh timing can differ. Exact confirmed revocation removes a ticket; full,
 corrupt, missing-keyed-file or uncertain storage denies further journal mutations. An isolated
 Android 14 proof verified restart, tamper/loss rejection and proof-only cleanup,
 without touching the production namespace. Account-change capture and signed-in
-same-owner server reconciliation is not yet connected. Native owner changes,
-expiry, explicit disable and receipt replacement now record the prior exact
-server-row IDs before erasure; failed journal writes deny the transition and
-retain the receipt for retry. Without a signed-in same-owner retry, the server
-row can still remain until its own expiry, so unexpected Auth-loss cleanup is
-not yet complete.
+same-owner server reconciliation now runs when the account is bound. Native
+owner changes, expiry, explicit disable and receipt replacement record the
+prior exact server-row IDs before erasure; failed journal writes deny the
+transition and retain the receipt for retry. The native bridge returns only
+the bound owner's device/generation IDs. Flutter checks the signed-in owner
+before and after the guarded revoke RPC and clears an exact journal ticket
+only after confirmation. Offline or owner-change failures leave the ticket for
+later same-owner sign-in. Explicit sign-out erases a server-confirmed local
+receipt without journaling a redundant revoke. No production recipient device
+or journal ticket exists yet, so hosted retry remains unverified; server expiry
+is still the fallback if that owner never signs in again.
 
 ### Integration still required
 

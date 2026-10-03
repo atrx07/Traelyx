@@ -98,8 +98,9 @@ pass. Native account-change capture is now connected below; guarded signed-in
 reconciliation is still missing. No device registration or token was requested.
 Native owner cleanup now writes the journal before erasing a receipt; failed
 writes deny rebinding, and replacement receipts also retain the previous row
-identity. First-phone proofs pass; finish CI, then connect signed-in same-owner
-server reconciliation and exact ticket confirmation before enabling opt-in.
+identity. First-phone proofs and CI pass. Same-owner signed-in server
+reconciliation and exact ticket confirmation are now wired; finish full gates
+and validate a hosted synthetic row before considering any real opt-in.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

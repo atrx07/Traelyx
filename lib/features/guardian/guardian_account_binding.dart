@@ -19,6 +19,15 @@ final class GuardianRecipientLocalStatus {
 abstract interface class GuardianOwnerPort {
   Future<void> bindOwner(String? ownerId);
   Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId);
+  Future<List<GuardianRecipientLocalStatus>> pendingRevokes(String ownerId);
+  Future<void> confirmPendingRevoke(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  );
+  Future<void> disableConfirmedRecipient(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  );
 }
 
 final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
@@ -66,6 +75,73 @@ final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
       throw const FormatException('Invalid Guardian recipient status');
     }
     return GuardianRecipientLocalStatus(device, generation);
+  }
+
+  @override
+  Future<List<GuardianRecipientLocalStatus>> pendingRevokes(
+    String ownerId,
+  ) async {
+    if (!_recipientUuid.hasMatch(ownerId)) throw const FormatException();
+    final raw = await _recipientChannel.invokeMethod<Object?>(
+      'pendingRevokes',
+      {'ownerId': ownerId},
+    );
+    if (raw is! List || raw.length > 8) throw const FormatException();
+    final result = <GuardianRecipientLocalStatus>[];
+    final seen = <(String, String)>{};
+    for (final item in raw) {
+      if (item is! Map ||
+          item.length != 2 ||
+          !item.containsKey('deviceId') ||
+          !item.containsKey('generation')) {
+        throw const FormatException();
+      }
+      final device = item['deviceId'];
+      final generation = item['generation'];
+      if (device is! String ||
+          generation is! String ||
+          !_recipientUuid.hasMatch(device) ||
+          !_recipientUuid.hasMatch(generation) ||
+          !seen.add((device, generation))) {
+        throw const FormatException();
+      }
+      result.add(GuardianRecipientLocalStatus(device, generation));
+    }
+    return result;
+  }
+
+  @override
+  Future<void> confirmPendingRevoke(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) {
+    if (!_recipientUuid.hasMatch(ownerId) ||
+        !_recipientUuid.hasMatch(status.deviceId) ||
+        !_recipientUuid.hasMatch(status.generation)) {
+      throw const FormatException();
+    }
+    return _recipientChannel.invokeMethod<void>('confirmRevoke', {
+      'ownerId': ownerId,
+      'deviceId': status.deviceId,
+      'generation': status.generation,
+    });
+  }
+
+  @override
+  Future<void> disableConfirmedRecipient(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) {
+    if (!_recipientUuid.hasMatch(ownerId) ||
+        !_recipientUuid.hasMatch(status.deviceId) ||
+        !_recipientUuid.hasMatch(status.generation)) {
+      throw const FormatException();
+    }
+    return _recipientChannel.invokeMethod<void>('disableConfirmed', {
+      'ownerId': ownerId,
+      'deviceId': status.deviceId,
+      'generation': status.generation,
+    });
   }
 }
 
@@ -118,13 +194,43 @@ final class GuardianBoundAccountGateway
         await _guardian.bindOwner(target);
         _boundOwner = target;
         _hasBoundOwner = true;
-        result.complete(true);
+        try {
+          if (target != null) await _reconcilePending(target);
+          result.complete(true);
+        } catch (_) {
+          result.complete(false);
+        }
       } catch (_) {
         _hasBoundOwner = false;
         result.complete(false);
       }
     });
     return result.future;
+  }
+
+  Future<void> _reconcilePending(String owner) async {
+    void checkOwner() {
+      if (_account.currentIdentity?.userId != owner ||
+          _desiredOwner != owner ||
+          _signingOut ||
+          _localCleanupRequired) {
+        throw const GuardianLocalCleanupException();
+      }
+    }
+
+    checkOwner();
+    final pending = await _guardian.pendingRevokes(owner);
+    checkOwner();
+    if (pending.isEmpty) return;
+    final revoker = deviceRevoker;
+    if (revoker == null) throw const GuardianLocalCleanupException();
+    for (final status in pending) {
+      checkOwner();
+      await revoker.revoke(owner, status.deviceId, status.generation);
+      checkOwner();
+      await _guardian.confirmPendingRevoke(owner, status);
+      checkOwner();
+    }
   }
 
   /// A later consent flow must call this and check the Auth identity again.
@@ -191,6 +297,14 @@ final class GuardianBoundAccountGateway
         if (revoker == null) throw const GuardianLocalCleanupException();
         try {
           await revoker.revoke(owner, status.deviceId, status.generation);
+        } catch (_) {
+          throw const GuardianLocalCleanupException();
+        }
+        if (_account.currentIdentity?.userId != owner) {
+          throw const GuardianLocalCleanupException();
+        }
+        try {
+          await _guardian.disableConfirmedRecipient(owner, status);
         } catch (_) {
           throw const GuardianLocalCleanupException();
         }

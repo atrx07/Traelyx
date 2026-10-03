@@ -277,6 +277,11 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(!file.exists())
             check(journal.pending() == listOf(io.github.atrx07.traelyx.guardian.GuardianRecipientRevokeTicket(owner, device, generation)))
             check(runCatching { bridge.dispatch("snapshot", mapOf("ownerId" to owner)) }.isFailure)
+            bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
+            check(bridge.dispatch("pendingRevokes", mapOf("ownerId" to owner)) ==
+                listOf(mapOf("deviceId" to device, "generation" to generation)))
+            bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
+            check(journal.pending().isEmpty())
         } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())

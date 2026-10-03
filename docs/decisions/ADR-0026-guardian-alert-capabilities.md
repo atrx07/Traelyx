@@ -104,9 +104,11 @@ only the owner, device and generation IDs needed for a later same-owner retry in
 a separate encrypted, no-backup native journal. Keep the journal bounded and
 never silently evict an unconfirmed row based on the local clock; refuse new
 registration when capacity or journal integrity is uncertain. The journal is
-now captures IDs before native local receipt erasure. Signed-in same-owner
-server reconciliation remains a separate gate before device registration can be
-exposed.
+now captures IDs before native local receipt erasure. On a later same-owner
+sign-in, the guarded RPC must confirm revocation before an exact local ticket is
+removed. This path is implemented but still lacks a production registered-row
+test; consented registration remains gated on that validation and the broader
+push/receipt lifecycle.
 
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain

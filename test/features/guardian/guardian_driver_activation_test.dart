@@ -61,6 +61,23 @@ final class OwnerPort implements GuardianOwnerPort {
   @override
   Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId) async =>
       null;
+
+  @override
+  Future<List<GuardianRecipientLocalStatus>> pendingRevokes(
+    String ownerId,
+  ) async => [];
+
+  @override
+  Future<void> confirmPendingRevoke(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {}
+
+  @override
+  Future<void> disableConfirmedRecipient(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {}
 }
 
 final class NativePort implements GuardianNativeActivationPort {
