@@ -521,8 +521,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   phone showed local status, opened/cancelled review, and retained no production
   revoke ticket. A data-preserving default-off update opens normally and shows
   the paused state. Focused widget/transaction tests, all 332 Flutter tests,
-  analysis, formatting, repository validation and a configured APK pass; CI
-  remains. No real token or recipient row exists.
+  analysis, formatting, repository validation, a configured APK and full CI
+  run 37215132816 (`0f5e3ab`) pass. No real token or recipient row exists.
+- [x] Add a versioned rollback-only synthetic recipient fixture to cloud-schema
+  CI. It checks private table grants, exact signed-in registration, same-owner
+  retry, wrong-owner denial, withdrawal and post-rollback absence. The fixture
+  adds no migration or real recipient and must pass CI before hosted execution.
 - [ ] Validate synthetic hosted registration, withdrawal and same-owner retry
   before enabling any real recipient opt-in; then run a separately consented
   first-phone registration and cancellation check. Keep alert processing off.

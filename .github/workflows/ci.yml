@@ -69,6 +69,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/safe_rankings.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_pairing.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_alert_delivery.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_recipient_registration.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_dispatch_worker.sql
 
   validate:
