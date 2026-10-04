@@ -321,8 +321,10 @@ startup registration path.
   to those guarded SQL transitions. It is deployed with processing disabled;
   an unauthenticated synthetic POST returned `503 capability_disabled`.
   Enabled hosted authorization and native integration still need validation.
-- Replaceable push provider, opt-in device registration, generic lock-screen
-  copy and authenticated details; distinct send/receipt/view semantics.
+- The opt-in first-phone provider registration/withdrawal path has passed a
+  consented pilot check. Validate receiver handling, generic lock-screen copy,
+  authenticated details and distinct send/receipt/view semantics before
+  enabling alert processing or two-phone delivery.
   The dormant Android envelope parser now accepts only data-only FCM messages
   with exactly `schema_version=1`, a canonical delivery UUID and a canonical
   device-generation UUID. It rejects notification payloads, extra fields and

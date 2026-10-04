@@ -533,14 +533,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   text in the Traelyx Supabase SQL Editor and reported all three final checks
   true with no error. Browser control failed before attachment, so the result
   was not directly observed by Codex. The fixture rolled back synthetic rows.
-- [ ] Run a separately consented first-phone registration and withdrawal check
+- [x] Run a separately consented first-phone registration and withdrawal check
   from a deliberately configured debug pilot build. Normal builds stay paused;
   release builds cannot enable the pilot flag. All 332 Flutter tests, focused
   recipient tests, analysis, repository validation and the configured pilot APK
-  build pass. The pilot APK was update-installed without clearing first-phone
-  data; Traelyx opens, notification permission is granted, a default network
-  exists and no production revoke ticket exists. No consent, token or row yet.
-  Keep alert processing off.
+  build pass; full CI run 37217322365 (`89a5b91`) passed. The APK was
+  update-installed without clearing first-phone data. The maintainer completed
+  both acknowledgements; the phone reported registration and an encrypted
+  receipt existed. The maintainer's read-only hosted count was 1 total/1
+  unexpired row. After explicit withdrawal, the phone reported removal, the
+  local receipt and provider cleanup marker were absent, and the maintainer's
+  hosted count was 0/0. Browser control prevented direct SQL observation;
+  no push, alert, trip upload or second-phone test occurred. Alert processing
+  stays off.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

@@ -114,10 +114,11 @@ and rechecks it after Firebase responds. A foreground status/review/withdrawal
 UI is wired but opt-in remains paused in normal builds. Full CI passed. A
 rollback-only recipient fixture passed CI, and the maintainer reported all
 three hosted registration/retry/withdrawal checks true with no error. The
-debug-only pilot APK passes local checks and opens on the first phone; its CI
-remains to run. Then run a separately consented first-phone opt-in and
-withdrawal while alert processing remains off. Browser control prevented direct
-observation of the hosted SQL result. Two-phone delivery comes later.
+debug-only pilot APK and full CI pass. A separately consented first-phone
+opt-in and withdrawal passed app/local checks; the maintainer reported hosted
+device counts moving from 1/1 to 0/0. Browser control prevented direct SQL
+observation. Next validate guarded alert processing and receiver behavior
+before two-phone delivery. Both Edge functions and actual sending remain off.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
