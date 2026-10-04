@@ -34,11 +34,19 @@ class GuardianRecipientCoordinatorTest {
         try { block(); fail("Expected rejection") } catch (_: IllegalArgumentException) { } catch (_: IllegalStateException) { }
     }
 
+    private fun register(coordinator: GuardianRecipientCoordinator, owner: String, candidate: GuardianRecipientDevice): GuardianRecipientStatus {
+        val ticket = GuardianRecipientRevokeTicket(owner, candidate.deviceId, candidate.generation)
+        coordinator.recordRegistrationAttempt(ticket)
+        val status = coordinator.commit(owner, candidate)
+        coordinator.confirmPendingRevoke(ticket)
+        return status
+    }
+
     @Test fun `same owner binding preserves a valid registration without exposing its secret`() {
         val vault = MemoryVault()
         val first = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         first.bindOwner(ownerA)
-        val status = first.commit(ownerA, device())
+        val status = register(first, ownerA, device())
         assertEquals(deviceId, status.deviceId)
         assertFalse(status.toString().contains(device().credential))
         val restarted = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now + 1 }
@@ -51,12 +59,12 @@ class GuardianRecipientCoordinatorTest {
         val vault = MemoryVault()
         val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         coordinator.bindOwner(ownerB)
         assertNull(vault.stored)
         assertNull(coordinator.snapshot(ownerB))
-        denied { coordinator.commit(ownerA, device()) }
-        coordinator.commit(ownerB, device(ownerB))
+        denied { register(coordinator, ownerA, device()) }
+        register(coordinator, ownerB, device(ownerB))
         coordinator.bindOwner(null)
         assertNull(vault.stored)
         denied { coordinator.snapshot(ownerB) }
@@ -67,7 +75,7 @@ class GuardianRecipientCoordinatorTest {
         val journal = MemoryGuardianRecipientRevokeJournal()
         val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         coordinator.bindOwner(ownerB)
         assertEquals(listOf(GuardianRecipientRevokeTicket(ownerA, deviceId, generation)), journal.pending())
         assertNull(vault.stored)
@@ -80,30 +88,31 @@ class GuardianRecipientCoordinatorTest {
         val journal = MemoryGuardianRecipientRevokeJournal()
         val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         journal.failRecord = true
         denied { coordinator.bindOwner(ownerB) }
         assertEquals(device(), vault.stored)
         denied { coordinator.snapshot(ownerA) }
-        denied { coordinator.commit(ownerB, device(ownerB)) }
+        denied { register(coordinator, ownerB, device(ownerB)) }
         journal.failRecord = false
         coordinator.bindOwner(ownerB)
         assertNull(vault.stored)
         assertEquals(1, journal.pending().size)
     }
 
-    @Test fun `replacement receipt journals prior device before overwrite`() {
+    @Test fun `replacement cannot overwrite a registered receipt`() {
         val vault = MemoryVault()
         val journal = MemoryGuardianRecipientRevokeJournal()
         val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         val replacement = device().copy(deviceId = "55555555-5555-4555-8555-555555555555")
-        journal.failRecord = true
+        denied { coordinator.recordRegistrationAttempt(GuardianRecipientRevokeTicket(ownerA, replacement.deviceId, replacement.generation)) }
         denied { coordinator.commit(ownerA, replacement) }
         assertEquals(device(), vault.stored)
-        journal.failRecord = false
-        coordinator.commit(ownerA, replacement)
+        assertTrue(journal.pending().isEmpty())
+        coordinator.disable(ownerA)
+        register(coordinator, ownerA, replacement)
         assertEquals(replacement, vault.stored)
         assertEquals(listOf(GuardianRecipientRevokeTicket(ownerA, deviceId, generation)), journal.pending())
     }
@@ -116,9 +125,9 @@ class GuardianRecipientCoordinatorTest {
         vault.stored = device(started = now - GuardianRecipientCoordinator.LOCAL_MAX_LIFETIME_MILLIS)
         assertNull(coordinator.snapshot(ownerA))
         assertEquals(1, journal.pending().size)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device().copy(deviceId = "55555555-5555-4555-8555-555555555555"))
         coordinator.disable(ownerA)
-        assertEquals(1, journal.pending().size)
+        assertEquals(2, journal.pending().size)
         assertNull(vault.stored)
     }
 
@@ -151,6 +160,8 @@ class GuardianRecipientCoordinatorTest {
         coordinator.recordRegistrationAttempt(ticket)
         assertEquals(listOf(ticket), journal.pending())
         assertNull(vault.stored)
+        denied { coordinator.commit(ownerA, device().copy(deviceId = "55555555-5555-4555-8555-555555555555")) }
+        assertNull(vault.stored)
         coordinator.commit(ownerA, device())
         denied { coordinator.recordRegistrationAttempt(ticket) }
         assertEquals(listOf(ticket), journal.pending())
@@ -182,7 +193,7 @@ class GuardianRecipientCoordinatorTest {
         val journal = MemoryGuardianRecipientRevokeJournal()
         val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         denied { coordinator.disableConfirmed(ownerA, deviceId, "55555555-5555-4555-8555-555555555555") }
         assertEquals(device(), vault.stored)
         coordinator.disableConfirmed(ownerA, deviceId, generation)
@@ -195,11 +206,11 @@ class GuardianRecipientCoordinatorTest {
         val vault = MemoryVault()
         val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         vault.failErase = true
         denied { coordinator.bindOwner(ownerB) }
-        denied { coordinator.commit(ownerA, device()) }
-        denied { coordinator.commit(ownerB, device(ownerB)) }
+        denied { register(coordinator, ownerA, device()) }
+        denied { register(coordinator, ownerB, device(ownerB)) }
         vault.failErase = false
         coordinator.bindOwner(ownerB)
         assertNull(vault.stored)
@@ -209,7 +220,7 @@ class GuardianRecipientCoordinatorTest {
         val vault = MemoryVault()
         val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
-        coordinator.commit(ownerA, device())
+        register(coordinator, ownerA, device())
         denied { coordinator.bindOwner("invalid-owner") }
         assertNull(vault.stored)
         denied { coordinator.snapshot(ownerA) }
@@ -228,6 +239,7 @@ class GuardianRecipientCoordinatorTest {
         val vault = MemoryVault()
         val coordinator = GuardianRecipientCoordinator(vault, MemoryGuardianRecipientRevokeJournal()) { now }
         coordinator.bindOwner(ownerA)
+        coordinator.recordRegistrationAttempt(GuardianRecipientRevokeTicket(ownerA, deviceId, generation))
         denied { coordinator.commit(ownerA, device(started = now - GuardianRecipientCoordinator.REVIEW_TTL_MILLIS)) }
         denied { coordinator.commit(ownerA, device(started = now + 1)) }
         denied { coordinator.commit(ownerA, device(lifetime = GuardianRecipientCoordinator.LOCAL_MAX_LIFETIME_MILLIS + 1)) }
@@ -248,6 +260,8 @@ class GuardianRecipientCoordinatorTest {
         )
         denied { bridge.dispatch("commit", args + ("extra" to true)) }
         denied { bridge.dispatch("commit", args + ("credential" to "bad")) }
+        denied { bridge.dispatch("commit", args) }
+        bridge.dispatch("recordAttempt", mapOf("ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation))
         val committed = bridge.dispatch("commit", args) as Map<*, *>
         assertEquals(setOf("deviceId", "generation", "expiresAtEpochMillis"), committed.keys)
         assertFalse(committed.toString().contains("a".repeat(64)))

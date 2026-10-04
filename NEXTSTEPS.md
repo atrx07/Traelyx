@@ -105,6 +105,9 @@ revoke ticket before future token acquisition; same-owner retry cleans up a
 matching local receipt after server confirmation. Finish full gates and validate
 a hosted synthetic row before considering any real opt-in. No production token
 or device row exists.
+The native receipt commit now requires that exact reservation and denies
+overwriting an existing receipt. Full gates remain pending. Next connect the
+reviewed consent to a serialized token/server/local transaction.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

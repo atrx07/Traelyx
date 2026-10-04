@@ -46,7 +46,9 @@ class GuardianRecipientCoordinator(
             now - device.registeredAtEpochMillis < REVIEW_TTL_MILLIS &&
             device.expiresAtEpochMillis > now &&
             device.expiresAtEpochMillis - device.registeredAtEpochMillis <= LOCAL_MAX_LIFETIME_MILLIS)
-        vault.readStored()?.takeIf { it != device }?.let(::recordBeforeErase)
+        require(vault.readStored() == null)
+        require(revokeJournal.pending().contains(GuardianRecipientRevokeTicket(
+            expectedOwner, device.deviceId, device.generation)))
         vault.write(device)
         return GuardianRecipientStatus(device.deviceId, device.generation, device.expiresAtEpochMillis)
     }

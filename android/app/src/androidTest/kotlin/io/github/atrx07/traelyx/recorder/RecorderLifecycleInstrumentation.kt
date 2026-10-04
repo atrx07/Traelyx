@@ -264,6 +264,12 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         try {
             bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
             val start = System.currentTimeMillis()
+            check(runCatching { bridge.dispatch("commit", mapOf(
+                "ownerId" to owner, "deviceId" to device, "generation" to generation,
+                "credential" to credential, "registeredAtEpochMillis" to start,
+                "expiresAtEpochMillis" to start + 60_000L,
+            )) }.isFailure)
+            bridge.dispatch("recordAttempt", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
             val committed = bridge.dispatch("commit", mapOf(
                 "ownerId" to owner, "deviceId" to device, "generation" to generation,
                 "credential" to credential, "registeredAtEpochMillis" to start,

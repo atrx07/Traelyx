@@ -481,8 +481,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   or receipt cleanup keeps the ticket; failed provider deletion keeps its marker.
   All 318 Flutter tests, analysis, native tests, Android lint, repository
   validation, configured APK and scoped first-phone proofs pass. No production
-  caller, token or device row exists.
+  caller, token or device row exists. Full CI run 37191422357 (`43c03e5`)
+  passed.
   The registration transaction, hosted row retry and delivery remain gates.
+- [x] Enforce that reservation at the native local receipt commit boundary.
+  A commit now requires a matching pending owner/device/generation ticket and
+  an empty local receipt. A replacement must first disable the old receipt,
+  preserving its revoke ticket, then use a fresh device ID and reservation.
+  Native tests and the scoped first-phone bridge proof pass. This is dormant:
+  production has no registered recipient or caller; consented token acquisition
+  and the guarded registration transaction remain pending.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

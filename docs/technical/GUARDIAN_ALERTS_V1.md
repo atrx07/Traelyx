@@ -286,6 +286,9 @@ cleanup. Failed server or receipt cleanup preserves the ticket; failed provider
 deletion preserves its separate marker for another retry.
 This reservation bridge is dormant until a reviewed registration transaction
 uses it; no token or production device row has been created.
+The native receipt commit rejects a missing or mismatched reservation and
+rejects overwriting an existing receipt. Replacing a device requires cleanup
+of the old receipt and a distinct new reservation before server registration.
 
 ### Integration still required
 

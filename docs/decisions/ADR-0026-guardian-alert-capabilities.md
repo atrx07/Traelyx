@@ -107,6 +107,10 @@ registration when capacity or journal integrity is uncertain. The journal
 captures IDs before native local receipt erasure. A future registration must
 reserve its exact revoke ticket before token acquisition or network I/O, so a
 process death after server registration still leaves a retryable row identity.
+The native receipt commit requires that exact pending ticket and an empty
+local receipt; replacement first records cleanup for the old row and uses a
+fresh identity. The future transaction removes its reservation only after a
+server-confirmed registration and durable local receipt commit.
 On a later same-owner
 sign-in, the guarded RPC must confirm revocation before an exact local ticket is
 removed. If a matching local receipt exists, revoke first, then erase that
