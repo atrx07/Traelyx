@@ -10,7 +10,41 @@ final _credential = RegExp(r'^[a-f0-9]{64}$');
 
 abstract interface class GuardianRecipientTokenPort {
   /// Called only after explicit consent and a durable revoke reservation.
-  Future<String> acquire(String ownerId, String generation);
+  Future<String> acquire(String ownerId, String deviceId, String generation);
+}
+
+final class MethodChannelGuardianRecipientTokenPort
+    implements GuardianRecipientTokenPort {
+  const MethodChannelGuardianRecipientTokenPort();
+  static const _channel = MethodChannel(
+    'io.github.atrx07.traelyx/guardian_recipient',
+  );
+
+  @override
+  Future<String> acquire(
+    String ownerId,
+    String deviceId,
+    String generation,
+  ) async {
+    if (!_uuid.hasMatch(ownerId) ||
+        !_uuid.hasMatch(deviceId) ||
+        !_uuid.hasMatch(generation)) {
+      throw const FormatException('Invalid Guardian device identity');
+    }
+    final raw = await _channel.invokeMethod<Object?>('acquireToken', {
+      'ownerId': ownerId,
+      'deviceId': deviceId,
+      'generation': generation,
+    });
+    if (raw is! String ||
+        raw.length < 16 ||
+        raw.length > 4096 ||
+        raw.trim() != raw ||
+        raw.runes.any((r) => r < 0x21 || r > 0x7e)) {
+      throw const FormatException('Invalid Guardian routing token');
+    }
+    return raw;
+  }
 }
 
 abstract interface class GuardianRecipientReceiptPort {
@@ -149,7 +183,7 @@ final class GuardianRecipientRegistrationService {
         checkOwner();
         try {
           final token = await tokenPort
-              .acquire(owner, status.generation)
+              .acquire(owner, status.deviceId, status.generation)
               .timeout(const Duration(seconds: 25));
           checkOwner();
           final registration = GuardianDeviceRegistration(

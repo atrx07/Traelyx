@@ -504,7 +504,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   be retried after the transaction. No production provider adapter or UI caller is wired;
   no FCM token or server row was created. All 327 Flutter tests, analysis,
   repository validation, a configured APK, and the data-preserving first-phone
-  inert startup check pass. Full CI remains pending.
+  inert startup check pass. Full CI run 37195623057 (`fb75553`) passed.
+- [x] Add a dormant native provider token bridge for the transaction. The
+  MethodChannel requires the exact bound owner/device/generation ticket before
+  invoking the marked Firebase adapter, and rechecks that ticket after its
+  callback. A late result after owner switch, malformed token or mismatched
+  consent is denied. The production entry point has no UI caller. All 328
+  Flutter tests, analysis, native tests, Android lint, repository validation,
+  a configured APK and scoped first-phone denial/startup proof pass; full CI
+  remains. No real token was requested; live consent, hosted row and delivery
+  remain gates.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

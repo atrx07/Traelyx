@@ -81,6 +81,12 @@ class GuardianRecipientCoordinator(
         revokeJournal.record(ticket)
     }
 
+    /** Check again after the provider callback; a new owner must not receive the token. */
+    @Synchronized fun authorizeToken(ticket: GuardianRecipientRevokeTicket) {
+        require(bound && owner == ticket.ownerId && vault.readStored() == null)
+        require(revokeJournal.pending().contains(ticket))
+    }
+
     /** Called after the server confirms this exact row is revoked. */
     @Synchronized fun confirmPendingRevoke(ticket: GuardianRecipientRevokeTicket) {
         require(bound && owner == ticket.ownerId)

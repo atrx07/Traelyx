@@ -47,6 +47,13 @@ class GuardianRecipientBridge(
                     requireNotNull(arguments["generation"] as? String)))
                 null
             }
+            AUTHORIZE_TOKEN -> {
+                exact("ownerId", "deviceId", "generation")
+                coordinator.authorizeToken(GuardianRecipientRevokeTicket(
+                    owner(), requireNotNull(arguments["deviceId"] as? String),
+                    requireNotNull(arguments["generation"] as? String)))
+                null
+            }
             CONFIRM_REVOKE -> {
                 exact("ownerId", "deviceId", "generation")
                 coordinator.confirmPendingRevoke(GuardianRecipientRevokeTicket(
@@ -78,6 +85,8 @@ class GuardianRecipientBridge(
         const val DISABLE = "disable"
         const val PENDING_REVOKES = "pendingRevokes"
         const val RECORD_ATTEMPT = "recordAttempt"
+        const val AUTHORIZE_TOKEN = "authorizeToken"
+        const val ACQUIRE_TOKEN = "acquireToken"
         const val CONFIRM_REVOKE = "confirmRevoke"
         const val DISABLE_CONFIRMED = "disableConfirmed"
         val METHODS = setOf(BIND_OWNER, COMMIT, SNAPSHOT, DISABLE, PENDING_REVOKES, RECORD_ATTEMPT, CONFIRM_REVOKE, DISABLE_CONFIRMED)

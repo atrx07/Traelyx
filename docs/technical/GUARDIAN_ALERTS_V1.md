@@ -298,7 +298,13 @@ to 25 seconds. Failure attempts signed-in server revocation before local receipt
 provider cleanup; uncertain cleanup leaves the exact ticket or provider marker
 for retry. Explicit sign-out is refused while the transaction is in flight, so
 it cannot release Auth before a late server registration finishes. No
-production provider adapter or UI caller is connected yet.
+production UI caller is connected yet.
+The Android provider adapter now has a dormant MethodChannel entry that checks
+the exact pending ticket before and after Firebase's token callback. Its
+account-free cleanup marker still precedes any token request. Late callbacks
+after owner switch, mismatched consent, malformed tokens and unreserved calls
+cannot return a routing token to Flutter. This entry has no production UI
+caller or automatic startup path.
 
 ### Integration still required
 

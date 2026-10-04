@@ -108,7 +108,17 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, GuardianRecipientBridge.CHANNEL)
             .setMethodCallHandler { call, result ->
-                if (call.method !in GuardianRecipientBridge.METHODS) {
+                if (call.method == GuardianRecipientBridge.ACQUIRE_TOKEN) {
+                    AndroidGuardianRecipientRuntime.acquireToken(applicationContext, call.arguments) { outcome ->
+                        runOnUiThread {
+                            if (!isDestroyed) outcome.fold(
+                                onSuccess = { result.success(it) },
+                                onFailure = { result.error("guardian_recipient_unavailable",
+                                    "Guardian notification token could not be confirmed.", null) },
+                            )
+                        }
+                    }
+                } else if (call.method !in GuardianRecipientBridge.METHODS) {
                     result.notImplemented()
                 } else {
                     AndroidGuardianRecipientRuntime.dispatch(applicationContext, call.method, call.arguments) { outcome ->

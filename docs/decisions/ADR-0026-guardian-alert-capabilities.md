@@ -121,6 +121,12 @@ lacks a production registered-row test; consented registration remains gated
 on that validation and the broader
 push/receipt lifecycle.
 
+The native token bridge rechecks the same pending ticket after the provider
+callback before returning a routing token to Flutter. The marked provider
+still persists an account-free cleanup marker before any token request, and
+the transaction rechecks Auth before server registration. This bridge has no
+automatic startup or production UI caller until delivery gates pass.
+
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain
 integration gates. All eight local SQL suites pass. Following the maintainer's

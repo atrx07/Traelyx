@@ -145,7 +145,11 @@ final class FakeRecipientTokenPort implements GuardianRecipientTokenPort {
   Completer<String>? waiting;
   Completer<void>? started;
   @override
-  Future<String> acquire(String ownerId, String generation) async {
+  Future<String> acquire(
+    String ownerId,
+    String deviceId,
+    String generation,
+  ) async {
     calls++;
     started?.complete();
     final pending = waiting;
@@ -952,6 +956,47 @@ void main() {
       expect(tokenPort.calls, 0);
       expect(ownerPort.pending, isEmpty);
       expect(transport.calls, isEmpty);
+    },
+  );
+
+  test(
+    'token channel sends exact IDs and rejects a malformed result',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const channel = MethodChannel(
+        'io.github.atrx07.traelyx/guardian_recipient',
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      Object? response = 'synthetic-routing-token-123456789';
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        expect(call.method, 'acquireToken');
+        expect(call.arguments, {
+          'ownerId': ownerA.userId,
+          'deviceId': '33333333-3333-4333-8333-333333333333',
+          'generation': '44444444-4444-4444-8444-444444444444',
+        });
+        return response;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      const port = MethodChannelGuardianRecipientTokenPort();
+      expect(
+        await port.acquire(
+          ownerA.userId,
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        ),
+        response,
+      );
+      response = {'token': 'must-not-be-accepted'};
+      await expectLater(
+        port.acquire(
+          ownerA.userId,
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        ),
+        throwsA(isA<FormatException>()),
+      );
     },
   );
 

@@ -104,12 +104,22 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         ) { result -> outcome = result; finished.countDown() }
         check(finished.await(5, java.util.concurrent.TimeUnit.SECONDS)) { "Recipient owner bind timed out." }
         outcome!!.getOrThrow()
+        check(io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRevokeJournal(context).pending().isEmpty()) {
+            "Production revoke ticket exists; refusing inert token-denial proof."
+        }
+        val denied = java.util.concurrent.CountDownLatch(1)
+        var tokenOutcome: Result<Any?>? = null
+        io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRuntime.acquireToken(
+            context, mapOf("ownerId" to UUID.randomUUID().toString(),
+                "deviceId" to UUID.randomUUID().toString(), "generation" to UUID.randomUUID().toString()),
+        ) { result -> tokenOutcome = result; denied.countDown() }
+        check(denied.await(5, java.util.concurrent.TimeUnit.SECONDS) && tokenOutcome!!.isFailure)
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty()) {
             "Inert recipient owner binding initialized Firebase."
         }
         check(!io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present())
         return "M6.8 recipient owner proof passed: empty production authority, inert sign-out bind, " +
-            "Firebase uninitialized, no token request."
+            "unreserved token denial; Firebase uninitialized, no token request."
     }
 
     private fun runGuardianVaultProof(): String {
@@ -269,7 +279,11 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 "credential" to credential, "registeredAtEpochMillis" to start,
                 "expiresAtEpochMillis" to start + 60_000L,
             )) }.isFailure)
+            check(runCatching { bridge.dispatch("authorizeToken", mapOf(
+                "ownerId" to owner, "deviceId" to device, "generation" to generation)) }.isFailure)
             bridge.dispatch("recordAttempt", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
+            bridge.dispatch("authorizeToken", mapOf(
+                "ownerId" to owner, "deviceId" to device, "generation" to generation))
             val committed = bridge.dispatch("commit", mapOf(
                 "ownerId" to owner, "deviceId" to device, "generation" to generation,
                 "credential" to credential, "registeredAtEpochMillis" to start,
