@@ -191,12 +191,13 @@ It returns a foreground-only, account-labelled result valid for less than two
 minutes; cancellation returns none. It does not initialize Firebase, request
 Android notification permission, register a token or mutate server state.
 
-The recipient device RPC gateway is also dormant. It validates canonical
+The recipient device RPC gateway validates canonical
 account/device/generation identities and bounded credentials, checks the current
 Auth owner before and after each guarded registration or revocation call, and
-never logs its routing token or credential. Explicit sign-out now invokes its
-revocation method when local recipient status exists. Registration still has
-no UI or native caller; unexpected account-loss reconciliation remains required.
+never logs its routing token or credential. Explicit sign-out invokes its
+revocation method when local recipient status exists. The foreground
+registration caller is paused in normal builds pending hosted validation;
+unexpected account-loss reconciliation remains required.
 
 Recipient receipt authority now has an isolated native storage boundary: a
 version-1, bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
@@ -207,19 +208,19 @@ no authority for a different account/generation, before registration time or
 at expiry; corruption, missing keys and uncertain writes fail closed. The
 record contains no routing token or Auth credential. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
-There is still no consent or registration caller: server-confirmed registration,
-unexpected account-loss reconciliation, receipt and notification remain gates.
+Live server-confirmed registration, unexpected account-loss reconciliation,
+receipt and notification remain gates.
 
 The native recipient coordinator now binds the Auth owner and validates local
-commit timing. A future foreground caller must confirm guarded server
+commit timing. A foreground caller must confirm guarded server
 registration before invoking that commit. It preserves an unexpired record only for
 that owner, erases on sign-out/account switch or expiry, rejects stale/future
 commit timestamps, and exposes only opaque device/generation IDs plus expiry
 in status. A separate foreground MethodChannel serializes its operations on a
 single process worker. Flutter Auth binding calls recipient cleanup before
 driver binding and waits for both on sign-out; a failure prevents sign-out from
-reporting success. This bridge has no consent or registration caller yet;
-marker-free binding does not initialize Firebase.
+reporting success. The foreground registration caller remains paused in normal
+builds; marker-free binding does not initialize Firebase.
 
 The dormant push adapter now writes an account-free, no-backup provider cleanup
 marker before any explicit Firebase token request. Marker presence blocks another
@@ -297,14 +298,17 @@ reservation and Auth after each await. Token and local receipt waits are bounded
 to 25 seconds. Failure attempts signed-in server revocation before local receipt and
 provider cleanup; uncertain cleanup leaves the exact ticket or provider marker
 for retry. Explicit sign-out is refused while the transaction is in flight, so
-it cannot release Auth before a late server registration finishes. No
-production UI caller is connected yet.
+it cannot release Auth before a late server registration finishes.
 The Android provider adapter now has a dormant MethodChannel entry that checks
 the exact pending ticket before and after Firebase's token callback. Its
 account-free cleanup marker still precedes any token request. Late callbacks
 after owner switch, mismatched consent, malformed tokens and unreserved calls
-cannot return a routing token to Flutter. This entry has no production UI
-caller or automatic startup path.
+cannot return a routing token to Flutter. Foreground Guardian UI now exposes
+an explicit local status check, the two-acknowledgement review and server-first
+withdrawal. The opt-in action is disabled in normal builds until hosted
+registration and withdrawal gates pass. Opening Guardian and cancelling review
+still create no token, recipient row or revoke ticket. There is no automatic
+startup registration path.
 
 ### Integration still required
 

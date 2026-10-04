@@ -125,7 +125,9 @@ The native token bridge rechecks the same pending ticket after the provider
 callback before returning a routing token to Flutter. The marked provider
 still persists an account-free cleanup marker before any token request, and
 the transaction rechecks Auth before server registration. This bridge has no
-automatic startup or production UI caller until delivery gates pass.
+automatic startup registration. The foreground review/status/withdrawal UI is
+wired, while normal builds keep opt-in paused until hosted synthetic row and
+revocation gates pass. No token or recipient row was created during UI checks.
 
 The migration does not install a scheduler, create credentials, register devices
 or send messages. Edge dispatch, scheduler setup and receipt handling remain

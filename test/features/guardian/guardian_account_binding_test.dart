@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,7 +18,9 @@ import 'package:traelyx/features/guardian/guardian_controller.dart';
 import 'package:traelyx/features/guardian/guardian_device_registration.dart';
 import 'package:traelyx/features/guardian/guardian_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_recipient_consent.dart';
+import 'package:traelyx/features/guardian/guardian_recipient_providers.dart';
 import 'package:traelyx/features/guardian/guardian_recipient_registration.dart';
+import 'package:traelyx/features/guardian/guardian_screen.dart';
 import 'package:traelyx/features/rankings/ranking_service.dart';
 import 'package:traelyx/features/social/application/social_controller.dart';
 import 'package:traelyx/features/social/data/supabase_social_gateway.dart';
@@ -210,6 +213,118 @@ final class FakeRecipientTransport implements GuardianDeviceRpcTransport {
 }
 
 void main() {
+  testWidgets('Guardian screen requires a check and review before token use', (
+    tester,
+  ) async {
+    final account = FakeAccount(ownerA);
+    final ownerPort = FakeOwnerPort();
+    final tokenPort = FakeRecipientTokenPort();
+    final transport = FakeRecipientTransport(account);
+    final bound = GuardianBoundAccountGateway(
+      account,
+      ownerPort,
+      deviceRevoker: GuardianDeviceServerGateway(transport),
+    );
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    final service = GuardianRecipientRegistrationService(
+      account: bound,
+      ownerPort: ownerPort,
+      tokenPort: tokenPort,
+      server: GuardianDeviceServerGateway(transport),
+      receiptPort: FakeRecipientReceiptPort(ownerPort),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          accountGatewayProvider.overrideWithValue(bound),
+          guardianRecipientPilotProvider.overrideWithValue(true),
+          guardianRecipientRegistrationProvider.overrideWithValue(service),
+        ],
+        child: const MaterialApp(home: Scaffold(body: GuardianScreen())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tokenPort.calls, 0);
+    expect(transport.calls, isEmpty);
+    await tester.scrollUntilVisible(
+      find.text('Check this phone'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Check this phone'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('This phone has no local Guardian registration.'),
+      findsOneWidget,
+    );
+    await tester.scrollUntilVisible(
+      find.text('Review phone registration'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Review phone registration'));
+    await tester.pumpAndSettle();
+    expect(find.text('Review Guardian notifications'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(tokenPort.calls, 0);
+    expect(transport.calls, isEmpty);
+  });
+
+  testWidgets('normal build keeps Guardian phone opt-in paused', (
+    tester,
+  ) async {
+    final account = FakeAccount(ownerA);
+    final ownerPort = FakeOwnerPort();
+    final tokenPort = FakeRecipientTokenPort();
+    final transport = FakeRecipientTransport(account);
+    final bound = GuardianBoundAccountGateway(
+      account,
+      ownerPort,
+      deviceRevoker: GuardianDeviceServerGateway(transport),
+    );
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    final service = GuardianRecipientRegistrationService(
+      account: bound,
+      ownerPort: ownerPort,
+      tokenPort: tokenPort,
+      server: GuardianDeviceServerGateway(transport),
+      receiptPort: FakeRecipientReceiptPort(ownerPort),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          accountGatewayProvider.overrideWithValue(bound),
+          guardianRecipientRegistrationProvider.overrideWithValue(service),
+        ],
+        child: const MaterialApp(home: Scaffold(body: GuardianScreen())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Check this phone'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Check this phone'));
+    await tester.pumpAndSettle();
+    expect(find.text('Review phone registration'), findsNothing);
+    expect(
+      find.text(
+        'Phone registration is paused until hosted safety checks pass.',
+      ),
+      findsOneWidget,
+    );
+    expect(tokenPort.calls, 0);
+    expect(transport.calls, isEmpty);
+  });
+
   test(
     'production owner port binds recipient before driver and clears both',
     () async {
@@ -687,6 +802,82 @@ void main() {
       expect(ownerPort.pending, isEmpty);
     },
   );
+
+  test(
+    'recipient status and explicit disable preserve server-first order',
+    () async {
+      final account = FakeAccount(ownerA);
+      final ownerPort = FakeOwnerPort();
+      final transport = FakeRecipientTransport(account);
+      final tokenPort = FakeRecipientTokenPort();
+      final bound = GuardianBoundAccountGateway(
+        account,
+        ownerPort,
+        deviceRevoker: GuardianDeviceServerGateway(transport),
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      final service = GuardianRecipientRegistrationService(
+        account: bound,
+        ownerPort: ownerPort,
+        tokenPort: tokenPort,
+        server: GuardianDeviceServerGateway(transport),
+        receiptPort: FakeRecipientReceiptPort(ownerPort),
+      );
+      expect(await service.isRegistered(ownerA.userId), isFalse);
+      ownerPort.status = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+      expect(await service.isRegistered(ownerA.userId), isTrue);
+      await service.disable(ownerA.userId);
+      expect(transport.calls, hasLength(1));
+      expect(transport.calls.single['routing_token'], isNull);
+      expect(ownerPort.disabled, [
+        (
+          ownerA.userId,
+          '33333333-3333-4333-8333-333333333333',
+          '44444444-4444-4444-8444-444444444444',
+        ),
+      ]);
+      expect(ownerPort.status, isNull);
+      expect(tokenPort.calls, 0);
+    },
+  );
+
+  test('failed recipient revocation retains local receipt', () async {
+    final account = FakeAccount(ownerA);
+    final ownerPort = FakeOwnerPort()
+      ..status = const GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+    final transport = FakeRecipientTransport(account)..failRevocation = true;
+    final bound = GuardianBoundAccountGateway(
+      account,
+      ownerPort,
+      deviceRevoker: GuardianDeviceServerGateway(transport),
+    );
+    addTearDown(() async {
+      await bound.dispose();
+      await account.close();
+    });
+    final service = GuardianRecipientRegistrationService(
+      account: bound,
+      ownerPort: ownerPort,
+      tokenPort: FakeRecipientTokenPort(),
+      server: GuardianDeviceServerGateway(transport),
+      receiptPort: FakeRecipientReceiptPort(ownerPort),
+    );
+    await expectLater(
+      service.disable(ownerA.userId),
+      throwsA(isA<GuardianRecipientRegistrationException>()),
+    );
+    expect(ownerPort.disabled, isEmpty);
+    expect(ownerPort.status, isNotNull);
+  });
 
   test(
     'local receipt failure revokes server row and clears reservation',

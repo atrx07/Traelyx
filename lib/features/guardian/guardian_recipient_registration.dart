@@ -123,7 +123,7 @@ final class GuardianRecipientRegistrationException implements Exception {
       'Guardian recipient registration could not be confirmed.';
 }
 
-/// Dormant until the native provider token adapter and reviewed UI are connected.
+/// Foreground-only registration and withdrawal; the caller owns explicit review.
 final class GuardianRecipientRegistrationService {
   const GuardianRecipientRegistrationService({
     required this.account,
@@ -142,6 +142,45 @@ final class GuardianRecipientRegistrationService {
   final GuardianRecipientReceiptPort receiptPort;
   final GuardianRecipientIdentitySource identitySource;
   final DateTime Function() now;
+
+  Future<bool> isRegistered(String owner) async {
+    try {
+      if (account.currentIdentity?.userId != owner ||
+          !await account.ensureCurrentOwnerBound() ||
+          account.currentIdentity?.userId != owner) {
+        throw const GuardianRecipientRegistrationException();
+      }
+      return await ownerPort.recipientStatus(owner) != null;
+    } catch (_) {
+      throw const GuardianRecipientRegistrationException();
+    }
+  }
+
+  Future<void> disable(String owner) async {
+    try {
+      if (account.currentIdentity?.userId != owner) {
+        throw const GuardianRecipientRegistrationException();
+      }
+      await account.runRecipientRegistration(owner, () async {
+        if (account.currentIdentity?.userId != owner) {
+          throw const GuardianRecipientRegistrationException();
+        }
+        final status = await ownerPort.recipientStatus(owner);
+        if (status == null) return;
+        if (account.currentIdentity?.userId != owner) {
+          throw const GuardianRecipientRegistrationException();
+        }
+        await server.revoke(owner, status.deviceId, status.generation);
+        if (account.currentIdentity?.userId != owner) {
+          throw const GuardianRecipientRegistrationException();
+        }
+        await ownerPort.disableConfirmedRecipient(owner, status);
+        await ownerPort.bindOwner(owner);
+      });
+    } catch (_) {
+      throw const GuardianRecipientRegistrationException();
+    }
+  }
 
   Future<void> registerAfterExplicitConsent(
     GuardianRecipientConsent consent,

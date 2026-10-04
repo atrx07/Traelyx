@@ -7,6 +7,8 @@ import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
 import 'package:traelyx/features/guardian/guardian_inbox.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
+import 'package:traelyx/features/guardian/guardian_recipient_consent_review.dart';
+import 'package:traelyx/features/guardian/guardian_recipient_providers.dart';
 
 class GuardianScreen extends ConsumerWidget {
   const GuardianScreen({super.key});
@@ -56,6 +58,10 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
     with WidgetsBindingObserver {
   final _code = TextEditingController();
   GuardianPermissions _permissions = const GuardianPermissions();
+  bool _recipientBusy = false;
+  bool _recipientReviewInterrupted = false;
+  bool? _recipientRegistered;
+  String? _recipientNotice;
   GuardianController get controller =>
       ref.read(guardianControllerProvider(widget.owner).notifier);
   @override
@@ -69,6 +75,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
     if (state != AppLifecycleState.resumed) {
       _code.clear();
       controller.clearSecrets();
+      _recipientReviewInterrupted = true;
     }
   }
 
@@ -98,6 +105,106 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         ),
       ) ??
       false;
+
+  Future<void> _checkRecipient() async {
+    final service = ref.read(guardianRecipientRegistrationProvider);
+    if (service == null || _recipientBusy) return;
+    setState(() {
+      _recipientBusy = true;
+      _recipientNotice = null;
+    });
+    try {
+      final registered = await service.isRegistered(widget.owner);
+      if (mounted) setState(() => _recipientRegistered = registered);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _recipientNotice =
+              'Could not confirm this phone’s Guardian notification state. Try again.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _recipientBusy = false);
+    }
+  }
+
+  Future<void> _enableRecipient() async {
+    final service = ref.read(guardianRecipientRegistrationProvider);
+    if (!ref.read(guardianRecipientPilotProvider) ||
+        service == null ||
+        _recipientBusy ||
+        _recipientRegistered != false) {
+      return;
+    }
+    _recipientReviewInterrupted = false;
+    final review = await showGuardianRecipientConsentReview(
+      context,
+      widget.owner,
+    );
+    if (review == null || !mounted || _recipientReviewInterrupted) return;
+    setState(() {
+      _recipientBusy = true;
+      _recipientNotice = null;
+    });
+    try {
+      await service.registerAfterExplicitConsent(review);
+      if (mounted) {
+        setState(() {
+          _recipientRegistered = true;
+          _recipientNotice =
+              'This phone is registered for Guardian notices. Alert sending is still disabled during testing.';
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _recipientRegistered = null;
+          _recipientNotice =
+              'Registration could not be confirmed. Check Android notification permission and your connection, then check this phone again.';
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _recipientBusy = false);
+    }
+  }
+
+  Future<void> _disableRecipient() async {
+    final service = ref.read(guardianRecipientRegistrationProvider);
+    if (service == null || _recipientBusy || _recipientRegistered != true) {
+      return;
+    }
+    final confirmed = await _confirm(
+      'Stop Guardian notices on this phone?',
+      'Remove this phone’s private routing token from your account and delete its local registration. Your Guardian pairings remain unchanged.',
+      'Stop notices',
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _recipientBusy = true;
+      _recipientNotice = null;
+    });
+    try {
+      await service.disable(widget.owner);
+      if (mounted) {
+        setState(() {
+          _recipientRegistered = false;
+          _recipientNotice =
+              'This phone is no longer registered for Guardian notices.';
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _recipientRegistered = null;
+          _recipientNotice =
+              'Could not confirm removal. Check this phone again before relying on the setting.';
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _recipientBusy = false);
+    }
+  }
+
   Future<void> _create(GuardianSnapshot snapshot) async {
     final permissions = _permissions;
     if (await _confirm(
@@ -185,6 +292,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(guardianControllerProvider(widget.owner));
+    final recipientPilot = ref.watch(guardianRecipientPilotProvider);
     final snapshot = state.snapshot;
     final invite = state.issued ?? snapshot?.invite;
     final preview = state.preview;
@@ -198,7 +306,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         const SizedBox(height: 12),
         const Text(
           'Pair with a trusted person and review permission preferences. '
-          'Alerts, live safety state and emergency delivery are not available in this version. '
+          'Alert sending, live safety state and emergency delivery are not available in this test build. '
           'Pairing must not be relied on for emergency assistance.',
         ),
         const SizedBox(height: 12),
@@ -283,6 +391,45 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         ],
         const SizedBox(height: 24),
         GuardianInboxPanel(owner: widget.owner),
+        const SizedBox(height: 24),
+        Text(
+          'Guardian notices on this phone',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const Text(
+          'Phone registration is optional and separate from pairing. It shares a private routing token with your account after your review. Alert sending is still disabled during testing; this is not emergency assistance.',
+        ),
+        Text(switch (_recipientRegistered) {
+          true => 'This phone has a local Guardian registration.',
+          false => 'This phone has no local Guardian registration.',
+          null => 'This phone’s registration has not been checked.',
+        }),
+        if (_recipientNotice != null)
+          Semantics(liveRegion: true, child: Text(_recipientNotice!)),
+        if (_recipientBusy) const LinearProgressIndicator(),
+        Wrap(
+          spacing: 8,
+          children: [
+            OutlinedButton(
+              onPressed: _recipientBusy ? null : _checkRecipient,
+              child: const Text('Check this phone'),
+            ),
+            if (_recipientRegistered == false && recipientPilot)
+              FilledButton(
+                onPressed: _recipientBusy ? null : _enableRecipient,
+                child: const Text('Review phone registration'),
+              ),
+            if (_recipientRegistered == true)
+              TextButton(
+                onPressed: _recipientBusy ? null : _disableRecipient,
+                child: const Text('Stop notices on this phone'),
+              ),
+          ],
+        ),
+        if (!recipientPilot && _recipientRegistered == false)
+          const Text(
+            'Phone registration is paused until hosted safety checks pass.',
+          ),
         const SizedBox(height: 24),
         Text(
           'Become someone’s Guardian',

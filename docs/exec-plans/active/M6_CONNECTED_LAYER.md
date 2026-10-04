@@ -372,7 +372,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   The activation service now rejects an incomplete, future or over-two-minute
   review before any native proposal. A widget cancellation/gating regression,
   a service rejection regression, all 294 Flutter tests, full analysis and the
-  configured debug APK pass. The dialog has no production route or caller; it
+  configured debug APK pass. At this stage the dialog had no production route or caller; it
   does not activate a hosted/local session or register a device. Full CI run
   36861945539 passed.
 - [x] Add a separate, dormant recipient notification review. It explains the
@@ -512,8 +512,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   consent is denied. The production entry point has no UI caller. All 328
   Flutter tests, analysis, native tests, Android lint, repository validation,
   a configured APK and scoped first-phone denial/startup proof pass; full CI
-  remains. No real token was requested; live consent, hosted row and delivery
-  remain gates.
+  run 37197100176 (`850ba2b`) passed. No real token was requested; live
+  consent, hosted row and delivery remain gates.
+- [x] Wire foreground recipient phone status, the existing two-acknowledgement
+  review, guarded registration and explicit server-first withdrawal. Normal
+  builds keep the opt-in action paused until hosted synthetic row registration
+  and withdrawal pass. Opening Guardian sends no registration request; the first
+  phone showed local status, opened/cancelled review, and retained no production
+  revoke ticket. A data-preserving default-off update opens normally and shows
+  the paused state. Focused widget/transaction tests, all 332 Flutter tests,
+  analysis, formatting, repository validation and a configured APK pass; CI
+  remains. No real token or recipient row exists.
+- [ ] Validate synthetic hosted registration, withdrawal and same-owner retry
+  before enabling any real recipient opt-in; then run a separately consented
+  first-phone registration and cancellation check. Keep alert processing off.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

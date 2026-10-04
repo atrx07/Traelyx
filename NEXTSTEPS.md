@@ -109,11 +109,11 @@ The native receipt commit now requires that exact reservation and denies
 overwriting an existing receipt. Full CI passed. A dormant reviewed-consent
 transaction now sequences ticket reservation, injected token acquisition,
 guarded server registration and local receipt commit with failure cleanup.
-Full CI passed. The dormant native token adapter now requires that exact
-reservation and rechecks it after Firebase responds; local gates and a
-token-free first-phone denial proof pass. Finish its full CI gate, then connect
-the reviewed UI, validate hosted synthetic row retry, and only later run
-two-phone delivery.
+Full CI passed. The dormant native token adapter requires that exact reservation
+and rechecks it after Firebase responds. A foreground status/review/withdrawal
+UI is wired but opt-in remains paused in normal builds. Finish its full gates,
+validate hosted synthetic row registration and withdrawal, then consider a
+consented first-phone opt-in. Two-phone delivery comes later.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the
