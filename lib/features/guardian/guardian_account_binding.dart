@@ -197,6 +197,8 @@ final class GuardianBoundAccountGateway
   String? _cleanupOwnerId;
   bool _hasBoundOwner = false;
   String? _boundOwner;
+  bool _recipientRegistrationStarting = false;
+  bool _recipientRegistrationActive = false;
 
   void _updateOwner() {
     _desiredOwner = _signingOut || _localCleanupRequired
@@ -212,11 +214,18 @@ final class GuardianBoundAccountGateway
     _tail = _tail.then((_) async {
       final target = _desiredOwner;
       try {
-        await _guardian.bindOwner(target);
+        if (!(_recipientRegistrationActive &&
+            target != null &&
+            _hasBoundOwner &&
+            _boundOwner == target)) {
+          await _guardian.bindOwner(target);
+        }
         _boundOwner = target;
         _hasBoundOwner = true;
         try {
-          if (target != null) await _reconcilePending(target);
+          if (target != null && !_recipientRegistrationActive) {
+            await _reconcilePending(target);
+          }
           result.complete(true);
         } catch (_) {
           result.complete(false);
@@ -270,6 +279,44 @@ final class GuardianBoundAccountGateway
     return _queueBind();
   }
 
+  /// Serializes a consented registration against same-owner startup rebinding.
+  /// Unexpected account changes can still clear native authority.
+  Future<T> runRecipientRegistration<T>(
+    String owner,
+    Future<T> Function() operation,
+  ) async {
+    if (_recipientRegistrationStarting ||
+        _recipientRegistrationActive ||
+        _signingOut ||
+        _preparingSignOut ||
+        _localCleanupRequired) {
+      throw const GuardianLocalCleanupException();
+    }
+    _recipientRegistrationStarting = true;
+    try {
+      if (_account.currentIdentity?.userId != owner ||
+          !await ensureCurrentOwnerBound() ||
+          _account.currentIdentity?.userId != owner ||
+          !_hasBoundOwner ||
+          _boundOwner != owner) {
+        throw const GuardianLocalCleanupException();
+      }
+      _recipientRegistrationActive = true;
+      final result = await operation();
+      if (_account.currentIdentity?.userId != owner ||
+          _desiredOwner != owner ||
+          _signingOut ||
+          _localCleanupRequired) {
+        throw const GuardianLocalCleanupException();
+      }
+      return result;
+    } finally {
+      _recipientRegistrationActive = false;
+      _recipientRegistrationStarting = false;
+      _updateOwner();
+    }
+  }
+
   Future<void> dispose() => _subscription.cancel();
 
   @override
@@ -289,7 +336,10 @@ final class GuardianBoundAccountGateway
 
   @override
   Future<void> signOut() async {
-    if (_preparingSignOut || _signingOut) {
+    if (_preparingSignOut ||
+        _signingOut ||
+        _recipientRegistrationStarting ||
+        _recipientRegistrationActive) {
       throw const GuardianLocalCleanupException();
     }
     _preparingSignOut = true;

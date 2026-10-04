@@ -106,8 +106,11 @@ matching local receipt after server confirmation. Finish full gates and validate
 a hosted synthetic row before considering any real opt-in. No production token
 or device row exists.
 The native receipt commit now requires that exact reservation and denies
-overwriting an existing receipt. Full gates remain pending. Next connect the
-reviewed consent to a serialized token/server/local transaction.
+overwriting an existing receipt. Full CI passed. A dormant reviewed-consent
+transaction now sequences ticket reservation, injected token acquisition,
+guarded server registration and local receipt commit with failure cleanup.
+Finish full gates, then connect the native provider adapter; hosted synthetic
+row retry and two-phone delivery still remain.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

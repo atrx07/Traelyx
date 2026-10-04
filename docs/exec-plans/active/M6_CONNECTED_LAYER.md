@@ -488,9 +488,23 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   A commit now requires a matching pending owner/device/generation ticket and
   an empty local receipt. A replacement must first disable the old receipt,
   preserving its revoke ticket, then use a fresh device ID and reservation.
-  Native tests and the scoped first-phone bridge proof pass. This is dormant:
+  Native tests and the scoped first-phone bridge proof pass. Full CI run
+  37192530498 (`6302ee8`) passed. This is dormant:
   production has no registered recipient or caller; consented token acquisition
   and the guarded registration transaction remain pending.
+- [x] Add a dormant recipient registration transaction behind explicit fresh
+  consent and current-owner serialization. It reserves exact cleanup IDs before
+  an injected provider token request, checks Auth around each await, calls the
+  guarded server registration, writes the native encrypted receipt, then clears
+  the reservation. Failure attempts guarded server revoke and local/provider
+  cleanup; uncertain cleanup retains the ticket or marker for retry. Synthetic
+  tests cover success, account switch, local failure, failed revoke, expiring
+  consent and exact receipt-channel response. Provider acquisition and local
+  receipt awaits have 25-second limits. A concurrent explicit sign-out is refused and can
+  be retried after the transaction. No production provider adapter or UI caller is wired;
+  no FCM token or server row was created. All 327 Flutter tests, analysis,
+  repository validation, a configured APK, and the data-preserving first-phone
+  inert startup check pass. Full CI remains pending.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

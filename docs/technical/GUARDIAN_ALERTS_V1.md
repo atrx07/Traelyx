@@ -289,6 +289,16 @@ uses it; no token or production device row has been created.
 The native receipt commit rejects a missing or mismatched reservation and
 rejects overwriting an existing receipt. Replacing a device requires cleanup
 of the old receipt and a distinct new reservation before server registration.
+The dormant foreground transaction validates fresh explicit recipient consent,
+serializes same-owner rebinding, reserves IDs, obtains a provider token through
+an injected adapter, registers the guarded server row, commits the encrypted
+local receipt and only then clears the reservation. It rechecks consent before
+reservation and Auth after each await. Token and local receipt waits are bounded
+to 25 seconds. Failure attempts signed-in server revocation before local receipt and
+provider cleanup; uncertain cleanup leaves the exact ticket or provider marker
+for retry. Explicit sign-out is refused while the transaction is in flight, so
+it cannot release Auth before a late server registration finishes. No
+production provider adapter or UI caller is connected yet.
 
 ### Integration still required
 

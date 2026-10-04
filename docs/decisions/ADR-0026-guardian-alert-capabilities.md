@@ -111,11 +111,14 @@ The native receipt commit requires that exact pending ticket and an empty
 local receipt; replacement first records cleanup for the old row and uses a
 fresh identity. The future transaction removes its reservation only after a
 server-confirmed registration and durable local receipt commit.
-On a later same-owner
-sign-in, the guarded RPC must confirm revocation before an exact local ticket is
+The dormant transaction serializes same-owner rebinding, refuses concurrent
+explicit sign-out, and rechecks Auth after each asynchronous step. On a later
+same-owner sign-in, the guarded RPC must
+confirm revocation before an exact local ticket is
 removed. If a matching local receipt exists, revoke first, then erase that
-receipt and clean up the provider marker. This path is implemented but still lacks a production registered-row
-test; consented registration remains gated on that validation and the broader
+receipt and clean up the provider marker. This path is implemented but still
+lacks a production registered-row test; consented registration remains gated
+on that validation and the broader
 push/receipt lifecycle.
 
 The migration does not install a scheduler, create credentials, register devices
