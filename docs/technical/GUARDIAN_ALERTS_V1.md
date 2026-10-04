@@ -305,8 +305,9 @@ account-free cleanup marker still precedes any token request. Late callbacks
 after owner switch, mismatched consent, malformed tokens and unreserved calls
 cannot return a routing token to Flutter. Foreground Guardian UI now exposes
 an explicit local status check, the two-acknowledgement review and server-first
-withdrawal. The opt-in action is disabled in normal builds until hosted
-registration and withdrawal gates pass. Opening Guardian and cancelling review
+withdrawal. The opt-in action stays disabled in normal and release builds; only
+an explicitly configured debug pilot build can expose it after hosted synthetic
+registration and withdrawal checks. Opening Guardian and cancelling review
 still create no token, recipient row or revoke ticket. There is no automatic
 startup registration path.
 

@@ -112,9 +112,12 @@ guarded server registration and local receipt commit with failure cleanup.
 Full CI passed. The dormant native token adapter requires that exact reservation
 and rechecks it after Firebase responds. A foreground status/review/withdrawal
 UI is wired but opt-in remains paused in normal builds. Full CI passed. A
-rollback-only recipient fixture is queued for CI; validate its hosted synthetic
-row registration and withdrawal, then consider a consented first-phone opt-in.
-Two-phone delivery comes later.
+rollback-only recipient fixture passed CI, and the maintainer reported all
+three hosted registration/retry/withdrawal checks true with no error. The
+debug-only pilot APK passes local checks and opens on the first phone; its CI
+remains to run. Then run a separately consented first-phone opt-in and
+withdrawal while alert processing remains off. Browser control prevented direct
+observation of the hosted SQL result. Two-phone delivery comes later.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

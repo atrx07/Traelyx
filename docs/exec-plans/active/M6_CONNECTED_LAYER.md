@@ -526,10 +526,21 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Add a versioned rollback-only synthetic recipient fixture to cloud-schema
   CI. It checks private table grants, exact signed-in registration, same-owner
   retry, wrong-owner denial, withdrawal and post-rollback absence. The fixture
-  adds no migration or real recipient and must pass CI before hosted execution.
-- [ ] Validate synthetic hosted registration, withdrawal and same-owner retry
-  before enabling any real recipient opt-in; then run a separately consented
-  first-phone registration and cancellation check. Keep alert processing off.
+  adds no migration or real recipient. Full CI run 37216038800 (`47ab744`)
+  passed before hosted execution.
+- [x] Validate synthetic hosted registration, withdrawal and same-owner retry
+  before exposing real recipient opt-in. The maintainer ran the versioned SQL
+  text in the Traelyx Supabase SQL Editor and reported all three final checks
+  true with no error. Browser control failed before attachment, so the result
+  was not directly observed by Codex. The fixture rolled back synthetic rows.
+- [ ] Run a separately consented first-phone registration and withdrawal check
+  from a deliberately configured debug pilot build. Normal builds stay paused;
+  release builds cannot enable the pilot flag. All 332 Flutter tests, focused
+  recipient tests, analysis, repository validation and the configured pilot APK
+  build pass. The pilot APK was update-installed without clearing first-phone
+  data; Traelyx opens, notification permission is granted, a default network
+  exists and no production revoke ticket exists. No consent, token or row yet.
+  Keep alert processing off.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
