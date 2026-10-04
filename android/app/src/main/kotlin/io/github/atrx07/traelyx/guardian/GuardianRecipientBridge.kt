@@ -40,6 +40,13 @@ class GuardianRecipientBridge(
                 exact("ownerId")
                 coordinator.pendingRevokes(owner()).map { mapOf("deviceId" to it.deviceId, "generation" to it.generation) }
             }
+            RECORD_ATTEMPT -> {
+                exact("ownerId", "deviceId", "generation")
+                coordinator.recordRegistrationAttempt(GuardianRecipientRevokeTicket(
+                    owner(), requireNotNull(arguments["deviceId"] as? String),
+                    requireNotNull(arguments["generation"] as? String)))
+                null
+            }
             CONFIRM_REVOKE -> {
                 exact("ownerId", "deviceId", "generation")
                 coordinator.confirmPendingRevoke(GuardianRecipientRevokeTicket(
@@ -70,8 +77,9 @@ class GuardianRecipientBridge(
         const val SNAPSHOT = "snapshot"
         const val DISABLE = "disable"
         const val PENDING_REVOKES = "pendingRevokes"
+        const val RECORD_ATTEMPT = "recordAttempt"
         const val CONFIRM_REVOKE = "confirmRevoke"
         const val DISABLE_CONFIRMED = "disableConfirmed"
-        val METHODS = setOf(BIND_OWNER, COMMIT, SNAPSHOT, DISABLE, PENDING_REVOKES, CONFIRM_REVOKE, DISABLE_CONFIRMED)
+        val METHODS = setOf(BIND_OWNER, COMMIT, SNAPSHOT, DISABLE, PENDING_REVOKES, RECORD_ATTEMPT, CONFIRM_REVOKE, DISABLE_CONFIRMED)
     }
 }

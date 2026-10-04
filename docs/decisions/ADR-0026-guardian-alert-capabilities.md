@@ -103,10 +103,14 @@ Unexpected Auth loss cannot call the signed-in device revocation RPC. Preserve
 only the owner, device and generation IDs needed for a later same-owner retry in
 a separate encrypted, no-backup native journal. Keep the journal bounded and
 never silently evict an unconfirmed row based on the local clock; refuse new
-registration when capacity or journal integrity is uncertain. The journal is
-now captures IDs before native local receipt erasure. On a later same-owner
+registration when capacity or journal integrity is uncertain. The journal
+captures IDs before native local receipt erasure. A future registration must
+reserve its exact revoke ticket before token acquisition or network I/O, so a
+process death after server registration still leaves a retryable row identity.
+On a later same-owner
 sign-in, the guarded RPC must confirm revocation before an exact local ticket is
-removed. This path is implemented but still lacks a production registered-row
+removed. If a matching local receipt exists, revoke first, then erase that
+receipt and clean up the provider marker. This path is implemented but still lacks a production registered-row
 test; consented registration remains gated on that validation and the broader
 push/receipt lifecycle.
 

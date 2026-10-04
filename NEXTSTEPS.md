@@ -100,7 +100,11 @@ Native owner cleanup now writes the journal before erasing a receipt; failed
 writes deny rebinding, and replacement receipts also retain the previous row
 identity. First-phone proofs and CI pass. Same-owner signed-in server
 reconciliation and exact ticket confirmation are now wired; finish full gates
-and validate a hosted synthetic row before considering any real opt-in.
+and full CI passed. The dormant pre-registration bridge now reserves an exact
+revoke ticket before future token acquisition; same-owner retry cleans up a
+matching local receipt after server confirmation. Finish full gates and validate
+a hosted synthetic row before considering any real opt-in. No production token
+or device row exists.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

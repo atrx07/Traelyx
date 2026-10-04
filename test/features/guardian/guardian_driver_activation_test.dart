@@ -68,6 +68,12 @@ final class OwnerPort implements GuardianOwnerPort {
   ) async => [];
 
   @override
+  Future<void> recordRegistrationAttempt(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {}
+
+  @override
   Future<void> confirmPendingRevoke(
     String ownerId,
     GuardianRecipientLocalStatus status,

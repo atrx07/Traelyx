@@ -471,8 +471,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   repository validation and the configured debug APK pass. A scoped first-phone
   bridge proof verifies owner filtering and exact ticket confirmation; production
   inert binding and normal startup pass after a data-preserving update. The
-  production journal is absent. Full CI is pending. No production ticket,
+  production journal is absent. Full CI run 37137200095 (`0eefc13`) passed. No production ticket,
   token or server device exists yet; hosted same-owner retry is untested.
+- [x] Reserve an exact ID-only revoke ticket before any future recipient token
+  acquisition or server registration. Native binding requires the currently
+  bound owner and an empty local receipt. If a crash leaves that ticket beside a
+  committed receipt, same-owner retry revokes the server row, erases the matching
+  receipt and retries provider cleanup before confirming success. Failed server
+  or receipt cleanup keeps the ticket; failed provider deletion keeps its marker.
+  All 318 Flutter tests, analysis, native tests, Android lint, repository
+  validation, configured APK and scoped first-phone proofs pass. No production
+  caller, token or device row exists.
+  The registration transaction, hosted row retry and delivery remain gates.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

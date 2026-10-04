@@ -73,6 +73,12 @@ class GuardianRecipientCoordinator(
         return revokeJournal.pending().filter { it.ownerId == expectedOwner }
     }
 
+    /** Reserve cleanup before a future token/server registration attempt. */
+    @Synchronized fun recordRegistrationAttempt(ticket: GuardianRecipientRevokeTicket) {
+        require(bound && owner == ticket.ownerId && vault.readStored() == null)
+        revokeJournal.record(ticket)
+    }
+
     /** Called after the server confirms this exact row is revoked. */
     @Synchronized fun confirmPendingRevoke(ticket: GuardianRecipientRevokeTicket) {
         require(bound && owner == ticket.ownerId)
@@ -85,8 +91,8 @@ class GuardianRecipientCoordinator(
         guardianUuid(deviceId); guardianUuid(generation)
         val stored = vault.readStored() ?: return
         require(stored.ownerId == expectedOwner && stored.deviceId == deviceId && stored.generation == generation)
-        revokeJournal.confirm(GuardianRecipientRevokeTicket(expectedOwner, deviceId, generation))
         vault.erase()
+        revokeJournal.confirm(GuardianRecipientRevokeTicket(expectedOwner, deviceId, generation))
     }
 
     private fun dropStored() {

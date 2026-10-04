@@ -277,6 +277,16 @@ receipt without journaling a redundant revoke. No production recipient device
 or journal ticket exists yet, so hosted retry remains unverified; server expiry
 is still the fallback if that owner never signs in again.
 
+Before a future token request or guarded server registration, the client must
+reserve the exact owner/device/generation revoke ticket in this journal. A
+same-owner retry may find both the ticket and a local receipt if the process
+stopped between receipt commit and ticket confirmation. In that case it revokes
+the server row, erases that matching receipt and runs marker-aware provider
+cleanup. Failed server or receipt cleanup preserves the ticket; failed provider
+deletion preserves its separate marker for another retry.
+This reservation bridge is dormant until a reviewed registration transaction
+uses it; no token or production device row has been created.
+
 ### Integration still required
 
 - Connect the tested native encrypted outbox to consent, cancellation notification

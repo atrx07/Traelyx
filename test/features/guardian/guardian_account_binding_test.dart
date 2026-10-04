@@ -81,6 +81,15 @@ final class FakeOwnerPort implements GuardianOwnerPort {
       : [];
 
   @override
+  Future<void> recordRegistrationAttempt(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) async {
+    pendingOwnerId = ownerId;
+    pending.add(status);
+  }
+
+  @override
   Future<void> confirmPendingRevoke(
     String ownerId,
     GuardianRecipientLocalStatus status,
@@ -96,6 +105,7 @@ final class FakeOwnerPort implements GuardianOwnerPort {
     GuardianRecipientLocalStatus status,
   ) async {
     disabled.add((ownerId, status.deviceId, status.generation));
+    pending.remove(status);
     this.status = null;
   }
 
@@ -303,8 +313,79 @@ void main() {
     );
     await port.confirmPendingRevoke(ownerA.userId, status);
     await port.disableConfirmedRecipient(ownerA.userId, status);
-    expect(calls, ['confirmRevoke', 'disableConfirmed']);
+    await port.recordRegistrationAttempt(ownerA.userId, status);
+    expect(calls, ['confirmRevoke', 'disableConfirmed', 'recordAttempt']);
+    expect(
+      () => port.recordRegistrationAttempt(
+        ownerA.userId,
+        const GuardianRecipientLocalStatus('bad', 'bad'),
+      ),
+      throwsA(isA<FormatException>()),
+    );
   });
+
+  test(
+    'interrupted registration with a local receipt revokes then erases it',
+    () async {
+      final account = FakeAccount(ownerA);
+      const ticket = GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+      final port = FakeOwnerPort()..status = ticket;
+      await port.recordRegistrationAttempt(ownerA.userId, ticket);
+      final revoker = FakeDeviceRevoker();
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      expect(revoker.calls, [
+        (ownerA.userId, ticket.deviceId, ticket.generation),
+      ]);
+      expect(port.disabled, [
+        (ownerA.userId, ticket.deviceId, ticket.generation),
+      ]);
+      expect(port.pending, isEmpty);
+      expect(port.status, isNull);
+      expect(
+        port.calls.where((owner) => owner == ownerA.userId).length,
+        greaterThanOrEqualTo(2),
+      );
+    },
+  );
+
+  test(
+    'offline interrupted registration retains its receipt and ticket',
+    () async {
+      final account = FakeAccount(ownerA);
+      const ticket = GuardianRecipientLocalStatus(
+        '33333333-3333-4333-8333-333333333333',
+        '44444444-4444-4444-8444-444444444444',
+      );
+      final port = FakeOwnerPort()..status = ticket;
+      await port.recordRegistrationAttempt(ownerA.userId, ticket);
+      final revoker = FakeDeviceRevoker()..fail = true;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        deviceRevoker: revoker,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isFalse);
+      expect(port.pending, [ticket]);
+      expect(port.status, same(ticket));
+      expect(port.disabled, isEmpty);
+    },
+  );
 
   test(
     'offline pending revoke retries under the same signed-in owner',

@@ -20,6 +20,10 @@ abstract interface class GuardianOwnerPort {
   Future<void> bindOwner(String? ownerId);
   Future<GuardianRecipientLocalStatus?> recipientStatus(String ownerId);
   Future<List<GuardianRecipientLocalStatus>> pendingRevokes(String ownerId);
+  Future<void> recordRegistrationAttempt(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  );
   Future<void> confirmPendingRevoke(
     String ownerId,
     GuardianRecipientLocalStatus status,
@@ -108,6 +112,23 @@ final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
       result.add(GuardianRecipientLocalStatus(device, generation));
     }
     return result;
+  }
+
+  @override
+  Future<void> recordRegistrationAttempt(
+    String ownerId,
+    GuardianRecipientLocalStatus status,
+  ) {
+    if (!_recipientUuid.hasMatch(ownerId) ||
+        !_recipientUuid.hasMatch(status.deviceId) ||
+        !_recipientUuid.hasMatch(status.generation)) {
+      throw const FormatException();
+    }
+    return _recipientChannel.invokeMethod<void>('recordAttempt', {
+      'ownerId': ownerId,
+      'deviceId': status.deviceId,
+      'generation': status.generation,
+    });
   }
 
   @override
@@ -228,7 +249,16 @@ final class GuardianBoundAccountGateway
       checkOwner();
       await revoker.revoke(owner, status.deviceId, status.generation);
       checkOwner();
-      await _guardian.confirmPendingRevoke(owner, status);
+      final local = await _guardian.recipientStatus(owner);
+      checkOwner();
+      if (local?.deviceId == status.deviceId &&
+          local?.generation == status.generation) {
+        await _guardian.disableConfirmedRecipient(owner, status);
+        checkOwner();
+        await _guardian.bindOwner(owner);
+      } else {
+        await _guardian.confirmPendingRevoke(owner, status);
+      }
       checkOwner();
     }
   }

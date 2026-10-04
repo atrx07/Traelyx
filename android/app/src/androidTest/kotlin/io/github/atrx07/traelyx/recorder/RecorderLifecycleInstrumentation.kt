@@ -282,6 +282,11 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 listOf(mapOf("deviceId" to device, "generation" to generation)))
             bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
             check(journal.pending().isEmpty())
+            bridge.dispatch("recordAttempt", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
+            check(bridge.dispatch("pendingRevokes", mapOf("ownerId" to owner)) ==
+                listOf(mapOf("deviceId" to device, "generation" to generation)))
+            bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "deviceId" to device, "generation" to generation))
+            check(journal.pending().isEmpty())
         } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())

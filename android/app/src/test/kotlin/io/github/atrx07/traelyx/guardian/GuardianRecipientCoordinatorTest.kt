@@ -139,6 +139,44 @@ class GuardianRecipientCoordinatorTest {
         assertEquals(listOf(other), journal.pending())
     }
 
+    @Test fun `registration attempt reserves exact revoke intent before receipt exists`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        val ticket = GuardianRecipientRevokeTicket(ownerA, deviceId, generation)
+        denied { coordinator.recordRegistrationAttempt(ticket) }
+        coordinator.bindOwner(ownerA)
+        denied { coordinator.recordRegistrationAttempt(ticket.copy(ownerId = ownerB)) }
+        coordinator.recordRegistrationAttempt(ticket)
+        coordinator.recordRegistrationAttempt(ticket)
+        assertEquals(listOf(ticket), journal.pending())
+        assertNull(vault.stored)
+        coordinator.commit(ownerA, device())
+        denied { coordinator.recordRegistrationAttempt(ticket) }
+        assertEquals(listOf(ticket), journal.pending())
+        coordinator.disableConfirmed(ownerA, deviceId, generation)
+        assertNull(vault.stored)
+        assertTrue(journal.pending().isEmpty())
+    }
+
+    @Test fun `failed local receipt erasure retains registration attempt ticket`() {
+        val vault = MemoryVault()
+        val journal = MemoryGuardianRecipientRevokeJournal()
+        val coordinator = GuardianRecipientCoordinator(vault, journal) { now }
+        val ticket = GuardianRecipientRevokeTicket(ownerA, deviceId, generation)
+        coordinator.bindOwner(ownerA)
+        coordinator.recordRegistrationAttempt(ticket)
+        coordinator.commit(ownerA, device())
+        vault.failErase = true
+        denied { coordinator.disableConfirmed(ownerA, deviceId, generation) }
+        assertEquals(device(), vault.stored)
+        assertEquals(listOf(ticket), journal.pending())
+        vault.failErase = false
+        coordinator.disableConfirmed(ownerA, deviceId, generation)
+        assertNull(vault.stored)
+        assertTrue(journal.pending().isEmpty())
+    }
+
     @Test fun `confirmed server revoke erases exact local row without creating a ticket`() {
         val vault = MemoryVault()
         val journal = MemoryGuardianRecipientRevokeJournal()
@@ -221,5 +259,9 @@ class GuardianRecipientCoordinatorTest {
         denied { bridge.dispatch("confirmRevoke", mapOf("ownerId" to ownerB, "deviceId" to deviceId, "generation" to generation)) }
         bridge.dispatch("confirmRevoke", mapOf("ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation))
         assertEquals(emptyList<Any>(), bridge.dispatch("pendingRevokes", mapOf("ownerId" to ownerA)))
+        denied { bridge.dispatch("recordAttempt", mapOf("ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation, "extra" to true)) }
+        bridge.dispatch("recordAttempt", mapOf("ownerId" to ownerA, "deviceId" to deviceId, "generation" to generation))
+        assertEquals(listOf(mapOf("deviceId" to deviceId, "generation" to generation)),
+            bridge.dispatch("pendingRevokes", mapOf("ownerId" to ownerA)))
     }
 }
