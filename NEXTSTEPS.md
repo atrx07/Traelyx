@@ -118,7 +118,10 @@ debug-only pilot APK and full CI pass. A separately consented first-phone
 opt-in and withdrawal passed app/local checks; the maintainer reported hosted
 device counts moving from 1/1 to 0/0. Browser control prevented direct SQL
 observation. Next validate guarded alert processing and receiver behavior
-before two-phone delivery. Both Edge functions and actual sending remain off.
+before two-phone delivery. A dormant native incoming-push preflight now denies
+messages without a matching local recipient receipt; server permission,
+notification and receipt handling remain unwired. Both Edge functions and
+actual sending remain off.
 
 A dormant Android activation bridge serializes encrypted-vault calls on one
 process worker and checks the current boot count. Flutter Auth now binds the

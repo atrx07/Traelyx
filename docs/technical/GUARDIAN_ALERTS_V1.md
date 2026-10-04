@@ -328,8 +328,11 @@ startup registration path.
   The dormant Android envelope parser now accepts only data-only FCM messages
   with exactly `schema_version=1`, a canonical delivery UUID and a canonical
   device-generation UUID. It rejects notification payloads, extra fields and
-  malformed IDs before any future local-authority or server check. No receiver
-  service, notification, registration or receipt is wired to it yet.
+  malformed IDs. A dormant native preflight then requires a provider cleanup
+  marker and an unexpired encrypted local receipt with matching generation;
+  missing or corrupt state yields no transient receipt request. A server check
+  is still required before notification. No receiver service, notification or
+  receipt call is wired to this preflight yet.
 - False-positive fixtures, lifecycle/retry/revocation tests, and background,
   screen-lock, offline/recovery and performance checks on a physical phone.
 - Synthetic end-to-end delivery without dangerous driving or real-contact

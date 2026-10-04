@@ -546,6 +546,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   hosted count was 0/0. Browser control prevented direct SQL observation;
   no push, alert, trip upload or second-phone test occurred. Alert processing
   stays off.
+- [x] Add a dormant native FCM preflight after the strict data-only envelope
+  parser. It requires the provider cleanup marker and a readable, unexpired
+  encrypted local receipt whose generation matches the envelope. Missing,
+  revoked, expired, mismatched or corrupt state yields no receipt authority.
+  A valid result is transient and redacted in diagnostics; it is not permission
+  to notify without a current server check. Focused and full native tests,
+  Android lint and a configured default-off APK build pass. The first phone was
+  not updated for this dormant change; no message, receipt or notification ran.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
