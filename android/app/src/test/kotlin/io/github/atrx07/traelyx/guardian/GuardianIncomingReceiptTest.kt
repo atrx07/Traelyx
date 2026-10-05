@@ -46,11 +46,23 @@ class GuardianIncomingReceiptTest {
         owner, deviceId, generation, credential, now - 1_000, now + 60_000,
     )
 
-    private fun handler(vault: Vault, marker: Marker, transport: Transport, notices: MutableList<String>) =
+    private fun handler(
+        vault: Vault, marker: Marker, transport: Transport, notices: MutableList<String>,
+        clock: () -> Long = { now },
+        claim: GuardianNoticeClaim = GuardianNoticeClaim { request, _ ->
+            val stored = vault.stored!!
+            if (request.deliveryId in stored.noticeDeliveryIds) false else {
+                vault.stored = stored.copy(noticeDeliveryIds = stored.noticeDeliveryIds + request.deliveryId)
+                true
+            }
+        },
+        notice: GuardianGenericNotice = GuardianGenericNotice { notices.add(it) },
+    ) =
         GuardianIncomingMessageHandler(
-            GuardianPushPreflight(vault, marker) { now },
+            GuardianPushPreflight(vault, marker, clock),
             GuardianCapabilityReceiptGateway(endpoint, transport),
-            GuardianGenericNotice { notices.add(it) },
+            claim,
+            notice,
         )
 
     @Test fun `exact server receipt and stable local registration allow one generic notice`() {
@@ -117,5 +129,83 @@ class GuardianIncomingReceiptTest {
         ).receive(request))
         assertEquals(0, transport.calls)
         assertTrue(GuardianCapabilityReceiptGateway(endpoint, transport).receive(request))
+    }
+
+    @Test fun `duplicate after dismissal and handler recreation never redisplays`() {
+        val vault = Vault(device())
+        val marker = Marker()
+        val transport = Transport()
+        val notices = mutableListOf<String>()
+        handler(vault, marker, transport, notices).handle(data, false)
+        notices.clear() // Dismissal does not erase the durable claim.
+        handler(vault, marker, transport, notices).handle(data, false)
+        assertTrue(notices.isEmpty())
+        assertEquals(listOf(delivery), vault.stored!!.noticeDeliveryIds)
+    }
+
+    @Test fun `a distinct authorized delivery still posts after an earlier claim`() {
+        val vault = Vault(device())
+        val notices = mutableListOf<String>()
+        val handler = handler(vault, Marker(), Transport(), notices)
+        val second = "55555555-5555-4555-8555-555555555555"
+        handler.handle(data, false)
+        handler.handle(data + ("delivery_id" to second), false)
+        handler.handle(data, false)
+        assertEquals(listOf(delivery, second), notices)
+    }
+
+    @Test fun `lost receipt response can retry before any notice is claimed`() {
+        val vault = Vault(device())
+        val marker = Marker()
+        val transport = Transport().also { it.beforeResponse = { error("network timeout") } }
+        val notices = mutableListOf<String>()
+        val handler = handler(vault, marker, transport, notices)
+        handler.handle(data, false)
+        assertTrue(vault.stored!!.noticeDeliveryIds.isEmpty())
+        transport.beforeResponse = null
+        handler.handle(data, false)
+        assertEquals(listOf(delivery), notices)
+    }
+
+    @Test fun `display failure retains claim and never attempts that notice again`() {
+        val vault = Vault(device())
+        val marker = Marker()
+        val transport = Transport()
+        val notices = mutableListOf<String>()
+        var attempts = 0
+        val failedNotice = GuardianGenericNotice { attempts++; error("display unavailable") }
+        handler(vault, marker, transport, notices, notice = failedNotice).handle(data, false)
+        handler(vault, marker, transport, notices, notice = failedNotice).handle(data, false)
+        assertEquals(1, attempts)
+        assertEquals(listOf(delivery), vault.stored!!.noticeDeliveryIds)
+        assertTrue(notices.isEmpty())
+    }
+
+    @Test fun `expiry or replacement while receipt responds prevents claim and display`() {
+        for (replace in listOf(false, true)) {
+            var clock = now
+            val vault = Vault(device())
+            val transport = Transport().also { it.beforeResponse = {
+                if (replace) vault.stored = device().copy(credential = "b".repeat(64))
+                else clock = device().expiresAtEpochMillis
+            } }
+            val notices = mutableListOf<String>()
+            handler(vault, Marker(), transport, notices, { clock }).handle(data, false)
+            assertTrue(notices.isEmpty())
+            assertTrue(vault.stored!!.noticeDeliveryIds.isEmpty())
+        }
+    }
+
+    @Test fun `failed claim and local withdrawal during claim suppress notice`() {
+        for (withdraw in listOf(false, true)) {
+            val vault = Vault(device())
+            val marker = Marker()
+            val notices = mutableListOf<String>()
+            val claim = GuardianNoticeClaim { _, _ ->
+                if (withdraw) { vault.erase(); marker.clear(); true } else error("disk uncertain")
+            }
+            handler(vault, marker, Transport(), notices, claim = claim).handle(data, false)
+            assertTrue(notices.isEmpty())
+        }
     }
 }

@@ -21,13 +21,20 @@ class GuardianFirebaseMessagingService : FirebaseMessagingService() {
         val endpoint = getString(R.string.traelyx_guardian_capability_url)
         if (endpoint.isEmpty() || !notificationsAllowed()) return
         try {
+            val vault = AndroidGuardianRecipientVault(applicationContext)
+            val marker = AndroidGuardianProviderMarker(applicationContext)
             val handler = GuardianIncomingMessageHandler(
                 GuardianPushPreflight(
-                    AndroidGuardianRecipientVault(applicationContext),
-                    AndroidGuardianProviderMarker(applicationContext),
+                    vault,
+                    marker,
                     System::currentTimeMillis,
                 ),
                 GuardianCapabilityReceiptGateway(endpoint, BoundedGuardianHttpsTransport()),
+                GuardianNoticeClaim { request, generation ->
+                    marker.present() && vault.claimNotice(
+                        request.deviceId, generation, request.credential, request.deliveryId, System.currentTimeMillis(),
+                    )
+                },
                 GuardianGenericNotice(::postGenericNotice),
             )
             handler.handle(message.data, message.notification != null)

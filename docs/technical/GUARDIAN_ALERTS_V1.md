@@ -200,13 +200,23 @@ registration caller is paused in normal builds pending hosted validation;
 unexpected account-loss reconciliation remains required.
 
 Recipient receipt authority now has an isolated native storage boundary: a
-version-1, bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
+bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
 with its own Android Keystore alias and encryption domain, separate from the
 driver lease/outbox. It binds the account, opaque device and generation to a
 lowercase 256-bit capability and a maximum 30-day local lifetime. Reads return
 no authority for a different account/generation, before registration time or
 at expiry; corruption, missing keys and uncertain writes fail closed. The
-record contains no routing token or Auth credential. A synthetic physical
+record contains no routing token or Auth credential. Recipient plaintext v2
+also retains at most 1,024 compact delivery IDs, encrypted under the same key.
+It reads v1 authority with an empty history and upgrades on write. After a
+positive server receipt and current local checks, it durably claims an ID
+before a generic notice attempt; dismissal/restart never clear a claim. No
+eviction is permitted during registration, and full history denies new notices
+until withdrawal and fresh registration. Erasing authority also erases history.
+Uncertain claim writes preserve atomic old/new authority for recovery but deny
+display. Process death or notification failure after claim can suppress that
+notice; this does not guarantee delivery. ADR-0027 defines the format, bounds,
+downgrade behavior and tradeoffs. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
 Live server-confirmed registration, unexpected account-loss reconciliation,
 receipt and notification remain gates.

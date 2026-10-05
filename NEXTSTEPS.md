@@ -187,8 +187,13 @@ using the second phone. Both Edge functions remain disabled.
 The approved capability-only hosted denial window passed all seven checks on
 2026-10-05. The flag was restored to explicit false, its digest verified, and
 every POST again returned 503; all four Guardian state tables were directly
-counted empty before and after. Next validate duplicate suppression and
-remaining receiver lifecycle behavior before positive delivery. Routine
+counted empty before and after. Durable duplicate claims and deterministic
+receiver lifecycle checks now pass all 351 native tests, Android lint, a
+configured default-off APK and the isolated first-phone Keystore proof.
+Recipient plaintext v2 reads v1 and keeps up to 1,024 encrypted delivery IDs
+without eviction; a failed display after claim can suppress a notice (ADR-0027).
+Next validate actual cold-process FCM callback and controlled synthetic
+receipt/notification behavior before positive two-phone delivery. Routine
 ingestion, dispatch, recorder monitoring and second-phone delivery remain gated.
 
 ## P1 — Preserve M5 boundaries

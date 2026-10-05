@@ -74,10 +74,15 @@ internal fun interface GuardianGenericNotice {
     fun post(deliveryId: String)
 }
 
+internal fun interface GuardianNoticeClaim {
+    fun claim(request: GuardianPushReceiptRequest, generation: String): Boolean
+}
+
 /** Remote confirmation and a second local check precede any generic notice. */
 internal class GuardianIncomingMessageHandler(
     private val preflight: GuardianPushPreflight,
     private val receipt: GuardianCapabilityReceiptGateway,
+    private val claim: GuardianNoticeClaim,
     private val notice: GuardianGenericNotice,
 ) {
     fun handle(data: Map<String, String>, hasNotificationPayload: Boolean) {
@@ -86,6 +91,9 @@ internal class GuardianIncomingMessageHandler(
         val current = preflight.check(data, hasNotificationPayload) ?: return
         if (current.deviceId != first.deviceId || current.credential != first.credential ||
             current.deliveryId != first.deliveryId) return
+        if (!runCatching { claim.claim(current, data.getValue("device_generation")) }.getOrDefault(false)) return
+        val final = preflight.check(data, hasNotificationPayload) ?: return
+        if (final.deviceId != current.deviceId || final.credential != current.credential) return
         runCatching { notice.post(first.deliveryId) }
     }
 }

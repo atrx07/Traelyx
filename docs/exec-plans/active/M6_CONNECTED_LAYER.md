@@ -594,6 +594,23 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Ignored proof: `.dart_tool/m6_8_capability_denial_closed.jpg`. Routine
   ingestion/dispatch, driver consent, recorder integration and positive
   delivery gates remain.
+- [x] Persist recipient notice claims before display (ADR-0027). Plaintext v2
+  reads v1 authority and retains at most 1,024 compact delivery IDs under the
+  existing no-backup Keystore key; no eviction, extra network field or recorder
+  change. Duplicate dismissal/restart cannot reset claims. Expiry, replacement,
+  withdrawal, missing server replies and uncertain disk writes fail closed;
+  uncertain claims preserve atomic old/new authority for restart/revocation.
+  A crash or display failure after claim may suppress that notice. All 351
+  native tests, including v1 upgrade/key preservation, concurrent claims,
+  capacity, lost-response retry and receiver lifecycle regressions pass.
+  Android lint, configured default-off APK and repository validation pass.
+  The isolated first-phone Keystore proof rejects duplicate claims through
+  separate vault instances and erases its synthetic file/key with Firebase
+  inactive and no-backup storage size unchanged. Production receipt and provider
+  marker variants remain absent; the normal configured app reopens on the
+  signed-in Guardian screen after its data-preserving update. Actual FCM,
+  notification dismissal/tap, cold-process delivery and two-phone checks remain unverified; both functions
+  remain disabled.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

@@ -185,6 +185,11 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(restored.readBound(owner, generation, now + 1) == recipient)
             check(restored.readBound(UUID.randomUUID().toString(), generation, now + 1) == null)
             check(restored.readBound(owner, UUID.randomUUID().toString(), now + 1) == null)
+            val deliveryId = UUID.randomUUID().toString()
+            check(vault.claimNotice(deviceId, generation, recipient.credential, deliveryId, now + 1))
+            check(!restored.claimNotice(deviceId, generation, recipient.credential, deliveryId, now + 2))
+            check(restored.readStored() == recipient.copy(noticeDeliveryIds = listOf(deliveryId)))
+            check(!restored.claimNotice(deviceId, generation, recipient.credential, UUID.randomUUID().toString(), now + 60_000))
             val original = file.readBytes()
             file.writeBytes(original.copyOf().also { it[it.lastIndex] = (it.last().toInt() xor 1).toByte() })
             check(runCatching { io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context, namespace)
@@ -197,7 +202,8 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
-            "tamper rejection and key destruction; Firebase inactive, trip/session storage untouched."
+            "durable notice claims across vault instances, expiry/tamper rejection and key destruction; " +
+            "Firebase inactive, trip/session storage untouched."
     }
 
     private fun runGuardianRecipientRevokeJournalProof(): String {

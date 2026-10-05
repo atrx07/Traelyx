@@ -168,3 +168,11 @@ account, alert or trip data. Cold and warm app sessions handle the link. Opening
 it neither reloads the inbox nor acknowledges a view; a signed-out user sees
 the sign-in gate. Details continue to require explicit reload and guarded
 opening under current permission. Actual push delivery remains a validation gate.
+
+The receiver remembers authorized notice delivery IDs in encrypted local
+registration state, so a duplicate cannot reappear after dismissal or restart.
+It records the ID before attempting display; an interrupted or failed display
+can therefore leave no notification. Device receipt does not mean display or
+human attention. The authenticated inbox remains available. The history is
+bounded at 1,024 IDs per registration with no eviction; reaching that bound
+suppresses additional notices until withdrawal and fresh registration.

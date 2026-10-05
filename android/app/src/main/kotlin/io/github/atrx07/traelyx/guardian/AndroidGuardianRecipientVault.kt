@@ -83,5 +83,11 @@ class AndroidGuardianRecipientVault(context: Context, namespace: String = "prima
     override fun write(device: GuardianRecipientDevice) = synchronized(LOCK) { delegate.write(device) }
     override fun erase() = synchronized(LOCK) { delegate.erase() }
 
+    fun claimNotice(
+        deviceId: String, generation: String, credential: String, deliveryId: String, nowEpochMillis: Long,
+    ): Boolean = synchronized(LOCK) {
+        delegate.claimNotice(deviceId, generation, credential, deliveryId, nowEpochMillis)
+    }
+
     companion object { private val LOCK = Any() }
 }
