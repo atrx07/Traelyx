@@ -567,6 +567,9 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   The sender uses data-only messages. Firebase may automatically display a
   notification-type payload while backgrounded before this callback can reject
   it, so sender access and payload contract remain security gates.
+  Full CI run 37310628396 (`470779b`) passed every job. Browser control recovered;
+  a directly observed read-only hosted count confirmed 0 device rows and 0
+  unexpired rows after withdrawal. No routing token or row identity was read.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
