@@ -135,8 +135,18 @@ class GuardianRecipientVaultTest {
 
     @Test fun `version one authority upgrades without losing registration or encryption key`() {
         val f = Fixture()
-        // Original v1 layout has no count or notice IDs.
-        val legacy = GuardianRecipientVaultCodec.encode(recipient).dropLast(4).toByteArray().also { it[3] = 1 }
+        // Original v1 contract, independent of the current encoder's layout.
+        val legacyBytes = java.io.ByteArrayOutputStream()
+        java.io.DataOutputStream(legacyBytes).use { output ->
+            output.writeInt(1)
+            output.writeUTF(owner)
+            output.writeUTF(deviceId)
+            output.writeUTF(generation)
+            output.writeUTF("a".repeat(64))
+            output.writeLong(registered)
+            output.writeLong(registered + 29L * 24 * 60 * 60 * 1000)
+        }
+        val legacy = legacyBytes.toByteArray()
         f.disk.bytes = f.cipher().seal(legacy)
         val originalKey = f.key
         val vault = f.vault()

@@ -49,6 +49,7 @@ generic text and guarded detail access continue to limit that race.
 ## Validation
 
 Test v1 upgrade/key preservation, encrypted restart, concurrent duplicates,
+using the original v1 field layout independently of the current encoder;
 capacity without eviction, expiry/generation/credential denial, uncertain writes
 before and after replacement, and withdrawal. Receiver tests cover dismissal,
 recreation, lost receipt response, replacement/expiry during the server reply and
