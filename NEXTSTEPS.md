@@ -196,6 +196,17 @@ Next validate actual cold-process FCM callback and controlled synthetic
 receipt/notification behavior before positive two-phone delivery. Routine
 ingestion, dispatch, recorder monitoring and second-phone delivery remain gated.
 
+Both duplicate-claim source CI runs passed (37319268272 / 37319919712).
+The maintainer freshly registered the first phone on the review pilot; app/local
+checks and a direct hosted aggregate verify 1 device/1 unexpired device, with
+zero sessions/events/deliveries and both function flags false. The next narrower
+gate is the isolated positive receipt/retry check in
+`docs/reference/GUARDIAN_RECEIPT_CHECK.md`: its staging/cleanup scripts pass all
+ten local SQL suites and negative guards, and the phone probe compiles.
+Obtain explicit production-window approval before staging or enabling it.
+It sends no FCM notification and needs no second phone. The live positive check
+has not run; actual FCM, recorder hookup and two-phone gates remain.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

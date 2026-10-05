@@ -611,6 +611,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   signed-in Guardian screen after its data-preserving update. Actual FCM,
   notification dismissal/tap, cold-process delivery and two-phone checks remain unverified; both functions
   remain disabled.
+- [x] Duplicate-claim full source CI passed in runs 37319268272 (`24e6cd7`)
+  and 37319919712 (`92a0430`, independent v1 upgrade fixture). After a
+  data-preserving review-pilot update, the maintainer freshly consented to
+  first-phone registration. App withdrawal control and encrypted receipt/marker
+  presence were observed. A read-only dashboard count directly showed 1 device,
+  1 unexpired device and 0 sessions/events/deliveries; both enable digests are
+  false. No token, receipt credential or real profile name was inspected.
+  Proof: `.dart_tool/m6_8_notice_claim_recipient_ready.jpg`.
+- [x] Prepare the isolated positive-receipt window described in
+  `docs/reference/GUARDIAN_RECEIPT_CHECK.md`. The stage/cleanup scripts and
+  disposable wrapper pass all ten SQL suites on network-isolated PostgreSQL 17;
+  negative staging/cleanup guards and recipient preservation also pass. The
+  dormant two-request native phone probe compiles; all 351 native tests, Android
+  lint and repository validation pass. Staging, enabled hosted
+  positive receipt, FCM and notices have not run; obtain concrete production
+  approval before the window. Keep dispatch disabled throughout.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

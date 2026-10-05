@@ -33,6 +33,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                 when (instrumentationArguments?.getString("mode")) {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
+                    "guardian-hosted-receipt" -> runGuardianHostedReceiptProof()
                     "guardian-recipient-revoke-journal" -> runGuardianRecipientRevokeJournalProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
                     "guardian-recipient-owner-inert" -> runGuardianRecipientOwnerInertProof()
@@ -204,6 +205,34 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
             "durable notice claims across vault instances, expiry/tamper rejection and key destruction; " +
             "Firebase inactive, trip/session storage untouched."
+    }
+
+    /** Explicit reviewed test only. No token/credential leaves the normal receipt API. */
+    private fun runGuardianHostedReceiptProof(): String {
+        val context = targetContext.applicationContext
+        check(io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present())
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context)
+        val device = requireNotNull(vault.readStored())
+        val delivery = "00000000-0000-4000-9000-000000000685"
+        val preflight = io.github.atrx07.traelyx.guardian.GuardianPushPreflight(
+            vault, io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context),
+            System::currentTimeMillis,
+        )
+        val data = mapOf("schema_version" to "1", "delivery_id" to delivery,
+            "device_generation" to device.generation)
+        val first = requireNotNull(preflight.check(data, false))
+        val endpoint = context.getString(io.github.atrx07.traelyx.R.string.traelyx_guardian_capability_url)
+        val gateway = io.github.atrx07.traelyx.guardian.GuardianCapabilityReceiptGateway(
+            endpoint, io.github.atrx07.traelyx.guardian.BoundedGuardianHttpsTransport(),
+        )
+        check(gateway.receive(first)) { "Synthetic hosted receipt was not accepted" }
+        val current = requireNotNull(preflight.check(data, false))
+        check(current.deviceId == first.deviceId && current.credential == first.credential)
+        check(gateway.receive(current)) { "Synthetic hosted receipt retry was not accepted" }
+        check(vault.readStored() == device) { "Receipt probe changed local authority" }
+        check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        return "M6.8 hosted synthetic receipt and idempotent retry passed; local authority unchanged, " +
+            "Firebase inactive, no notification or trip upload."
     }
 
     private fun runGuardianRecipientRevokeJournalProof(): String {
