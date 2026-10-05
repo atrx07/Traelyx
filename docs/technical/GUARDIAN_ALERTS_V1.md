@@ -331,8 +331,17 @@ startup registration path.
   malformed IDs. A dormant native preflight then requires a provider cleanup
   marker and an unexpired encrypted local receipt with matching generation;
   missing or corrupt state yields no transient receipt request. A server check
-  is still required before notification. No receiver service, notification or
-  receipt call is wired to this preflight yet.
+  is still required before notification. The Android FCM service now runs that
+  preflight, sends a bounded HTTPS receipt to the configured capability
+  endpoint, accepts only an exact positive reply, rechecks local authority,
+  and posts generic private notification text. A missing local receipt,
+  permission denial, network error or disabled capability endpoint shows no
+  notice. The phone build has been update-installed with no local registration;
+  actual FCM callback, positive server receipt and notification display remain
+  unverified. The dispatch sender's data-only contract is essential: Android
+  Firebase can display notification-type messages in the background without
+  calling the app's receiver, so the callback's payload rejection alone cannot
+  contain a compromised sender. Neither Guardian Edge function is enabled.
 - False-positive fixtures, lifecycle/retry/revocation tests, and background,
   screen-lock, offline/recovery and performance checks on a physical phone.
 - Synthetic end-to-end delivery without dangerous driving or real-contact

@@ -172,10 +172,15 @@ build pass. Next connect account-bound recipient opt-in to native token lifecycl
 and guarded server registration, then validate account switching, background
 receipt and revocation before exposing the control.
 
-An isolated Android parser now rejects push envelopes outside the exact
-data-only version-1 contract; the full native unit suite passes. It has no
-runtime receiver or notification side effect. The next integration must check
-local account/device generation and current server authority before receipt.
+An isolated Android parser rejects push envelopes outside the exact
+data-only version-1 contract; the full native unit suite passes. The native
+preflight checks local registration, and a bounded receiver now requires a positive
+server receipt plus a second local check before generic notification text.
+The first phone opens after a data-preserving default-off update with its
+withdrawn registration absent. Next verify cold-process FCM callback behavior,
+negative and positive hosted receipt paths, background/lock-screen copy and
+authenticated inbox opening with synthetic delivery before enabling Guardian
+processing or using the second phone. Both Edge functions remain disabled.
 
 ## P1 — Preserve M5 boundaries
 

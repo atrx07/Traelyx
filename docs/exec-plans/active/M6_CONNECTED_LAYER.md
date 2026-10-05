@@ -554,6 +554,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   to notify without a current server check. Focused and full native tests,
   Android lint and a configured default-off APK build pass. The first phone was
   not updated for this dormant change; no message, receipt or notification ran.
+- [x] Wire the Android data-message receiver to a bounded, no-redirect HTTPS
+  receipt call. It accepts only the exact `received: true` capability response,
+  rechecks the encrypted local registration after the server reply, and then
+  posts generic lock-screen text without driver or trip details. The endpoint
+  is a public build resource derived from the ignored Supabase URL; no receipt
+  credential is embedded. Five focused and full native tests, Android lint,
+  repository validation and a configured default-off APK build pass. A
+  data-preserving first-phone update opens normally; the withdrawn recipient
+  receipt and provider marker remain absent. Both Edge functions stay disabled,
+  so actual FCM arrival, server receipt and notification display are untested.
+  The sender uses data-only messages. Firebase may automatically display a
+  notification-type payload while backgrounded before this callback can reject
+  it, so sender access and payload contract remain security gates.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

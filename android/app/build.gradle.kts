@@ -37,6 +37,21 @@ val firebaseClientValues = if (providers.gradleProperty("traelyxFirebaseEnabled"
     }
 } else emptyMap()
 
+// Public endpoint only. The receipt credential stays in the encrypted native vault.
+val guardianCapabilityEndpoint = if (firebaseClientValues.isNotEmpty()) {
+    val authClientFile = rootProject.file("../auth-config.local.json")
+    if (authClientFile.isFile) {
+        try {
+            val values = JsonSlurper().parse(authClientFile) as Map<*, *>
+            val url = values["TRAELYX_SUPABASE_URL"] as String
+            require(url.matches(Regex("https://[a-z0-9]{20}\\.supabase\\.co")))
+            "$url/functions/v1/guardian-capability"
+        } catch (_: Exception) {
+            throw GradleException("Invalid public Guardian endpoint configuration; details redacted")
+        }
+    } else ""
+} else ""
+
 android {
     buildFeatures { resValues = true }
     namespace = "io.github.atrx07.traelyx"
@@ -62,6 +77,7 @@ android {
         for (field in listOf("project_id", "sender_id", "app_id", "client_key")) {
             resValue("string", "traelyx_firebase_$field", firebaseClientValues[field] ?: "")
         }
+        resValue("string", "traelyx_guardian_capability_url", guardianCapabilityEndpoint)
     }
 
     buildTypes {
