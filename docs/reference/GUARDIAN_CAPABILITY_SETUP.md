@@ -57,7 +57,18 @@ without credentials and created no alert or registration.
    duplicate, stale generation, expiry, revocation, offline recovery and locked
    phone behavior without real contacts or personal telemetry. Only then review
    enabling ingestion. The FCM sender credential and dispatch activation are
-   separate gates; Google organization policy currently blocks key creation.
+   separate gates; the restricted sender credential is now installed, while
+   dispatch remains disabled.
+
+   A separately reviewed, brief test window may enable only this capability
+   endpoint to check denial responses before routine ingestion is ready. First
+   confirm aggregate driver-session, device, event and delivery counts are zero.
+   Use only synthetic identifiers and an unusable zero credential: GET must
+   return 405; wrong media type 415; malformed, extra-field and oversized JSON
+   400; unknown receipt and ingest capabilities 401. Restore the flag to `false`
+   and verify `503 capability_disabled` afterward. This window creates no
+   accepted event or device and authorizes no FCM send, scheduler or normal
+   driver monitoring. Positive delivery and mobile lifecycle gates still apply.
 
 ## Local verification
 

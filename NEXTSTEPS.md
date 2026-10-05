@@ -184,6 +184,13 @@ and positive hosted receipt paths, background/lock-screen copy and actual
 notice taps with synthetic delivery before enabling Guardian processing or
 using the second phone. Both Edge functions remain disabled.
 
+The immediate hosted gate is a separately approved, brief capability-only denial
+test window with synthetic IDs and an unusable zero credential. All four
+Guardian state tables were directly counted empty, and the disabled HTTP probe
+passed. Verify 400/401/405/415 denial contracts, restore the enable flag to false,
+and verify 503 afterward. The browser form is prepared but unsaved. Routine
+ingestion, dispatch, recorder monitoring and second-phone delivery remain gated.
+
 ## P1 — Preserve M5 boundaries
 
 1. Keep `.tripdebug` precise-private and the redacted summary separately versioned, local-only, and free of route, raw samples, identifiers, and wall-clock time.

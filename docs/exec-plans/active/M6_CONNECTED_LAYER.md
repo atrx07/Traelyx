@@ -581,6 +581,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   A data-preserving first-phone update passed cold and warm link launches;
   sign-in remained and the withdrawn receipt/provider marker stayed absent.
   These were link-ingress checks, not FCM or actual notification-tap tests.
+  Full CI run 37313495995 (`b6effe3`) passed every job.
+- [ ] Obtain exact approval for a brief capability-only hosted denial-test
+  window. A directly observed read-only aggregate query on 2026-10-05 found
+  0 driver sessions, devices, alert events and deliveries. The prepared
+  synthetic probe confirmed 405 for GET and 503 for every POST while disabled.
+  After approval, temporarily set `GUARDIAN_CAPABILITY_ENABLED=true`, check
+  method/media/schema/body-size rejection and unknown synthetic ingest/receipt
+  credentials, then set it to `false` and verify 503 again. No live credential,
+  registration, accepted event, FCM send or scheduler is part of this test.
+  This narrow test window does not authorize routine ingestion or dispatch;
+  driver consent, recorder integration and positive delivery gates remain.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
