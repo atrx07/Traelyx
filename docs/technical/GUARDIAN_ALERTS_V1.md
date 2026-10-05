@@ -342,6 +342,14 @@ startup registration path.
   Firebase can display notification-type messages in the background without
   calling the app's receiver, so the callback's payload rejection alone cannot
   contain a compromised sender. Neither Guardian Edge function is enabled.
+  The generic notice's immutable tap intent uses only the fixed
+  `io.github.atrx07.traelyx://guardian-notice/` URI. Configured app startup and
+  warm-link handling route it to Guardian without passing an alert identity or
+  acknowledging a view. Links with extra path, query, fragment, user information
+  or port are ignored. Signed-out users see the existing sign-in gate; signed-in
+  users must explicitly reload and open an authorized inbox row. Cold and warm
+  link ingress passed on the first phone; an actual FCM notice tap remains
+  unverified. Notifications use the full opaque delivery ID as their tag.
 - False-positive fixtures, lifecycle/retry/revocation tests, and background,
   screen-lock, offline/recovery and performance checks on a physical phone.
 - Synthetic end-to-end delivery without dangerous driving or real-contact

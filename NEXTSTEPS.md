@@ -177,10 +177,12 @@ data-only version-1 contract; the full native unit suite passes. The native
 preflight checks local registration, and a bounded receiver now requires a positive
 server receipt plus a second local check before generic notification text.
 The first phone opens after a data-preserving default-off update with its
-withdrawn registration absent. Next verify cold-process FCM callback behavior,
-negative and positive hosted receipt paths, background/lock-screen copy and
-authenticated inbox opening with synthetic delivery before enabling Guardian
-processing or using the second phone. Both Edge functions remain disabled.
+withdrawn registration absent. Fixed data-free notice routing passed cold and
+warm first-phone link checks and the signed-out widget gate; it does not reload
+or acknowledge alerts. Next verify cold-process FCM callback behavior, negative
+and positive hosted receipt paths, background/lock-screen copy and actual
+notice taps with synthetic delivery before enabling Guardian processing or
+using the second phone. Both Edge functions remain disabled.
 
 ## P1 — Preserve M5 boundaries
 

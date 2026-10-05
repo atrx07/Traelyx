@@ -162,3 +162,9 @@ guarded view acknowledgement before displaying guidance. The driver cannot
 acknowledge the recipient's view. Expiry, backgrounding, account change and
 failed access clear cached details; the inbox has no disk cache. Empty results
 do not imply safety. This does not enable registration, evaluation or push.
+
+A generic Guardian notice opens this screen through a fixed link containing no
+account, alert or trip data. Cold and warm app sessions handle the link. Opening
+it neither reloads the inbox nor acknowledges a view; a signed-out user sees
+the sign-in gate. Details continue to require explicit reload and guarded
+opening under current permission. Actual push delivery remains a validation gate.

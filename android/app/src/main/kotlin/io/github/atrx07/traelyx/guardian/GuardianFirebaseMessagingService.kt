@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -50,7 +51,9 @@ class GuardianFirebaseMessagingService : FirebaseMessagingService() {
             ).apply { description = "Private Guardian notices with no driver or trip details." })
         }
         val openApp = PendingIntent.getActivity(
-            this, deliveryId.hashCode(), Intent(this, MainActivity::class.java),
+            this, 0, Intent(this, MainActivity::class.java)
+                .setAction(Intent.ACTION_VIEW)
+                .setData(Uri.parse("io.github.atrx07.traelyx://guardian-notice/")),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -58,7 +61,7 @@ class GuardianFirebaseMessagingService : FirebaseMessagingService() {
         } else {
             Notification.Builder(this).setPriority(Notification.PRIORITY_HIGH)
         }
-        manager.notify(deliveryId.hashCode(), builder
+        manager.notify(deliveryId, 0, builder
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Traelyx Guardian notice")
             .setContentText("Open Traelyx to check a private notice.")

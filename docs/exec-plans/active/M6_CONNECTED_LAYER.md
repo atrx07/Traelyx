@@ -570,6 +570,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Full CI run 37310628396 (`470779b`) passed every job. Browser control recovered;
   a directly observed read-only hosted count confirmed 0 device rows and 0
   unexpired rows after withdrawal. No routing token or row identity was read.
+- [x] Route a generic notice tap through the fixed data-free
+  `io.github.atrx07.traelyx://guardian-notice/` link to Guardian. Extra paths,
+  query/fragment fields, user information and ports are rejected. Opening the
+  screen performs no alert request or view acknowledgement; signed-out users
+  see the existing sign-in gate, and details still require explicit current
+  server authorization. Full delivery IDs tag notifications without integer
+  hash collisions. Navigation regressions, all 334 Flutter tests, analysis,
+  native unit tests, Android lint and the configured default-off APK pass.
+  A data-preserving first-phone update passed cold and warm link launches;
+  sign-in remained and the withdrawn receipt/provider marker stayed absent.
+  These were link-ingress checks, not FCM or actual notification-tap tests.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

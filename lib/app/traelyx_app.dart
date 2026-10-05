@@ -6,46 +6,48 @@ import 'package:traelyx/app/traelyx_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/account/domain/account_callback.dart';
+import 'package:traelyx/features/guardian/guardian_notice_link.dart';
 
 class TraelyxApp extends StatefulWidget {
-  const TraelyxApp({super.key, this.router, this.accountLinks});
+  const TraelyxApp({super.key, this.router, this.appLinks});
 
   final GoRouter? router;
-  final Stream<Uri>? accountLinks;
+  final Stream<Uri>? appLinks;
 
   @override
   State<TraelyxApp> createState() => _TraelyxAppState();
 }
 
 class _TraelyxAppState extends State<TraelyxApp> {
-  StreamSubscription<Uri>? _accountLinkSubscription;
+  StreamSubscription<Uri>? _appLinkSubscription;
 
   GoRouter get _router => widget.router ?? traelyxRouter;
 
   @override
   void initState() {
     super.initState();
-    _subscribeToAccountLinks();
+    _subscribeToAppLinks();
   }
 
   @override
   void didUpdateWidget(covariant TraelyxApp oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.accountLinks != widget.accountLinks) {
-      _accountLinkSubscription?.cancel();
-      _subscribeToAccountLinks();
+    if (oldWidget.appLinks != widget.appLinks) {
+      _appLinkSubscription?.cancel();
+      _subscribeToAppLinks();
     }
   }
 
-  void _subscribeToAccountLinks() {
-    _accountLinkSubscription = widget.accountLinks?.listen((uri) {
+  void _subscribeToAppLinks() {
+    _appLinkSubscription = widget.appLinks?.listen((uri) {
       if (isAccountCallback(uri)) _router.go(TraelyxRoutes.youAccount);
+      if (isGuardianNoticeLink(uri)) _router.go(TraelyxRoutes.socialGuardian);
     });
   }
 
   @override
   void dispose() {
-    _accountLinkSubscription?.cancel();
+    _appLinkSubscription?.cancel();
     super.dispose();
   }
 

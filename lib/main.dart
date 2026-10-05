@@ -30,7 +30,7 @@ Future<void> main() async {
           ),
   );
   final router = createTraelyxRouter(
-    initialLocation: initialLocationForAccountLink(
+    initialLocation: initialLocationForAppLink(
       initialLink,
       accountEnabled: accountGateway.isAvailable,
     ),
@@ -40,9 +40,7 @@ Future<void> main() async {
       overrides: [accountGatewayProvider.overrideWithValue(accountGateway)],
       child: TraelyxApp(
         router: router,
-        accountLinks: accountGateway.isAvailable
-            ? appLinks.uriLinkStream
-            : null,
+        appLinks: accountGateway.isAvailable ? appLinks.uriLinkStream : null,
       ),
     ),
   );

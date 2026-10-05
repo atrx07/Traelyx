@@ -272,15 +272,15 @@ void main() {
       'io.github.atrx07.traelyx://auth-callback/?code=opaque',
     );
     expect(
-      initialLocationForAccountLink(callback, accountEnabled: true),
+      initialLocationForAppLink(callback, accountEnabled: true),
       TraelyxRoutes.youAccount,
     );
     expect(
-      initialLocationForAccountLink(callback, accountEnabled: false),
+      initialLocationForAppLink(callback, accountEnabled: false),
       TraelyxRoutes.root,
     );
     expect(
-      initialLocationForAccountLink(null, accountEnabled: true),
+      initialLocationForAppLink(null, accountEnabled: true),
       TraelyxRoutes.root,
     );
   });
@@ -293,7 +293,7 @@ void main() {
     final accountLinks = StreamController<Uri>.broadcast();
     addTearDown(accountLinks.close);
 
-    await _pumpApp(tester, router, accountLinks: accountLinks.stream);
+    await _pumpApp(tester, router, appLinks: accountLinks.stream);
     accountLinks.add(Uri.parse('https://example.com/other'));
     await tester.pumpAndSettle();
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.drive);
@@ -308,6 +308,62 @@ void main() {
     );
     expect(find.byKey(const ValueKey('account-screen')), findsOneWidget);
   });
+
+  test('cold Guardian notice routes only the exact data-free link', () {
+    final notice = Uri.parse('io.github.atrx07.traelyx://guardian-notice/');
+    expect(
+      initialLocationForAppLink(notice, accountEnabled: true),
+      TraelyxRoutes.socialGuardian,
+    );
+    expect(
+      initialLocationForAppLink(notice, accountEnabled: false),
+      TraelyxRoutes.root,
+    );
+    for (final invalid in [
+      'https://guardian-notice/',
+      'io.github.atrx07.traelyx://guardian-notice/alert',
+      'io.github.atrx07.traelyx://guardian-notice/?delivery=private',
+      'io.github.atrx07.traelyx://guardian-notice/#private',
+      'io.github.atrx07.traelyx://user@guardian-notice/',
+      'io.github.atrx07.traelyx://guardian-notice:443/',
+    ]) {
+      expect(
+        initialLocationForAppLink(Uri.parse(invalid), accountEnabled: true),
+        TraelyxRoutes.root,
+      );
+    }
+  });
+
+  testWidgets(
+    'warm Guardian notice opens the signed-out gate without details',
+    (tester) async {
+      final router = createTraelyxRouter();
+      addTearDown(router.dispose);
+      final links = StreamController<Uri>.broadcast();
+      addTearDown(links.close);
+      await _pumpApp(tester, router, appLinks: links.stream);
+
+      links.add(
+        Uri.parse('io.github.atrx07.traelyx://guardian-notice/?delivery=x'),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        router.routeInformationProvider.value.uri.path,
+        TraelyxRoutes.drive,
+      );
+
+      links.add(Uri.parse('io.github.atrx07.traelyx://guardian-notice/'));
+      await tester.pumpAndSettle();
+      expect(
+        router.routeInformationProvider.value.uri.path,
+        TraelyxRoutes.socialGuardian,
+      );
+      expect(find.text('Guardian pairing'), findsOneWidget);
+      expect(find.textContaining('Sign in to pair'), findsOneWidget);
+      expect(find.text('Recent Guardian alerts'), findsNothing);
+      expect(find.text('Reload alerts'), findsNothing);
+    },
+  );
 
   testWidgets(
     'Account sends a link and signs out without touching local trips',
@@ -445,7 +501,7 @@ Future<void> _pumpApp(
   RecorderPermissionStatus? permissionStatus,
   TripHistoryRepository tripRepository = const _FakeTripRepository(),
   AccountGateway? accountGateway,
-  Stream<Uri>? accountLinks,
+  Stream<Uri>? appLinks,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -496,7 +552,7 @@ Future<void> _pumpApp(
             (ref) async => permissionStatus,
           ),
       ],
-      child: TraelyxApp(router: router, accountLinks: accountLinks),
+      child: TraelyxApp(router: router, appLinks: appLinks),
     ),
   );
   await tester.pumpAndSettle();

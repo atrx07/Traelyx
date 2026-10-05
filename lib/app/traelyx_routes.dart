@@ -5,6 +5,7 @@ abstract final class TraelyxRoutes {
   static const tripResultPattern = '/trips/:tripId';
   static const dna = '/dna';
   static const social = '/social';
+  static const socialGuardian = '/social/guardian';
   static const you = '/you';
   static const youAccount = '/you/account';
   static const youSummarySync = '/you/account/summaries';
