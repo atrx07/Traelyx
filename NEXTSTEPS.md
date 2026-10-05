@@ -206,6 +206,8 @@ ten local SQL suites and negative guards, and the phone probe compiles.
 Obtain explicit production-window approval before staging or enabling it.
 It sends no FCM notification and needs no second phone. The live positive check
 has not run; actual FCM, recorder hookup and two-phone gates remain.
+Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
+runner is installed; obtain the production-window confirmation next.
 
 ## P1 — Preserve M5 boundaries
 

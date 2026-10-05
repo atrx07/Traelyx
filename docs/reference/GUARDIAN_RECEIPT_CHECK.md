@@ -73,3 +73,6 @@ Android lint and repository validation also passed. Hosted staging/positive rece
 has not yet run. The fresh consented first-phone registration is directly
 verified as 1 device/1 unexpired device; sessions/events/deliveries remain zero,
 and both enable-secret digests match false.
+Full preparation source CI run 37331996250 (`fd139db`) passed every job. The
+instrumentation runner is installed on the first phone; the hosted mode remains
+unexecuted pending production approval.

@@ -627,6 +627,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   lint and repository validation pass. Staging, enabled hosted
   positive receipt, FCM and notices have not run; obtain concrete production
   approval before the window. Keep dispatch disabled throughout.
+  Full source CI run 37331996250 (`fd139db`) passed every job. The prepared
+  instrumentation runner is update-installed on the authorized first phone;
+  its hosted receipt mode has not been run. Fresh read-only hosted counts
+  remain 0 sessions, 1 device, 1 unexpired device, 0 events and 0 deliveries.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
