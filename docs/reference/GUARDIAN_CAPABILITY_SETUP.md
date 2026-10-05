@@ -11,6 +11,15 @@ activation, scheduler, FCM credential or alert send. The existing
 `guardian-dispatch` remains disabled. No physical phone was needed for this
 isolated hosted check.
 
+After specific approval on 2026-10-05, a brief capability-only test window passed
+all seven hosted denial checks: method 405, media type 415, malformed/extra/
+oversized contract 400, and unknown synthetic receipt/ingest capabilities 401.
+The flag was true from 13:15:08 to 13:16:09 UTC, then restored to explicit
+`false`; its hosted digest matches `false`, and every POST again returned 503.
+Direct aggregate counts before and after were zero for driver sessions, devices,
+events and deliveries. No live capability, accepted event, registration or FCM
+send was used. Positive receipt/delivery remains unverified.
+
 The function is intended to use `verify_jwt=false` because native background
 delivery cannot own Flutter's rotating Supabase Auth token. Its own authority is
 the random 256-bit, eight-hour driver capability or receipt-only device

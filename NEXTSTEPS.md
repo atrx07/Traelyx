@@ -184,11 +184,11 @@ and positive hosted receipt paths, background/lock-screen copy and actual
 notice taps with synthetic delivery before enabling Guardian processing or
 using the second phone. Both Edge functions remain disabled.
 
-The immediate hosted gate is a separately approved, brief capability-only denial
-test window with synthetic IDs and an unusable zero credential. All four
-Guardian state tables were directly counted empty, and the disabled HTTP probe
-passed. Verify 400/401/405/415 denial contracts, restore the enable flag to false,
-and verify 503 afterward. The browser form is prepared but unsaved. Routine
+The approved capability-only hosted denial window passed all seven checks on
+2026-10-05. The flag was restored to explicit false, its digest verified, and
+every POST again returned 503; all four Guardian state tables were directly
+counted empty before and after. Next validate duplicate suppression and
+remaining receiver lifecycle behavior before positive delivery. Routine
 ingestion, dispatch, recorder monitoring and second-phone delivery remain gated.
 
 ## P1 — Preserve M5 boundaries

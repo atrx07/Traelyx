@@ -582,16 +582,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   sign-in remained and the withdrawn receipt/provider marker stayed absent.
   These were link-ingress checks, not FCM or actual notification-tap tests.
   Full CI run 37313495995 (`b6effe3`) passed every job.
-- [ ] Obtain exact approval for a brief capability-only hosted denial-test
-  window. A directly observed read-only aggregate query on 2026-10-05 found
-  0 driver sessions, devices, alert events and deliveries. The prepared
-  synthetic probe confirmed 405 for GET and 503 for every POST while disabled.
-  After approval, temporarily set `GUARDIAN_CAPABILITY_ENABLED=true`, check
-  method/media/schema/body-size rejection and unknown synthetic ingest/receipt
-  credentials, then set it to `false` and verify 503 again. No live credential,
-  registration, accepted event, FCM send or scheduler is part of this test.
-  This narrow test window does not authorize routine ingestion or dispatch;
-  driver consent, recorder integration and positive delivery gates remain.
+- [x] Complete the separately approved capability-only hosted denial-test
+  window on 2026-10-05. Direct aggregate counts before and after were 0 driver
+  sessions, devices, alert events and deliveries. The flag was saved true at
+  13:15:08 UTC and restored false at 13:16:09 UTC; the hosted false digest was
+  verified. Seven enabled checks passed: GET 405, wrong media type 415,
+  missing/extra/oversized contracts 400, and unknown synthetic receipt/ingest
+  capabilities 401. After closure every POST again returned 503. The probe
+  used only synthetic IDs and an unusable zero credential; no accepted event,
+  registration, FCM send or scheduler occurred. Both functions are disabled.
+  Ignored proof: `.dart_tool/m6_8_capability_denial_closed.jpg`. Routine
+  ingestion/dispatch, driver consent, recorder integration and positive
+  delivery gates remain.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
