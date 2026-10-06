@@ -203,11 +203,15 @@ zero sessions/events/deliveries and both function flags false. The next narrower
 gate is the isolated positive receipt/retry check in
 `docs/reference/GUARDIAN_RECEIPT_CHECK.md`: its staging/cleanup scripts pass all
 ten local SQL suites and negative guards, and the phone probe compiles.
-Obtain explicit production-window approval before staging or enabling it.
+The concrete production window and cleanup were approved. The first attempt
+found an Android regex initialization failure before HTTPS, then closed and
+cleaned safely. The literal-brace repair passes 352 native tests, lint/build,
+repository checks and the physical Android contract proof. Await source CI
+before retrying that approved receipt-only scope.
 It sends no FCM notification and needs no second phone. The live positive check
-has not run; actual FCM, recorder hookup and two-phone gates remain.
+has not passed; actual FCM, recorder hookup and two-phone gates remain.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
-runner is installed; obtain the production-window confirmation next.
+runner was installed; the Android parser repair/retry is now the immediate gate.
 
 ## P1 — Preserve M5 boundaries
 

@@ -74,5 +74,22 @@ has not yet run. The fresh consented first-phone registration is directly
 verified as 1 device/1 unexpired device; sessions/events/deliveries remain zero,
 and both enable-secret digests match false.
 Full preparation source CI run 37331996250 (`fd139db`) passed every job. The
-instrumentation runner is installed on the first phone; the hosted mode remains
-unexecuted pending production approval.
+instrumentation runner was installed on the first phone.
+
+## First approved hosted attempt — 2026-10-06
+
+Staging passed both checks. Capability processing was enabled from 14:20:07 to
+14:20:41 UTC; dispatch remained disabled. The phone probe failed before HTTPS
+because Android rejected the receipt-response regex at class initialization.
+`receipt_recorded` was false. Capability was restored to explicit false, its
+digest and disabled responses verified, and marker-checked cleanup passed all
+three absence checks while preserving the sole device. Final aggregate counts
+were 0/1/1/0/0. No FCM or notice was sent.
+
+The [incident record](../issues/2026-10-06_android-guardian-receipt-regex.md)
+tracks the literal-brace repair. All 352 native tests, lint, repository checks
+and the configured review-pilot APK pass. The network-free
+`guardian-receipt-contract` proof passes on the first Android 14 phone after a
+data-preserving update. Await source CI before retrying the already approved
+isolated receipt scope. Positive hosted receipt remains unverified at this
+checkpoint.

@@ -93,6 +93,21 @@ class GuardianIncomingReceiptTest {
         assertTrue(notices.isEmpty())
     }
 
+    @Test fun `receipt response requires both literal braces and no trailing content`() {
+        val transport = Transport()
+        val gateway = GuardianCapabilityReceiptGateway(endpoint, transport)
+        val request = GuardianPushReceiptRequest(delivery, deviceId, credential)
+        for (body in listOf("{\"received\":true}", "{ \n\"received\" : true\t}")) {
+            transport.response = GuardianReceiptResponse(200, body)
+            assertTrue(gateway.receive(request))
+        }
+        for (body in listOf("{\"received\":true", "\"received\":true}",
+            "{\"received\":true}}", "{\"received\":true}\n")) {
+            transport.response = GuardianReceiptResponse(200, body)
+            assertFalse(gateway.receive(request))
+        }
+    }
+
     @Test fun `withdrawal while server responds prevents a stale notice`() {
         val vault = Vault(device())
         val marker = Marker()

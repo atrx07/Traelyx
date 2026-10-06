@@ -66,7 +66,7 @@ internal class GuardianCapabilityReceiptGateway(
         val ENDPOINT = Regex("^https://[a-z0-9]{20}\\.supabase\\.co/functions/v1/guardian-capability$")
         val UUID = Regex("^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$")
         val CREDENTIAL = Regex("^[a-f0-9]{64}$")
-        val RECEIVED_TRUE = Regex("^\\{\\s*\"received\"\\s*:\\s*true\\s*}$")
+        val RECEIVED_TRUE = Regex("^\\{\\s*\"received\"\\s*:\\s*true\\s*\\}$")
     }
 }
 

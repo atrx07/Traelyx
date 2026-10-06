@@ -34,6 +34,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-vault" -> runGuardianVaultProof()
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
                     "guardian-hosted-receipt" -> runGuardianHostedReceiptProof()
+                    "guardian-receipt-contract" -> runGuardianReceiptContractProof()
                     "guardian-recipient-revoke-journal" -> runGuardianRecipientRevokeJournalProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
                     "guardian-recipient-owner-inert" -> runGuardianRecipientOwnerInertProof()
@@ -61,7 +62,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         } catch (error: Throwable) {
             results.putString(
                 "stream",
-                "\nM2.7 recorder recovery, finalization handoff, and chunk proof failed:\n" +
+                "\nInstrumentation proof failed (mode=${instrumentationArguments?.getString("mode") ?: "recorder-lifecycle"}):\n" +
                     "${error.stackTraceToString()}\n",
             )
             finish(Activity.RESULT_CANCELED, results)
@@ -205,6 +206,33 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         return "M6.8 recipient vault proof passed: scoped Keystore encryption, account/generation binding, " +
             "durable notice claims across vault instances, expiry/tamper rejection and key destruction; " +
             "Firebase inactive, trip/session storage untouched."
+    }
+
+    /** Exercises Android's regex engine with synthetic transport; no network or stored authority. */
+    private fun runGuardianReceiptContractProof(): String {
+        val endpoint = "https://abcdefghijklmnopqrst.supabase.co/functions/v1/guardian-capability"
+        val request = io.github.atrx07.traelyx.guardian.GuardianPushReceiptRequest(
+            "44444444-4444-4444-8444-444444444444",
+            "22222222-2222-4222-8222-222222222222", "a".repeat(64),
+        )
+        var response = io.github.atrx07.traelyx.guardian.GuardianReceiptResponse(200, "")
+        val gateway = io.github.atrx07.traelyx.guardian.GuardianCapabilityReceiptGateway(
+            endpoint, io.github.atrx07.traelyx.guardian.GuardianReceiptTransport { _, _ -> response },
+        )
+        for (body in listOf("{\"received\":true}", "{ \n\"received\" : true\t}")) {
+            response = io.github.atrx07.traelyx.guardian.GuardianReceiptResponse(200, body)
+            check(gateway.receive(request)) { "Exact receipt response rejected on Android" }
+        }
+        for (body in listOf("{\"received\":false}", "{\"received\":true", "\"received\":true}",
+            "{\"received\":true,\"extra\":1}", "{\"received\":true}}", "{\"received\":true}\n")) {
+            response = io.github.atrx07.traelyx.guardian.GuardianReceiptResponse(200, body)
+            check(!gateway.receive(request)) { "Unexpected receipt response accepted on Android" }
+        }
+        response = io.github.atrx07.traelyx.guardian.GuardianReceiptResponse(503, "{\"received\":true}")
+        check(!gateway.receive(request))
+        check(com.google.firebase.FirebaseApp.getApps(targetContext.applicationContext).isEmpty())
+        return "M6.8 Android receipt contract passed: exact positives, malformed/extra/denied rejection; " +
+            "synthetic transport only, Firebase inactive, stored authority untouched."
     }
 
     /** Explicit reviewed test only. No token/credential leaves the normal receipt API. */

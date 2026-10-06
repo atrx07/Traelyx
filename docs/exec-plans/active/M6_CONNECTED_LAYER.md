@@ -631,6 +631,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   instrumentation runner is update-installed on the authorized first phone;
   its hosted receipt mode has not been run. Fresh read-only hosted counts
   remain 0 sessions, 1 device, 1 unexpired device, 0 events and 0 deliveries.
+- [x] Attempt the approved isolated receipt window on 2026-10-06. Staging
+  passed; the Android gateway failed at regex initialization before HTTPS.
+  Receipt status remained false. Capability was enabled 14:20:07–14:20:41 UTC,
+  restored to false and verified by digest/503 responses; dispatch stayed false.
+  Synthetic cleanup passed, preserving the sole real device, with final
+  counts 0/1/1/0/0. Explicitly escaping the closing brace repairs the Android
+  ICU pattern; all 352 JVM tests, lint, configured review-pilot build and
+  repository checks pass. After a data-preserving first-phone update, the
+  independent network-free Android contract proof passes with Firebase
+  inactive. Source CI and hosted retry are pending; see
+  `docs/issues/2026-10-06_android-guardian-receipt-regex.md`.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
