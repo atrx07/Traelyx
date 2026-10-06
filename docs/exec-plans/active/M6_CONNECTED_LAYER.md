@@ -640,8 +640,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   ICU pattern; all 352 JVM tests, lint, configured review-pilot build and
   repository checks pass. After a data-preserving first-phone update, the
   independent network-free Android contract proof passes with Firebase
-  inactive. Source CI and hosted retry are pending; see
+  inactive. Subsequent source CI and hosted retry results are below; see
   `docs/issues/2026-10-06_android-guardian-receipt-regex.md`.
+- [x] Repair source CI run 37479031254 (`94eadff`) passed every job. Repeated
+  the already approved isolated receipt window after fresh queue/phone checks.
+  Staging passed; capability was enabled 14:39:43–14:40:21 UTC on 2026-10-06.
+  Both native receipt calls passed with unchanged local authority and Firebase
+  inactive; boolean hosted verification confirmed `device_received`. Restored
+  false and verified its digest/disabled responses, then removed only synthetic
+  records. Cleanup passed all absence checks, preserved the sole real device,
+  and final counts were 0/1/1/0/0. Normal signed-in app reopening and encrypted
+  receipt/marker presence pass. Dispatch stayed false; no FCM, notice or trip
+  upload ran. Receipt-only gate passes; actual FCM/notice, cold-process,
+  recorder and two-phone gates remain. Proof:
+  `.dart_tool/m6_8_receipt_positive.jpg`, `.dart_tool/m6_8_receipt_closed.jpg`.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

@@ -206,12 +206,17 @@ ten local SQL suites and negative guards, and the phone probe compiles.
 The concrete production window and cleanup were approved. The first attempt
 found an Android regex initialization failure before HTTPS, then closed and
 cleaned safely. The literal-brace repair passes 352 native tests, lint/build,
-repository checks and the physical Android contract proof. Await source CI
-before retrying that approved receipt-only scope.
-It sends no FCM notification and needs no second phone. The live positive check
-has not passed; actual FCM, recorder hookup and two-phone gates remain.
+repository checks and the physical Android contract proof. Full repair source
+CI run 37479031254 (`94eadff`) passed, then the approved hosted receipt and
+idempotent retry passed on the first phone. Hosted `device_received` was
+confirmed; local authority stayed unchanged and Firebase inactive. The window
+was closed, synthetic records removed, and final counts were 0/1/1/0/0 with
+both flags false. Sign-in and registration remain intact.
+Prepare the next concrete, separately reviewed single-phone synthetic FCM
+send/notice check. It needs no second phone yet. Actual FCM, cold-process,
+recorder hookup and two-phone gates remain; routine sending stays disabled.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
-runner was installed; the Android parser repair/retry is now the immediate gate.
+runner was installed; the receipt-only gate now passes.
 
 ## P1 — Preserve M5 boundaries
 

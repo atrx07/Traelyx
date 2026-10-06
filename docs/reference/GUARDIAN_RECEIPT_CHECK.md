@@ -90,6 +90,27 @@ The [incident record](../issues/2026-10-06_android-guardian-receipt-regex.md)
 tracks the literal-brace repair. All 352 native tests, lint, repository checks
 and the configured review-pilot APK pass. The network-free
 `guardian-receipt-contract` proof passes on the first Android 14 phone after a
-data-preserving update. Await source CI before retrying the already approved
-isolated receipt scope. Positive hosted receipt remains unverified at this
-checkpoint.
+data-preserving update. Repair source CI run 37479031254 (`94eadff`) passed
+every job before the approved receipt retry.
+
+## Successful approved retry — 2026-10-06
+
+Fresh counts were 0 sessions, 1 device, 1 unexpired device, 0 events and 0
+deliveries; both flags were false and the phone had no active recorder. Staging
+again returned both checks true. Capability processing was enabled from
+14:39:43 to 14:40:21 UTC. The phone's positive receipt and idempotent retry
+passed through the normal bounded HTTPS gateway; native authority was unchanged
+and Firebase stayed inactive. A boolean-only hosted check confirmed
+`device_received`. Dispatch stayed disabled; no FCM or notice was sent.
+
+Capability was restored to explicit false, its digest and synthetic disabled
+responses verified. Marker-checked cleanup returned three true absence checks
+and one retained device. Final counts were 0/1/1/0/0. The normal app reopened
+signed in; encrypted receipt and provider marker remain present. Proof images
+are local and ignored: `.dart_tool/m6_8_receipt_positive.jpg` and
+`.dart_tool/m6_8_receipt_closed.jpg`.
+
+This closes the receipt-only gate. Actual FCM authentication/arrival, generic
+notice display and tap, cold-process delivery, recorder integration and
+two-phone behavior remain unverified. A real synthetic FCM send requires a
+separate concrete production review; the second phone is not needed yet.
