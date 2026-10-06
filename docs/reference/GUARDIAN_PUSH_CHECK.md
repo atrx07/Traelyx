@@ -4,9 +4,10 @@
 
 The [receipt-only check](GUARDIAN_RECEIPT_CHECK.md) passed on 2026-10-06, after
 the [Android parser repair](../issues/2026-10-06_android-guardian-receipt-regex.md).
-The approved background delivery and tap check passed on 2026-10-06. It exercises
+The approved background and cold-process delivery/tap checks passed on
+2026-10-06. They exercise
 the existing backend OAuth/FCM adapter, native background receiver, receipt,
-durable notice claim, generic notice and data-free tap. It uses one synthetic
+durable notice claim, generic notice and data-free tap. Each uses one synthetic
 severe-drive event for the already consented first-phone registration.
 
 It bypasses real driver pairing/activation/detection/ingestion only in this
@@ -202,12 +203,13 @@ closure. Saved sign-in and registration remain intact. No app update, schema
 change, personal telemetry upload, scheduler or Google sender-key change ran.
 
 Proof files are private and ignored: `.dart_tool/m6_8_push_positive.jpg` and
-`.dart_tool/m6_8_push_closed.jpg`. Cold-process arrival, locked/offline/expiry
-and revocation behavior, actual duplicate FCM delivery, recorder integration
-and two-phone delivery remain unverified. M6.8 remains in progress; a further
+`.dart_tool/m6_8_push_closed.jpg`. At this checkpoint cold-process arrival was
+still unverified; it subsequently passed below. Locked/offline/expiry and
+revocation behavior, actual duplicate FCM delivery, recorder integration and
+two-phone delivery remain unverified. M6.8 remains in progress; a further
 hosted push window requires its own concrete review.
 
-## Next cold-process window — prepared, not sent
+## Cold-process window — preparation and results
 
 On 2026-10-06, the first phone remained ADB-authorized with no RecorderService.
 The Settings/Home/background-kill sequence above established an absent app
@@ -220,8 +222,8 @@ The ignored review copies `.dart_tool/m6_8_cold_push_stage.sql` and
 Reverse substitution verifies that UUID constants are their only difference
 from the already tested standalone scripts. The one-request worker probe and
 production receiver are unchanged; full source CI and the previous physical
-background send/receipt/tap remain applicable. No new credential, fixture,
-enablement, OAuth exchange or push has been created for this window.
+background send/receipt/tap remain applicable. Preparation created no new
+credential, hosted fixture, enablement, OAuth exchange or push.
 
 After specific approval, repeat the bounded sequence once, with fresh
 preconditions. Require process absence and `stopped=false` immediately before
@@ -233,3 +235,30 @@ be claimed as evidence for 715. Restore both flags, retire the test worker,
 remove only fixture 711–715 and verify the real registration/sign-in as before.
 The second phone is not needed. Readiness proof:
 `.dart_tool/m6_8_cold_ready.jpg`.
+
+The maintainer then explicitly approved this complete window. Fresh ADB,
+inactive-recorder, validated-network, notification-permission and non-stopped
+package checks passed. Stage returned all three booleans true. Capability was
+enabled at 16:05:25 UTC and dispatch at 16:06:25 on 2026-10-06. The command
+immediately preceding the sole dispatch required process absence and
+`stopped=false`; both passed. It returned processed=1/provider_accepted=1,
+with zero skipped/failed/deferred outcomes. No instrumentation or app opening
+ran between that process observation and hosted `device_received` confirmation.
+The incoming callback started the app process. Both flags were restored to
+false at 16:07:27; authenticated dispatch and capability probes verified 503.
+
+The actual generic system-tray notice was located and tapped. Guardian opened
+with Reload alerts available and its inbox unloaded. A post-tap SQL check
+confirmed one attempt still in `device_received`, without acknowledging a
+detail view. This proves one cold-process delivery on this phone/network;
+it does not establish delivery guarantees under other lifecycle conditions.
+The hardcoded delivery-695 observation helper was not used for delivery 715.
+
+The test worker was replaced with a fresh server-only value at 16:09:10 UTC;
+its digest matched, the old value returned 401 and its local file was deleted.
+Marker-checked cleanup returned all three absence booleans true/device_rows=1.
+Final counts are 0/1/1/0/0, both flags false, and sign-in/registration preserved.
+No runtime update, schema change, personal telemetry, scheduler or Google key
+change ran. Proof: `.dart_tool/m6_8_cold_positive.jpg` and
+`.dart_tool/m6_8_cold_closed.jpg`. Locked/offline/expiry/revocation, actual
+duplicate FCM, recorder integration and two-phone gates remain pending.

@@ -221,14 +221,15 @@ Guardian pass; tap did not acknowledge details viewed. Both flags are false,
 both fixtures removed, temporary worker values retired and files deleted.
 Final counts 0/1/1/0/0; sign-in and registration preserved. Full source CI
 37484921020 (`76c02a7`) passes all jobs, eleven SQL suites and four probe tests;
-352 native tests pass. The process remained alive after `am kill`, so next
-verify cold-process/background lifecycle, lock/offline/expiry/revocation and
-actual duplicate FCM under concrete reviewed windows, then recorder hookup
-and two-phone gates. No second phone is needed yet; routine sending remains
-disabled. No M7 work is authorized. Cold-process preflight now establishes
-process absence without force-stop after a read-only switch to Android
-Settings; fresh hosted readiness passes. Review the concrete single-message
-window with fresh IDs 711–715 in `GUARDIAN_PUSH_CHECK.md` before sending.
+352 native tests pass. The subsequent approved cold-process window with fresh
+IDs 711–715 also passed: process absent/not force-stopped immediately before
+one send, then hosted receipt, generic notice and actual tap to unloaded
+Guardian without a viewed acknowledgement. Both functions closed at 16:07:27
+UTC; disabled probes, worker retirement and cleanup pass. Final counts remain
+0/1/1/0/0 with saved sign-in/registration preserved. Next verify lock/offline/
+expiry/revocation and actual duplicate FCM under concrete reviewed windows,
+then recorder hookup and two-phone gates. No second phone is needed yet;
+routine sending remains disabled. No M7 work is authorized.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

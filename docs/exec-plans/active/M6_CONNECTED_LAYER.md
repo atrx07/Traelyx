@@ -683,15 +683,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Saved sign-in/registration pass. See `docs/reference/GUARDIAN_PUSH_CHECK.md`
   and ignored positive/closed screenshots. No runtime/schema update, real
   telemetry, scheduler or Google sender-key change. Second phone not needed.
-- [ ] Verify cold-process, locked/offline/expiry/revocation and actual duplicate
+- [x] Verify one approved cold-process delivery with synthetic IDs 711–715.
+  Process absence and package `stopped=false` were checked immediately before
+  the sole dispatch; no instrumentation or app opening preceded hosted receipt.
+  Exactly one provider acceptance, receipt and generic notice pass; actual tap
+  opens unloaded Guardian and leaves delivery `device_received`, not viewed.
+  Capability enabled 16:05:25 UTC, dispatch 16:06:25, both closed 16:07:27 on
+  2026-10-06. Disabled probes pass. Test worker retired at 16:09:10, digest
+  verified/old value rejected with 401/local file erased. Cleanup passes with
+  final 0/1/1/0/0, both flags false and real registration/sign-in intact. No
+  runtime/schema update, personal telemetry, scheduler or Google key change.
+  See `GUARDIAN_PUSH_CHECK.md` and ignored cold positive/closed proof images.
+- [ ] Verify locked/offline/expiry/revocation and actual duplicate
   FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
-  Cold-process preparation now passes: inactive recorder, ADB-authorized phone,
-  process absent after Settings/Home/app-specific kill, package not force-stopped,
-  and fresh hosted empty queue/one unexpired device with over ten minutes left.
-  Ignored cold fixture scripts use fresh IDs 711–715, verified to differ only
-  in UUIDs from the tested artifacts. Both flags remain false; obtain concrete
-  production approval before the single-message window. No new send ran.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
