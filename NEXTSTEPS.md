@@ -212,8 +212,11 @@ idempotent retry passed on the first phone. Hosted `device_received` was
 confirmed; local authority stayed unchanged and Firebase inactive. The window
 was closed, synthetic records removed, and final counts were 0/1/1/0/0 with
 both flags false. Sign-in and registration remain intact.
-Prepare the next concrete, separately reviewed single-phone synthetic FCM
-send/notice check. It needs no second phone yet. Actual FCM, cold-process,
+The concrete single-phone synthetic FCM send/notice plan and artifacts are in
+`docs/reference/GUARDIAN_PUSH_CHECK.md`. Local probe/native gates and read-only
+phone readiness pass; await the PostgreSQL fixture CI, then obtain the specific
+window/worker-rotation/send/cleanup approval. It needs no second phone yet.
+Actual FCM, cold-process,
 recorder hookup and two-phone gates remain; routine sending stays disabled.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.

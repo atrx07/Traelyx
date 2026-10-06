@@ -18,7 +18,11 @@ The flag was true from 13:15:08 to 13:16:09 UTC, then restored to explicit
 `false`; its hosted digest matches `false`, and every POST again returned 503.
 Direct aggregate counts before and after were zero for driver sessions, devices,
 events and deliveries. No live capability, accepted event, registration or FCM
-send was used. Positive receipt/delivery remains unverified.
+send was used. The separate approved receipt-only window on 2026-10-06
+subsequently passed a normal phone receipt and idempotent retry, with unchanged
+local authority and Firebase inactive. Its synthetic fixture was removed and
+processing restored to false. Actual FCM delivery remains unverified; see
+`GUARDIAN_RECEIPT_CHECK.md` and the prepared `GUARDIAN_PUSH_CHECK.md`.
 
 The function is intended to use `verify_jwt=false` because native background
 delivery cannot own Flutter's rotating Supabase Auth token. Its own authority is

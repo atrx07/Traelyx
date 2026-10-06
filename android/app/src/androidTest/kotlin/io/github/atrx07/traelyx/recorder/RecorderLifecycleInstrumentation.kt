@@ -35,6 +35,8 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-recipient-vault" -> runGuardianRecipientVaultProof()
                     "guardian-hosted-receipt" -> runGuardianHostedReceiptProof()
                     "guardian-receipt-contract" -> runGuardianReceiptContractProof()
+                    "guardian-push-observe" -> runGuardianPushObservation()
+                    "guardian-push-ready" -> runGuardianPushReadiness()
                     "guardian-recipient-revoke-journal" -> runGuardianRecipientRevokeJournalProof()
                     "guardian-recipient-bridge" -> runGuardianRecipientBridgeProof()
                     "guardian-recipient-owner-inert" -> runGuardianRecipientOwnerInertProof()
@@ -233,6 +235,45 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(targetContext.applicationContext).isEmpty())
         return "M6.8 Android receipt contract passed: exact positives, malformed/extra/denied rejection; " +
             "synthetic transport only, Firebase inactive, stored authority untouched."
+    }
+
+    /** Read-only prerequisites; no token acquisition, network or notice mutation. */
+    private fun runGuardianPushReadiness(): String {
+        val context = targetContext.applicationContext
+        check(io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present())
+        val device = requireNotNull(io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context).readStored())
+        check(device.expiresAtEpochMillis > System.currentTimeMillis() + 600_000) {
+            "Recipient authority expires too soon for the synthetic push check"
+        }
+        check(!device.noticeDeliveryIds.contains("00000000-0000-4000-9000-000000000695")) {
+            "Synthetic push delivery ID already claimed; do not reuse it"
+        }
+        check(Build.VERSION.SDK_INT < 33 || context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)
+        check(context.getSystemService(NotificationManager::class.java).areNotificationsEnabled())
+        return "M6.8 push readiness passed: registered authority/marker, unclaimed fixture ID, " +
+            "notification permission; read-only, no token request, send or upload."
+    }
+
+    /** Read-only own-app observation after the separately reviewed real FCM fixture. */
+    private fun runGuardianPushObservation(): String {
+        val context = targetContext.applicationContext
+        val delivery = "00000000-0000-4000-9000-000000000695"
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientVault(context)
+        check(io.github.atrx07.traelyx.guardian.AndroidGuardianProviderMarker(context).present())
+        check(requireNotNull(vault.readStored()).noticeDeliveryIds.contains(delivery)) {
+            "Synthetic push durable notice claim absent"
+        }
+        val notices = context.getSystemService(NotificationManager::class.java).activeNotifications
+            .filter { it.tag == delivery && it.id == 0 }
+        check(notices.size == 1) { "Synthetic push generic notice absent or duplicated" }
+        val notice = notices.single().notification
+        check(notice.extras.getCharSequence(android.app.Notification.EXTRA_TITLE)?.toString() == "Traelyx Guardian notice")
+        check(notice.extras.getCharSequence(android.app.Notification.EXTRA_TEXT)?.toString() == "Open Traelyx to check a private notice.")
+        check(notice.visibility == android.app.Notification.VISIBILITY_PRIVATE)
+        check(notice.flags and android.app.Notification.FLAG_AUTO_CANCEL != 0)
+        check(notice.contentIntent != null)
+        return "M6.8 synthetic FCM observation passed: one generic private notice, durable claim, " +
+            "fixed public copy and tap intent; read-only own-app state, no request or upload."
     }
 
     /** Explicit reviewed test only. No token/credential leaves the normal receipt API. */

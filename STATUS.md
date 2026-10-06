@@ -10,6 +10,15 @@
 
 ## Working
 
+- The controlled first-phone FCM window is prepared for validation/review in
+  `docs/reference/GUARDIAN_PUSH_CHECK.md`: one pending synthetic delivery,
+  marker-checked cleanup, one bounded dispatch invocation without retries,
+  and own-app notice observation. Four Node tests and 352 native tests pass;
+  read-only phone readiness passes with registration/permission intact.
+  New SQL fixture/negative guards await CI PostgreSQL 17 after local Docker
+  startup failed and exited. No production fixture, secret rotation, enablement,
+  OAuth or FCM send has run; both functions stay disabled.
+
 - The approved 2026-10-06 hosted receipt attempt staged successfully but found
   an Android ICU regex initialization failure before HTTPS. Capability was
   restored to false, disabled responses verified and the synthetic fixture
