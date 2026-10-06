@@ -230,6 +230,12 @@ UTC; disabled probes, worker retirement and cleanup pass. Final counts remain
 expiry/revocation and actual duplicate FCM under concrete reviewed windows,
 then recorder hookup and two-phone gates. No second phone is needed yet;
 routine sending remains disabled. No M7 work is authorized.
+The next concrete two-case plan in `GUARDIAN_RECEIVER_CHECK.md` is prepared:
+locked-phone generic notice/tap, then a single queued FCM message during a
+short phone-only outage with baseline restoration. Fresh hosted readiness,
+registration-file presence and 22 dispatcher/probe tests pass. Obtain the
+specific two-send/enablement/network-toggle/worker-retirement/cleanup approval
+before execution. Expiry/revocation and actual duplicate FCM remain later gates.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

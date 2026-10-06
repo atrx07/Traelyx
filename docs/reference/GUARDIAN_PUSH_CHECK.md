@@ -262,3 +262,8 @@ No runtime update, schema change, personal telemetry, scheduler or Google key
 change ran. Proof: `.dart_tool/m6_8_cold_positive.jpg` and
 `.dart_tool/m6_8_cold_closed.jpg`. Locked/offline/expiry/revocation, actual
 duplicate FCM, recorder integration and two-phone gates remain pending.
+
+The next two receiver cases are prepared in
+[GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md): locked-phone notice
+and one offline queued delivery after connectivity restoration. They require
+specific review before any further enablement/send/network interruption.

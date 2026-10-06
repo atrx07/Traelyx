@@ -9,7 +9,7 @@ ephemeral signing key. Production has `GUARDIAN_DISPATCH_ENABLED=false`, a
 separate 256-bit worker secret and the FCM project ID. The function's legacy
 JWT gate is off only for this function; its worker-secret gate is active.
 Hosted calls returned the worker's own `401 unauthorized` without that secret
-and `503 dispatch_disabled` with it. No scheduler or real delivery is configured.
+and `503 dispatch_disabled` with it. No scheduler or routine alert dispatch is enabled.
 M6.8 remains in progress.
 
 Google Cloud project `traelyx-e28ff` has the dedicated
@@ -19,7 +19,10 @@ Google Cloud project `traelyx-e28ff` has the dedicated
 installed as Supabase Edge secret `GUARDIAN_FCM_SERVICE_ACCOUNT`. The hosted
 secret digest matched the exact local JSON uploaded. The ignored local key file
 was deleted after verification; the key remains active in Google IAM and in
-Supabase Edge secrets. No OAuth or FCM send has been attempted with it.
+Supabase Edge secrets. Approved synthetic background and cold-process OAuth/FCM,
+receipt, generic notice and actual tap checks passed on 2026-10-06; see
+[GUARDIAN_PUSH_CHECK.md](GUARDIAN_PUSH_CHECK.md). All test windows are closed,
+their temporary worker credentials retired, and synthetic fixtures removed.
 
 Creation required a separately approved, temporary project exception to the
 inherited `iam.disableServiceAccountKeyCreation` policy and a temporary
@@ -100,8 +103,9 @@ package. This does not change the hosted runtime version or app dependencies.
    `dispatch_disabled`. These calls made no claim, OAuth or provider request.
    Ignored screenshots: `.dart_tool/m6_8_sender_iam.png` and
    `.dart_tool/m6_8_dispatch_disabled_settings.png`.
-4. The backend FCM credential gate is complete, but no live send has been
-   tested. Keep the sender key in Supabase Edge secrets only. For rotation or
+4. The backend FCM credential gate and reviewed synthetic background/cold-process
+   sends pass. Remaining lifecycle/receiver/recorder/two-phone gates still apply.
+   Keep the sender key in Supabase Edge secrets only. For rotation or
    revocation, identify the active key under the dedicated Google service
    account; never place a server key in the app, Git, chat or SQL history.
    Do not weaken the organization policy without separate explicit approval.
@@ -116,10 +120,15 @@ package. This does not change the hosted runtime version or app dependencies.
    No real-contact test alerts or dangerous-road tests.
 
 The separate capability ingestion/receipt Edge function is deployed with
-processing disabled. Mobile account/consent integration and recorder attachment
-are still required. Six deliveries per invocation and free-tier limits bound
+processing disabled. Recipient account/registration consent is implemented;
+driver consent and recorder attachment are still required. Six deliveries per invocation and free-tier limits bound
 capacity; this is best-effort notification, not emergency protection or a
 delivery guarantee.
+
+The next reviewed receiver plan is [GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md).
+It prepares at most two explicit sends for locked-phone and short offline
+recovery checks, with both functions closed and synthetic data removed after
+each phase. It is not approval for routine dispatch or a scheduler.
 
 ## Local checks
 

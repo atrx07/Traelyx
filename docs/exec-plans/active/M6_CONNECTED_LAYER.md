@@ -697,6 +697,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [ ] Verify locked/offline/expiry/revocation and actual duplicate
   FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
+  The locked/offline pair is now concrete in `GUARDIAN_RECEIVER_CHECK.md`:
+  two sequential fixtures (721–725/731–735), at most one send each, observed
+  lock-policy precondition, short offline host-side dispatch and network
+  restoration in `finally`. Ignored fixture copies reverse-verify as UUID-only
+  substitutions of tested SQL. Offline helper syntax passes without execution;
+  all 22 dispatcher/probe tests pass. Fresh phone/hosted readiness passes with
+  both flags false. Review production enable/send/network changes, worker
+  rotation and cleanup before execution; no new hosted mutation or push ran.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

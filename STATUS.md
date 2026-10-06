@@ -10,6 +10,16 @@
 
 ## Working
 
+- Locked-phone and short offline-recovery FCM checks are prepared in
+  `docs/reference/GUARDIAN_RECEIVER_CHECK.md`, awaiting concrete production
+  approval for at most two synthetic sends and temporary phone-network changes.
+  Fresh ADB/inactive-recorder/registration-file and hosted empty-queue/one-ready-
+  device checks pass; Wi-Fi is on and mobile data off. Both functions stay
+  disabled. Four fixture copies differ only in fresh UUIDs; the offline helper
+  parses without execution and restores the reviewed baseline in `finally`.
+  All 22 dispatcher/probe Node tests pass again. No new push, credential,
+  hosted mutation or phone-network/lock change ran during preparation.
+
 - The approved cold-process FCM window passed on 2026-10-06. Traelyx's process
   was absent and the package not force-stopped immediately before the sole
   dispatch; one provider acceptance, hosted receipt, generic notice and actual
