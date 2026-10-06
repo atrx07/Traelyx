@@ -151,8 +151,13 @@ Four synthetic Node probe tests and all 352 native unit tests pass. Both
 read-only Android helper modes compile; the first-phone readiness proof passes
 after updating only the test runner, preserving the app and registration.
 The observation mode awaits a separately approved real synthetic FCM arrival.
-The new PostgreSQL fixture/negative guards are pending CI. Docker Desktop
-failed during local startup before any container was created; it exited
-without data/configuration changes. Use CI's disposable PostgreSQL 17 for the
-SQL gate. No hosted fixture, worker-secret rotation, enablement, OAuth or FCM
-send has run for this check.
+Full preparation source CI run
+[37484921020](https://github.com/atrx07/Traelyx/actions/runs/37484921020)
+(`76c02a7`) passed every job, including all eleven SQL suites on disposable
+PostgreSQL 17, the new negative staging/cleanup and receipt-race checks, and
+the four Node probe tests. Docker Desktop failed during local startup before
+any container was created; it exited without data/configuration changes. The
+SQL validation used CI rather than local Docker. Fresh hosted aggregate
+counts remain 0/1/1/0/0 and both enable digests match false; browser control
+works. No hosted fixture, worker-secret rotation, enablement, OAuth or FCM
+send has run for this check. Concrete production approval is the next gate.

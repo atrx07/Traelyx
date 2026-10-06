@@ -214,8 +214,10 @@ was closed, synthetic records removed, and final counts were 0/1/1/0/0 with
 both flags false. Sign-in and registration remain intact.
 The concrete single-phone synthetic FCM send/notice plan and artifacts are in
 `docs/reference/GUARDIAN_PUSH_CHECK.md`. Local probe/native gates and read-only
-phone readiness pass; await the PostgreSQL fixture CI, then obtain the specific
-window/worker-rotation/send/cleanup approval. It needs no second phone yet.
+phone readiness pass. Full source CI run 37484921020 (`76c02a7`) passes all
+jobs, including eleven PostgreSQL suites and the four probe tests. Obtain the
+specific window/worker-rotation/send/cleanup approval next. It needs no second
+phone yet.
 Actual FCM, cold-process,
 recorder hookup and two-phone gates remain; routine sending stays disabled.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test

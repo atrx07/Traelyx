@@ -15,9 +15,12 @@
   marker-checked cleanup, one bounded dispatch invocation without retries,
   and own-app notice observation. Four Node tests and 352 native tests pass;
   read-only phone readiness passes with registration/permission intact.
-  New SQL fixture/negative guards await CI PostgreSQL 17 after local Docker
-  startup failed and exited. No production fixture, secret rotation, enablement,
-  OAuth or FCM send has run; both functions stay disabled.
+  Full preparation source CI run 37484921020 (`76c02a7`) passed every job,
+  including all eleven SQL suites/negative guards on PostgreSQL 17. Local
+  Docker startup failed and exited before any container; SQL validation used
+  CI. Fresh hosted counts are 0/1/1/0/0 and both enable digests match false.
+  Concrete send-window/worker-rotation/cleanup approval is next. No production
+  fixture, secret rotation, enablement, OAuth or FCM send has run.
 
 - The approved 2026-10-06 hosted receipt attempt staged successfully but found
   an Android ICU regex initialization failure before HTTPS. Capability was

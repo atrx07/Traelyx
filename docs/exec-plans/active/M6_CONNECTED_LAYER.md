@@ -654,18 +654,24 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   upload ran. Receipt-only gate passes; actual FCM/notice, cold-process,
   recorder and two-phone gates remain. Proof:
   `.dart_tool/m6_8_receipt_positive.jpg`, `.dart_tool/m6_8_receipt_closed.jpg`.
-- [ ] Prepare and review the controlled single-phone FCM window in
+- [x] Prepare and validate the controlled single-phone FCM window in
   `docs/reference/GUARDIAN_PUSH_CHECK.md`. Standalone pending-fixture/cleanup
   SQL and a one-invocation, bounded, redacted worker probe are implemented.
   Four Node probe tests and 352 native tests pass; own-notification observation
   and readiness modes compile. The read-only readiness proof passes on the
   consented first phone after updating only the test runner. Eleven SQL suites
-  including the new negative-stage, cleanup and receipt-race fixture are
-  pending CI's disposable PostgreSQL 17; local Docker startup failed before
-  any container and exited without configuration/data changes. Production
+  including the new negative-stage, cleanup and receipt-race fixture pass
+  CI's disposable PostgreSQL 17. Full source CI run 37484921020 (`76c02a7`)
+  passed every job. Local Docker startup failed before any container and exited
+  without configuration/data changes; SQL validation used CI. Production
   rotation of the worker secret, both temporary enable flags, one FCM send,
   synthetic cleanup and retirement of the test worker secret require a new
   concrete approval. No hosted change or push has run for this preparation.
+- [ ] Obtain exact controlled single-phone production approval and execute
+  the bounded worker-rotation, synthetic FCM/notice/tap, disablement and cleanup
+  sequence in `docs/reference/GUARDIAN_PUSH_CHECK.md`. Both function flags
+  remain false; fresh aggregate counts are 0/1/1/0/0. The second phone is not
+  needed for this gate. Do not infer actual delivery from preparation tests.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
