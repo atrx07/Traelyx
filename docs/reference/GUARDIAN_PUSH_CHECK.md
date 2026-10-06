@@ -105,6 +105,11 @@ requires reassessment; do not assume an earlier empty-queue count still holds.
    force-stop: it suppresses delivery until manual reopening. Leave the phone
    unlocked for this initial notice/tap check. If a process remains, report
    background-only evidence rather than claiming a cold-process pass.
+   On this phone, Home alone left Traelyx alive. A read-only foreground switch
+   to Android Settings, then Home and the same app-specific `am kill`,
+   established process absence without force-stop or a setting change.
+   Recheck `pidof` immediately before dispatch. Do not run instrumentation or
+   reopen Traelyx between that observation and the incoming FCM callback.
 5. Enable capability processing, then dispatch. Verify both true digests.
    Run `node tool/guardian_push_probe.mjs send` exactly once. It must report
    processed=1, provider_accepted=1, and all other counters=0. Record ambiguity
@@ -201,3 +206,30 @@ Proof files are private and ignored: `.dart_tool/m6_8_push_positive.jpg` and
 and revocation behavior, actual duplicate FCM delivery, recorder integration
 and two-phone delivery remain unverified. M6.8 remains in progress; a further
 hosted push window requires its own concrete review.
+
+## Next cold-process window — prepared, not sent
+
+On 2026-10-06, the first phone remained ADB-authorized with no RecorderService.
+The Settings/Home/background-kill sequence above established an absent app
+process with package `stopped=false`. Fresh hosted read-only checks passed:
+zero sessions/events/deliveries, one device, and over ten minutes of remaining
+device authority. Both enable digests still matched false.
+
+The ignored review copies `.dart_tool/m6_8_cold_push_stage.sql` and
+`.dart_tool/m6_8_cold_push_cleanup.sql` use fresh reserved IDs 711–715.
+Reverse substitution verifies that UUID constants are their only difference
+from the already tested standalone scripts. The one-request worker probe and
+production receiver are unchanged; full source CI and the previous physical
+background send/receipt/tap remain applicable. No new credential, fixture,
+enablement, OAuth exchange or push has been created for this window.
+
+After specific approval, repeat the bounded sequence once, with fresh
+preconditions. Require process absence and `stopped=false` immediately before
+dispatch; otherwise close without sending and report the unmet precondition.
+Observe the normal callback through hosted one-attempt receipt and the actual
+generic notice/tap, without starting instrumentation or reopening the app
+before receipt. The observation helper is fixed to delivery 695 and must not
+be claimed as evidence for 715. Restore both flags, retire the test worker,
+remove only fixture 711–715 and verify the real registration/sign-in as before.
+The second phone is not needed. Readiness proof:
+`.dart_tool/m6_8_cold_ready.jpg`.

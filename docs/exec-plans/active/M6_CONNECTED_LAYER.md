@@ -686,6 +686,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [ ] Verify cold-process, locked/offline/expiry/revocation and actual duplicate
   FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
+  Cold-process preparation now passes: inactive recorder, ADB-authorized phone,
+  process absent after Settings/Home/app-specific kill, package not force-stopped,
+  and fresh hosted empty queue/one unexpired device with over ten minutes left.
+  Ignored cold fixture scripts use fresh IDs 711–715, verified to differ only
+  in UUIDs from the tested artifacts. Both flags remain false; obtain concrete
+  production approval before the single-message window. No new send ran.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

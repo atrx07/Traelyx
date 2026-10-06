@@ -10,6 +10,13 @@
 
 ## Working
 
+- The next cold-process FCM window is prepared in `docs/reference/GUARDIAN_PUSH_CHECK.md`.
+  With recording inactive, switching to Android Settings, Home and app-specific
+  `am kill` established process absence without force-stop. Fresh hosted empty
+  queue/one-device/remaining-expiry checks pass; both functions stay disabled.
+  Ignored fixture copies differ only in fresh synthetic UUIDs 711–715.
+  A new production/send approval is required; no new push or fixture ran.
+
 - The approved first-phone background FCM check passed on 2026-10-06:
   exactly one provider acceptance/attempt, hosted receipt, and one generic
   private notice with durable claim. The maintainer cleared it before tapping

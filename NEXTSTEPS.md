@@ -225,7 +225,10 @@ Final counts 0/1/1/0/0; sign-in and registration preserved. Full source CI
 verify cold-process/background lifecycle, lock/offline/expiry/revocation and
 actual duplicate FCM under concrete reviewed windows, then recorder hookup
 and two-phone gates. No second phone is needed yet; routine sending remains
-disabled. No M7 work is authorized.
+disabled. No M7 work is authorized. Cold-process preflight now establishes
+process absence without force-stop after a read-only switch to Android
+Settings; fresh hosted readiness passes. Review the concrete single-message
+window with fresh IDs 711–715 in `GUARDIAN_PUSH_CHECK.md` before sending.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 
