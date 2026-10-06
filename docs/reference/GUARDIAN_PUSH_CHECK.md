@@ -4,7 +4,7 @@
 
 The [receipt-only check](GUARDIAN_RECEIPT_CHECK.md) passed on 2026-10-06, after
 the [Android parser repair](../issues/2026-10-06_android-guardian-receipt-regex.md).
-This next check is prepared, not executed or approved for sending. It exercises
+The approved background delivery and tap check passed on 2026-10-06. It exercises
 the existing backend OAuth/FCM adapter, native background receiver, receipt,
 durable notice claim, generic notice and data-free tap. It uses one synthetic
 severe-drive event for the already consented first-phone registration.
@@ -13,7 +13,7 @@ It bypasses real driver pairing/activation/detection/ingestion only in this
 reviewed fixture. No personal telemetry or real driver name is uploaded. It
 does not validate crash detection, recorder integration, real-contact alerts,
 two-phone behavior or emergency reliability. The second phone is not needed.
-There is no scheduler; both hosted functions remain disabled during preparation.
+There is no scheduler; both hosted functions are disabled after the closed checks.
 
 ## Reviewable artifacts
 
@@ -150,14 +150,54 @@ Primary references:
 Four synthetic Node probe tests and all 352 native unit tests pass. Both
 read-only Android helper modes compile; the first-phone readiness proof passes
 after updating only the test runner, preserving the app and registration.
-The observation mode awaits a separately approved real synthetic FCM arrival.
+The observation mode passed after the first approved synthetic FCM arrival.
 Full preparation source CI run
 [37484921020](https://github.com/atrx07/Traelyx/actions/runs/37484921020)
 (`76c02a7`) passed every job, including all eleven SQL suites on disposable
 PostgreSQL 17, the new negative staging/cleanup and receipt-race checks, and
 the four Node probe tests. Docker Desktop failed during local startup before
 any container was created; it exited without data/configuration changes. The
-SQL validation used CI rather than local Docker. Fresh hosted aggregate
-counts remain 0/1/1/0/0 and both enable digests match false; browser control
-works. No hosted fixture, worker-secret rotation, enablement, OAuth or FCM
-send has run for this check. Concrete production approval is the next gate.
+SQL validation used CI rather than local Docker. Before the approved window,
+hosted aggregate counts were 0/1/1/0/0 and both enable digests matched false.
+
+## Hosted and physical results — 2026-10-06
+
+The maintainer approved the complete single-phone fixture, worker rotation,
+temporary enablement, one send and cleanup. The first window enabled capability
+at 15:33:01 UTC and dispatch at 15:33:19; both were false again at 15:34:15.
+One invocation returned processed=1/provider_accepted=1 and zero skipped,
+failed or deferred deliveries. Hosted checks confirmed one attempt and
+`device_received`. Android's read-only own-notice observation passed: one
+generic private notification, durable encrypted claim, fixed public copy,
+auto-cancel and tap intent. The app process remained alive after `am kill`, so
+this is background evidence, not a cold-process pass.
+
+The maintainer accidentally cleared the notification before its actual tap,
+then explicitly requested one repeat send and agent control. After the first
+fixture was removed, the same stage/cleanup text was used with only its five
+reserved UUIDs changed from suffixes 691–695 to 701–705. A new delivery ID
+preserved the duplicate guard; no claim history was erased. Capability was
+enabled at 15:39:38 UTC, dispatch at 15:40:05, and both were false again at
+15:41:09. The repeat invocation also returned exactly one provider acceptance
+and no other outcomes. Hosted receipt passed before closure. The real
+system-tray notice was located and tapped; Guardian opened with its inbox
+unloaded and “Reload alerts” available. A post-tap hosted check confirmed one
+attempt still in `device_received`, with no detail-view acknowledgement.
+This second window did not run the observation helper hardcoded to delivery
+695; its notice/tap evidence came from the actual phone UI and hosted state.
+
+Both temporary worker values were replaced with fresh server-only random
+values, verified by their hosted digests; each old value returned 401 and its
+private local file was deleted. The final replacement was saved at 15:42:20
+UTC. Both fixture cleanups returned all absence checks true/device_rows=1.
+Final counts are 0 sessions / 1 device / 1 unexpired device / 0 events /
+0 deliveries. Both enable digests match false; capability POST probes return
+503, and the first window also verified the authenticated dispatch 503 after
+closure. Saved sign-in and registration remain intact. No app update, schema
+change, personal telemetry upload, scheduler or Google sender-key change ran.
+
+Proof files are private and ignored: `.dart_tool/m6_8_push_positive.jpg` and
+`.dart_tool/m6_8_push_closed.jpg`. Cold-process arrival, locked/offline/expiry
+and revocation behavior, actual duplicate FCM delivery, recorder integration
+and two-phone delivery remain unverified. M6.8 remains in progress; a further
+hosted push window requires its own concrete review.

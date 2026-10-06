@@ -664,14 +664,28 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   CI's disposable PostgreSQL 17. Full source CI run 37484921020 (`76c02a7`)
   passed every job. Local Docker startup failed before any container and exited
   without configuration/data changes; SQL validation used CI. Production
-  rotation of the worker secret, both temporary enable flags, one FCM send,
-  synthetic cleanup and retirement of the test worker secret require a new
-  concrete approval. No hosted change or push has run for this preparation.
-- [ ] Obtain exact controlled single-phone production approval and execute
-  the bounded worker-rotation, synthetic FCM/notice/tap, disablement and cleanup
-  sequence in `docs/reference/GUARDIAN_PUSH_CHECK.md`. Both function flags
-  remain false; fresh aggregate counts are 0/1/1/0/0. The second phone is not
-  needed for this gate. Do not infer actual delivery from preparation tests.
+  rotation, enablement, sending and cleanup were subsequently approved and
+  executed as recorded below.
+- [x] Execute the approved first-phone background FCM/notice/tap gate.
+  First window: capability 15:33:01 UTC, dispatch 15:33:19, both closed
+  15:34:15 on 2026-10-06. Exactly one provider acceptance, hosted one-attempt
+  receipt and own-app generic/private notice observation pass. The process
+  stayed alive after `am kill`; cold-process arrival remains unverified.
+  The maintainer cleared the notice before tapping and explicitly requested
+  one repeat. Fresh reserved IDs 701–705 preserved duplicate claims. Repeat
+  window: capability 15:39:38, dispatch 15:40:05, both closed 15:41:09 UTC.
+  Exactly one provider acceptance and receipt pass; actual system-tray tap
+  opens unloaded Guardian with Reload alerts available. Post-tap delivery
+  remains `device_received`, not viewed. Both temporary worker secrets were
+  retired to fresh server-only values, digests verified, old keys rejected
+  with 401 and local files removed. Both marker-checked cleanups pass,
+  preserving the real device; final counts 0/1/1/0/0 and both flags false.
+  Saved sign-in/registration pass. See `docs/reference/GUARDIAN_PUSH_CHECK.md`
+  and ignored positive/closed screenshots. No runtime/schema update, real
+  telemetry, scheduler or Google sender-key change. Second phone not needed.
+- [ ] Verify cold-process, locked/offline/expiry/revocation and actual duplicate
+  FCM behavior under separately reviewed windows; complete recorder integration
+  and two-phone gates before calling M6.8 complete.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push

@@ -212,14 +212,20 @@ idempotent retry passed on the first phone. Hosted `device_received` was
 confirmed; local authority stayed unchanged and Firebase inactive. The window
 was closed, synthetic records removed, and final counts were 0/1/1/0/0 with
 both flags false. Sign-in and registration remain intact.
-The concrete single-phone synthetic FCM send/notice plan and artifacts are in
-`docs/reference/GUARDIAN_PUSH_CHECK.md`. Local probe/native gates and read-only
-phone readiness pass. Full source CI run 37484921020 (`76c02a7`) passes all
-jobs, including eleven PostgreSQL suites and the four probe tests. Obtain the
-specific window/worker-rotation/send/cleanup approval next. It needs no second
-phone yet.
-Actual FCM, cold-process,
-recorder hookup and two-phone gates remain; routine sending stays disabled.
+The approved first-phone background FCM send/notice/tap checks passed on
+2026-10-06; see `docs/reference/GUARDIAN_PUSH_CHECK.md`. Each of two separately
+authorized windows sent once: the maintainer cleared the first notice before
+tap and explicitly requested the repeat with fresh synthetic IDs. Provider
+acceptance, hosted receipt, generic/private notice and actual tap to unloaded
+Guardian pass; tap did not acknowledge details viewed. Both flags are false,
+both fixtures removed, temporary worker values retired and files deleted.
+Final counts 0/1/1/0/0; sign-in and registration preserved. Full source CI
+37484921020 (`76c02a7`) passes all jobs, eleven SQL suites and four probe tests;
+352 native tests pass. The process remained alive after `am kill`, so next
+verify cold-process/background lifecycle, lock/offline/expiry/revocation and
+actual duplicate FCM under concrete reviewed windows, then recorder hookup
+and two-phone gates. No second phone is needed yet; routine sending remains
+disabled. No M7 work is authorized.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 
