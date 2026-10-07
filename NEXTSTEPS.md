@@ -226,16 +226,20 @@ IDs 711–715 also passed: process absent/not force-stopped immediately before
 one send, then hosted receipt, generic notice and actual tap to unloaded
 Guardian without a viewed acknowledgement. Both functions closed at 16:07:27
 UTC; disabled probes, worker retirement and cleanup pass. Final counts remain
-0/1/1/0/0 with saved sign-in/registration preserved. Next verify lock/offline/
+0/1/1/0/0 with saved sign-in/registration preserved. Next verify
 expiry/revocation and actual duplicate FCM under concrete reviewed windows,
 then recorder hookup and two-phone gates. No second phone is needed yet;
 routine sending remains disabled. No M7 work is authorized.
-The next concrete two-case plan in `GUARDIAN_RECEIVER_CHECK.md` is prepared:
-locked-phone generic notice/tap, then a single queued FCM message during a
-short phone-only outage with baseline restoration. Fresh hosted readiness,
-registration-file presence and 22 dispatcher/probe tests pass. Obtain the
-specific two-send/enablement/network-toggle/worker-retirement/cleanup approval
-before execution. Expiry/revocation and actual duplicate FCM remain later gates.
+The reviewed locked/offline pair in `GUARDIAN_RECEIVER_CHECK.md` passed on
+2026-10-07: one send and receipt per case, actual tap to unloaded Guardian and
+no viewed acknowledgement. Copy was hidden until unlock. An initial offline
+preflight aborted without sending; the corrected bounded-disconnect check passed
+with a fresh fixture. Both functions are false and network settings restored.
+Worker retirement/old-value 401/local deletion and both synthetic cleanups pass;
+final hosted counts are 0/1/1/0/0. Fresh changed-phone checks confirm retained
+sign-in/native registration, no recorder and reviewed network settings. Next review
+expiry/revocation and actual duplicate FCM, then recorder integration and the
+two-phone gates. The second phone is not needed yet.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

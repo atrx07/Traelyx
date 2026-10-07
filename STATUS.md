@@ -10,15 +10,19 @@
 
 ## Working
 
-- Locked-phone and short offline-recovery FCM checks are prepared in
-  `docs/reference/GUARDIAN_RECEIVER_CHECK.md`, awaiting concrete production
-  approval for at most two synthetic sends and temporary phone-network changes.
-  Fresh ADB/inactive-recorder/registration-file and hosted empty-queue/one-ready-
-  device checks pass; Wi-Fi is on and mobile data off. Both functions stay
-  disabled. Four fixture copies differ only in fresh UUIDs; the offline helper
-  parses without execution and restores the reviewed baseline in `finally`.
-  All 22 dispatcher/probe Node tests pass again. No new push, credential,
-  hosted mutation or phone-network/lock change ran during preparation.
+- Reviewed locked-phone and short offline-recovery FCM checks passed on
+  2026-10-07: one send per case, normal one-attempt receipt, actual generic notice
+  tap to unloaded Guardian and no detail-view acknowledgement. Lock settings hid
+  copy until unlock. An initial offline guard aborted before dispatch; settings
+  restored, hosted attempts stayed zero, and the corrected bounded-disconnect
+  check subsequently passed with a fresh synthetic fixture. Wi-Fi/data/airplane
+  settings are restored to 1/0/0. Both functions are disabled; the worker is
+  retired, old value rejects with 401 and its local file is deleted. Locked
+  and offline cleanup pass with final hosted counts 0/1/1/0/0. Fresh phone state
+  checks confirm authorized/unlocked, retained sign-in/registration and no recorder.
+  See `docs/reference/GUARDIAN_RECEIVER_CHECK.md`. No runtime/schema update,
+  personal telemetry or Google key change. Further receiver/recorder/two-phone
+  gates remain; M6.8 is in progress.
 
 - The approved cold-process FCM window passed on 2026-10-06. Traelyx's process
   was absent and the package not force-stopped immediately before the sole
@@ -285,4 +289,4 @@
 
 ## Current step
 
-**Current step:** M6.8 Guardian alerts is authorized. Firebase `traelyx-e28ff` remains on Spark with Android registered and FCM v1 enabled. The verified client config is Git-ignored. Isolated native evaluator, encrypted lease/outbox, activation coordinator and optional FCM adapter pass their synthetic/native gates. Native owner binding is attached to Auth; driver consent remains dormant and evaluation is not attached to recording. The private alert and retry migrations passed hosted rollback checks. Both Edge functions are deployed but disabled; their isolated hosted denial checks pass. The restricted backend sender credential is installed in Supabase Edge secrets with a verified digest. The first phone was freshly registered after the withdrawal proof; direct hosted counts now verify 1 device/1 unexpired device and zero sessions/events/deliveries. Durable notice claims, v1 upgrade and isolated physical vault checks pass; both source CI runs are green. The narrower positive receipt/retry window was approved; its first attempt found an Android parser defect, now repaired and physically checked. Full source CI and the subsequent hosted receipt/retry pass, with synthetic cleanup complete and both flags false. Approved background FCM/OAuth, receipt, generic notice and actual tap checks now pass; both windows are closed and cleaned, and test worker credentials are retired. Cold-process FCM receipt/notice/tap also passes after immediate process-absence verification; its window is closed and cleaned. Locked/offline/expiry/revocation and actual duplicate FCM behavior, recorder integration and two-phone delivery remain untested. No scheduler or real alert is enabled. M6.7 remains complete; M7 is not authorized.
+**Current step:** M6.8 Guardian alerts is authorized. Firebase `traelyx-e28ff` remains on Spark with Android registered and FCM v1 enabled. The verified client config is Git-ignored. Isolated native evaluator, encrypted lease/outbox, activation coordinator and optional FCM adapter pass their synthetic/native gates. Native owner binding is attached to Auth; driver consent remains dormant and evaluation is not attached to recording. The private alert and retry migrations passed hosted rollback checks. Both Edge functions are deployed but disabled; their isolated hosted denial checks pass. The restricted backend sender credential is installed in Supabase Edge secrets with a verified digest. The first phone was freshly registered after the withdrawal proof; direct hosted counts now verify 1 device/1 unexpired device and zero sessions/events/deliveries. Durable notice claims, v1 upgrade and isolated physical vault checks pass; both source CI runs are green. The narrower positive receipt/retry window was approved; its first attempt found an Android parser defect, now repaired and physically checked. Full source CI and the subsequent hosted receipt/retry pass, with synthetic cleanup complete and both flags false. Approved background FCM/OAuth, receipt, generic notice and actual tap checks now pass; both windows are closed and cleaned, and test worker credentials are retired. Cold-process FCM receipt/notice/tap also passes after immediate process-absence verification; its window is closed and cleaned. Locked/offline one-send receipt and notice-tap checks pass; both functions are closed, the test worker retired and both synthetic cleanups pass with final counts 0/1/1/0/0. Expiry/revocation and actual duplicate FCM behavior, recorder integration and two-phone delivery remain untested. No scheduler or real alert is enabled. M6.7 remains complete; M7 is not authorized.

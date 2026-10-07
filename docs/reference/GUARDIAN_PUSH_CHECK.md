@@ -263,7 +263,9 @@ change ran. Proof: `.dart_tool/m6_8_cold_positive.jpg` and
 `.dart_tool/m6_8_cold_closed.jpg`. Locked/offline/expiry/revocation, actual
 duplicate FCM, recorder integration and two-phone gates remain pending.
 
-The next two receiver cases are prepared in
-[GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md): locked-phone notice
-and one offline queued delivery after connectivity restoration. They require
-specific review before any further enablement/send/network interruption.
+The subsequent reviewed locked-phone and short offline-recovery checks passed on
+2026-10-07; see [GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md) for exact
+windows, the pre-send guard abort, fresh-fixture replacement and visibility
+limits. Both functions are disabled and the worker retired. Final offline
+synthetic cleanup passes with final 0/1/1/0/0 and retained sign-in/registration.
+Further receiver/recorder/two-phone gates remain.

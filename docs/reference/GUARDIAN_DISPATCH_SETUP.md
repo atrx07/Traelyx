@@ -125,10 +125,12 @@ driver consent and recorder attachment are still required. Six deliveries per in
 capacity; this is best-effort notification, not emergency protection or a
 delivery guarantee.
 
-The next reviewed receiver plan is [GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md).
-It prepares at most two explicit sends for locked-phone and short offline
-recovery checks, with both functions closed and synthetic data removed after
-each phase. It is not approval for routine dispatch or a scheduler.
+The reviewed locked-phone and short offline-recovery checks passed; evidence and
+limits are in [GUARDIAN_RECEIVER_CHECK.md](GUARDIAN_RECEIVER_CHECK.md). Each case
+sent once and acknowledged receipt without a detail view. Both functions are
+closed, the test worker is retired and both synthetic cleanups pass (0/1/1/0/0).
+Further expiry/revocation, duplicate FCM, recorder and two-phone gates remain.
+Routine dispatch and a scheduler are not enabled.
 
 ## Local checks
 

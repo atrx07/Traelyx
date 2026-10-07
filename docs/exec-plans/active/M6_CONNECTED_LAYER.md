@@ -694,17 +694,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   final 0/1/1/0/0, both flags false and real registration/sign-in intact. No
   runtime/schema update, personal telemetry, scheduler or Google key change.
   See `GUARDIAN_PUSH_CHECK.md` and ignored cold positive/closed proof images.
-- [ ] Verify locked/offline/expiry/revocation and actual duplicate
+- [ ] Verify expiry/revocation and actual duplicate
   FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
-  The locked/offline pair is now concrete in `GUARDIAN_RECEIVER_CHECK.md`:
-  two sequential fixtures (721–725/731–735), at most one send each, observed
-  lock-policy precondition, short offline host-side dispatch and network
-  restoration in `finally`. Ignored fixture copies reverse-verify as UUID-only
-  substitutions of tested SQL. Offline helper syntax passes without execution;
-  all 22 dispatcher/probe tests pass. Fresh phone/hosted readiness passes with
-  both flags false. Review production enable/send/network changes, worker
-  rotation and cleanup before execution; no new hosted mutation or push ran.
+- [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
+  Both physical cases passed on 2026-10-07: one send each, normal one-attempt
+  receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
+  Lock copy was hidden until unlock. Initial offline preflight aborted without
+  dispatch and restored settings; the bounded-disconnect helper then passed with
+  a fresh fixture after reviewed replacement. Network baseline restored to 1/0/0.
+  Both functions closed at 09:59:17 UTC. Worker retired at 10:03:38 with matching
+  digest/old-value 401/local-file deletion. Both marker-checked cleanups pass;
+  final hosted counts 0/1/1/0/0, both flags false. Fresh changed-phone checks
+  confirm authorized/unlocked, retained sign-in/native registration, network
+  settings 1/0/0 and no recorder. Repository validation/diff checks pass and
+  result documents are synchronized. No runtime, schema, personal telemetry or
+  Google key change; second phone not needed yet.
 - [ ] Validate all affected suites, schema upgrades, builds and performance;
   obtain exact deployment approval and verify synthetic hosted delivery.
 - [ ] Synchronize M6 completion only after every M6.8 gate passes; commit/push
