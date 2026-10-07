@@ -216,5 +216,7 @@ progress; no scheduler or real-contact alerts are enabled.
 
 The next proposed cases are concrete in
 [GUARDIAN_REJECTION_CHECK.md](GUARDIAN_REJECTION_CHECK.md). Their new isolated
-SQL controls passed full CI 37646111095 and await specific hosted review; preparation does
-not enable functions or send another message.
+SQL controls passed full CI 37646111095. The first reviewed duplicate phase passed
+one receipt/tap, but the event expired before a second send; that window is closed,
+worker retired and fixture cleaned. Actual duplicate suppression remains unverified;
+the reference records a fresh-window review requirement.

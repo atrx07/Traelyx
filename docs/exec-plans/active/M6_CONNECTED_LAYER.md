@@ -702,9 +702,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   guarded disconnect controls plus disposable SQL regression suite are wired
   into CI; corrected full run 37646111095 (`6734a3b`) passes every job and twelve
   SQL suites. Nine UUID-only copies reverse-verify; the bounded
-  offline-hold/independent-restore helper parses without execution. No hosted
-  mutation, credential or send ran. Review the duplicate pair's two-send window
-  first; expiry/disconnect remain separately gated on review/callback evidence.
+  offline-hold/independent-restore helper parses without execution. The reviewed
+  duplicate first phase passed one acceptance/receipt and actual notice tap to
+  unloaded Guardian, attempts=1/device_received (not viewed). Its event expired
+  before requeue; no second send or lifetime extension occurred. Both functions
+  closed at 16:07:27 UTC, worker retired at 16:20:13 with digest/401/local-file
+  proof, and approved cleanup passes with final counts 0/1/1/0/0. Network 1/0/0,
+  no recorder, unchanged encrypted vault hash and zero notice records pass.
+  Actual duplicate suppression remains unverified. Review fresh IDs and a
+  contiguous two-send window within the existing event lifetime, preserving
+  durable claims; expiry/disconnect remain gated on review/callback evidence.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

@@ -1,7 +1,8 @@
 # M6.8 duplicate, expiry and revocation receiver checks
 
-**Status:** Validated preparation; awaiting specific hosted review. No new hosted
-mutation or send. Full CI 37646111095 (`6734a3b`) passes all jobs, including the
+**Status:** First duplicate-phase receipt/tap passed; event expired before requeue,
+so the actual duplicate check remains unverified. Both functions are disabled,
+worker retired and synthetic cleanup passed. Full CI 37646111095 (`6734a3b`) passes all jobs, including the
 twelfth SQL suite, Flutter/native tests, analysis and debug/release builds.
 **Owner:** agent/maintainer. **Updated:** 2026-10-07. M6.8 remains active.
 
@@ -115,6 +116,46 @@ new wrapper. Corrected to the existing `receive_guardian_alert_v1`; no runtime o
 hosted change. Corrected full CI 37646111095 passed every job. Repository validation
 and diff checks pass. The first requested hosted review covers only the duplicate
 pair; expiry/disconnect remain separately gated.
+
+## Duplicate execution checkpoint — 2026-10-07
+
+The maintainer approved the two-message duplicate scope. Fresh phone checks pass:
+ADB authorized, no recorder, Wi-Fi on/mobile data off, notification permission
+granted and process absent without force-stop after Settings/Home/app-specific
+kill. The approved temporary worker was installed at 16:01:04 UTC with matching
+digest; its ignored 64-byte local file has inheritance disabled and only the
+current Windows user/SYSTEM access. The authenticated disabled dispatch probe passes.
+Fixture 741–745 staged with fixture_ready/one_pending_delivery/one_device all true.
+Both functions were enabled after action-time approval at 16:05:27 UTC. Immediate
+process-absence/non-stopped checks preceded the sole dispatch. The probe returned
+processed=1/provider_accepted=1 and zero skipped/failed/deferred. Hosted receipt
+was device_received/attempts=1 before manual app opening. Both flags returned to
+false at 16:07:27 UTC.
+
+Android had exactly one generic notice for delivery 745. Tapping its actual title
+opened unloaded Guardian; the active record count became zero. Only the encrypted
+recipient vault hash was saved, without reading contents. A later hosted query
+confirmed device_received/attempts=1 (not viewed) and event expiry. The eight-minute
+fixture lifetime elapsed during phase transition/resumption; no requeue or second
+send occurred, and no event/session lifetime was extended. This is incomplete
+duplicate validation, not evidence of a receiver defect or duplicate suppression.
+
+Disabled dispatch/capability probes pass. The worker was replaced with a fresh
+server-only value at 16:20:13 UTC, its digest verified, the old value rejected with
+401 and the exact local temporary file deleted; credential strings were cleared.
+After separate action-time cleanup approval, marker-checked deletion returned all
+three fixture absence checks true and device_rows=1; final readiness counts are
+0 sessions/1 device/1 unexpired device/0 events/0 deliveries. Fresh phone checks confirm
+ADB authorization, network settings 1/0/0, inactive recorder, unchanged encrypted
+vault hash and zero active notice records for 745. Ignored proof images:
+`m6_8_duplicate_first_expired.jpg`, `m6_8_duplicate_cleanup_review.jpg`,
+`m6_8_duplicate_closed.jpg`.
+
+A repeat must use fresh synthetic IDs because durable notice claims for 745 were
+preserved. Review a contiguous two-send enable window so dismissal/restart/requeue
+can finish within the existing eight-minute event lifetime. Do not extend an
+already staged event or erase notice claims to make the check pass. Expiry and
+disconnect remain separately gated on approval and callback evidence.
 
 No schema, app/backend runtime, dependency, sampling, battery or permission change.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder

@@ -245,8 +245,12 @@ duplicate-after-dismissal/restart, synthetic server expiry after queuing, and
 guarded driver disconnect after queuing. Exact-marker SQL controls and the new
 isolated regression suite pass full CI 37646111095 (`6734a3b`), including all
 twelve SQL suites and app/native/build gates. Ignored copies reverse-verify and
-bounded offline-hold helper syntax passes. Request the duplicate pair's two-send
-review first; expiry/disconnect need separate review and reliable callback evidence.
+bounded offline-hold helper syntax passes. The reviewed duplicate window sent its
+first message successfully, but the fixture expired before requeue; no second send
+occurred. Both flags are false, the worker retired and cleanup verified with
+0/1/1/0/0. Review a fresh-ID contiguous two-send window within the existing event
+lifetime, preserving durable claims; actual duplicate suppression is unverified.
+Expiry/disconnect need separate review and reliable callback evidence.
 Require specific hosted review before any new enable/send/control/network
 change; both functions remain disabled and no temporary worker is active locally.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test

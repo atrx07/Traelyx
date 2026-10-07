@@ -10,15 +10,26 @@
 
 ## Working
 
+- The reviewed duplicate window sent only its first message on 2026-10-07:
+  one provider acceptance/receipt and actual generic-notice tap to unloaded
+  Guardian passed, with attempts=1/device_received (not viewed). The event expired
+  before requeue; no second send or lifetime extension occurred. Actual duplicate
+  suppression remains unverified. Both functions are false, disabled probes pass,
+  worker is retired/old value rejects with 401/local file deleted, and synthetic
+  cleanup passes with final counts 0/1/1/0/0. Fresh phone checks confirm network
+  1/0/0, no recorder, retained registration and unchanged encrypted vault hash.
+  Review a fresh-ID, contiguous two-send window within the existing event lifetime;
+  preserve durable claims. See `docs/reference/GUARDIAN_REJECTION_CHECK.md`.
+
 - The next M6.8 duplicate/expiry/disconnect window is prepared in
   `docs/reference/GUARDIAN_REJECTION_CHECK.md`, with at most four synthetic sends
   proposed. Three exact-marker SQL controls and a disposable PostgreSQL wrapper
   cover requeue history/refusals, denied expired/disconnected receipts, audit and
   retained receiver authority. Corrected full CI 37646111095 (`6734a3b`) passes
   all jobs and twelve SQL suites. Nine ignored copies reverse-verify as UUID-only changes,
-  and the offline hold/restore helper parses without execution. No hosted
-  mutation, credential, new send or phone-network change has run for this scope.
-  Request the duplicate pair's concrete two-send review first; expiry/disconnect
+  and the offline hold/restore helper parses without execution. The first duplicate
+  phase is recorded above; no expiry/disconnect control or network change ran.
+  Review the fresh duplicate pair first; expiry/disconnect
   need separate review and reliable callback evidence. Second phone not needed.
 
 - Reviewed locked-phone and short offline-recovery FCM checks passed on
