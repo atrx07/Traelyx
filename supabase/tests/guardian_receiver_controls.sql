@@ -27,7 +27,7 @@ insert into public.guardian_push_devices values(
 select pg_temp.receiver_assert(exists(select 1 from public.guardian_alert_deliveries
   where status='pending' and attempts=0),'Unreceived requeue changed state');
 select pg_temp.receiver_accept();
-select pg_temp.receiver_assert(public.receive_guardian_delivery_v1(
+select pg_temp.receiver_assert(public.receive_guardian_alert_v1(
   '66666666-6666-4666-8666-666666666666',repeat('b',64),
   '00000000-0000-4000-9000-000000000695'),'First receipt denied');
 
@@ -47,7 +47,7 @@ update public.profiles set display_name='Synthetic push test driver'
 select pg_temp.receiver_assert(exists(select 1 from public.guardian_alert_deliveries
   where status='pending' and attempts=1),'Requeue erased attempt history');
 select pg_temp.receiver_accept();
-select pg_temp.receiver_assert(public.receive_guardian_delivery_v1(
+select pg_temp.receiver_assert(public.receive_guardian_alert_v1(
   '66666666-6666-4666-8666-666666666666',repeat('b',64),
   '00000000-0000-4000-9000-000000000695'),'Duplicate receipt denied');
 \set ON_ERROR_STOP off
@@ -72,7 +72,7 @@ select pg_temp.receiver_assert(not exists(select 1 from public.guardian_audit
 update public.profiles set display_name='Synthetic push test driver'
   where user_id='00000000-0000-4000-9000-000000000691';
 \ir ../manual_tests/guardian_push_expire.sql
-select pg_temp.receiver_assert(not public.receive_guardian_delivery_v1(
+select pg_temp.receiver_assert(not public.receive_guardian_alert_v1(
   '66666666-6666-4666-8666-666666666666',repeat('b',64),
   '00000000-0000-4000-9000-000000000695'),'Expired delivery accepted a receipt');
 select pg_temp.receiver_assert(exists(select 1 from public.guardian_alert_deliveries
@@ -82,7 +82,7 @@ select pg_temp.receiver_assert(exists(select 1 from public.guardian_alert_delive
 \ir ../manual_tests/guardian_push_stage.sql
 select pg_temp.receiver_accept();
 \ir ../manual_tests/guardian_push_disconnect.sql
-select pg_temp.receiver_assert(not public.receive_guardian_delivery_v1(
+select pg_temp.receiver_assert(not public.receive_guardian_alert_v1(
   '66666666-6666-4666-8666-666666666666',repeat('b',64),
   '00000000-0000-4000-9000-000000000695'),'Disconnected delivery accepted a receipt');
 select pg_temp.receiver_assert(exists(select 1 from public.guardian_audit

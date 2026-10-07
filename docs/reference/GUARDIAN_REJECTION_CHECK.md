@@ -87,7 +87,9 @@ No credential or private payload is logged. Syntax is checked without execution.
    instrument Traelyx before callback observation. Close flags within 90 seconds
    of reconnection or failure, then cleanup before the next case.
 5. Provider acceptance with no callback evidence is inconclusive, not a receiver
-   rejection pass. Never resend after an uncertain response or timeout. Cleanup
+   rejection pass. Process start alone does not prove `onMessageReceived`; require
+   scoped Firebase service/callback evidence and report inference or missing
+   observability explicitly. Never resend after an uncertain response or timeout. Cleanup
    still runs; record any late-message observations honestly.
 6. Verify final false digests/disabled probes, retired worker 401/local deletion,
    three fixture absence checks and final 0/1/1/0/0. Verify retained sign-in/device
@@ -100,6 +102,10 @@ No credential or private payload is logged. Syntax is checked without execution.
 - [ ] Isolated SQL CI and remaining affected checks pass.
 - [ ] Obtain concrete hosted review and execute bounded cases.
 - [ ] Record observed results/limits and complete cleanup/persistence.
+
+Initial isolated CI run 37645710237 caught an incorrect receipt API name in the
+new wrapper. Corrected to the existing `receive_guardian_alert_v1`; no runtime or
+hosted change. The corrected run must pass before these controls are used.
 
 No schema, app/backend runtime, dependency, sampling, battery or permission change.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
