@@ -240,6 +240,13 @@ final hosted counts are 0/1/1/0/0. Fresh changed-phone checks confirm retained
 sign-in/native registration, no recorder and reviewed network settings. Next review
 expiry/revocation and actual duplicate FCM, then recorder integration and the
 two-phone gates. The second phone is not needed yet.
+The concrete follow-up `GUARDIAN_REJECTION_CHECK.md` proposes four sends across
+duplicate-after-dismissal/restart, synthetic server expiry after queuing, and
+guarded driver disconnect after queuing. Exact-marker SQL controls and the new
+isolated regression suite are prepared; CI validation is pending. Ignored copies
+reverse-verify and bounded offline-hold helper syntax passes. Require green
+validation and specific hosted review before any new enable/send/control/network
+change; both functions remain disabled and no temporary worker is active locally.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

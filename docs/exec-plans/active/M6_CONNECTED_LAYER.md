@@ -697,6 +697,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [ ] Verify expiry/revocation and actual duplicate
   FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
+  Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
+  across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
+  guarded disconnect controls plus disposable SQL regression suite are wired
+  into CI (validation pending). Nine UUID-only copies reverse-verify; the bounded
+  offline-hold/independent-restore helper parses without execution. No hosted
+  mutation, credential or send ran. Green CI and concrete review precede execution.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

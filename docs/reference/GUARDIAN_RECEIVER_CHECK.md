@@ -213,3 +213,8 @@ lock screen with hidden notice copy until unlock, and one short offline interval
 Expiry/revocation, actual duplicate FCM, natural Doze, long outages, reboot/direct
 boot, recorder integration and two-phone delivery remain unverified. M6.8 is in
 progress; no scheduler or real-contact alerts are enabled.
+
+The next proposed cases are concrete in
+[GUARDIAN_REJECTION_CHECK.md](GUARDIAN_REJECTION_CHECK.md). Their new isolated
+SQL controls await CI validation and specific hosted review; preparation does
+not enable functions or send another message.
