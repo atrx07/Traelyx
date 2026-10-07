@@ -243,9 +243,11 @@ two-phone gates. The second phone is not needed yet.
 The concrete follow-up `GUARDIAN_REJECTION_CHECK.md` proposes four sends across
 duplicate-after-dismissal/restart, synthetic server expiry after queuing, and
 guarded driver disconnect after queuing. Exact-marker SQL controls and the new
-isolated regression suite are prepared; CI validation is pending. Ignored copies
-reverse-verify and bounded offline-hold helper syntax passes. Require green
-validation and specific hosted review before any new enable/send/control/network
+isolated regression suite pass full CI 37646111095 (`6734a3b`), including all
+twelve SQL suites and app/native/build gates. Ignored copies reverse-verify and
+bounded offline-hold helper syntax passes. Request the duplicate pair's two-send
+review first; expiry/disconnect need separate review and reliable callback evidence.
+Require specific hosted review before any new enable/send/control/network
 change; both functions remain disabled and no temporary worker is active locally.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.

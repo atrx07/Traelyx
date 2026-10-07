@@ -1,6 +1,8 @@
 # M6.8 duplicate, expiry and revocation receiver checks
 
-**Status:** Prepared for isolated CI validation; no hosted mutation or send.
+**Status:** Validated preparation; awaiting specific hosted review. No new hosted
+mutation or send. Full CI 37646111095 (`6734a3b`) passes all jobs, including the
+twelfth SQL suite, Flutter/native tests, analysis and debug/release builds.
 **Owner:** agent/maintainer. **Updated:** 2026-10-07. M6.8 remains active.
 
 ## Goal and references
@@ -20,6 +22,10 @@ At most **four synthetic FCM messages** across three sequential fixtures:
 | Duplicate after dismissal/restart | 741–745 | 2, same delivery/generation | Two receipts/attempts; second message does not recreate the dismissed notice |
 | Server expiry after queuing | 751–755 | 1 | Shortened synthetic server expiry denies receipt/display after reconnection |
 | Disconnect after queuing | 761–765 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
+
+Review each case separately. The first hosted window is the duplicate pair only
+(two sends). Expiry and disconnect require their own review and reliable callback
+observability; they are not authorized by approval of the duplicate pair.
 
 Use one explicitly reviewed temporary worker value, private ignored file and
 fixed-endpoint probe; retire to a fresh server-only value, prove old-value 401 and
@@ -55,7 +61,8 @@ Source controls in `supabase/manual_tests/` are standalone SQL, not migrations:
   refusal, denied expired/disconnected receipts, disconnect audit/cascading cleanup,
   and unchanged receiver routing/generation/credential/lifetime. Added to CI.
 
-The ignored `m6_8_receiver_negative_once.ps1 -Case expiry|revocation` requires the
+The ignored `m6_8_receiver_negative_once.ps1` with `-Case expiry` or
+`-Case revocation` requires the
 same Wi-Fi-on/data-off/airplane-off baseline, inactive recorder, absent process and
 non-stopped package. It waits at most 15 seconds for no active default network,
 dispatches exactly once, then holds offline for at most 90 seconds awaiting a
@@ -99,13 +106,15 @@ No credential or private payload is logged. Syntax is checked without execution.
 
 - [x] Guarded SQL controls and isolated regression wrapper prepared.
 - [x] Ignored fixture copies reverse-verified; bounded helper syntax parsed.
-- [ ] Isolated SQL CI and remaining affected checks pass.
+- [x] Isolated SQL CI and remaining affected checks pass (37646111095).
 - [ ] Obtain concrete hosted review and execute bounded cases.
 - [ ] Record observed results/limits and complete cleanup/persistence.
 
 Initial isolated CI run 37645710237 caught an incorrect receipt API name in the
 new wrapper. Corrected to the existing `receive_guardian_alert_v1`; no runtime or
-hosted change. The corrected run must pass before these controls are used.
+hosted change. Corrected full CI 37646111095 passed every job. Repository validation
+and diff checks pass. The first requested hosted review covers only the duplicate
+pair; expiry/disconnect remain separately gated.
 
 No schema, app/backend runtime, dependency, sampling, battery or permission change.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder

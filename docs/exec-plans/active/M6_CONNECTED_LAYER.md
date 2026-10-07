@@ -700,9 +700,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
   guarded disconnect controls plus disposable SQL regression suite are wired
-  into CI (validation pending). Nine UUID-only copies reverse-verify; the bounded
+  into CI; corrected full run 37646111095 (`6734a3b`) passes every job and twelve
+  SQL suites. Nine UUID-only copies reverse-verify; the bounded
   offline-hold/independent-restore helper parses without execution. No hosted
-  mutation, credential or send ran. Green CI and concrete review precede execution.
+  mutation, credential or send ran. Review the duplicate pair's two-send window
+  first; expiry/disconnect remain separately gated on review/callback evidence.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

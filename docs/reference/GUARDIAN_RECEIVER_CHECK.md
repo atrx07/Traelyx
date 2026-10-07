@@ -216,5 +216,5 @@ progress; no scheduler or real-contact alerts are enabled.
 
 The next proposed cases are concrete in
 [GUARDIAN_REJECTION_CHECK.md](GUARDIAN_REJECTION_CHECK.md). Their new isolated
-SQL controls await CI validation and specific hosted review; preparation does
+SQL controls passed full CI 37646111095 and await specific hosted review; preparation does
 not enable functions or send another message.

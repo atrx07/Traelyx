@@ -14,10 +14,12 @@
   `docs/reference/GUARDIAN_REJECTION_CHECK.md`, with at most four synthetic sends
   proposed. Three exact-marker SQL controls and a disposable PostgreSQL wrapper
   cover requeue history/refusals, denied expired/disconnected receipts, audit and
-  retained receiver authority. The twelfth SQL suite is wired into CI; validation
-  is pending. Nine ignored fixture copies reverse-verify as UUID-only changes,
+  retained receiver authority. Corrected full CI 37646111095 (`6734a3b`) passes
+  all jobs and twelve SQL suites. Nine ignored copies reverse-verify as UUID-only changes,
   and the offline hold/restore helper parses without execution. No hosted
   mutation, credential, new send or phone-network change has run for this scope.
+  Request the duplicate pair's concrete two-send review first; expiry/disconnect
+  need separate review and reliable callback evidence. Second phone not needed.
 
 - Reviewed locked-phone and short offline-recovery FCM checks passed on
   2026-10-07: one send per case, normal one-attempt receipt, actual generic notice
