@@ -253,6 +253,12 @@ lifetime, preserving durable claims; actual duplicate suppression is unverified.
 Expiry/disconnect need separate review and reliable callback evidence.
 Require specific hosted review before any new enable/send/control/network
 change; both functions remain disabled and no temporary worker is active locally.
+Replacement fixture 771–775 received once but had no observed notice or vault change;
+the duplicate phase was aborted and cleanup/worker retirement verified on 2026-10-08.
+Data-free debug receiver tracing passes 357 native tests, lint, configured build
+and data-preserving signed-in startup. Finish full source CI, then review a
+fresh diagnostic send to identify the stopping gate before attempting another pair.
+Receipt-response failure is a hypothesis; no root cause or notice fix is confirmed.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

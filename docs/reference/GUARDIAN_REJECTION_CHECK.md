@@ -4,7 +4,7 @@
 so the actual duplicate check remains unverified. Both functions are disabled,
 worker retired and synthetic cleanup passed. Full CI 37646111095 (`6734a3b`) passes all jobs, including the
 twelfth SQL suite, Flutter/native tests, analysis and debug/release builds.
-**Owner:** agent/maintainer. **Updated:** 2026-10-07. M6.8 remains active.
+**Owner:** agent/maintainer. **Updated:** 2026-10-08. M6.8 remains active.
 
 ## Goal and references
 
@@ -156,6 +156,72 @@ preserved. Review a contiguous two-send enable window so dismissal/restart/reque
 can finish within the existing eight-minute event lifetime. Do not extend an
 already staged event or erase notice claims to make the check pass. Expiry and
 disconnect remain separately gated on approval and callback evidence.
+
+## Fresh duplicate repeat — closed, first notice unverified
+
+Reserved fixture IDs 771–775 avoid the retained claim for 745. Three ignored
+`m6_8_duplicate_repeat_{stage,control,cleanup}.sql` copies reverse-verify as
+UUID-only substitutions of the CI-validated scripts; their existing eight-minute
+event/ten-minute session lifetimes and all guards remain unchanged.
+
+The maintainer approved at most two sends in one contiguous enable window, capped at six minutes:
+first normal receipt/notice, actual tap and hash baseline, Settings/Home/background
+kill without force-stop, guarded one-time requeue, then one duplicate dispatch.
+Keep both functions active only for this bounded reviewed pair; close immediately
+after the second receipt or any failure/deadline. Recheck remaining event lifetime
+and absent/non-stopped process before each dispatch. Never extend a staged event,
+erase claims or retry an uncertain invocation. No network toggling, app update,
+scheduler, recorder or real-contact event. The temporary worker and synthetic
+fixture require the same verified retirement/cleanup as the first window.
+
+The temporary worker was installed at 16:29:27 UTC on 2026-10-07 and its digest /
+authenticated disabled probe verified. Exact staging guards and a fresh six-minute
+remaining lifetime check passed. Both flags became true at 16:31:55 after separate
+action-time approval. Immediate process absence/non-stopped checks preceded the
+sole dispatch: processed=1/provider_accepted=1, with zero other counters. Hosted
+attempts=1/device_received passed before app opening. Two scoped Android checks
+found zero active package notices; no generic title was visible. The receiver vault
+hash was unchanged from the earlier baseline. Notification permission was granted,
+there was no explicit app-op denial, and the Guardian channel had high importance.
+
+The duplicate phase was aborted: no tap, requeue, second send, network toggle or
+claim erasure. Both flags returned false at 16:34:52, within the six-minute cap.
+Disabled probes passed. Worker rotation was submitted at 16:43:25. Automatic
+approval review then became unavailable due to the account usage limit; its digest
+and old-value 401 were verified on resumption on 2026-10-08, and the exact local
+worker file and credential strings were removed. After action-time deletion
+approval, all three fixture absence checks and retained device_rows=1 passed.
+Final hosted counts are 0/1/1/0/0; both flags remain false. Proof images are ignored:
+`m6_8_duplicate_repeat_receipt.jpg`, `m6_8_duplicate_repeat_cleanup_review.jpg`,
+`m6_8_duplicate_repeat_closed.jpg`.
+
+The notice absence does not establish a root cause. The existing native transport
+has three-second connect/read bounds; a server-committed receipt with an unconfirmed
+client response is one hypothesis, not a measured timeout. No claim-file change
+was observed. Read-only invocation metadata later showed HTTP 200 at 16:33:02 UTC
+with execution_time_ms=1537; server execution does not establish client response
+arrival or total network duration. Do not label this a duplicate pass or increase timeouts without
+evidence. Before another reviewed send, use the data-free debug receiver stages
+described below to identify the stopping gate. Expiry/disconnect remain separately
+gated; the second phone is not needed.
+
+## Receiver observability — 2026-10-08
+
+Debuggable builds now emit only fixed `GuardianReceiveStage` enum names under
+`TraelyxGuardianReceive`: callback, permission/configuration/preflight rejection,
+unconfirmed transport or rejected response, confirmed receipt, current-authority
+rejection, claim outcome and attempted/failed post. The sink accepts no dynamic
+data or exception, makes no extra request, writes no app file and is inert in
+non-debuggable builds. Observer failures cannot alter receiver decisions.
+`NOTICE_POST_ATTEMPTED` is not proof of display. Existing authorization, durable
+claims, request bounds and no-retry behavior are preserved. All 357 native tests,
+Android lint, configured debug build and repository/diff checks pass. The known
+local-properties escaping failure required the documented one-time forced lint
+rerun; the ignored file was restored exactly. A data-preserving physical update
+opens signed-in Guardian with details unloaded, no fatal exception or receiver
+trace at inert startup, and unchanged encrypted registration hash. Phone network
+is 1/0/0 and recording inactive. Full source CI is pending. No live diagnostic
+callback or further push has run; this is observability, not a confirmed notice fix.
 
 No schema, app/backend runtime, dependency, sampling, battery or permission change.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder

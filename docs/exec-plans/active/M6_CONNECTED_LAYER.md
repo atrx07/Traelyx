@@ -712,6 +712,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Actual duplicate suppression remains unverified. Review fresh IDs and a
   contiguous two-send window within the existing event lifetime, preserving
   durable claims; expiry/disconnect remain gated on review/callback evidence.
+- [ ] Finish data-free debug receiver observability after the 771–775 repeat.
+  That reviewed window enabled both flags at 16:31:55 UTC on 2026-10-07 and
+  closed them at 16:34:52. One provider acceptance/hosted receipt passed, but two
+  Android checks found zero notices and the encrypted vault hash was unchanged.
+  Notification permission/channel checks did not show a block. No requeue or
+  second send occurred; notice absence has no confirmed cause. Worker rotation
+  at 16:43:25 was verified after the usage-limit interruption on 2026-10-08:
+  digest/old-value 401/local deletion and approved fixture cleanup pass, final
+  0/1/1/0/0. Fixed enum-only debug tracing identifies callback and stopping gates
+  without IDs/credentials/payloads/exceptions, extra requests or app persistence.
+  It is inert in non-debuggable builds and sink failure cannot change decisions.
+  All 357 native tests, Android lint and configured debug build pass. Physical
+  data-preserving startup keeps signed-in Guardian, encrypted registration hash,
+  unloaded details and no crash/receiver trace; phone network 1/0/0, no recorder.
+  Full source CI is pending. Review any further hosted diagnostic send separately; no timeout
+  or claim policy is changed without evidence. See `GUARDIAN_REJECTION_CHECK.md`.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

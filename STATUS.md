@@ -10,6 +10,19 @@
 
 ## Working
 
+- The replacement duplicate fixture 771–775 received its first message, but two
+  Android checks found no active notice and the encrypted claim vault was unchanged.
+  Permission/channel checks did not show a block. Root cause is unconfirmed;
+  no requeue or second send occurred. Both functions closed within the reviewed
+  six-minute window. On 2026-10-08 worker retirement/401/local deletion and approved
+  synthetic cleanup passed, with final 0/1/1/0/0. Data-free debug receiver stage
+  tracing is implemented to identify the stopping gate; 357 native tests, Android
+  lint and configured debug build pass. Data-preserving startup opens signed-in
+  Guardian with encrypted registration unchanged, no crash/receiver callback and
+  details unloaded; source CI pending. It changes no receipt bounds, authorization
+  or durable claim decisions and is inert in non-debuggable builds. Actual duplicate,
+  expiry/disconnect, recorder and two-phone gates remain unverified.
+
 - The reviewed duplicate window sent only its first message on 2026-10-07:
   one provider acceptance/receipt and actual generic-notice tap to unloaded
   Guardian passed, with attempts=1/device_received (not viewed). The event expired

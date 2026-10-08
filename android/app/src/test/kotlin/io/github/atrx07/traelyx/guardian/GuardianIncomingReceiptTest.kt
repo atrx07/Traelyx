@@ -57,12 +57,14 @@ class GuardianIncomingReceiptTest {
             }
         },
         notice: GuardianGenericNotice = GuardianGenericNotice { notices.add(it) },
+        trace: GuardianReceiveTrace = GuardianReceiveTrace(),
     ) =
         GuardianIncomingMessageHandler(
             GuardianPushPreflight(vault, marker, clock),
-            GuardianCapabilityReceiptGateway(endpoint, transport),
+            GuardianCapabilityReceiptGateway(endpoint, transport, trace),
             claim,
             notice,
+            trace,
         )
 
     @Test fun `exact server receipt and stable local registration allow one generic notice`() {
@@ -222,5 +224,68 @@ class GuardianIncomingReceiptTest {
             handler(vault, marker, Transport(), notices, claim = claim).handle(data, false)
             assertTrue(notices.isEmpty())
         }
+    }
+
+    @Test fun `disabled diagnostics never invoke their sink`() {
+        var calls = 0
+        val trace = GuardianReceiveTrace(false) { calls++ }
+        val notices = mutableListOf<String>()
+        handler(Vault(device()), Marker(), Transport(), notices, trace = trace).handle(data, false)
+        assertEquals(0, calls)
+        assertEquals(listOf(delivery), notices)
+    }
+
+    @Test fun `diagnostic sink failures cannot suppress an authorized notice`() {
+        val trace = GuardianReceiveTrace(true) { error("diagnostic unavailable") }
+        val vault = Vault(device())
+        val notices = mutableListOf<String>()
+        handler(vault, Marker(), Transport(), notices, trace = trace).handle(data, false)
+        assertEquals(listOf(delivery), vault.stored!!.noticeDeliveryIds)
+        assertEquals(listOf(delivery), notices)
+    }
+
+    @Test fun `unconfirmed receipt is distinguishable without claiming or logging data`() {
+        val stages = mutableListOf<GuardianReceiveStage>()
+        val trace = GuardianReceiveTrace(true) { stages.add(it) }
+        val vault = Vault(device())
+        val transport = Transport().also { it.beforeResponse = { error("private response unavailable") } }
+        val notices = mutableListOf<String>()
+        handler(vault, Marker(), transport, notices, trace = trace).handle(data, false)
+        assertEquals(listOf(GuardianReceiveStage.RECEIPT_TRANSPORT_UNCONFIRMED), stages)
+        assertTrue(vault.stored!!.noticeDeliveryIds.isEmpty())
+        assertTrue(notices.isEmpty())
+    }
+
+    @Test fun `trace distinguishes a duplicate from a new notice without identifiers`() {
+        val stages = mutableListOf<GuardianReceiveStage>()
+        val trace = GuardianReceiveTrace(true) { stages.add(it) }
+        val vault = Vault(device())
+        val notices = mutableListOf<String>()
+        handler(vault, Marker(), Transport(), notices, trace = trace).handle(data, false)
+        assertEquals(listOf(
+            GuardianReceiveStage.RECEIPT_CONFIRMED,
+            GuardianReceiveStage.NOTICE_CLAIMED,
+            GuardianReceiveStage.NOTICE_POST_ATTEMPTED,
+        ), stages)
+        stages.clear()
+        notices.clear()
+        handler(vault, Marker(), Transport(), notices, trace = trace).handle(data, false)
+        assertEquals(listOf(GuardianReceiveStage.RECEIPT_CONFIRMED, GuardianReceiveStage.CLAIM_UNAVAILABLE), stages)
+        assertTrue(notices.isEmpty())
+        assertEquals(listOf(delivery), vault.stored!!.noticeDeliveryIds)
+    }
+
+    @Test fun `failed display trace retains the claim and is not a display confirmation`() {
+        val stages = mutableListOf<GuardianReceiveStage>()
+        val trace = GuardianReceiveTrace(true) { stages.add(it) }
+        val vault = Vault(device())
+        val failedNotice = GuardianGenericNotice { error("display unavailable") }
+        handler(vault, Marker(), Transport(), mutableListOf(), notice = failedNotice, trace = trace).handle(data, false)
+        assertEquals(listOf(
+            GuardianReceiveStage.RECEIPT_CONFIRMED,
+            GuardianReceiveStage.NOTICE_CLAIMED,
+            GuardianReceiveStage.NOTICE_POST_FAILED,
+        ), stages)
+        assertEquals(listOf(delivery), vault.stored!!.noticeDeliveryIds)
     }
 }

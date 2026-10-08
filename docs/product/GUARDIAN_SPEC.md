@@ -176,3 +176,12 @@ can therefore leave no notification. Device receipt does not mean display or
 human attention. The authenticated inbox remains available. The history is
 bounded at 1,024 IDs per registration with no eviction; reaching that bound
 suppresses additional notices until withdrawal and fresh registration.
+
+Debuggable Android builds expose fixed receiver-stage codes under the
+`TraelyxGuardianReceive` log tag to distinguish callback arrival, unconfirmed
+receipt, current-authority rejection, claim outcome and attempted posting. No
+account/delivery identifiers, routing tokens, credentials, payloads, response
+bodies or exception details enter this trace. It writes no app file, makes no
+extra network request and is inert in non-debuggable builds. Diagnostic sink
+failure cannot change authorization or notice decisions. A posting attempt is
+not confirmation of Android display or user attention.

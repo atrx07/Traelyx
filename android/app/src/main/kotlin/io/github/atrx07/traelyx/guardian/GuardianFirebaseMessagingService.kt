@@ -6,9 +6,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import io.github.atrx07.traelyx.MainActivity
@@ -17,9 +19,20 @@ import io.github.atrx07.traelyx.R
 /** Data-only ingress; never trusts FCM acceptance as recipient permission. */
 class GuardianFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
+        val trace = GuardianReceiveTrace(
+            (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0,
+        ) { stage -> Log.i("TraelyxGuardianReceive", stage.name) }
+        trace.record(GuardianReceiveStage.CALLBACK)
         // An unconfigured build cannot acknowledge or display Guardian messages.
         val endpoint = getString(R.string.traelyx_guardian_capability_url)
-        if (endpoint.isEmpty() || !notificationsAllowed()) return
+        if (endpoint.isEmpty()) {
+            trace.record(GuardianReceiveStage.UNCONFIGURED)
+            return
+        }
+        if (!notificationsAllowed()) {
+            trace.record(GuardianReceiveStage.NOTIFICATIONS_DISABLED)
+            return
+        }
         try {
             val vault = AndroidGuardianRecipientVault(applicationContext)
             val marker = AndroidGuardianProviderMarker(applicationContext)
@@ -29,16 +42,18 @@ class GuardianFirebaseMessagingService : FirebaseMessagingService() {
                     marker,
                     System::currentTimeMillis,
                 ),
-                GuardianCapabilityReceiptGateway(endpoint, BoundedGuardianHttpsTransport()),
+                GuardianCapabilityReceiptGateway(endpoint, BoundedGuardianHttpsTransport(), trace),
                 GuardianNoticeClaim { request, generation ->
                     marker.present() && vault.claimNotice(
                         request.deviceId, generation, request.credential, request.deliveryId, System.currentTimeMillis(),
                     )
                 },
                 GuardianGenericNotice(::postGenericNotice),
+                trace,
             )
             handler.handle(message.data, message.notification != null)
         } catch (_: Exception) {
+            trace.record(GuardianReceiveStage.RECEIVER_FAILED)
             // Missing keys, local uncertainty, and network failure show no notice.
         }
     }
