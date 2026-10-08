@@ -712,7 +712,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Actual duplicate suppression remains unverified. Review fresh IDs and a
   contiguous two-send window within the existing event lifetime, preserving
   durable claims; expiry/disconnect remain gated on review/callback evidence.
-- [ ] Finish data-free debug receiver observability after the 771–775 repeat.
+- [x] Prepare and validate data-free debug receiver observability after the 771–775 repeat.
   That reviewed window enabled both flags at 16:31:55 UTC on 2026-10-07 and
   closed them at 16:34:52. One provider acceptance/hosted receipt passed, but two
   Android checks found zero notices and the encrypted vault hash was unchanged.
@@ -726,7 +726,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   All 357 native tests, Android lint and configured debug build pass. Physical
   data-preserving startup keeps signed-in Guardian, encrypted registration hash,
   unloaded details and no crash/receiver trace; phone network 1/0/0, no recorder.
-  Full source CI is pending. Review any further hosted diagnostic send separately; no timeout
+  Full source CI 37803704159 (`4aecd2e`) passes every job, including twelve SQL
+  suites, Flutter/native checks and debug/release builds. The installed build is
+  debuggable; encrypted registration still matches after startup. Live callback
+  diagnosis remains a separate reviewed gate; no timeout
   or claim policy is changed without evidence. See `GUARDIAN_REJECTION_CHECK.md`.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt

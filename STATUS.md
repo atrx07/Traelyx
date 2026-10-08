@@ -19,7 +19,9 @@
   tracing is implemented to identify the stopping gate; 357 native tests, Android
   lint and configured debug build pass. Data-preserving startup opens signed-in
   Guardian with encrypted registration unchanged, no crash/receiver callback and
-  details unloaded; source CI pending. It changes no receipt bounds, authorization
+  details unloaded; full source CI 37803704159 (`4aecd2e`) passes every job,
+  including twelve SQL suites, Flutter/native checks and debug/release builds.
+  It changes no receipt bounds, authorization
   or durable claim decisions and is inert in non-debuggable builds. Actual duplicate,
   expiry/disconnect, recorder and two-phone gates remain unverified.
 

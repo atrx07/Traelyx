@@ -1,9 +1,11 @@
 # M6.8 duplicate, expiry and revocation receiver checks
 
-**Status:** First duplicate-phase receipt/tap passed; event expired before requeue,
-so the actual duplicate check remains unverified. Both functions are disabled,
-worker retired and synthetic cleanup passed. Full CI 37646111095 (`6734a3b`) passes all jobs, including the
-twelfth SQL suite, Flutter/native tests, analysis and debug/release builds.
+**Status:** Actual duplicate suppression remains unverified: first fixture expired
+after receipt/tap; replacement received once without an observed notice. Both
+windows are disabled/cleaned with workers retired. Debug-only receiver tracing
+passes local/device checks and full CI 37803704159 (`4aecd2e`), including twelve
+SQL suites, Flutter/native tests, analysis and debug/release builds. A fresh
+single-message diagnostic window needs review before another duplicate pair.
 **Owner:** agent/maintainer. **Updated:** 2026-10-08. M6.8 remains active.
 
 ## Goal and references
@@ -220,10 +222,36 @@ local-properties escaping failure required the documented one-time forced lint
 rerun; the ignored file was restored exactly. A data-preserving physical update
 opens signed-in Guardian with details unloaded, no fatal exception or receiver
 trace at inert startup, and unchanged encrypted registration hash. Phone network
-is 1/0/0 and recording inactive. Full source CI is pending. No live diagnostic
+is 1/0/0 and recording inactive. Full source CI 37803704159 (`4aecd2e`) passes
+every job, including twelve SQL suites, Flutter/native checks and debug/release
+builds. The installed build is debuggable and the encrypted registration hash
+still matches after startup. No live diagnostic
 callback or further push has run; this is observability, not a confirmed notice fix.
 
-No schema, app/backend runtime, dependency, sampling, battery or permission change.
+### Next diagnostic review boundary
+
+Before another duplicate pair, propose exactly one data-only message using fresh
+synthetic fixture 781–785. Its ignored stage/cleanup copies reverse-verify as
+UUID-only substitutions of the existing scripts. Stage only while both functions
+are false, recheck the inactive recorder / notification permission / retained
+registration / network baseline, and establish process absence without force-stop.
+Capture the phone's timestamp before the sole send, then read only fixed enum
+codes from the `TraelyxGuardianReceive` tag after that timestamp. Preserve Android
+logs, registration and durable claims; do not clear logcat or read raw message data.
+Require source CI first and fresh scoped plus action-time enable approval.
+
+Use a temporary worker under the same private custody, bounded invocation and
+verified retirement/cleanup contract. Close both functions within 90 seconds of
+provider acceptance, or immediately on failure; never resend an uncertain call.
+Compare stage codes with hosted receipt and scoped active-notice counts before
+app opening. A server receipt or post-attempt code alone is not display evidence.
+Record the stopping gate without claiming a measured timeout or changing safety /
+authorization / claim policy. No network toggle, recorder activation, scheduler,
+trip upload or real-contact alert. No fixture, credential or enable is staged yet.
+The second phone is not needed.
+
+The only app change is debug-only stage tracing; no backend runtime, schema,
+dependency, sampling, recorder lifecycle or permission contract change.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining
 M6.8 gates independently; M7 is not authorized.
