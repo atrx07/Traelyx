@@ -729,8 +729,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Full source CI 37803704159 (`4aecd2e`) passes every job, including twelve SQL
   suites, Flutter/native checks and debug/release builds. The installed build is
   debuggable; encrypted registration still matches after startup. Live callback
-  diagnosis remains a separate reviewed gate; no timeout
+  diagnosis was separately reviewed below; no timeout
   or claim policy is changed without evidence. See `GUARDIAN_REJECTION_CHECK.md`.
+- [x] Run the reviewed single-message receiver diagnostic 781–785.
+  On 2026-10-08, after fresh phone/lifetime/process guards, the sole dispatch passed
+  processed=1/provider_accepted=1. Scoped debug stages confirmed callback/receipt/
+  claim/post attempt; Android showed one notice, encrypted vault changed, hosted
+  attempts=1/device_received (not viewed) passed before manual app opening. Both
+  flags enabled 16:11:35 UTC and closed 16:13:10, 56.07 seconds after the confirmed
+  probe return. Actual notice tap opens signed-in Guardian and removes the notice.
+  Disabled probes pass; worker retired 16:20:07 with matching digest/old-value 401/
+  local deletion, and approved synthetic cleanup passes with the real device
+  retained and final counts 0/1/1/0/0. Registration/consent marker/network 1/0/0/
+  no-recorder checks pass.
+  Prior absence did not reproduce; root cause/permanent fix remain unconfirmed.
+  No second message, network toggle, upload, runtime or schema change in this test.
+  Actual duplicate/expiry/disconnect, recorder and two-phone gates remain pending.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

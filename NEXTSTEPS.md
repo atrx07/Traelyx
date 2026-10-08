@@ -257,9 +257,14 @@ Replacement fixture 771–775 received once but had no observed notice or vault 
 the duplicate phase was aborted and cleanup/worker retirement verified on 2026-10-08.
 Data-free debug receiver tracing passes 357 native tests, lint, configured build
 and data-preserving signed-in startup. Full source CI 37803704159 (`4aecd2e`)
-passes every job. Review a
-fresh diagnostic send to identify the stopping gate before attempting another pair.
-Receipt-response failure is a hypothesis; no root cause or notice fix is confirmed.
+passes every job. A reviewed single diagnostic message 781–785 subsequently passed
+callback/receipt/claim/post stages, one Android notice, hosted attempts=1/not viewed,
+and actual notice tap to signed-in Guardian. Both flags are false; worker retirement
+and approved synthetic cleanup pass with final counts 0/1/1/0/0. The prior missing
+notice did not reproduce;
+receipt-response failure remains a hypothesis, with no confirmed cause or fix.
+Next review an actual duplicate pair using fresh IDs and the verified debug stages
+before expiry/disconnect, recorder and two-phone gates. Preserve durable claims.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

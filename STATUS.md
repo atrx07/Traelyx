@@ -10,6 +10,17 @@
 
 ## Working
 
+- The reviewed single diagnostic message 781–785 passes on 2026-10-08: fixed debug
+  stages confirm callback/receipt/claim/post attempt, Android has one notice,
+  encrypted vault changes and hosted receipt is one attempt/not viewed. Actual
+  notice tap opens signed-in Guardian and leaves zero notice records. Both flags
+  are false, disabled probes pass, worker retired/old-value 401/local deletion
+  verified. Approved marker-checked cleanup passes all three absence checks with
+  the real device retained; registration/consent marker/network 1/0/0/no-recorder
+  checks pass; final hosted counts are 0/1/1/0/0.
+  Earlier missing notice did not reproduce; no cause or permanent fix is claimed.
+  See `docs/reference/GUARDIAN_REJECTION_CHECK.md`; no second phone needed yet.
+
 - The replacement duplicate fixture 771–775 received its first message, but two
   Android checks found no active notice and the encrypted claim vault was unchanged.
   Permission/channel checks did not show a block. Root cause is unconfirmed;

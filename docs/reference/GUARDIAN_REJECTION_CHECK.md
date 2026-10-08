@@ -4,8 +4,9 @@
 after receipt/tap; replacement received once without an observed notice. Both
 windows are disabled/cleaned with workers retired. Debug-only receiver tracing
 passes local/device checks and full CI 37803704159 (`4aecd2e`), including twelve
-SQL suites, Flutter/native tests, analysis and debug/release builds. A fresh
-single-message diagnostic window needs review before another duplicate pair.
+SQL suites, Flutter/native tests, analysis and debug/release builds. The single
+traced live message passes callback/receipt/claim/notice checks and is closed and
+cleaned; earlier absence did not reproduce. Review a fresh actual duplicate pair.
 **Owner:** agent/maintainer. **Updated:** 2026-10-08. M6.8 remains active.
 
 ## Goal and references
@@ -225,12 +226,12 @@ trace at inert startup, and unchanged encrypted registration hash. Phone network
 is 1/0/0 and recording inactive. Full source CI 37803704159 (`4aecd2e`) passes
 every job, including twelve SQL suites, Flutter/native checks and debug/release
 builds. The installed build is debuggable and the encrypted registration hash
-still matches after startup. No live diagnostic
-callback or further push has run; this is observability, not a confirmed notice fix.
+still matches after startup. The reviewed single live callback subsequently passed
+as recorded below; this is observability, not a confirmed fix for the prior absence.
 
-### Next diagnostic review boundary
+### Reviewed single-message diagnostic boundary — completed
 
-Before another duplicate pair, propose exactly one data-only message using fresh
+The approved boundary before another duplicate pair was one data-only message using fresh
 synthetic fixture 781–785. Its ignored stage/cleanup copies reverse-verify as
 UUID-only substitutions of the existing scripts. Stage only while both functions
 are false, recheck the inactive recorder / notification permission / retained
@@ -247,8 +248,47 @@ Compare stage codes with hosted receipt and scoped active-notice counts before
 app opening. A server receipt or post-attempt code alone is not display evidence.
 Record the stopping gate without claiming a measured timeout or changing safety /
 authorization / claim policy. No network toggle, recorder activation, scheduler,
-trip upload or real-contact alert. No fixture, credential or enable is staged yet.
+trip upload or real-contact alert. After closure, no fixture or temporary worker
+remains and both functions are false.
 The second phone is not needed.
+
+### Diagnostic execution checkpoint — 2026-10-08
+
+The maintainer approved the single-message 781–785 scope. Phone was awakened and
+unlocked using the authorized password-free swipe; signed-in unloaded Guardian
+was verified. Fresh permission/debuggable/network 1/0/0/no-recorder checks pass.
+Process absence and non-stopped package were established without force-stop.
+Hosted baseline 0/1/1/0/0 passed. Temporary worker installed at 16:08:31 UTC,
+digest/private ignored file/authenticated disabled probe verified. All three
+fixture staging guards and a fresh three-minute remaining lifetime check passed.
+Both flags were enabled at 16:11:35 UTC after action-time approval. An immediate
+process-absence/non-stopped check and fresh device timestamp preceded the sole
+dispatch. Its probe returned processed=1/provider_accepted=1, zero other counters.
+After that timestamp, the data-free trace contained exactly:
+`CALLBACK, RECEIPT_CONFIRMED, NOTICE_CLAIMED, NOTICE_POST_ATTEMPTED`.
+Android's scoped active section contained one notice for delivery 785; the
+encrypted vault hash changed, consistent with its new durable claim. Hosted
+attempts=1/device_received (not viewed) passed before app opening.
+
+Both flags returned false at 16:13:10 UTC, 56.07 seconds after the probe's confirmed
+provider-acceptance return. Disabled dispatch/capability probes pass. The actual
+generic notice title was tapped; an initial transient UI snapshot failure was
+resolved by a fresh observation confirming signed-in Guardian and zero notice
+records. No alert reload/view acknowledgement was performed. The temporary worker
+was retired to a fresh server-only value at 16:20:07, digest verified, old value
+rejected with 401, exact local file deleted and credential strings cleared.
+After action-time deletion approval, marker-checked cleanup returned all three
+fixture absence checks true and device_rows=1. Final readiness counts are
+0 sessions/1 device/1 unexpired device/0 events/0 deliveries. Fresh phone checks retain
+encrypted registration/provider consent marker, network 1/0/0 and inactive recorder.
+
+The earlier missing-notice symptom did not reproduce. These stages confirm a
+successful callback path and provide future stopping-gate evidence; they do not
+establish the prior failure's cause or prove a permanent notice fix. No retry,
+second message, network toggle, trip upload, schema or backend change occurred.
+Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
+remain pending. Ignored proof: `m6_8_diagnostic_positive.jpg`,
+`m6_8_diagnostic_cleanup_review.jpg` and `m6_8_diagnostic_closed.jpg`.
 
 The only app change is debug-only stage tracing; no backend runtime, schema,
 dependency, sampling, recorder lifecycle or permission contract change.
