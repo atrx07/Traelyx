@@ -284,9 +284,13 @@ The helper's notification parser rejected raw Windows CRLF; normalization and
 static failure codes pass twelve operator tests/syntax. The corrected parser
 reads the real notice; a later full helper attempt lacked trace observations and
 is not a live helper pass. Manual existing-notice tap after closure opens unloaded
-Guardian. Finish action-time-approved expired 801–805 cleanup first, then verify
-source CI for the operator repair. Actual helper live phases and duplicate
-suppression remain unverified; review fresh IDs before another push window.
+Guardian. Action-time-approved 801–805 cleanup passes; final hosted counts are
+0/1/1/0/0 and zero synthetic notices remain. Full repair source CI 37949413443
+(`77dd2c1`) passes every job; the separate local operator-tag timestamp check
+passes. Actual helper live phases and duplicate suppression remain unverified.
+Fresh 811–815 ignored copies reverse-verify as UUID-only substitutions; review
+the corrected at-most-two-send pair before staging or enabling it. Preserve the
+first-notice guard, native claims and all existing lifetime/security limits.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

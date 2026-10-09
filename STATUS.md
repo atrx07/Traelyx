@@ -20,9 +20,13 @@
   syntax. The corrected parser reads the actual notice; a later full helper
   attempt remained unverified because its trace observations were unavailable.
   Manual tap of the existing notice after closure opens unloaded Guardian.
-  Fixture expired; marker-checked cleanup is prepared, awaiting action-time
-  deletion approval. Real registration/trips remain intact. Source CI for the
-  operator repair is pending; no app/server runtime or security policy changed.
+  Approved marker-checked cleanup passes with final hosted counts 0/1/1/0/0;
+  the real registration remains unexpired and zero synthetic notices remain.
+  Real profile/trips remain intact. Full source CI 37949413443 (`77dd2c1`) passes
+  every job, including all app/native checks and both APK builds. A fresh separate
+  local operator-tag probe confirms Node/ADB timestamp observation. No app/server
+  runtime or security policy changed. Fresh 811–815 UUID-only copies are prepared
+  for review; no new fixture, worker or enable window has started.
 
 - The traced duplicate pair 791–795 sent only its first message on 2026-10-08.
   Callback/receipt/claim/post, one notice and actual tap to unloaded Guardian pass.

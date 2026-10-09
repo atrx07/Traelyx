@@ -372,7 +372,7 @@ For a fresh, separately reviewed pair (fresh IDs required):
    action-time fixture cleanup confirmation. Preserve real registration and all
    durable claims. Do not stage a new event or extend a lifetime inside the window.
 
-### Batched pair 801–805 — aborted, cleanup approval pending
+### Batched pair 801–805 — aborted and cleaned
 
 After fresh authorized phone/recorder/network/process and lifetime guards, the
 temporary worker was installed at 14:47:05 UTC on 2026-10-09, digest/private file/
@@ -392,18 +392,40 @@ operator defect. The corrected parser reads the existing notice. A later full
 helper attempt remained unverified; subsequent trace reads contained no stages.
 That does not establish another stopping cause or a live helper pass. Static
 operator failure codes now identify failed gates without raw output/exceptions.
-Twelve operator tests, syntax and physical parser checks pass; repair source CI
-is pending. No app/server receiver, authorization, timeout or claim policy changed.
+Twelve operator tests, syntax and physical parser checks pass. Full repair source
+CI 37949413443 (`77dd2c1`) passes every job, including app/native checks and both
+APK builds. A fresh local `TraelyxGuardianOperatorProbe` tag (separate from the app
+trace) confirms Node/ADB timestamp observation. This is tooling evidence, not an
+app callback or receipt. No app/server receiver, authorization, timeout or claim
+policy changed.
 
 Worker retirement at 14:55:42 has matching digest, old-value 401 and exact local
 deletion. Credential strings were cleared; the backend sender key is unchanged.
 The event expired at 14:56:29.950133 UTC. After shutdown, a manual tap of the sole
 existing generic notice opens Guardian with details unloaded; no reload/view
-acknowledgement was performed. Marker-checked expired-fixture cleanup is prepared
-and awaits its action-time confirmation. Real registration/profile/trips are
-retained. Actual duplicate suppression remains unverified. Ignored proof:
+acknowledgement was performed. After action-time confirmation, marker-checked
+cleanup returned all three fixture absence checks true and device_rows=1.
+Final hosted counts are 0 sessions/1 device/1 unexpired device/0 events/0 deliveries;
+the corrected physical parser confirms zero notices for 805 and no recorder.
+Real registration/profile/trips are retained. Actual duplicate suppression
+remains unverified. Ignored proof:
 `m6_8_batched_duplicate_{enable_review,enabled,disabled,cleanup_review}.jpg` and
 `m6_8_batched_duplicate_first_codes.json`. Do not reuse 805 or erase durable claims.
+Closure proof: `m6_8_batched_duplicate_cleanup_pass.jpg`,
+`m6_8_batched_duplicate_closed.jpg`.
+
+### Corrected pair review boundary
+
+Fresh ignored `m6_8_corrected_duplicate_{stage,control,cleanup}.sql` copies reserve
+811–815 and reverse-verify as UUID-only substitutions. The first-send sentinel
+and encrypted-vault hash baseline are absent; no new worker, production fixture
+or enable window exists. Review at most two sends / one guarded requeue under
+the unchanged six-minute enable cap, eight-minute event lifetime and two-minute
+requeue buffer. The corrected helper's first phase must pass before any requeue.
+Unexpected static failure code or uncertain send closes the window without retry.
+Keep claims and real registration intact; no network toggle, scheduler, recorder
+or personal trip upload. Fresh scope review plus action-time enable/cleanup
+confirmations remain required. Actual duplicate suppression is still unverified.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

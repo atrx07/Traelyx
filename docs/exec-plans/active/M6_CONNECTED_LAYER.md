@@ -763,7 +763,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   suites, app/native tests and debug/release builds. Fresh ignored 801–805 copies
   reverse-verify as UUID-only changes. This was the pre-window checkpoint;
   the subsequently approved pair's incomplete outcome is recorded below.
-- [ ] Finish the aborted batched duplicate pair 801–805 closure and operator repair gates.
+- [x] Finish the aborted batched duplicate pair 801–805 closure and operator repair gates.
   Sole provider acceptance/positive native stages/one notice/hosted one-attempt
   receipt pass on 2026-10-09. Both flags enabled 14:50:48 UTC and closed 14:52:35
   after the operator phase failed; no requeue or second send. Worker retired at
@@ -772,8 +772,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   and fixed failure codes pass twelve operator tests/syntax. Actual parser reads
   the phone notice; later full-helper trace observations unavailable, so no live
   helper pass claimed. Manual existing notice tap after closure opens unloaded
-  Guardian. Fixture expired; action-time cleanup approval and repair source CI
-  remain pending. App/server behavior and security/lifetime limits are unchanged.
+  Guardian. Action-time-approved marker cleanup passes, final hosted counts
+  0/1/1/0/0 and zero synthetic notices. Full repair source CI 37949413443
+  (`77dd2c1`) passes all jobs. A fresh separate local operator-tag probe verifies
+  Node/ADB timestamp observation. Fresh 811–815 copies reverse-verify as UUID-only
+  substitutions; review this corrected pair before staging or enabling it.
+  App/server behavior and security/lifetime limits are unchanged.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
