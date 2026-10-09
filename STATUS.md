@@ -10,6 +10,15 @@
 
 ## Working
 
+- The reviewed bridge pair 821–825 expired before enable approval was received
+  on 2026-10-09. Hosted checks confirm pending/attempts=0/unclaimed; no enable,
+  requeue, send or bridge Run occurred. Both flags remain false. Worker retired
+  at 16:37:37 UTC with matching digest/old-value 401/local deletion verified.
+  Approved marker cleanup passes; final hosted counts 0/1/1/0/0 retain the real
+  registration. USB wake setting remains 0. Actual duplicate suppression remains
+  unverified. Prepare the next review before starting its short-lived fixture;
+  stage only after approval, then validate lifetime and apply the approved enable.
+
 - The corrected pair 811–815 on 2026-10-09 passes the complete first operator
   phase: callback/receipt/claim/post, actual notice tap to unloaded Guardian,
   durable vault baseline and background process restart without force-stop.

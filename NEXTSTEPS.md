@@ -298,10 +298,15 @@ unverified. The bounded `tool/guardian_duplicate_pair.ps1` bridge waits at most
 duplicate phase immediately; 23 local gate checks and twelve existing operator
 tests pass. Full source CI 37956582373 (`223cc48`) passes every job. Obtain
 fresh-ID pair review and action-time enable confirmation before its live use.
-Fresh 821–825 ignored SQL copies reverse-verify as UUID-only substitutions.
-Preserve the first-notice
-guard, native claims and all existing lifetime/security limits. No new pair is
-staged or enabled; the second phone is still not needed.
+The approved 821–825 bridge pair expired while awaiting enable approval. Hosted
+attempts remain zero; no enable, requeue, send or bridge Run occurred. Worker
+retirement at 16:37:37 UTC passes digest/401/local deletion. Approved marker
+cleanup and final counts 0/1/1/0/0 pass, USB wake setting remains 0. No fixture,
+temporary local worker or enable window is active. Prepare a fresh pair review
+and the exact enable form before starting the short-lived fixture. After approval,
+stage under disabled flags, verify hosted lifetime and apply the approved enable
+immediately. Preserve the first-notice guard, native claims and all existing
+lifetime/security limits; second phone is still not needed.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

@@ -480,8 +480,24 @@ actual paired live run remains pending. No
 runtime, schema, dependency, receiver authorization or claim-policy change.
 Fresh pair scope and action-time enable/cleanup confirmations remain required.
 Actual duplicate suppression is still unverified; no fresh fixture is staged.
-Ignored 821–825 stage/control/cleanup copies reverse-verify as UUID-only
-substitutions, ready for fresh scope review. No worker or enable window is active.
+The UUID-only 821–825 pair was reviewed and staged, but expired at
+16:30:36.990944 UTC while awaiting action-time enable approval. At resume,
+hosted pending/attempts=0/unclaimed/expired checks pass. No enable, requeue,
+send or bridge Run occurred. Both flags remain false. Worker retirement at
+16:37:37 UTC passes digest/old-value 401/exact local deletion; credential strings
+were cleared. Approved marker cleanup returns three absence checks true and
+device_rows=1; final counts 0/1/1/0/0 and USB wake setting 0 pass. Real registration,
+profile/trips and Google key remain intact. Ignored proof:
+`m6_8_bridge_duplicate_{expired_unsent,disabled,cleanup_review,cleanup_pass,closed}.jpg`.
+No fixture, temporary local worker or enable window is active.
+
+For the next fresh reviewed pair, prepare the exact enable form, local SQL and
+launch/browser handoff before requesting approval. Start the eight-minute fixture
+only after approval arrives, with both functions still disabled. Observe staging
+guards and fresh hosted lifetime, then immediately apply the exact approved enable
+change. This avoids consuming fixture lifetime while awaiting user response; it
+does not extend lifetime or waive action-time confirmation. A changed action or
+approval rejection still requires renewed review. Never use an expired fixture.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

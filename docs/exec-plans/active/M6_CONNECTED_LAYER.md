@@ -799,6 +799,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Keep actual duplicate suppression pending until the second callback, refused claim, unchanged vault
   and zero recreated notices pass together. Fresh scope and action-time browser
   confirmations remain required.
+- [x] Close unused bridge fixture 821–825 after approval-time expiry on 2026-10-09.
+  Hosted pending/attempts=0/unclaimed/expired checks pass; no enable, requeue,
+  send or bridge Run occurred. Worker retired 16:37:37 UTC, digest/401/local
+  deletion verified. Approved marker cleanup returns three absence checks true
+  and device_rows=1; final hosted counts 0/1/1/0/0. USB wake setting remains 0.
+  Actual duplicate suppression remains pending. Prepare fresh scope/exact-enable
+  review before starting the timed fixture; after approval, stage with both flags
+  false, check hosted lifetime and apply the approved enable without another
+  preparation gap. All existing lifetime and action-time approval gates remain.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
