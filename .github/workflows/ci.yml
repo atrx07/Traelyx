@@ -77,6 +77,10 @@ jobs:
           node --test tests/tool/test_guardian_push_probe.mjs
           node --test tests/tool/test_guardian_duplicate_phone.mjs
 
+      - name: Test bounded Guardian pair operator gates
+        shell: pwsh
+        run: ./tests/tool/test_guardian_duplicate_pair.ps1
+
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 30

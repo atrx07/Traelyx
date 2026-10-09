@@ -414,18 +414,70 @@ remains unverified. Ignored proof:
 Closure proof: `m6_8_batched_duplicate_cleanup_pass.jpg`,
 `m6_8_batched_duplicate_closed.jpg`.
 
-### Corrected pair review boundary
+### Corrected pair 811–815 closed (2026-10-09)
 
-Fresh ignored `m6_8_corrected_duplicate_{stage,control,cleanup}.sql` copies reserve
-811–815 and reverse-verify as UUID-only substitutions. The first-send sentinel
-and encrypted-vault hash baseline are absent; no new worker, production fixture
-or enable window exists. Review at most two sends / one guarded requeue under
-the unchanged six-minute enable cap, eight-minute event lifetime and two-minute
-requeue buffer. The corrected helper's first phase must pass before any requeue.
-Unexpected static failure code or uncertain send closes the window without retry.
-Keep claims and real registration intact; no network toggle, scheduler, recorder
-or personal trip upload. Fresh scope review plus action-time enable/cleanup
-confirmations remain required. Actual duplicate suppression is still unverified.
+The reviewed UUID-only fixture passed staging/lifetime guards and the first full
+operator phase. Enable at 15:33:25 UTC; sole acceptance at 15:34:35.3880541 UTC.
+The helper confirms callback/receipt/claim/post, taps the actual notice to
+unloaded Guardian, preserves the encrypted-vault hash and restarts the background
+process without force-stop. The temporary USB awake setting was restored to 0.
+The guarded requeue returned true, but the next preflight refused before dispatch
+because operator latency exhausted the existing event/window buffers. Hosted
+attempts remained one with no claimed worker; the second sentinel is absent.
+No duplicate send or lifetime extension occurred. This proves the first helper
+phase live, not the duplicate phase.
+
+Both flags closed at 15:38:30 UTC (5m05s active). Worker retired at 15:46:58 with
+matching digest, old-value 401 and exact local deletion. After action-time
+approval, marker-checked cleanup returned three absence checks true/device_rows=1.
+Final hosted counts are 0 sessions/1 device/1 unexpired device/0 events/0 deliveries.
+Physical read-only preflight passes and recorder is inactive. Real registration,
+profile/trips and backend Google key remain intact. Preserve the local claim/hash;
+do not reuse 815. Ignored proof: `m6_8_corrected_duplicate_first_codes.json`,
+`m6_8_corrected_duplicate_{enabled,disabled,requeued_unsent,cleanup_pass,closed}.jpg`.
+
+### Bounded pair operator bridge (live validation pending)
+
+`tool/guardian_duplicate_pair.ps1` defaults to Plan mode: no ADB, cloud requests
+or sends. Run mode requires explicit reviewed scope, fresh fixture/worker/lifetime
+checks and action-time enable approval. Prepare the command and requeue SQL
+before enabling; launch the prewritten command immediately afterward. Pass the
+fresh synthetic delivery UUID, hosted event expiry and six-minute window deadline
+as UTC `DateTimeOffset` values. No function/SQL mutation is performed by the script.
+
+The bridge allows at most two one-shot dispatch invocations. It rechecks lifetime,
+default network, absent/non-stopped app process and recipient preflight; captures
+a fresh device timestamp; writes a create-only sentinel before each invocation;
+then runs the existing first/duplicate helper. Any uncertain acceptance fails
+without retry. A second immediate budget check accounts for preflight latency.
+It requires first-event lifetime >180 seconds, duplicate lifetime >120 seconds
+and remaining enable time >165 seconds (45s dispatch +75s phone observation
++45s browser shutdown margin). Existing SQL guards remain unchanged.
+ADB subprocesses are limited to 15 seconds and emit no raw errors. The adapter
+passes physical read-only network/USB-wake checks; the new bridge Run mode has
+not yet been exercised live.
+
+After first-phase success, it restores the USB awake setting and writes a local
+`.dart_tool/guardian-pair-<suffix>/waiting.json` with delivery, fresh correlation
+nonce and `phase=waiting_for_guarded_requeue`. The browser operator must check
+that file and `first-passed.json`, execute the already prepared guarded requeue
+through the visible SQL Editor, and observe the new successful result. Only then
+write a create-only `requeue-confirmed.json` in the same ignored directory with
+exactly `delivery`, `nonce` and boolean `guarded_requeue_confirmed=true`, matching
+the waiting file. Never signal a stale, failed or unobserved SQL result. The nonce
+is a local correlation value, not an access credential. The bridge waits at most
+45 seconds and refuses missing/extra fields, wrong delivery/nonce or non-boolean
+confirmation; after a valid gate it starts the duplicate phase immediately.
+
+The operator must disable both functions immediately on success/failure/timeout
+and always within six minutes, then retire the worker and obtain action-time
+cleanup confirmation. Keep the shutdown UI ready while the job runs. Script
+output explicitly requests closure but does not close cloud flags itself. Source
+syntax, twenty-three local budget/correlation/quoting/Plan checks and twelve existing operator
+tests pass. Full source CI and an actual paired live run remain pending. No
+runtime, schema, dependency, receiver authorization or claim-policy change.
+Fresh pair scope and action-time enable/cleanup confirmations remain required.
+Actual duplicate suppression is still unverified; no fresh fixture is staged.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

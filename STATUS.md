@@ -10,6 +10,20 @@
 
 ## Working
 
+- The corrected pair 811–815 on 2026-10-09 passes the complete first operator
+  phase: callback/receipt/claim/post, actual notice tap to unloaded Guardian,
+  durable vault baseline and background process restart without force-stop.
+  One guarded requeue passed, but the second send was refused before invocation
+  because operator latency exhausted the existing buffers. Hosted attempts=1;
+  no second send occurred. Both flags closed at 15:38:30 UTC after enabling at
+  15:33:25. Worker retirement at 15:46:58 passes digest/old-value 401/local deletion.
+  Approved marker cleanup passes; final counts 0/1/1/0/0 retain the real device.
+  Physical read-only preflight passes, recorder is inactive and USB wake setting
+  is restored to 0. A bounded PowerShell pair operator now waits for a verified
+  browser requeue signal and immediately runs the second phase; 23 local gate
+  checks and all twelve existing operator tests pass. Its live pair and source
+  CI remain pending. App/server behavior and security/lifetime limits are unchanged.
+
 - The approved batched pair 801–805 sent only its first message on 2026-10-09.
   Provider acceptance, fixed positive receiver stages, one Android notice and
   hosted attempts=1/device_received pass. The operator phase aborted; both flags
@@ -25,8 +39,8 @@
   Real profile/trips remain intact. Full source CI 37949413443 (`77dd2c1`) passes
   every job, including all app/native checks and both APK builds. A fresh separate
   local operator-tag probe confirms Node/ADB timestamp observation. No app/server
-  runtime or security policy changed. Fresh 811–815 UUID-only copies are prepared
-  for review; no new fixture, worker or enable window has started.
+  runtime or security policy changed. The subsequently approved 811–815 pair is
+  closed as recorded above.
 
 - The traced duplicate pair 791–795 sent only its first message on 2026-10-08.
   Callback/receipt/claim/post, one notice and actual tap to unloaded Guardian pass.

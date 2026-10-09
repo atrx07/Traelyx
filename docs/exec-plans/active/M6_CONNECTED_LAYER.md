@@ -775,9 +775,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Guardian. Action-time-approved marker cleanup passes, final hosted counts
   0/1/1/0/0 and zero synthetic notices. Full repair source CI 37949413443
   (`77dd2c1`) passes all jobs. A fresh separate local operator-tag probe verifies
-  Node/ADB timestamp observation. Fresh 811–815 copies reverse-verify as UUID-only
-  substitutions; review this corrected pair before staging or enabling it.
+  Node/ADB timestamp observation. The subsequently approved 811–815 closure is
+  recorded below.
   App/server behavior and security/lifetime limits are unchanged.
+- [x] Close the corrected 811–815 pair and preserve its first live helper proof.
+  On 2026-10-09, first callback/receipt/claim/post, actual tap to unloaded Guardian,
+  durable vault baseline and non-force-stop background restart pass. Guarded
+  requeue passes; second invocation refused because operator latency exhausted
+  existing buffers. Hosted attempts remain one. Both flags closed at 15:38:30 UTC
+  after enabling at 15:33:25. Worker retired at 15:46:58, digest/401/local deletion
+  verified. Approved marker cleanup passes, final hosted counts 0/1/1/0/0.
+  USB wake setting restored to 0 and physical read-only preflight passes.
+- [x] Add a bounded operator-only pair bridge to remove model turnaround between
+  requeue confirmation and second dispatch. Default Plan mode sends nothing;
+  Run allows at most two non-retried invocations, a 45-second exact job gate and
+  unchanged event/requeue/enable guards with a 45-second browser shutdown margin.
+  Twenty-three local gate/quoting/Plan checks and twelve existing operator tests pass.
+  No app/server/schema/dependency changes; live bridge remains unverified.
+- [ ] Verify bridge source CI before a fresh reviewed pair; keep actual duplicate
+  suppression pending until the second callback, refused claim, unchanged vault
+  and zero recreated notices pass together. Fresh scope and action-time browser
+  confirmations remain required.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

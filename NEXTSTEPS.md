@@ -270,7 +270,7 @@ on 2026-10-09; final hosted counts 0/1/1/0/0. Actual duplicate suppression is pe
 Use the bounded `tool/guardian_duplicate_phone.mjs` operator helper to batch the
 first phone transition immediately after the confirmed send, then perform the
 unchanged guarded requeue and one duplicate send. Twelve operator tests and
-physical read-only preflight pass; live helper phases are still unverified.
+physical read-only preflight pass; its first live phase passes with 811–815 below.
 Require source CI, a fresh-ID pair review and action-time enable confirmation
 before running those live phases. Preserve durable claims and the existing event,
 requeue and enable limits. Expiry/disconnect, recorder and two-phone gates follow;
@@ -287,10 +287,19 @@ is not a live helper pass. Manual existing-notice tap after closure opens unload
 Guardian. Action-time-approved 801–805 cleanup passes; final hosted counts are
 0/1/1/0/0 and zero synthetic notices remain. Full repair source CI 37949413443
 (`77dd2c1`) passes every job; the separate local operator-tag timestamp check
-passes. Actual helper live phases and duplicate suppression remain unverified.
-Fresh 811–815 ignored copies reverse-verify as UUID-only substitutions; review
-the corrected at-most-two-send pair before staging or enabling it. Preserve the
-first-notice guard, native claims and all existing lifetime/security limits.
+passes. The corrected 811–815 pair subsequently passes the full first helper
+phase and one guarded requeue. Operator latency exhausted the buffers before
+the second invocation; hosted attempts remain one. Both flags closed at
+15:38:30 UTC; worker retirement at 15:46:58 passes digest/401/local deletion.
+Approved marker cleanup and final counts 0/1/1/0/0 pass. USB wake setting is
+restored and physical read-only readiness passes. Duplicate suppression remains
+unverified. The bounded `tool/guardian_duplicate_pair.ps1` bridge waits at most
+45 seconds for the browser's exact verified-requeue signal, then starts the
+duplicate phase immediately; 23 local gate checks and twelve existing operator
+tests pass. Verify full source CI, then obtain fresh-ID pair review and
+action-time enable confirmation before its live use. Preserve the first-notice
+guard, native claims and all existing lifetime/security limits. No new pair is
+staged or enabled; the second phone is still not needed.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 
