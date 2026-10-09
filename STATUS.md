@@ -10,6 +10,20 @@
 
 ## Working
 
+- The approved batched pair 801–805 sent only its first message on 2026-10-09.
+  Provider acceptance, fixed positive receiver stages, one Android notice and
+  hosted attempts=1/device_received pass. The operator phase aborted; both flags
+  closed at 14:52:35 UTC after enabling at 14:50:48. No requeue/second send occurred.
+  Worker retired at 14:55:42 with digest/401/local deletion verified. A confirmed
+  operator parser defect rejected Windows CRLF notification output; normalization
+  plus CRLF regressions and fixed failure codes pass twelve operator tests and
+  syntax. The corrected parser reads the actual notice; a later full helper
+  attempt remained unverified because its trace observations were unavailable.
+  Manual tap of the existing notice after closure opens unloaded Guardian.
+  Fixture expired; marker-checked cleanup is prepared, awaiting action-time
+  deletion approval. Real registration/trips remain intact. Source CI for the
+  operator repair is pending; no app/server runtime or security policy changed.
+
 - The traced duplicate pair 791–795 sent only its first message on 2026-10-08.
   Callback/receipt/claim/post, one notice and actual tap to unloaded Guardian pass.
   The guarded requeue refused with insufficient remaining event lifetime; no
@@ -22,8 +36,8 @@
   twelve operator tests, syntax and physical read-only preflight pass. Live helper
   phases require a fresh reviewed pair. It changes no app/server behavior.
   Full source CI 37944918981 (`16cf9a5`) passes all jobs, including twelve SQL
-  suites, app/native checks and debug/release builds. Fresh 801–805 SQL copies
-  reverse-verify as UUID-only substitutions; no new worker/fixture/window started.
+  suites, app/native checks and debug/release builds before the Windows parser
+  repair. Fresh 801–805 copies reverse-verify as UUID-only substitutions.
   See `docs/reference/GUARDIAN_REJECTION_CHECK.md` for the sequence and limits.
 
 - The reviewed single diagnostic message 781–785 passes on 2026-10-08: fixed debug

@@ -276,10 +276,17 @@ before running those live phases. Preserve durable claims and the existing event
 requeue and enable limits. Expiry/disconnect, recorder and two-phone gates follow;
 the second phone is not needed yet.
 Full source CI 37944918981 (`16cf9a5`) now passes all jobs. Fresh 801–805 ignored
-stage/control/cleanup copies reverse-verify as UUID-only substitutions. Review
-that at-most-two-send pair using the batched phone phases; nothing new is staged
-in production and no temporary worker is active. Actual helper live phases and
-duplicate suppression remain unverified.
+stage/control/cleanup copies reverse-verify as UUID-only substitutions. That
+approved pair sent its first message, with positive receiver/notice/hosted receipt
+checks. The operator phase aborted; both flags closed 14:52:35 UTC, worker retired
+14:55:42 with digest/401/local deletion verified. No requeue or second send.
+The helper's notification parser rejected raw Windows CRLF; normalization and
+static failure codes pass twelve operator tests/syntax. The corrected parser
+reads the real notice; a later full helper attempt lacked trace observations and
+is not a live helper pass. Manual existing-notice tap after closure opens unloaded
+Guardian. Finish action-time-approved expired 801–805 cleanup first, then verify
+source CI for the operator repair. Actual helper live phases and duplicate
+suppression remain unverified; review fresh IDs before another push window.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

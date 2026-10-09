@@ -345,8 +345,8 @@ withdrawal or alert reload was performed during the resumed check.
 Full source CI 37944918981 (`16cf9a5`) passes every job: Guardian functions,
 twelve SQL suites, operator/app/native tests, analysis and debug/release builds.
 Fresh ignored `m6_8_batched_duplicate_{stage,control,cleanup}.sql` copies reserve
-801–805 and reverse-verify as UUID-only substitutions. No new production fixture,
-temporary worker, enable window or send has begun.
+801–805 and reverse-verify as UUID-only substitutions. This was the pre-window
+checkpoint; the subsequent approved attempt is recorded below.
 
 For a fresh, separately reviewed pair (fresh IDs required):
 
@@ -371,6 +371,39 @@ For a fresh, separately reviewed pair (fresh IDs required):
 5. Verify closure, retire worker with digest/401/local deletion, and obtain the
    action-time fixture cleanup confirmation. Preserve real registration and all
    durable claims. Do not stage a new event or extend a lifetime inside the window.
+
+### Batched pair 801–805 — aborted, cleanup approval pending
+
+After fresh authorized phone/recorder/network/process and lifetime guards, the
+temporary worker was installed at 14:47:05 UTC on 2026-10-09, digest/private file/
+authenticated disabled probe verified. All staging guards passed. Both flags
+enabled at 14:50:48 after action-time approval. The sole dispatch acceptance
+returned at 14:51:59.1884188 UTC (processed=1/provider_accepted=1, zero others).
+The phone helper aborted before its UI snapshot/tap/hash baseline. Immediate
+closure returned both flags false at 14:52:35 (1m47s active); no guarded requeue,
+second send, network change or lifetime extension occurred.
+
+Scoped PowerShell observations confirmed CALLBACK/RECEIPT_CONFIRMED/NOTICE_CLAIMED/
+NOTICE_POST_ATTEMPTED, one active Android record and hosted attempts=1/
+device_received (not viewed). A direct Node parser check rejected the raw header;
+the actual header is CRLF, whereas its LF-only expression required LF immediately
+after the colon. Normalization and CRLF positive/empty fixtures fix this confirmed
+operator defect. The corrected parser reads the existing notice. A later full
+helper attempt remained unverified; subsequent trace reads contained no stages.
+That does not establish another stopping cause or a live helper pass. Static
+operator failure codes now identify failed gates without raw output/exceptions.
+Twelve operator tests, syntax and physical parser checks pass; repair source CI
+is pending. No app/server receiver, authorization, timeout or claim policy changed.
+
+Worker retirement at 14:55:42 has matching digest, old-value 401 and exact local
+deletion. Credential strings were cleared; the backend sender key is unchanged.
+The event expired at 14:56:29.950133 UTC. After shutdown, a manual tap of the sole
+existing generic notice opens Guardian with details unloaded; no reload/view
+acknowledgement was performed. Marker-checked expired-fixture cleanup is prepared
+and awaits its action-time confirmation. Real registration/profile/trips are
+retained. Actual duplicate suppression remains unverified. Ignored proof:
+`m6_8_batched_duplicate_{enable_review,enabled,disabled,cleanup_review}.jpg` and
+`m6_8_batched_duplicate_first_codes.json`. Do not reuse 805 or erase durable claims.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

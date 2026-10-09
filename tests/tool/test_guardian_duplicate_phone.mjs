@@ -13,16 +13,18 @@ const shade = '<node text="Traelyx Guardian notice" bounds="[100,200][500,300]"/
 const trace = (codes) => codes.map((code) => `I/TraelyxGuardianReceive(123): ${code}`).join("\n");
 
 test("missing notification section cannot be treated as zero; historical and unrelated records do not count", () => {
-  assert.throws(() => noticeCount("truncated output", id));
+  assert.throws(() => noticeCount("truncated output", id), { operatorStage: "notification_section_missing" });
   assert.equal(noticeCount(`${emptyNotice}    NotificationRecord pkg=${packageName} tag=${id}`, id), 0);
   assert.equal(noticeCount(notice.replace(packageName, "unrelated.app"), id), 0);
   assert.equal(noticeCount(notice, id), 1);
+  assert.equal(noticeCount(notice.replaceAll("\n", "\r\n"), id), 1);
+  assert.equal(noticeCount(emptyNotice.replaceAll("\n", "\r\n"), id), 0);
   assert.equal(noticeCount(notice.replace("  Other section:", `    NotificationRecord pkg=${packageName} tag=${id}\n  Other section:`), id), 2);
 });
 
 test("ambiguous or malformed notice title prevents tapping", () => {
   assert.deepEqual(noticePoint(shade), [300, 250]);
-  assert.throws(() => noticePoint(shade + shade));
+  assert.throws(() => noticePoint(shade + shade), { operatorStage: "generic_notice_not_unique" });
   assert.throws(() => noticePoint(shade.replace("[500,300]", "[50,100]")));
 });
 
@@ -102,10 +104,12 @@ test("asynchronous receipt is observed without resending; denial aborts and abse
     { read: async () => hash }, async () => {})).verified, true);
   assert.equal(reads, 3);
   const denied = async (...args) => args[0] === "logcat" ? trace(["CALLBACK", "RECEIPT_RESPONSE_REJECTED"]) : adb(...args);
-  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", denied, {}, async () => {}));
+  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", denied, {}, async () => {}),
+    { operatorStage: "receiver_stage_rejected" });
   let missingReads = 0;
   const missing = async (...args) => { if (args[0] === "logcat") { missingReads++; return ""; } return adb(...args); };
-  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", missing, {}, async () => {}));
+  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", missing, {}, async () => {}),
+    { operatorStage: "receiver_observation_unconfirmed" });
   assert.equal(missingReads, 40);
   assert.ok(!calls.some((command) => /input |am kill|statusbar/.test(command)));
 });

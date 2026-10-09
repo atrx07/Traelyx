@@ -761,8 +761,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   acceptance unchecked and preserve all lifetime/claim/security limits.
   Full source CI 37944918981 (`16cf9a5`) passes every job, including twelve SQL
   suites, app/native tests and debug/release builds. Fresh ignored 801–805 copies
-  reverse-verify as UUID-only changes; production staging/worker/enable/send have
-  not begun. Review that fresh pair before exercising the helper's live phases.
+  reverse-verify as UUID-only changes. This was the pre-window checkpoint;
+  the subsequently approved pair's incomplete outcome is recorded below.
+- [ ] Finish the aborted batched duplicate pair 801–805 closure and operator repair gates.
+  Sole provider acceptance/positive native stages/one notice/hosted one-attempt
+  receipt pass on 2026-10-09. Both flags enabled 14:50:48 UTC and closed 14:52:35
+  after the operator phase failed; no requeue or second send. Worker retired at
+  14:55:42, digest/401/local deletion verified. Windows CRLF output breaks the
+  helper's LF-only notification header parser; normalization, CRLF regressions
+  and fixed failure codes pass twelve operator tests/syntax. Actual parser reads
+  the phone notice; later full-helper trace observations unavailable, so no live
+  helper pass claimed. Manual existing notice tap after closure opens unloaded
+  Guardian. Fixture expired; action-time cleanup approval and repair source CI
+  remain pending. App/server behavior and security/lifetime limits are unchanged.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

@@ -10,13 +10,17 @@ const PACKAGE = "io.github.atrx07.traelyx";
 const ID = /^00000000-0000-4000-9000-000000000[0-9]{3}$/;
 const TIMESTAMP = /^\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.000$/;
 const HASH = /^[a-f0-9]{64}$/;
-const fail = () => new Error("Phone phase failed; close the reviewed window; never automatically resend");
+const FAILURE_CODES = new Set(["invalid_input", "notification_section_missing", "generic_notice_not_unique",
+  "notice_bounds_invalid", "guardian_ui_unconfirmed", "receiver_stage_rejected",
+  "receiver_observation_unconfirmed", "unexpected_notice_count", "phone_locked", "adb_call_failed", "operator_io_failed"]);
+const fail = (operatorStage = "invalid_input") => Object.assign(
+  new Error("Phone phase failed; close the reviewed window; never automatically resend"), { operatorStage });
 const runFile = promisify(execFile);
 
 export function noticeCount(dump, delivery) {
   if (!ID.test(delivery)) throw fail();
-  const section = dump.match(/(?:^|\n)  Notification List:[ \t]*\n([\s\S]*?)(?=\n  \S|$)/);
-  if (!section) throw fail(); // Missing section is not evidence of zero notices.
+  const section = dump.replaceAll("\r", "").match(/(?:^|\n)  Notification List:[ \t]*\n([\s\S]*?)(?=\n  \S|$)/);
+  if (!section) throw fail("notification_section_missing"); // Missing section is not evidence of zero notices.
   return (section[1].match(/^\s*NotificationRecord[^\r\n]*/gm) ?? [])
     .filter((line) => line.includes(`pkg=${PACKAGE}`) && line.includes(delivery)).length;
 }
@@ -24,11 +28,11 @@ export function noticeCount(dump, delivery) {
 export function noticePoint(xml) {
   const nodes = (xml.match(/<node\b[^>]*>/g) ?? [])
     .filter((node) => /\btext="Traelyx Guardian notice"/.test(node));
-  if (nodes.length !== 1) throw fail();
+  if (nodes.length !== 1) throw fail("generic_notice_not_unique");
   const bounds = nodes[0].match(/\bbounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"/);
-  if (!bounds) throw fail();
+  if (!bounds) throw fail("notice_bounds_invalid");
   const [x, y, right, bottom] = bounds.slice(1).map(Number);
-  if (right <= x || bottom <= y || right > 4000 || bottom > 6000) throw fail();
+  if (right <= x || bottom <= y || right > 4000 || bottom > 6000) throw fail("notice_bounds_invalid");
   return [Math.floor((x + right) / 2), Math.floor((y + bottom) / 2)];
 }
 
@@ -56,7 +60,7 @@ export async function settleGuardian(readUi) {
   for (let attempt = 0; attempt < 3; attempt++) {
     if (guardianUnloaded(await readUi())) return true;
   }
-  throw fail();
+  throw fail("guardian_ui_unconfirmed");
 }
 
 export function currentPackageState(dump, user) {
@@ -100,21 +104,21 @@ export async function runPhonePhase(mode, delivery, timestamp, adb, baseline,
   for (let attempt = 0; attempt < 40; attempt++) {
     const state = traceState(await adb("logcat", "-d", "-v", "brief", "-T", timestamp,
       "-s", "TraelyxGuardianReceive:I", "*:S"), mode === "duplicate");
-    if (state === "rejected") throw fail();
+    if (state === "rejected") throw fail("receiver_stage_rejected");
     if (state === "complete") {
       const records = await count();
-      if (records > (mode === "first" ? 1 : 0)) throw fail();
+      if (records > (mode === "first" ? 1 : 0)) throw fail("unexpected_notice_count");
       if (records === (mode === "first" ? 1 : 0)) { received = true; break; }
     }
     if (attempt < 39) await pause();
   }
-  if (!received) throw fail();
+  if (!received) throw fail("receiver_observation_unconfirmed");
   if (mode === "duplicate") {
     if (await vaultHash() !== await baseline.read()) throw fail();
     return { mode, verified: true, claim_refused: true, notice_count: 0, vault_unchanged: true };
   }
   const policy = await shell("dumpsys", "window", "policy");
-  if (/^\s*showing=true\s*$/m.test(policy)) throw fail(); // Unlock before starting the live window.
+  if (/^\s*showing=true\s*$/m.test(policy)) throw fail("phone_locked"); // Unlock before starting the live window.
   const ui = async () => {
     await shell("uiautomator", "dump", "/data/local/tmp/traelyx-guardian-operator.xml");
     return shell("cat", "/data/local/tmp/traelyx-guardian-operator.xml");
@@ -151,7 +155,7 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
       } catch (error) {
         if (args.join(" ") === `shell pidof ${PACKAGE}` && error.code === 1 &&
             typeof error.stdout === "string" && !error.stdout.trim()) return "";
-        throw fail(); // Do not expose raw device output or subprocess exceptions.
+        throw fail("adb_call_failed"); // Do not expose raw device output or subprocess exceptions.
       }
     };
     const hashPath = resolve(".dart_tool", `guardian-duplicate-${delivery ?? "preflight"}.sha256`);
@@ -160,8 +164,9 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
       write: async (hash) => writeFile(hashPath, hash, { flag: "wx" }),
     };
     console.log(JSON.stringify(await runPhonePhase(mode, delivery, timestamp, adb, baseline)));
-  } catch {
-    console.error(fail().message);
+  } catch (error) {
+    console.error(JSON.stringify({ verified: false,
+      failure: FAILURE_CODES.has(error?.operatorStage) ? error.operatorStage : "operator_io_failed" }));
     process.exitCode = 1;
   }
 }
