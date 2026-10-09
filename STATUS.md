@@ -19,7 +19,7 @@
   are 0 sessions/1 device/1 unexpired device/0 events/0 deliveries. Actual duplicate
   suppression remains unverified. A bounded operator-only phone helper batches
   first-notice observation/tap/background restart and duplicate observation;
-  eleven operator tests, syntax and physical read-only preflight pass. Live helper
+  twelve operator tests, syntax and physical read-only preflight pass. Live helper
   phases require a fresh reviewed pair. It changes no app/server behavior.
   See `docs/reference/GUARDIAN_REJECTION_CHECK.md` for the sequence and limits.
 

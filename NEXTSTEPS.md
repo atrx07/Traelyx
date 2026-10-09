@@ -269,7 +269,7 @@ Both flags are false, the worker retirement and approved cleanup are verified
 on 2026-10-09; final hosted counts 0/1/1/0/0. Actual duplicate suppression is pending.
 Use the bounded `tool/guardian_duplicate_phone.mjs` operator helper to batch the
 first phone transition immediately after the confirmed send, then perform the
-unchanged guarded requeue and one duplicate send. Eleven operator tests and
+unchanged guarded requeue and one duplicate send. Twelve operator tests and
 physical read-only preflight pass; live helper phases are still unverified.
 Require source CI, a fresh-ID pair review and action-time enable confirmation
 before running those live phases. Preserve durable claims and the existing event,

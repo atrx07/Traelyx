@@ -93,3 +93,19 @@ test("recorder active or stopped package aborts before any UI action", async () 
     assert.ok(!calls.some((command) => /input |statusbar/.test(command)));
   }
 });
+
+test("asynchronous receipt is observed without resending; denial aborts and absent callback is bounded", async () => {
+  const { adb, calls } = phone(true);
+  let reads = 0;
+  const delayed = async (...args) => args[0] === "logcat" && ++reads < 3 ? "" : adb(...args);
+  assert.equal((await runPhonePhase("duplicate", id, "10-09 12:00:00.000", delayed,
+    { read: async () => hash }, async () => {})).verified, true);
+  assert.equal(reads, 3);
+  const denied = async (...args) => args[0] === "logcat" ? trace(["CALLBACK", "RECEIPT_RESPONSE_REJECTED"]) : adb(...args);
+  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", denied, {}, async () => {}));
+  let missingReads = 0;
+  const missing = async (...args) => { if (args[0] === "logcat") { missingReads++; return ""; } return adb(...args); };
+  await assert.rejects(runPhonePhase("duplicate", id, "10-09 12:00:00.000", missing, {}, async () => {}));
+  assert.equal(missingReads, 40);
+  assert.ok(!calls.some((command) => /input |am kill|statusbar/.test(command)));
+});

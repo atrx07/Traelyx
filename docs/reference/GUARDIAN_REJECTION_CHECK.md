@@ -331,11 +331,17 @@ reviewed pair. It never sends, requeues, changes flags/network, force-stops, cle
 logs or deletes claims. Outputs are fixed booleans; subprocess failures are
 redacted. Only a hash of the encrypted vault is stored in ignored `.dart_tool`.
 The CLI phase deadline is 75 seconds, individual ADB calls at most 15 seconds.
+After provider acceptance, fixed trace/notice observations wait at most forty
+reads spaced 500 ms apart for asynchronous receipt (also inside that deadline).
+Denial/unexpected stages abort immediately; no request or tap is repeated.
 Missing notification sections, ambiguous titles, active recorder, wrong current
 Android user state and unexpected trace sequences fail closed. A transient UI
 root is observed at most three times without repeating a tap. The physical
-read-only `preflight` passes; eleven operator tests and syntax pass. First and
+read-only `preflight` passes; twelve operator tests and syntax pass. First and
 duplicate live phases have not yet been exercised through this helper.
+The app also opens Guardian with details unloaded; its explicit read-only phone
+check shows the retained registration and the Stop notices control. No registration,
+withdrawal or alert reload was performed during the resumed check.
 
 For a fresh, separately reviewed pair (fresh IDs required):
 

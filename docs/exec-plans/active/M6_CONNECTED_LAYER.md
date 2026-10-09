@@ -754,7 +754,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   digest/old-value 401/local deletion. Action-time-approved marker cleanup passes
   and hosted counts are 0/1/1/0/0. `tool/guardian_duplicate_phone.mjs` batches the
   first transition, retries only transient UI observation (three reads maximum),
-  and separately checks duplicate refusal/no notice/unchanged vault. Eleven
+  and separately checks duplicate refusal/no notice/unchanged vault. Twelve
   operator tests, syntax and physical read-only preflight pass. It performs no
   send or cloud mutation and changes no app contract. Live helper phases remain
   unverified; require source CI and a fresh reviewed pair. Keep actual duplicate

@@ -39,13 +39,15 @@ export function guardianUnloaded(xml) {
     !/Open alert|Synthetic push test driver|No currently accessible alerts/.test(ownNodes);
 }
 
-export function tracePassed(log, duplicate) {
+export function traceState(log, duplicate) {
   const codes = [...log.matchAll(/^I\/TraelyxGuardianReceive\s*\([0-9 ]+\):\s*([A-Z_]+)\s*$/gm)]
     .map((match) => match[1]);
   const expected = duplicate
     ? ["CALLBACK", "RECEIPT_CONFIRMED", "CLAIM_UNAVAILABLE"]
     : ["CALLBACK", "RECEIPT_CONFIRMED", "NOTICE_CLAIMED", "NOTICE_POST_ATTEMPTED"];
-  return codes.join(",") === expected.join(",");
+  if (codes.join(",") === expected.join(",")) return "complete";
+  if (codes.length < expected.length && codes.every((code, index) => code === expected[index])) return "pending";
+  return "rejected";
 }
 
 // Android sometimes returns a null root while the tap launches MainActivity.
@@ -71,7 +73,8 @@ export function currentPackageState(dump, user) {
   return state;
 }
 
-export async function runPhonePhase(mode, delivery, timestamp, adb, baseline) {
+export async function runPhonePhase(mode, delivery, timestamp, adb, baseline,
+  pause = () => new Promise((done) => setTimeout(done, 500))) {
   if (!["preflight", "first", "duplicate"].includes(mode) ||
       (mode !== "preflight" && (!ID.test(delivery) || !TIMESTAMP.test(timestamp)))) throw fail();
   const shell = (...args) => adb("shell", ...args);
@@ -91,11 +94,21 @@ export async function runPhonePhase(mode, delivery, timestamp, adb, baseline) {
   await vaultHash();
   await shell("run-as", PACKAGE, "ls", "no_backup/guardian/recipient-provider-primary.v1");
   if (mode === "preflight") return { mode, verified: true, recorder_inactive: true };
-  const log = await adb("logcat", "-d", "-v", "brief", "-T", timestamp,
-    "-s", "TraelyxGuardianReceive:I", "*:S");
-  if (!tracePassed(log, mode === "duplicate")) throw fail();
   const count = async () => noticeCount(await shell("dumpsys", "notification"), delivery);
-  if (await count() !== (mode === "first" ? 1 : 0)) throw fail();
+  let received = false;
+  // FCM acceptance precedes asynchronous phone receipt. Observe, never resend.
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const state = traceState(await adb("logcat", "-d", "-v", "brief", "-T", timestamp,
+      "-s", "TraelyxGuardianReceive:I", "*:S"), mode === "duplicate");
+    if (state === "rejected") throw fail();
+    if (state === "complete") {
+      const records = await count();
+      if (records > (mode === "first" ? 1 : 0)) throw fail();
+      if (records === (mode === "first" ? 1 : 0)) { received = true; break; }
+    }
+    if (attempt < 39) await pause();
+  }
+  if (!received) throw fail();
   if (mode === "duplicate") {
     if (await vaultHash() !== await baseline.read()) throw fail();
     return { mode, verified: true, claim_refused: true, notice_count: 0, vault_unchanged: true };
