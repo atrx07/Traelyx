@@ -342,6 +342,11 @@ duplicate live phases have not yet been exercised through this helper.
 The app also opens Guardian with details unloaded; its explicit read-only phone
 check shows the retained registration and the Stop notices control. No registration,
 withdrawal or alert reload was performed during the resumed check.
+Full source CI 37944918981 (`16cf9a5`) passes every job: Guardian functions,
+twelve SQL suites, operator/app/native tests, analysis and debug/release builds.
+Fresh ignored `m6_8_batched_duplicate_{stage,control,cleanup}.sql` copies reserve
+801–805 and reverse-verify as UUID-only substitutions. No new production fixture,
+temporary worker, enable window or send has begun.
 
 For a fresh, separately reviewed pair (fresh IDs required):
 

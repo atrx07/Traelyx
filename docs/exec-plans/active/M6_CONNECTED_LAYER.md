@@ -759,6 +759,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   send or cloud mutation and changes no app contract. Live helper phases remain
   unverified; require source CI and a fresh reviewed pair. Keep actual duplicate
   acceptance unchecked and preserve all lifetime/claim/security limits.
+  Full source CI 37944918981 (`16cf9a5`) passes every job, including twelve SQL
+  suites, app/native tests and debug/release builds. Fresh ignored 801–805 copies
+  reverse-verify as UUID-only changes; production staging/worker/enable/send have
+  not begun. Review that fresh pair before exercising the helper's live phases.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

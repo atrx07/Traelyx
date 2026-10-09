@@ -275,6 +275,11 @@ Require source CI, a fresh-ID pair review and action-time enable confirmation
 before running those live phases. Preserve durable claims and the existing event,
 requeue and enable limits. Expiry/disconnect, recorder and two-phone gates follow;
 the second phone is not needed yet.
+Full source CI 37944918981 (`16cf9a5`) now passes all jobs. Fresh 801–805 ignored
+stage/control/cleanup copies reverse-verify as UUID-only substitutions. Review
+that at-most-two-send pair using the batched phone phases; nothing new is staged
+in production and no temporary worker is active. Actual helper live phases and
+duplicate suppression remain unverified.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

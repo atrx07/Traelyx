@@ -21,6 +21,9 @@
   first-notice observation/tap/background restart and duplicate observation;
   twelve operator tests, syntax and physical read-only preflight pass. Live helper
   phases require a fresh reviewed pair. It changes no app/server behavior.
+  Full source CI 37944918981 (`16cf9a5`) passes all jobs, including twelve SQL
+  suites, app/native checks and debug/release builds. Fresh 801–805 SQL copies
+  reverse-verify as UUID-only substitutions; no new worker/fixture/window started.
   See `docs/reference/GUARDIAN_REJECTION_CHECK.md` for the sequence and limits.
 
 - The reviewed single diagnostic message 781–785 passes on 2026-10-08: fixed debug
