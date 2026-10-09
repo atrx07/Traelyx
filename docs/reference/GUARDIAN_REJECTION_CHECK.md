@@ -474,10 +474,14 @@ and always within six minutes, then retire the worker and obtain action-time
 cleanup confirmation. Keep the shutdown UI ready while the job runs. Script
 output explicitly requests closure but does not close cloud flags itself. Source
 syntax, twenty-three local budget/correlation/quoting/Plan checks and twelve existing operator
-tests pass. Full source CI and an actual paired live run remain pending. No
+tests pass. Full source CI 37956582373 (`223cc48`) passes all jobs, including
+Edge functions, twelve SQL suites, app/native tests and both APK builds. An
+actual paired live run remains pending. No
 runtime, schema, dependency, receiver authorization or claim-policy change.
 Fresh pair scope and action-time enable/cleanup confirmations remain required.
 Actual duplicate suppression is still unverified; no fresh fixture is staged.
+Ignored 821–825 stage/control/cleanup copies reverse-verify as UUID-only
+substitutions, ready for fresh scope review. No worker or enable window is active.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

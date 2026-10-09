@@ -296,8 +296,10 @@ restored and physical read-only readiness passes. Duplicate suppression remains
 unverified. The bounded `tool/guardian_duplicate_pair.ps1` bridge waits at most
 45 seconds for the browser's exact verified-requeue signal, then starts the
 duplicate phase immediately; 23 local gate checks and twelve existing operator
-tests pass. Verify full source CI, then obtain fresh-ID pair review and
-action-time enable confirmation before its live use. Preserve the first-notice
+tests pass. Full source CI 37956582373 (`223cc48`) passes every job. Obtain
+fresh-ID pair review and action-time enable confirmation before its live use.
+Fresh 821–825 ignored SQL copies reverse-verify as UUID-only substitutions.
+Preserve the first-notice
 guard, native claims and all existing lifetime/security limits. No new pair is
 staged or enabled; the second phone is still not needed.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test

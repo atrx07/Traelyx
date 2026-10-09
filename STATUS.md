@@ -21,8 +21,9 @@
   Physical read-only preflight passes, recorder is inactive and USB wake setting
   is restored to 0. A bounded PowerShell pair operator now waits for a verified
   browser requeue signal and immediately runs the second phase; 23 local gate
-  checks and all twelve existing operator tests pass. Its live pair and source
-  CI remain pending. App/server behavior and security/lifetime limits are unchanged.
+  checks and all twelve existing operator tests pass. Full source CI 37956582373
+  (`223cc48`) passes every job, including app/native tests and both APK builds.
+  Its live pair remains pending. App/server behavior and lifetime limits are unchanged.
 
 - The approved batched pair 801–805 sent only its first message on 2026-10-09.
   Provider acceptance, fixed positive receiver stages, one Android notice and

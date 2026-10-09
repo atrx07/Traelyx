@@ -792,8 +792,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   unchanged event/requeue/enable guards with a 45-second browser shutdown margin.
   Twenty-three local gate/quoting/Plan checks and twelve existing operator tests pass.
   No app/server/schema/dependency changes; live bridge remains unverified.
-- [ ] Verify bridge source CI before a fresh reviewed pair; keep actual duplicate
-  suppression pending until the second callback, refused claim, unchanged vault
+- [x] Verify bridge source CI before a fresh reviewed pair. Full run 37956582373
+  (`223cc48`) passes all jobs: Edge functions, twelve SQL suites, operator checks,
+  app/native tests and both APK builds. Fresh local 821–825 copies reverse-verify
+  as UUID-only substitutions; no fixture/worker/enable window is active.
+  Keep actual duplicate suppression pending until the second callback, refused claim, unchanged vault
   and zero recreated notices pass together. Fresh scope and action-time browser
   confirmations remain required.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
