@@ -292,6 +292,75 @@ remain pending. Ignored proof: `m6_8_diagnostic_positive.jpg`,
 
 The only app change is debug-only stage tracing; no backend runtime, schema,
 dependency, sampling, recorder lifecycle or permission contract change.
+
+### Traced duplicate pair — closed after first phase
+
+The maintainer approved a fresh 791–795 pair: at most two sends / one guarded
+requeue in one contiguous enable window capped at six minutes. Three ignored
+`m6_8_traced_duplicate_{stage,control,cleanup}.sql` copies reverse-verify as UUID-only
+substitutions. Fresh phone permission/network 1/0/0/no-recorder/process-absence/
+non-stopped checks passed. Worker installed at 16:41:14 UTC, private ignored file
+and digest verified; authenticated disabled dispatch probe passed. Staging guards
+all true. Both flags became true at 16:43:57 after action-time approval. Only the
+first message was sent: provider acceptance, fixed CALLBACK/RECEIPT_CONFIRMED/
+NOTICE_CLAIMED/NOTICE_POST_ATTEMPTED stages, one scoped Android notice and hosted
+attempts=1/device_received passed. Actual notice tap opened unloaded Guardian;
+an initial transient null-root snapshot resolved on fresh observation. Its notice
+disappeared, the encrypted vault hash was saved and the process was background
+killed without force-stop. The exact guarded requeue refused: event expiry was
+16:49:49.398678 UTC and the required remaining two-minute buffer had elapsed.
+No requeue, second send, claim erasure or lifetime extension occurred.
+
+Both flags returned false at 16:49:18 (5m21s active, within the six-minute cap).
+Disabled probes passed. Worker rotation was saved at 16:57:02; verification was
+interrupted by the usage limit. On 2026-10-09, the hosted digest differs from the
+temporary file, the old credential returned 401, and that exact local file was
+deleted. After action-time deletion approval, marker-checked cleanup returned
+fixture_user_absent/fixture_connection_absent/fixture_delivery_absent all true,
+device_rows=1. Final hosted counts are 0 sessions/1 device/1 unexpired device/
+0 events/0 deliveries. Phone ADB authorization, notification permission,
+registration/consent marker, network 1/0/0 and inactive recorder pass. Ignored
+proof: `m6_8_traced_duplicate_cleanup_pass.jpg`, `m6_8_traced_duplicate_closed.jpg`.
+This is an incomplete operator window, not duplicate-suppression evidence or a
+confirmed receiver defect. No app/server behavior or security limit was changed.
+
+### Bounded phone transition — operator helper
+
+`tool/guardian_duplicate_phone.mjs` reduces model/tool round trips during the next
+reviewed pair. It never sends, requeues, changes flags/network, force-stops, clears
+logs or deletes claims. Outputs are fixed booleans; subprocess failures are
+redacted. Only a hash of the encrypted vault is stored in ignored `.dart_tool`.
+The CLI phase deadline is 75 seconds, individual ADB calls at most 15 seconds.
+Missing notification sections, ambiguous titles, active recorder, wrong current
+Android user state and unexpected trace sequences fail closed. A transient UI
+root is observed at most three times without repeating a tap. The physical
+read-only `preflight` passes; eleven operator tests and syntax pass. First and
+duplicate live phases have not yet been exercised through this helper.
+
+For a fresh, separately reviewed pair (fresh IDs required):
+
+1. While both flags are false, complete source CI, unlock/wake the phone and use
+   `preflight <adb-path> <serial>`. Establish absent/non-stopped process, network
+   and fresh fixture lifetime before action-time enable confirmation. Recheck
+   lifetime/process immediately afterward; do not dispatch if the buffer is gone.
+2. Capture a fresh device timestamp, invoke the existing single-send probe once,
+   then immediately run `first <adb-path> <serial> <delivery-uuid> <timestamp>`.
+   It verifies fixed positive stages and exactly one active record, taps the
+   observed generic title, requires unloaded Guardian/no notice, stores the vault
+   hash and backgrounds/kills without force-stop in one invocation.
+3. Verify the first hosted receipt and perform the unchanged marker-checked
+   guarded requeue while its existing two-minute buffer remains. Confirm true,
+   absent/non-stopped process and fresh lifetime; capture a new device timestamp
+   and invoke the single-send probe once. Never retry an uncertain invocation.
+4. Run `duplicate <adb-path> <serial> <same-delivery-uuid> <new-timestamp>`.
+   Require CALLBACK/RECEIPT_CONFIRMED/CLAIM_UNAVAILABLE, zero active notices and
+   unchanged vault; separately verify hosted attempts=2/device_received. Close
+   both flags immediately afterward or on any failure/deadline. The existing
+   six-minute enable cap and eight-minute fixture lifetime remain unchanged.
+5. Verify closure, retire worker with digest/401/local deletion, and obtain the
+   action-time fixture cleanup confirmation. Preserve real registration and all
+   durable claims. Do not stage a new event or extend a lifetime inside the window.
+
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining
 M6.8 gates independently; M7 is not authorized.

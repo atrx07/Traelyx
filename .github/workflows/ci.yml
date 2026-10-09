@@ -75,6 +75,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_push_fixture.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_receiver_controls.sql
           node --test tests/tool/test_guardian_push_probe.mjs
+          node --test tests/tool/test_guardian_duplicate_phone.mjs
 
   validate:
     runs-on: ubuntu-latest

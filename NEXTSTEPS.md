@@ -263,8 +263,18 @@ and actual notice tap to signed-in Guardian. Both flags are false; worker retire
 and approved synthetic cleanup pass with final counts 0/1/1/0/0. The prior missing
 notice did not reproduce;
 receipt-response failure remains a hypothesis, with no confirmed cause or fix.
-Next review an actual duplicate pair using fresh IDs and the verified debug stages
-before expiry/disconnect, recorder and two-phone gates. Preserve durable claims.
+The 791–795 repeat also stopped after its successful first receipt/notice/tap:
+the guarded requeue refused because the existing lifetime buffer had elapsed.
+Both flags are false, the worker retirement and approved cleanup are verified
+on 2026-10-09; final hosted counts 0/1/1/0/0. Actual duplicate suppression is pending.
+Use the bounded `tool/guardian_duplicate_phone.mjs` operator helper to batch the
+first phone transition immediately after the confirmed send, then perform the
+unchanged guarded requeue and one duplicate send. Eleven operator tests and
+physical read-only preflight pass; live helper phases are still unverified.
+Require source CI, a fresh-ID pair review and action-time enable confirmation
+before running those live phases. Preserve durable claims and the existing event,
+requeue and enable limits. Expiry/disconnect, recorder and two-phone gates follow;
+the second phone is not needed yet.
 Preparation source CI run 37331996250 (`fd139db`) passed every job. The test
 runner was installed; the receipt-only gate now passes.
 

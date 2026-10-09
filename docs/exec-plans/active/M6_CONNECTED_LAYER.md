@@ -745,6 +745,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Prior absence did not reproduce; root cause/permanent fix remain unconfirmed.
   No second message, network toggle, upload, runtime or schema change in this test.
   Actual duplicate/expiry/disconnect, recorder and two-phone gates remain pending.
+- [x] Close the incomplete traced duplicate window 791–795 and validate a bounded operator transition.
+  On 2026-10-08 the first callback/receipt/claim/post, one Android notice and actual
+  tap to unloaded Guardian passed. The unchanged requeue guard refused because
+  the remaining event lifetime fell below its two-minute buffer; no second send,
+  requeue or lifetime extension occurred. Both flags closed 16:49:18 UTC (5m21s).
+  Worker rotation at 16:57:02 was verified after resumption on 2026-10-09 by changed
+  digest/old-value 401/local deletion. Action-time-approved marker cleanup passes
+  and hosted counts are 0/1/1/0/0. `tool/guardian_duplicate_phone.mjs` batches the
+  first transition, retries only transient UI observation (three reads maximum),
+  and separately checks duplicate refusal/no notice/unchanged vault. Eleven
+  operator tests, syntax and physical read-only preflight pass. It performs no
+  send or cloud mutation and changes no app contract. Live helper phases remain
+  unverified; require source CI and a fresh reviewed pair. Keep actual duplicate
+  acceptance unchecked and preserve all lifetime/claim/security limits.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

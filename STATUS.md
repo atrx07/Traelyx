@@ -10,6 +10,19 @@
 
 ## Working
 
+- The traced duplicate pair 791–795 sent only its first message on 2026-10-08.
+  Callback/receipt/claim/post, one notice and actual tap to unloaded Guardian pass.
+  The guarded requeue refused with insufficient remaining event lifetime; no
+  second send or lifetime extension occurred. Both flags closed at 16:49:18 UTC.
+  Worker rotation at 16:57:02 was verified on 2026-10-09 (changed digest, old-value
+  401, local deletion). Approved marker-checked cleanup passes; final hosted counts
+  are 0 sessions/1 device/1 unexpired device/0 events/0 deliveries. Actual duplicate
+  suppression remains unverified. A bounded operator-only phone helper batches
+  first-notice observation/tap/background restart and duplicate observation;
+  eleven operator tests, syntax and physical read-only preflight pass. Live helper
+  phases require a fresh reviewed pair. It changes no app/server behavior.
+  See `docs/reference/GUARDIAN_REJECTION_CHECK.md` for the sequence and limits.
+
 - The reviewed single diagnostic message 781–785 passes on 2026-10-08: fixed debug
   stages confirm callback/receipt/claim/post attempt, Android has one notice,
   encrypted vault changes and hosted receipt is one attempt/not viewed. Actual
