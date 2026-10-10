@@ -888,6 +888,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   approved marker cleanup and final counts 0/1/1/0/0 pass. No app/server/schema,
   dependency, personal telemetry or Google key change. Expiry/disconnect still
   require separate review and denial/callback evidence; second phone not needed.
+- [x] Prepare separately gated expiry case 881–885 locally only: UUID-only
+  stage/lifetime/control/cleanup reverse checks and offline/future-launch syntax
+  pass. Read-only denial observer requires callback then response rejection,
+  unchanged encrypted vault and zero notices; ten parser regressions pass.
+  No fixture, worker or window is active. Runtime source CI remains 38068318083;
+  this manual observation preparation introduces no app/server change.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

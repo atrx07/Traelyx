@@ -619,6 +619,29 @@ cleanup_pass,closed}.jpg` and `guardian-pair-875/{first,duplicate}-passed.json`.
 Next review is the one-message expiry-after-queue case, then disconnect. Preserve
 fixed callback/denial evidence, network restoration and each separate review gate.
 
+### Prepared expiry case 881–885 — review pending
+
+Fresh ignored stage/lifetime/cleanup copies reverse-verify against 871–875 as
+UUID-only substitutions; expiry control reverse-verifies against the existing
+CI-tested `guardian_push_expire.sql`. The existing offline helper uses a unique
+881 signal, keeps its 90-second control wait and independent 1/0/0 radio
+restoration, and passes syntax parsing. The launcher preserves the reviewed
+future-start and >300-second headroom checks; no fixture/window is staged.
+
+The read-only manual observer captures only an encrypted-vault hash and device
+log timestamp. After reconnection it requires exactly `CALLBACK` then
+`RECEIPT_RESPONSE_REJECTED`, unchanged vault and zero matching notices. A transport
+failure, success, extra/malformed stage or missing callback is inconclusive/fails;
+it cannot count as server-expiry rejection. Ten no-device/no-network parser
+regressions and Node syntax pass. ADB observations are bounded to 15 seconds;
+callback observation has a 75-second deadline. It sends nothing, changes no
+radio/UI/claim and never prints raw logs, hashes or account data.
+
+Obtain separate review for one FCM send, brief radio disconnection, synthetic
+server expiry and the exact finite enable change. Retire the worker, restore
+settings and close both functions on success/failure; marker cleanup requires
+action-time approval. This preparation changes no app/server/schema/dependency.
+
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining
 M6.8 gates independently; M7 is not authorized.
