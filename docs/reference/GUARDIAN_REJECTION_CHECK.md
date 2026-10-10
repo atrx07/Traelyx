@@ -532,10 +532,12 @@ duplicate evidence occurred.
 The versioned operator's new strict `-ContextPath` path fixes UTC/precision loss
 and rejects local/ambiguous dates, non-UTC offsets, malformed dates and extra
 context fields. Thirty-seven PowerShell checks and twelve phone/probe tests pass;
-full repair CI is pending. Legacy Windows PowerShell file execution was blocked
-by host authorization; the string-date path is covered in current PowerShell.
+full [repair CI 38065895016](https://github.com/atrx07/Traelyx/actions/runs/38065895016)
+for `17d7fb7` passes all jobs, including both APK builds. Legacy Windows PowerShell
+file execution was blocked by host authorization; the string-date path is covered
+in current PowerShell.
 See [the tooling entry](KNOWN_TOOLING_ISSUES.md). Retire the old temporary wrapper;
-review a fresh pair only after repair CI, with mandatory server processing expiry.
+review a fresh pair with mandatory server processing expiry.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

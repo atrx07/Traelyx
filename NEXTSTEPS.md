@@ -25,9 +25,10 @@ expired. No send or fixture occurred. Pair 841–845 subsequently stopped before
 job creation because the temporary wrapper reparsed JSON UTC objects as local
 time. Zero attempts verified; flags disabled, worker retired/deleted and approved
 fixture cleanup passed. The versioned operator now supports strict `-ContextPath`;
-37 local PowerShell checks and twelve phone/probe tests pass. Verify full source
-CI, then recheck first-phone readiness and review a fresh actual duplicate pair
-under mandatory server expiry. Do not use the old timestamp-parsing wrapper.
+37 local PowerShell checks and twelve phone/probe tests pass. Full source CI
+38065895016 (`17d7fb7`) passes all jobs. Recheck first-phone readiness and review
+a fresh actual duplicate pair under mandatory server expiry. Do not use the old
+timestamp-parsing wrapper.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

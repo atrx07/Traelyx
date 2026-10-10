@@ -16,7 +16,8 @@
   retired (digest/401/local deletion), approved cleanup returns true/true/true/1.
   Final counts are 0/1/1/0/0; USB wake remains 0. The versioned operator now accepts
   strict `-ContextPath` input preserving UTC and precision; 37 PowerShell checks
-  and twelve phone/probe tests pass. Full repair CI remains pending before a pair.
+  and twelve phone/probe tests pass. Full repair CI 38065895016 (`17d7fb7`) passes
+  all jobs, including both APK builds. Review a fresh bounded pair next.
 
 - On 2026-10-10, recovery of interrupted 831–835 found both test flags still true
   after a usage-limit rejection prevented dispatch launch. The six-minute window

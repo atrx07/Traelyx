@@ -842,7 +842,9 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   UTC dates and precision, validates exact context fields and rejects ambiguous
   dates. The real failed context now passes its original preflight budget in
   regression. 37 PowerShell gates and twelve phone/probe tests pass.
-- [ ] Verify full UTC-context repair CI before reviewing a replacement pair.
+- [x] Verify full UTC-context repair CI 38065895016 (`17d7fb7`): all jobs pass,
+  including twelve SQL suites, operator/app/native checks and both APK builds.
+  Fresh pair 851–855 is prepared locally only; review scope and exact enable next.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
