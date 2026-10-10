@@ -822,7 +822,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Verify expiry-repair source CI 38058389131 (`09089ac`): all jobs pass,
   including SQL/operator/app/native checks and both APK builds. Two dashboard
   drafts match their tested single-file bundles (line endings normalized).
-- [ ] Complete reviewed inert deployment and hosted expiry before
+- [x] Reviewed inert deployment completed on 2026-10-10 (verified by 14:26:52 UTC):
+  both hosted single-file bundles match tested source, legacy JWT settings stay
+  off, both flags remain false and processing-window config is absent. Empty
+  credential-free checks return capability 503/dispatch 401. No send or app change.
+- [ ] Complete hosted expiry before
   further live sends. Missing/invalid/expired config must deny on warm instances;
   retain manual false restoration, worker retirement and synthetic cleanup.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.

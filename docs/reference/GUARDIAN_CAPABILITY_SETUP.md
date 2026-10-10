@@ -65,8 +65,9 @@ compact JSON has exactly schema_version=1, starts_at_epoch_ms and
 expires_at_epoch_ms; positive integer milliseconds and duration <=360,000.
 Every request and outbound SQL call rechecks the finite window. Expired/missing
 config denies processing even if the dashboard flag remains true. This repair
-is not deployed yet; keep both functions false until exact deployment review
-and hosted expiry checks pass. See the
+was deployed disabled on 2026-10-10 after review; hosted bundle matching and
+credential-free 503 checks pass. Keep both functions false except for a separately
+reviewed hosted expiry proof window; no live sends before that proof. See the
 [window incident](../issues/2026-10-10_guardian-processing-window-overrun.md).
 
 1. Completed after exact production-access approval: both staged files matched

@@ -1,7 +1,7 @@
 # Guardian test window remained enabled after operator interruption
 
-- Status: Production disabled and synthetic fixture removed; source expiry repair
-  passes local checks, deployment and hosted expiry proof pending.
+- Status: Production disabled and synthetic fixture removed; expiry repair passes
+  full CI and is deployed disabled. Hosted expiry proof remains pending.
 - Affected path: M6.8 production capability/dispatch test enablement.
 
 ## Evidence and confirmed cause
@@ -56,10 +56,18 @@ and full [CI 38058389131](https://github.com/atrx07/Traelyx/actions/runs/3805838
 pass all jobs, including twelve SQL suites, app/native checks and both APK builds.
 No migration, dependency, app update, client payload or permission grant changed.
 
+Reviewed deployment of both tested single-file bundles completed on 2026-10-10,
+verified by 14:26:52 UTC. Deployed editor contents match the tested bundles after
+line-ending normalization. Legacy JWT settings remain off; both enable flags are
+false and processing-window config is absent. Credential-free empty POSTs return
+capability 503 `capability_disabled` and dispatch 401 `unauthorized`. No send,
+registration, fixture or credential was created during deployment.
+
 ## Remaining limits
 
-The shutdown above is recovery. The durable repair is not deployed yet; production
-must stay disabled until reviewed deployment and hosted expiry checks pass.
+The shutdown above is recovery. The durable repair is deployed disabled; keep
+production disabled except for a separately reviewed hosted expiry proof window.
+Live sends remain blocked until hosted expiry checks pass.
 The guard stops new processing/outbound operations, not an HTTPS operation already
 in flight; existing transport deadlines still bound those. It does not edit the
 dashboard flag or delete fixtures/credentials automatically. Manual restoration,

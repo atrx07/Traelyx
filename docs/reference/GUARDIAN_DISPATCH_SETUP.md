@@ -139,9 +139,11 @@ The source now requires the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract in
 the exact enable flag and existing worker credential. Admission and every
 outbound SQL/OAuth/FCM request recheck expiry, including warm instances. Invalid
 or expired config blocks work. Already-started HTTPS calls retain their existing
-transport deadlines. This source repair is not deployed yet; both functions
-are false and no new live test may start before reviewed deployment and hosted
-expiry proof. Manual false restoration and worker/fixture cleanup remain required.
+transport deadlines. This repair was deployed disabled on 2026-10-10 after review;
+hosted bundle matching and unauthenticated 401 checks pass. Both functions
+are false except for a separately reviewed hosted expiry proof window; no live
+send may start before that proof passes. Manual false restoration and
+worker/fixture cleanup remain required.
 
 ```powershell
 npx --yes --package=deno@2.9.6 deno fmt --check supabase/functions

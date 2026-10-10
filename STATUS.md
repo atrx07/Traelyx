@@ -20,8 +20,11 @@
   new regressions: all 35 Node/Deno function tests, lint/type checks, twelve
   operator tests, 23 PowerShell checks and both deployment-bundle tests pass.
   Full source CI 38058389131 (`09089ac`) passes every job, including app/native
-  checks and both APK builds. Verified single-file deployment drafts are ready;
-  deployment and hosted expiry proof are pending. No live sends before those gates.
+  checks and both APK builds. Reviewed disabled deployment of both tested bundles
+  completed on 2026-10-10; hosted code matches, legacy JWT settings remain off,
+  both flags are false and processing-window config is absent. Credential-free
+  checks return capability 503/dispatch 401. Hosted expiry proof remains pending;
+  no live sends before that gate.
   See `docs/issues/2026-10-10_guardian-processing-window-overrun.md`.
 
 - The reviewed bridge pair 821–825 expired before enable approval was received
