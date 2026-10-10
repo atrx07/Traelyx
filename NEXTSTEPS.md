@@ -15,8 +15,12 @@ two receipts, one first notice/tap, background restart, second claim refused,
 unchanged encrypted vault and no recreated notice. The future-start six-minute
 lease and >300-second launch headroom passed; full source CI 38068318083 is green.
 Both functions disabled, worker retired/deleted, approved cleanup and final counts
-0/1/1/0/0 pass. Review expiry-after-queue next, then disconnect, recorder and
-two-phone gates. Second phone is not needed for the expiry/disconnect checks.
+0/1/1/0/0 pass. Server expiry after queuing also passes with 881–885: one offline
+provider acceptance, guarded event expiry, then callback/receipt response rejection,
+unchanged vault and no notice. Flags false, worker retired/deleted, network 1/0/0,
+approved cleanup and final counts 0/1/1/0/0 pass. Review disconnect next, then
+recorder and two-phone gates. Second phone is not needed for disconnect. Natural
+FCM TTL expiry, long outages and Doze remain unverified.
 
 The earlier operator attempts below describe superseded gates and their repairs.
 

@@ -695,7 +695,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   runtime/schema update, personal telemetry, scheduler or Google key change.
   See `GUARDIAN_PUSH_CHECK.md` and ignored cold positive/closed proof images.
 - [x] Verify actual duplicate FCM suppression: 871–875 proof and closure below.
-- [ ] Verify expiry/revocation FCM behavior under separately reviewed windows; complete recorder integration
+- [x] Verify server expiry after queuing: 881–885 proof and closure below.
+- [ ] Verify revocation FCM behavior under a separately reviewed window; complete recorder integration
   and two-phone gates before calling M6.8 complete.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
@@ -894,6 +895,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   unchanged encrypted vault and zero notices; ten parser regressions pass.
   No fixture, worker or window is active. Runtime source CI remains 38068318083;
   this manual observation preparation introduces no app/server change.
+- [x] Complete separately reviewed 881–885 expiry-after-queue proof (2026-10-11
+  local), lease 20:01:06.344–20:07:06.344 UTC on October 10. One provider acceptance
+  while offline; guarded event expiry denies receipt and leaves it unrecorded.
+  Reconnection yields CALLBACK then RECEIPT_RESPONSE_REJECTED, zero notices and
+  unchanged encrypted vault. Hosted provider_accepted/attempts=1, event expired,
+  receipt denied and exact private marker pass. Both flags false, worker retired
+  (digest/old 401/local deletion), independent network restoration 1/0/0, approved
+  marker cleanup and final counts 0/1/1/0/0 pass. No app/server/schema/dependency,
+  personal telemetry or Google key change. Source CI 38068318083 remains green.
+  This establishes server expiry rejection after queuing, not natural provider
+  TTL exhaustion, long outages or Doze. Disconnect requires its own reviewed
+  window; recorder/two-phone gates remain, and the second phone is not needed yet.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

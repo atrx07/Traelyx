@@ -17,7 +17,9 @@ must supply the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract described in the
 receipt, refused durable claim, unchanged vault and no recreated notice. Both
 functions are disabled; worker retired/deleted and approved fixture cleanup
 passes with final counts 0/1/1/0/0. Full source CI 38068318083 (`ee81423`) is green.
-Expiry/disconnect remain separately gated; recorder/two-phone checks follow.
+Server expiry after queuing passes with 881–885: callback/response rejection,
+unchanged vault/no notice and approved cleanup, final counts 0/1/1/0/0. Disconnect
+remains separately gated; recorder/two-phone checks follow.
 Earlier incomplete attempts below are historical, superseded by the final proof.
 **Owner:** agent/maintainer. **Updated:** 2026-10-11. M6.8 remains active.
 
@@ -31,17 +33,17 @@ Prior [locked/offline results](GUARDIAN_RECEIVER_CHECK.md) passed and are closed
 
 ## Remaining review boundary
 
-Duplicate is complete. Review each remaining case separately, one synthetic FCM
-message per fixture:
+Duplicate and server expiry are complete. Review the remaining case separately,
+one synthetic FCM message per fixture:
 
 | Case | Reserved IDs | Sends | Expected result |
 |---|---|---|---|
 | Duplicate after dismissal/restart (complete) | 871–875 | 2, same delivery/generation | Two receipts/attempts; second message did not recreate the dismissed notice |
-| Server expiry after queuing | 881–885 | 1 | Shortened synthetic server expiry denies receipt/display after reconnection |
+| Server expiry after queuing (complete) | 881–885 | 1 | Callback/response rejection, unchanged vault and no notice after reconnection |
 | Disconnect after queuing | 761–765 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
 
-Expiry and disconnect require their own review and reliable callback observability;
-they are not authorized by approval of the completed duplicate pair.
+Disconnect requires its own review and reliable callback observability;
+it is not authorized by approval of the completed duplicate or expiry case.
 
 Use one explicitly reviewed temporary worker value, private ignored file and
 fixed-endpoint probe; retire to a fresh server-only value, prove old-value 401 and
@@ -124,7 +126,8 @@ No credential or private payload is logged. Syntax is checked without execution.
 - [x] Ignored fixture copies reverse-verified; bounded helper syntax parsed.
 - [x] Isolated SQL CI and remaining affected checks pass (37646111095).
 - [x] Execute the reviewed duplicate pair and complete its cleanup/persistence.
-- [ ] Obtain concrete hosted review and execute expiry/disconnect cases.
+- [x] Execute the separately reviewed server expiry case and complete cleanup.
+- [ ] Obtain concrete hosted review and execute the disconnect case.
 - [ ] Record observed results/limits and complete cleanup/persistence.
 
 Initial isolated CI run 37645710237 caught an incorrect receipt API name in the
@@ -616,10 +619,11 @@ intact. No source/app/schema/dependency or personal telemetry change. Source CI
 pass. Ignored proof: `m6_8_future_duplicate_{staged,enabled,two_received,disabled,
 cleanup_pass,closed}.jpg` and `guardian-pair-875/{first,duplicate}-passed.json`.
 
-Next review is the one-message expiry-after-queue case, then disconnect. Preserve
-fixed callback/denial evidence, network restoration and each separate review gate.
+The subsequent expiry-after-queue result is recorded below. Review disconnect
+next. Preserve fixed callback/denial evidence, network restoration and each
+separate review gate.
 
-### Prepared expiry case 881–885 — review pending
+### Prepared expiry case 881–885 — preparation subsequently executed
 
 Fresh ignored stage/lifetime/cleanup copies reverse-verify against 871–875 as
 UUID-only substitutions; expiry control reverse-verifies against the existing
@@ -641,6 +645,32 @@ Obtain separate review for one FCM send, brief radio disconnection, synthetic
 server expiry and the exact finite enable change. Retire the worker, restore
 settings and close both functions on success/failure; marker cleanup requires
 action-time approval. This preparation changes no app/server/schema/dependency.
+
+### Server expiry proof — fixture 881–885 complete and closed
+
+On 2026-10-11 local, the separately reviewed lease was 20:01:06.344–20:07:06.344
+UTC on October 10. Fresh future-start/headroom and inactive-recorder/background
+checks passed. Exactly one data-only FCM message was provider-accepted while the
+phone had no active default network. The exact-marker control shortened only the
+synthetic server event expiry; the already queued provider TTL was unchanged.
+Both expired_receipt_denied and receipt_not_recorded returned true.
+
+After verified control and reconnection, fixed debug stages were CALLBACK then
+RECEIPT_RESPONSE_REJECTED. The matching notice count was zero and the encrypted
+vault hash unchanged. Hosted audit showed provider_accepted, attempts=1, unclaimed,
+expired event, denied receipt, exact private marker and one unexpired real device.
+Transport failure was not counted as a denial. This proves server expiry rejection
+after queuing; it does not prove natural FCM TTL exhaustion or long-outage behavior.
+
+Both functions were disabled immediately after observation. Worker retirement
+digest, old-value 401 and exact local deletion pass. Independent radio restoration
+confirmed Wi-Fi/mobile-data/airplane baseline 1/0/0. Approved marker cleanup returns
+all three fixture absence checks true and device_rows=1; final counts 0/1/1/0/0.
+Real profile/device/trips and backend Google key remain intact. No runtime/app,
+schema or dependency change; source CI 38068318083 remains green. Ignored proof:
+`m6_8_expiry_881_{control_pass,disabled,denied,cleanup_pass,closed}.jpg`, observed
+booleans and closed checkpoint. Preserve these artifacts; do not reuse delivery
+885, its signal or baseline. Next is a fresh separately reviewed disconnect case.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

@@ -10,6 +10,15 @@
 
 ## Working
 
+- Server expiry after queuing passes (2026-10-11 local), fixture 881–885:
+  one provider acceptance while offline, guarded synthetic event expiry, then
+  callback/receipt response rejected after reconnection. No receipt recorded,
+  unchanged encrypted vault and zero notices. Both flags false, worker retired
+  (digest/old 401/local deletion), network baseline 1/0/0 restored, approved
+  marker cleanup and final counts 0/1/1/0/0 pass. Real registration/profile/trips
+  remain intact. This proves server expiry rejection, not natural FCM TTL expiry
+  or long-outage/Doze behavior. Next: reviewed disconnect, recorder/two-phone gates.
+
 - Actual duplicate suppression passes (2026-10-11 local), fixture 871–875:
   two provider acceptances/receipts, first notice tap to unloaded Guardian and
   background-only restart; second callback/receipt refuses the durable claim,
@@ -18,7 +27,8 @@
   approved marker cleanup and final counts 0/1/1/0/0 pass. Real registration,
   profile/sign-in/trips remain intact. The delayed-start six-minute lease and
   >300-second launch headroom checks passed; source CI 38068318083 is green.
-  Next: separately reviewed expiry/disconnect, then recorder and two-phone gates.
+  Expiry subsequently passed under its separate review; disconnect, recorder and
+  two-phone gates remain.
 
 Earlier duplicate attempts below are superseded by this completed live proof.
 
