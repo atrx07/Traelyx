@@ -22,9 +22,12 @@
   Full source CI 38058389131 (`09089ac`) passes every job, including app/native
   checks and both APK builds. Reviewed disabled deployment of both tested bundles
   completed on 2026-10-10; hosted code matches, legacy JWT settings remain off,
-  both flags are false and processing-window config is absent. Credential-free
-  checks return capability 503/dispatch 401. Hosted expiry proof remains pending;
-  no live sends before that gate.
+  hosted expiry proof passed: a three-minute window ending 14:56:21.191 UTC gave
+  both malformed probes 400 while active, then capability/dispatch 503 after
+  expiry with both flags still true. Flags are restored false, the test worker
+  is retired (digest/old 401/local deletion) and the retained window is expired.
+  No send, fixture, registration or app change occurred. Actual duplicate FCM
+  remains unverified; review a fresh bounded pair next.
   See `docs/issues/2026-10-10_guardian-processing-window-overrun.md`.
 
 - The reviewed bridge pair 821–825 expired before enable approval was received

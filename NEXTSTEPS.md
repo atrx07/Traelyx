@@ -10,17 +10,19 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Immediate prerequisite: verify hosted automatic processing-window expiry
-before another live pair. The 831–835 enable window overran after approval-service
+Automatic processing-window expiry is deployed and hosted proof passes.
+The 831–835 enable window overran after approval-service
 usage rejection stopped dispatch launch; on 2026-10-10 both flags were closed,
 zero attempts verified and approved cleanup completed (0/1/1/0/0). Worker retired,
 local file removed, real registration retained. The source finite-window repair
 passes 35 Node/Deno function tests, lint/type checks, two deployment-bundle tests
 and existing operator gates.
 Full source CI 38058389131 (`09089ac`) passes all jobs. Reviewed disabled
-deployment completed on 2026-10-10: both hosted bundles match, flags are false,
-window config is absent and capability 503/unauthenticated dispatch 401 pass.
-Review a bounded malformed-request window to prove hosted expiry without a send.
+deployment completed on 2026-10-10. The reviewed three-minute malformed-request
+window passes active 400 and expired 503 for both endpoints with flags still true.
+Both flags are restored false, the worker is retired/deleted and the window is
+expired. No send or fixture occurred. Recheck first-phone/operator readiness and
+review a fresh actual duplicate pair under mandatory server expiry.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

@@ -140,10 +140,12 @@ the exact enable flag and existing worker credential. Admission and every
 outbound SQL/OAuth/FCM request recheck expiry, including warm instances. Invalid
 or expired config blocks work. Already-started HTTPS calls retain their existing
 transport deadlines. This repair was deployed disabled on 2026-10-10 after review;
-hosted bundle matching and unauthenticated 401 checks pass. Both functions
-are false except for a separately reviewed hosted expiry proof window; no live
-send may start before that proof passes. Manual false restoration and
-worker/fixture cleanup remain required.
+hosted bundle matching and unauthenticated 401 checks pass. The reviewed
+three-minute hosted proof passes worker-authenticated malformed 400 then expired
+503 while both flags remain true. Flags restored false, test worker retired with
+old-credential 401/local deletion, window config expired. Keep both functions
+false except for separately reviewed finite windows. Manual false restoration
+and worker/fixture cleanup remain required.
 
 ```powershell
 npx --yes --package=deno@2.9.6 deno fmt --check supabase/functions

@@ -66,8 +66,10 @@ expires_at_epoch_ms; positive integer milliseconds and duration <=360,000.
 Every request and outbound SQL call rechecks the finite window. Expired/missing
 config denies processing even if the dashboard flag remains true. This repair
 was deployed disabled on 2026-10-10 after review; hosted bundle matching and
-credential-free 503 checks pass. Keep both functions false except for a separately
-reviewed hosted expiry proof window; no live sends before that proof. See the
+credential-free 503 checks pass. The reviewed three-minute hosted expiry proof
+passes active malformed 400 then expired 503 while both flags remain true.
+Flags restored false and worker retired/deleted; retained window config expired.
+Keep both functions false except for separately reviewed finite windows. See the
 [window incident](../issues/2026-10-10_guardian-processing-window-overrun.md).
 
 1. Completed after exact production-access approval: both staged files matched

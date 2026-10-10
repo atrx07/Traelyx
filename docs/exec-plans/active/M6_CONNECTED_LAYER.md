@@ -826,9 +826,13 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   both hosted single-file bundles match tested source, legacy JWT settings stay
   off, both flags remain false and processing-window config is absent. Empty
   credential-free checks return capability 503/dispatch 401. No send or app change.
-- [ ] Complete hosted expiry before
-  further live sends. Missing/invalid/expired config must deny on warm instances;
-  retain manual false restoration, worker retirement and synthetic cleanup.
+- [x] Hosted expiry proof on 2026-10-10: window 14:53:21.191–14:56:21.191 UTC.
+  Fixed invalid probes return 400 at 14:54:16/17, then capability/dispatch 503 at
+  14:56:42/43 while both flags remain true. Flags restored false, test worker
+  retired (digest/old 401/local deletion); expired window retained. No fixture,
+  send, registration or phone change; final counts 0/1/1/0/0. Hosted instance
+  reuse is not established; warm-instance behavior is covered by source/bundle
+  regressions.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

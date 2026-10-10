@@ -1,7 +1,7 @@
 # Guardian test window remained enabled after operator interruption
 
 - Status: Production disabled and synthetic fixture removed; expiry repair passes
-  full CI and is deployed disabled. Hosted expiry proof remains pending.
+  full CI, is deployed and passes hosted automatic-expiry proof.
 - Affected path: M6.8 production capability/dispatch test enablement.
 
 ## Evidence and confirmed cause
@@ -63,11 +63,28 @@ false and processing-window config is absent. Credential-free empty POSTs return
 capability 503 `capability_disabled` and dispatch 401 `unauthorized`. No send,
 registration, fixture or credential was created during deployment.
 
+The reviewed no-send hosted proof used a finite three-minute window from
+14:53:21.191 to 14:56:21.191 UTC. Both endpoints received only `{"probe":true}`,
+which is invalid for both APIs and never invokes their SQL/provider path. Active
+requests returned 400 `invalid_request` at 14:54:16/17 UTC. Requests after the
+deadline returned capability 503 `capability_disabled` and worker-authenticated
+dispatch 503 `dispatch_disabled` at 14:56:42/43 UTC, while both flags were still
+true. Flags were then restored false, the temporary worker was retired with a
+verified digest/old-credential 401, and its restricted ignored file was deleted.
+The retained processing-window config is expired. No fixture or send occurred.
+Final read-only hosted counts are sessions=0, devices=1, unexpired_devices=1,
+events=0 and deliveries=0; the real phone registration remains intact.
+Hosted instance reuse is not proven; warm-instance expiry is tested locally in
+the source and actual entrypoint bundles. Ignored closure proof is
+`m6_8_window_expiry_closed.jpg`; sanitized response evidence is
+`m6_8_window_expiry_results.jsonl` under `.dart_tool/`.
+
 ## Remaining limits
 
-The shutdown above is recovery. The durable repair is deployed disabled; keep
-production disabled except for a separately reviewed hosted expiry proof window.
-Live sends remain blocked until hosted expiry checks pass.
+The original shutdown was recovery; the durable repair is now deployed and its
+hosted automatic-expiry proof passes. Keep production disabled except for new
+explicitly reviewed finite windows. This closes the missing-deadline defect;
+actual duplicate FCM and the remaining M6.8 gates are not complete.
 The guard stops new processing/outbound operations, not an HTTPS operation already
 in flight; existing transport deadlines still bound those. It does not edit the
 dashboard flag or delete fixtures/credentials automatically. Manual restoration,

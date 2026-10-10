@@ -6,9 +6,10 @@ left the previous enable window open beyond its approved deadline; see the
 [incident record](../issues/2026-10-10_guardian-processing-window-overrun.md).
 Server-enforced processing expiry is implemented in `09089ac` and full CI
 [38058389131](https://github.com/atrx07/Traelyx/actions/runs/38058389131) passed.
-Reviewed disabled deployment completed on 2026-10-10; both hosted bundles match,
-flags are false and capability 503/unauthenticated dispatch 401 pass. Complete
-hosted expiry proof before any new send. Every subsequent window
+Reviewed deployment and hosted expiry proof completed on 2026-10-10: malformed
+requests return 400 during the three-minute window and 503 after its deadline
+with both flags still true. Flags restored false; worker retired/deleted; no send.
+Review a fresh actual duplicate pair next. Every subsequent window
 must supply the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract described in the
 [capability setup](GUARDIAN_CAPABILITY_SETUP.md).
 
