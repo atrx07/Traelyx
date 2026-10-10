@@ -916,6 +916,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   No fixture, worker or window staged. Review one send, bounded offline hold,
   synthetic disconnect and exact finite enable before execution; cleanup retains
   its action-time gate. No app/server/schema/dependency change.
+- [x] Close unused 891–895 after reviewed staging (2026-10-11 local). Setup
+  left about six minutes of event lifetime, insufficient for the reviewed
+  two-minute future start plus >300-second launch headroom. No enable or send,
+  network change, claim or disconnect control occurred; hosted pending/attempts=0.
+  Both flags remained false, worker retired (digest/old 401/local deletion),
+  approved marker cleanup and final counts 0/1/1/0/0 pass. Replacement 901–905
+  reverse-verifies all seven SQL/helper artifacts as ID/path-only changes; helper
+  syntax passes. Verify the worker before staging the replacement so credential
+  setup does not consume event lifetime. Keep all timing/send limits unchanged;
+  replacement scope/exact enable and cleanup remain separately reviewed.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

@@ -17,10 +17,12 @@
   (digest/old 401/local deletion), network baseline 1/0/0 restored, approved
   marker cleanup and final counts 0/1/1/0/0 pass. Real registration/profile/trips
   remain intact. This proves server expiry rejection, not natural FCM TTL expiry
-  or long-outage/Doze behavior. Fresh disconnect case 891–895 is prepared locally:
-  four UUID-only SQL checks, two PowerShell syntax checks, Node syntax and ten
-  denial-parser regressions pass. First-phone read-only preflight and network
-  1/0/0 pass; no fixture/window staged. Review disconnect, recorder/two-phone gates.
+  or long-outage/Doze behavior. Disconnect attempt 891–895 stopped before enabling
+  or sending: setup consumed the future-start/headroom budget. Zero attempts,
+  flags false, retired worker/old 401/local deletion and approved cleanup pass.
+  Replacement 901–905 is prepared with seven ID/path-only reverse checks and
+  helper syntax passing; verify worker before staging so setup does not consume
+  event lifetime. Review the replacement, then recorder/two-phone gates.
 
 - Actual duplicate suppression passes (2026-10-11 local), fixture 871–875:
   two provider acceptances/receipts, first notice tap to unloaded Guardian and

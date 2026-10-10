@@ -40,7 +40,7 @@ one synthetic FCM message per fixture:
 |---|---|---|---|
 | Duplicate after dismissal/restart (complete) | 871–875 | 2, same delivery/generation | Two receipts/attempts; second message did not recreate the dismissed notice |
 | Server expiry after queuing (complete) | 881–885 | 1 | Callback/response rejection, unchanged vault and no notice after reconnection |
-| Disconnect after queuing | 891–895 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
+| Disconnect after queuing | 901–905 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
 
 Disconnect requires its own review and reliable callback observability;
 it is not authorized by approval of the completed duplicate or expiry case.
@@ -672,7 +672,7 @@ schema or dependency change; source CI 38068318083 remains green. Ignored proof:
 booleans and closed checkpoint. Preserve these artifacts; do not reuse delivery
 885, its signal or baseline. Next is a fresh separately reviewed disconnect case.
 
-### Prepared disconnect case 891–895 — review pending
+### Prepared disconnect case 891–895 — subsequently closed without sending
 
 Fresh stage/lifetime/cleanup copies reverse-verify against 881–885 as UUID-only
 changes. The disconnect control reverse-verifies against the CI-tested
@@ -694,6 +694,32 @@ needed background-only process restart and the exact six-minute enable change.
 Use the tested two-minute future start and >300-second launch headroom, close on
 failure, retire/delete the worker and preserve action-time fixture cleanup review.
 The second phone is not needed. No runtime/app/schema/dependency change.
+
+### Disconnect attempt 891–895 closed; replacement 901–905 prepared
+
+On 2026-10-11 local, phone preflight passed with no recorder, absent process and
+active network at 1/0/0. The reviewed fixture staged under disabled functions;
+temporary worker ACL/ignore protection and hosted digest verification passed.
+Setup consumed nearly two minutes of the eight-minute event lifetime. At the
+lifetime check, roughly six minutes remained, insufficient for the reviewed
+two-minute future start and >300-second launch headroom. The operator stopped
+before enabling, sending, changing phone network or running disconnect control.
+
+Hosted audit returned pending/attempts=0, unclaimed, exact private marker and one
+unexpired registration. Both flags remained false. Worker retirement digest,
+old-value 401 and exact local deletion pass. Approved marker cleanup returned all
+three absence checks true and device_rows=1; final counts 0/1/1/0/0 pass. Ignored
+proof: `m6_8_disconnect_891_{zero_attempts,disabled,cleanup_pass,closed}.jpg` and
+closed checkpoint. No app/server/schema/dependency or personal data change.
+
+Fresh 901–905 copies reverse-verify all seven SQL/helper artifacts as ID/path-only
+changes, and PowerShell/Node syntax passes. Complete the worker setup and digest
+verification while flags are false **before staging** the next eight-minute
+fixture. Then read its deadline, configure the two-minute future start/six-minute
+lease, and launch only with >300 seconds remaining in event/window. No timing
+limit is relaxed or live lifetime extended. This replacement needs fresh scope
+and exact enable review; cleanup retains action-time approval. Nothing for the
+replacement is staged or sent, and the second phone is not needed.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

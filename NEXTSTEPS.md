@@ -20,10 +20,13 @@ provider acceptance, guarded event expiry, then callback/receipt response reject
 unchanged vault and no notice. Flags false, worker retired/deleted, network 1/0/0,
 approved cleanup and final counts 0/1/1/0/0 pass. Review disconnect next, then
 recorder and two-phone gates. Second phone is not needed for disconnect. Natural
-FCM TTL expiry, long outages and Doze remain unverified. Fresh disconnect 891–895
-is prepared locally with UUID-only SQL checks, helper syntax and ten denial-parser
-regressions passing. First-phone readiness/network pass; nothing is staged/sent.
-Obtain its concrete one-message/network/control/exact-enable review before running.
+FCM TTL expiry, long outages and Doze remain unverified. Disconnect attempt 891–895
+stopped before enabling or sending because credential setup consumed launch
+headroom. Zero attempts, worker retirement and approved cleanup pass. Replacement
+901–905 is prepared with seven ID/path-only reverse checks and helper syntax
+passing. Complete worker setup/verification before staging the next fixture;
+preserve the two-minute future start and >300-second launch reserve. Obtain fresh
+one-message/network/control/exact-enable review before running the replacement.
 
 The earlier operator attempts below describe superseded gates and their repairs.
 
