@@ -10,6 +10,19 @@
 
 ## Working
 
+- On 2026-10-10, recovery of interrupted 831–835 found both test flags still true
+  after a usage-limit rejection prevented dispatch launch. The six-minute window
+  was not enforced: flags were true 20h53m54s, then closed at 13:44:13 UTC.
+  Hosted attempts=0/unclaimed/expired, worker retirement at 13:45:55
+  (digest/401/local deletion), approved fixture cleanup and final counts
+  0/1/1/0/0 pass. USB wake remains 0; real registration/profile/trips are retained.
+  Automatic finite-window enforcement is now implemented in source, with six
+  new regressions: all 35 Node/Deno function tests, lint/type checks, twelve
+  operator tests, 23 PowerShell checks and both deployment-bundle tests pass.
+  Full source CI, deployment and
+  hosted expiry proof are pending. No further live sends before those gates.
+  See `docs/issues/2026-10-10_guardian-processing-window-overrun.md`.
+
 - The reviewed bridge pair 821–825 expired before enable approval was received
   on 2026-10-09. Hosted checks confirm pending/attempts=0/unclaimed; no enable,
   requeue, send or bridge Run occurred. Both flags remain false. Worker retired

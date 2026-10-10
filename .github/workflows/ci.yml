@@ -23,6 +23,13 @@ jobs:
           npx --yes --package=deno@2.9.6 deno check supabase/functions/guardian-capability/index.ts
           npx --yes --package=deno@2.9.6 deno test --no-prompt supabase/functions/tests/guardian_dispatch.test.mjs
           npx --yes --package=deno@2.9.6 deno test --no-prompt supabase/functions/tests/guardian_capability.test.mjs
+          npx --yes --package=deno@2.9.6 deno test --no-prompt supabase/functions/tests/processing_window.test.mjs
+      - name: Verify bundled production entrypoints and warm expiry
+        run: |
+          mkdir -p .dart_tool
+          npx --yes --package=deno@2.9.6 deno bundle --platform deno --no-remote --no-npm --no-config --no-lock -o .dart_tool/guardian-capability-window.bundle.js supabase/functions/guardian-capability/index.ts
+          npx --yes --package=deno@2.9.6 deno bundle --platform deno --no-remote --no-npm --no-config --no-lock -o .dart_tool/guardian-dispatch-window.bundle.js supabase/functions/guardian-dispatch/index.ts
+          node --test tests/tool/test_guardian_processing_bundle.mjs
 
   cloud-schema:
     runs-on: ubuntu-latest

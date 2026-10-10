@@ -149,6 +149,13 @@ predicate at dispatch/read time and pass separate delivery validation.
 
 ## 12. M6.8 implementation boundary
 
+Reviewed production validation windows must expire on the server independently
+of the operator/chat. The prepared entrypoint repair requires the finite
+versioned config in `../decisions/ADR-0028-guardian-processing-windows.md`, with
+a maximum six-minute interval and per-request/outbound expiry checks. Production
+is disabled pending deployment and hosted expiry proof. A finite test window
+does not authorize continuous driver monitoring or replace participant consent.
+
 The isolated experimental native evaluator and alert lifecycle are specified in
 `../technical/GUARDIAN_ALERTS_V1.md`. They are not yet connected to recording or
 enabled by pairing. Alert delivery remains unavailable until consent, persistence,

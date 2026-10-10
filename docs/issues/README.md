@@ -19,6 +19,7 @@ Local host/build/tool failures belong in
 
 | Date | Issue / symptoms | Status |
 |---|---|---|
+| 2026-10-10 | [Guardian processing window overrun](2026-10-10_guardian-processing-window-overrun.md): usage-limit interruption left test flags enabled beyond the reviewed deadline | Production closed, zero attempts verified, fixture removed; automatic expiry source tested, deployment pending |
 | 2026-10-06 | [Android Guardian receipt regex fails at initialization](2026-10-06_android-guardian-receipt-regex.md): synthetic phone receipt probe stops before HTTPS | Repaired in `94eadff`; source CI, physical parser and hosted receipt/retry pass |
 | 2026-09-27 | [Long-trip finalization exhausts Android heap](2026-09-27_long-trip-finalization-oom.md): End drive appears frozen, then repeated startup crashes | Root cause repaired in `691bb57`; original trip recovered; longer-duration limits remain unverified |
 | 2026-09-30 | [Auth decorator hid optional cloud providers](2026-09-30_auth-decorator-cloud-providers.md): hosted features selected unavailable gateways after sign-in | Provider selection repaired in `103d3d7`; CI passed, account-switch QA remains |

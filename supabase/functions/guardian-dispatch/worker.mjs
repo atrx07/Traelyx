@@ -364,7 +364,9 @@ export function createHandler({ enabled, secret, run }) {
     ) {
       return reply(401, { error: "unauthorized" });
     }
-    if (!enabled) return reply(503, { error: "dispatch_disabled" });
+    if ((typeof enabled === "function" ? enabled() : enabled) !== true) {
+      return reply(503, { error: "dispatch_disabled" });
+    }
     try {
       const body = await deadline(
         (signal) => readBoundedJson(request.body, 32, signal),

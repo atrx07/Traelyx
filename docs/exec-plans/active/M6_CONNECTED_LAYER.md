@@ -808,6 +808,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   review before starting the timed fixture; after approval, stage with both flags
   false, check hosted lifetime and apply the approved enable without another
   preparation gap. All existing lifetime and action-time approval gates remain.
+- [x] Recover the interrupted 831–835 window on 2026-10-10. Both flags remained
+  true after an approval-service usage rejection prevented dispatch launch; the
+  six-minute limit was missed (20h53m54s). Close at 13:44:13 UTC; hosted zero
+  attempts/unclaimed/expired proof, worker retirement 13:45:55 (digest/401/local
+  deletion), approved cleanup and final counts 0/1/1/0/0 pass. USB wake remains 0.
+  Real registration/profile/trips retained; no dispatch or requeue occurred.
+- [x] Implement mandatory finite-window processing in both entrypoints and shared
+  outbound transport gate (ADR-0028). All 35 local Node/Deno function tests,
+  lint/type checks, two deployment-bundle tests, twelve operator tests and
+  23 PowerShell checks pass. No
+  migration, dependency, client payload, credential or permission grant added.
+- [ ] Verify full source CI, reviewed inert deployment and hosted expiry before
+  further live sends. Missing/invalid/expired config must deny on warm instances;
+  retain manual false restoration, worker retirement and synthetic cleanup.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

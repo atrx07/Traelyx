@@ -10,6 +10,17 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Immediate prerequisite: deploy and verify automatic processing-window expiry
+before another live pair. The 831–835 enable window overran after approval-service
+usage rejection stopped dispatch launch; on 2026-10-10 both flags were closed,
+zero attempts verified and approved cleanup completed (0/1/1/0/0). Worker retired,
+local file removed, real registration retained. The source finite-window repair
+passes 35 Node/Deno function tests, lint/type checks, two deployment-bundle tests
+and existing operator gates.
+Verify full CI, review inert deployment and prove hosted expiry without any send.
+Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
+remain pending. Second phone is not needed for this backend prerequisite.
+
 1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
 3. The final app update preserves 7,546 raw files / 59,570 KiB. All GitHub CI gates pass in run 36265444147 for `d8b3823`. Physical inert opening, live reload, defaults and cancelled invite review pass. Sign-in is preserved; no real invitation, alert or trip upload was created. M6.7 is complete. M6.8 was subsequently authorized.

@@ -149,7 +149,9 @@ export function createHandler({ enabled, rpc }) {
     if (request.method !== "POST") {
       return reply(405, { error: "method_not_allowed" });
     }
-    if (!enabled) return reply(503, { error: "capability_disabled" });
+    if ((typeof enabled === "function" ? enabled() : enabled) !== true) {
+      return reply(503, { error: "capability_disabled" });
+    }
     if (
       !/^application\/json(?:;\s*charset=utf-8)?$/i.test(
         request.headers.get("content-type") ?? "",

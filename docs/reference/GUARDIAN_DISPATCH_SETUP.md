@@ -134,6 +134,15 @@ Routine dispatch and a scheduler are not enabled.
 
 ## Local checks
 
+The source now requires the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract in
+[ADR-0028](../decisions/ADR-0028-guardian-processing-windows.md), in addition to
+the exact enable flag and existing worker credential. Admission and every
+outbound SQL/OAuth/FCM request recheck expiry, including warm instances. Invalid
+or expired config blocks work. Already-started HTTPS calls retain their existing
+transport deadlines. This source repair is not deployed yet; both functions
+are false and no new live test may start before reviewed deployment and hosted
+expiry proof. Manual false restoration and worker/fixture cleanup remain required.
+
 ```powershell
 npx --yes --package=deno@2.9.6 deno fmt --check supabase/functions
 npx --yes --package=deno@2.9.6 deno lint supabase/functions

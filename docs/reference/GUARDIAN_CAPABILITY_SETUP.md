@@ -59,6 +59,16 @@ without credentials and created no alert or registration.
 
 ## Deployment and enablement gates
 
+The source repair in [ADR-0028](../decisions/ADR-0028-guardian-processing-windows.md)
+adds mandatory `GUARDIAN_PROCESSING_WINDOW_V1` alongside the enable flag. Its
+compact JSON has exactly schema_version=1, starts_at_epoch_ms and
+expires_at_epoch_ms; positive integer milliseconds and duration <=360,000.
+Every request and outbound SQL call rechecks the finite window. Expired/missing
+config denies processing even if the dashboard flag remains true. This repair
+is not deployed yet; keep both functions false until exact deployment review
+and hosted expiry checks pass. See the
+[window incident](../issues/2026-10-10_guardian-processing-window-overrun.md).
+
 1. Completed after exact production-access approval: both staged files matched
    the committed SHA-256 hashes, `verify_jwt=false` was saved and verified for
    this function only, and a synthetic unauthenticated POST returned the
