@@ -482,9 +482,14 @@ through the visible SQL Editor, and observe the new successful result. Only then
 write a create-only `requeue-confirmed.json` in the same ignored directory with
 exactly `delivery`, `nonce` and boolean `guarded_requeue_confirmed=true`, matching
 the waiting file. Never signal a stale, failed or unobserved SQL result. The nonce
-is a local correlation value, not an access credential. The bridge waits at most
-45 seconds and refuses missing/extra fields, wrong delivery/nonce or non-boolean
-confirmation; after a valid gate it starts the duplicate phase immediately.
+is a local correlation value, not an access credential. The bridge defaults to
+45 seconds; reviewed `-GateWaitSeconds 90` permits up to 90. The gate ends at the
+earliest of that wait, event expiry minus 120 seconds and window expiry minus
+165 seconds. Equality or an exhausted budget refuses the gate. Fresh preflight
+and immediate pre-send checks still require the original strict budgets.
+Missing/extra fields, wrong delivery/nonce or non-boolean confirmation are refused;
+after a valid gate it starts the duplicate phase immediately. Publish the complete
+gate using a create-only temporary file and an atomic non-overwriting file move.
 
 The operator must disable both functions immediately on success/failure/timeout
 and always within six minutes, then retire the worker and obtain action-time
@@ -538,6 +543,24 @@ file execution was blocked by host authorization; the string-date path is covere
 in current PowerShell.
 See [the tooling entry](KNOWN_TOOLING_ISSUES.md). Retire the old temporary wrapper;
 review a fresh pair with mandatory server processing expiry.
+
+### Confirmation handoff repair — fixture 851–855 closed
+
+On 2026-10-10 the first phase passed callback, receipt, durable claim, notice,
+tap to unloaded Guardian, preserved vault baseline and background-only restart.
+The guarded SQL requeue passed. Its local confirmation arrived about 68 seconds
+after the wait began, missing the original 45-second gate; hosted attempts remain
+one, and no duplicate-send sentinel exists. Both flags are false, the worker was
+retired (matching digest/old 401/local deletion), USB wake is 0 and approved marker
+cleanup passes. Final counts are 0/1/1/0/0; the real registration is unexpired.
+
+The configurable gate retains the 45-second default and allows an explicit
+maximum of 90 only within unchanged event/send/shutdown budgets. Fifty-one
+PowerShell checks include the measured UTC handoff, shortened waits, strict
+boundary refusal and no-send Plan mode. Twelve phone/probe tests pass. Full
+source CI and a replacement reviewed live pair remain required; actual duplicate
+suppression is unverified. No app/server/schema/dependency or access change.
+Ignored proof: `m6_8_context_duplicate_{first_only,disabled,cleanup_pass,closed}.jpg`.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

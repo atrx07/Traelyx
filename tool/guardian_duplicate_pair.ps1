@@ -6,6 +6,7 @@ param(
   [string]$DeliveryId,
   [DateTimeOffset]$ExpiresAt,
   [DateTimeOffset]$WindowDeadline,
+  [ValidateRange(1,90)][int]$GateWaitSeconds = 45,
   [string]$AdbPath = 'adb',
   [string]$Serial,
   [string]$NodePath = 'node'
@@ -52,6 +53,19 @@ function Test-GuardianPairBudget($Now, $Expiry, $Deadline, [bool]$First) {
     (($Deadline-$Now).TotalSeconds -gt 165)
 }
 
+function Get-GuardianPairGateDeadline($Now, $Expiry, $Deadline,
+  [ValidateRange(1,90)][int]$WaitSeconds = 45) {
+  $instant=Convert-GuardianPairUtc $Now
+  $eventCutoff=(Convert-GuardianPairUtc $Expiry).AddSeconds(-120)
+  $windowCutoff=(Convert-GuardianPairUtc $Deadline).AddSeconds(-165)
+  # Browser confirmation may wait longer only within the existing send budgets.
+  $cutoff=$instant.AddSeconds($WaitSeconds)
+  if($eventCutoff -lt $cutoff){$cutoff=$eventCutoff}
+  if($windowCutoff -lt $cutoff){$cutoff=$windowCutoff}
+  if($cutoff -le $instant){throw 'operator_budget_exhausted'}
+  return $cutoff
+}
+
 function Test-GuardianPairGate($Gate, [string]$ExpectedDelivery, [string]$ExpectedNonce) {
   if($null -eq $Gate){return $false}
   $keys=@($Gate.PSObject.Properties.Name | Sort-Object)
@@ -67,7 +81,7 @@ function Convert-GuardianProcessArgument([string]$Argument) {
 
 if($MyInvocation.InvocationName -eq '.'){return} # Pure gate tests can dot-source.
 if($Mode -eq 'Plan'){
-  [pscustomobject]@{mode='plan'; sends=0; maximum_sends=2; gate_wait_seconds=45;
+  [pscustomobject]@{mode='plan'; sends=0; maximum_sends=2; gate_wait_seconds=$GateWaitSeconds;
     browser_shutdown_margin_seconds=45; requeue_requires_exact_gate=$true} | ConvertTo-Json -Compress
   return
 }
@@ -183,11 +197,12 @@ try{
   Write-GuardianPairJson (Join-Path $stateRoot 'waiting.json') @{delivery=$DeliveryId; nonce=$nonce; phase='waiting_for_guarded_requeue'}
   Write-Output 'waiting_for_guarded_requeue'
   $gatePath=Join-Path $stateRoot 'requeue-confirmed.json'
-  $gateDeadline=[DateTimeOffset]::UtcNow.AddSeconds(45)
+  $gateDeadline=Get-GuardianPairGateDeadline ([DateTimeOffset]::UtcNow) $ExpiresAt $WindowDeadline $GateWaitSeconds
   while(-not (Test-Path -LiteralPath $gatePath)){
     if([DateTimeOffset]::UtcNow -ge $gateDeadline){throw 'operator_gate_wait_expired'}
     Start-Sleep -Milliseconds 100
   }
+  if([DateTimeOffset]::UtcNow -ge $gateDeadline){throw 'operator_gate_wait_expired'}
   $gate=[IO.File]::ReadAllText($gatePath) | ConvertFrom-Json
   if(-not (Test-GuardianPairGate $gate $DeliveryId $nonce)){throw 'operator_gate_invalid'}
   Invoke-PairPhase 'duplicate'

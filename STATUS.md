@@ -10,6 +10,16 @@
 
 ## Working
 
+- Pair 851–855 passed the first callback/receipt/claim/notice, tap to unloaded
+  Guardian and background restart. Guarded requeue passed, but its local signal
+  arrived about 68 seconds into a 45-second wait. Hosted attempts remain one;
+  no duplicate invocation occurred. Both flags false, worker retired
+  (digest/401/local deletion), USB wake 0 and approved marker cleanup pass;
+  final counts 0/1/1/0/0. Operator handoff now defaults to 45 seconds with an
+  explicit maximum of 90, shortened by unchanged event/send/shutdown budgets.
+  All 51 PowerShell and twelve phone/probe checks pass; full source CI is pending.
+  Actual duplicate suppression remains unverified.
+
 - Synthetic pair 841–845 stopped before job creation/send: the prepared launch
   wrapper reparsed PowerShell JSON UTC date objects through local text, making
   valid deadlines appear expired. Hosted attempts=0; both flags false, worker

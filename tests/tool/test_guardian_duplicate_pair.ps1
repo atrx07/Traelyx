@@ -46,6 +46,26 @@ Assert-Rejected {Convert-GuardianPairUtc '2026-19-10T15:55:29Z'} 'invalid calend
 Assert-Rejected {Convert-GuardianPairContext ([pscustomobject]@{delivery='other';expires_at=$now;window_deadline=$now})} 'non-synthetic context refused'
 Assert-Rejected {Convert-GuardianPairContext ([pscustomobject]@{delivery='00000000-0000-4000-9000-000000000845';expires_at=$now;window_deadline=$now;extra=$true})} 'extra context fields refused'
 
+# The reviewed longer handoff cannot consume send or browser shutdown budgets.
+Assert-Result ((Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $longDeadline) -eq $now.AddSeconds(45)) $true 'default handoff remains 45 seconds'
+Assert-Result ((Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $longDeadline 90) -eq $now.AddSeconds(90)) $true 'explicit handoff capped at 90 seconds'
+Assert-Result ((Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $now.AddSeconds(200) 90) -eq $now.AddSeconds(35)) $true 'window budget shortens handoff'
+Assert-Result ((Get-GuardianPairGateDeadline $now $now.AddSeconds(140) $longDeadline 90) -eq $now.AddSeconds(20)) $true 'event budget shortens handoff'
+$waiting=Convert-GuardianPairUtc '2026-10-10T16:20:08.6996972Z'
+$handoff=Convert-GuardianPairUtc '2026-10-10T16:21:16.5100096Z'
+$expiry=Convert-GuardianPairUtc '2026-10-10T16:24:25.206748Z'
+$window=Convert-GuardianPairUtc '2026-10-10T16:24:23.388Z'
+$cutoff=Get-GuardianPairGateDeadline $waiting $expiry $window 90
+Assert-Result ($cutoff.ToString('o') -ceq '2026-10-10T16:21:38.3880000+00:00') $true 'measured handoff retains window margin and precision'
+Assert-Result ($handoff -lt $cutoff) $true 'measured 68 second handoff admitted'
+Assert-Result ($handoff -lt (Get-GuardianPairGateDeadline $waiting $expiry $window)) $false 'original handoff regression reproduces refusal'
+Assert-Result (Test-GuardianPairBudget $handoff $expiry $window $false) $true 'measured handoff retains strict send budget'
+Assert-Result (Test-GuardianPairBudget $cutoff $expiry $window $false) $false 'cutoff equality still refuses dispatch'
+Assert-Rejected {Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $now.AddSeconds(165) 90} 'exhausted window refuses handoff'
+Assert-Rejected {Get-GuardianPairGateDeadline $now $now.AddSeconds(120) $longDeadline 90} 'exhausted event refuses handoff'
+Assert-Rejected {Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $longDeadline 91} 'handoff above 90 refused'
+Assert-Rejected {Get-GuardianPairGateDeadline $now $now.AddSeconds(480) $longDeadline 0} 'nonpositive handoff refused'
+
 # Local correlation values, not credentials or real account identifiers.
 $delivery = '00000000-0000-4000-9000-000000000825'
 $nonce = 'synthetic-job-correlation'
@@ -78,4 +98,9 @@ if ($plan.mode -cne 'plan' -or $plan.sends -ne 0 -or $plan.maximum_sends -ne 2 -
     $plan.gate_wait_seconds -ne 45 -or $plan.browser_shutdown_margin_seconds -ne 45 -or
     $plan.requeue_requires_exact_gate -cne $true) { throw 'Default no-send plan contract failed' }
 $checks++
+$extendedPlan = & $operatorPath -GateWaitSeconds 90 -AdbPath 'not-an-executable' -NodePath 'not-an-executable' | ConvertFrom-Json
+Assert-Result ($extendedPlan.mode -ceq 'plan' -and $extendedPlan.sends -eq 0 -and
+  $extendedPlan.gate_wait_seconds -eq 90 -and $extendedPlan.maximum_sends -eq 2 -and
+  $extendedPlan.browser_shutdown_margin_seconds -eq 45 -and
+  $extendedPlan.requeue_requires_exact_gate -ceq $true) $true 'extended no-send Plan preserves access and send limits'
 Write-Output "Guardian pair operator: $checks checks passed; no device or network calls."

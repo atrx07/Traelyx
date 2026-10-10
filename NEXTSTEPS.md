@@ -28,7 +28,13 @@ fixture cleanup passed. The versioned operator now supports strict `-ContextPath
 37 local PowerShell checks and twelve phone/probe tests pass. Full source CI
 38065895016 (`17d7fb7`) passes all jobs. Recheck first-phone readiness and review
 a fresh actual duplicate pair under mandatory server expiry. Do not use the old
-timestamp-parsing wrapper.
+timestamp-parsing wrapper. Pair 851–855 passed its first phone phase and guarded
+requeue, but its confirmation arrived after the 45-second handoff; only one send
+occurred. Flags/worker/USB wake are restored and approved cleanup/counts pass.
+The configurable handoff defaults to 45 seconds, permits an explicit maximum of
+90 and ends earlier when existing send/shutdown budgets require it. All 51
+PowerShell and twelve phone/probe checks pass. Verify full repair CI before
+reviewing a replacement live pair with the bounded longer handoff.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

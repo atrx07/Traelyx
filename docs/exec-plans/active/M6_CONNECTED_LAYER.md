@@ -845,6 +845,21 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Verify full UTC-context repair CI 38065895016 (`17d7fb7`): all jobs pass,
   including twelve SQL suites, operator/app/native checks and both APK builds.
   Fresh pair 851–855 is prepared locally only; review scope and exact enable next.
+- [x] Close pair 851–855 on 2026-10-10: first callback/receipt/claim/post,
+  tap to unloaded Guardian, preserved vault baseline and background-only restart
+  pass. One guarded requeue passed, but local confirmation arrived about 68
+  seconds after waiting began, beyond the 45-second gate. Attempts remain one;
+  no duplicate-send sentinel exists. Both flags false, retired worker
+  digest/401/local deletion, USB wake 0, approved marker cleanup and final counts
+  0/1/1/0/0 pass. Real profile/registration/trips remain intact.
+- [x] Bound configurable handoff allowance: default 45 seconds, explicit maximum
+  90, cut short by event expiry minus 120 seconds or server-window deadline minus
+  165 seconds. Equality refuses the gate/send. Existing fresh preflight,
+  immediate send-budget checks, two one-shot limits and six-minute server expiry
+  remain unchanged. All 51 local PowerShell and twelve phone/probe checks pass.
+- [ ] Verify full handoff-repair CI before a fresh reviewed pair. Actual duplicate
+  suppression still requires second callback/receipt, refused claim, unchanged
+  vault and no recreated notice together. No fixture/window is active.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

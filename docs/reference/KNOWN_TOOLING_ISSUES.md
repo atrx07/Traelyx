@@ -20,6 +20,21 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   of the same file in legacy Windows PowerShell was blocked by host authorization.
 - **Do not:** Weaken execution policy or convert times through local/culture text.
 
+## Guardian operator confirmation exceeds the default handoff wait
+
+- **Scope:** The reviewed first-phone duplicate operator, not receiver delivery.
+- **Symptom:** First phase/requeue pass, but no second-send sentinel is created.
+- **Cause:** Browser SQL verification and local gate publication can exceed the
+  default 45-second wait; one measured handoff took about 68 seconds.
+- **Safe fix:** After source CI and fresh live-scope review, use explicit
+  `-GateWaitSeconds 90`. The operator ends earlier at the event/window budget
+  cutoff and still rechecks all pre-send budgets. Prepare the gate publication
+  path before enabling; publish only after observing a successful SQL requeue.
+- **Verification:** 51 PowerShell checks cover the measured handoff, strict
+  boundaries, shortened waits and no-send Plan; twelve phone/probe tests pass.
+- **Do not:** Extend the six-minute server lease, waive a send budget, signal an
+  unobserved SQL result or retry an expired/already attempted job.
+
 ## Gradle cannot find Java in a clean PowerShell session
 
 - **Scope:** Windows PowerShell; Android/Gradle commands.
