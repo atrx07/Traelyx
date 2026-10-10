@@ -17,7 +17,8 @@
   (digest/401/local deletion), USB wake 0 and approved marker cleanup pass;
   final counts 0/1/1/0/0. Operator handoff now defaults to 45 seconds with an
   explicit maximum of 90, shortened by unchanged event/send/shutdown budgets.
-  All 51 PowerShell and twelve phone/probe checks pass; full source CI is pending.
+  All 51 PowerShell and twelve phone/probe checks pass; full source CI 38068318083
+  (`ee81423`) passes all jobs, including both APK builds.
   Actual duplicate suppression remains unverified.
 
 - Synthetic pair 841–845 stopped before job creation/send: the prepared launch

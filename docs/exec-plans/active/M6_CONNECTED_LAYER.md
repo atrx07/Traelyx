@@ -857,7 +857,9 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   165 seconds. Equality refuses the gate/send. Existing fresh preflight,
   immediate send-budget checks, two one-shot limits and six-minute server expiry
   remain unchanged. All 51 local PowerShell and twelve phone/probe checks pass.
-- [ ] Verify full handoff-repair CI before a fresh reviewed pair. Actual duplicate
+- [x] Verify full handoff-repair CI 38068318083 (`ee81423`): all jobs pass,
+  including twelve SQL suites, operator/app/native checks and both APK builds.
+  Atomic non-overwriting gate publication was verified locally. Actual duplicate
   suppression still requires second callback/receipt, refused claim, unchanged
   vault and no recreated notice together. No fixture/window is active.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.

@@ -33,8 +33,9 @@ requeue, but its confirmation arrived after the 45-second handoff; only one send
 occurred. Flags/worker/USB wake are restored and approved cleanup/counts pass.
 The configurable handoff defaults to 45 seconds, permits an explicit maximum of
 90 and ends earlier when existing send/shutdown budgets require it. All 51
-PowerShell and twelve phone/probe checks pass. Verify full repair CI before
-reviewing a replacement live pair with the bounded longer handoff.
+PowerShell and twelve phone/probe checks pass. Full repair CI 38068318083
+(`ee81423`) passes all jobs. Review a replacement live pair with the bounded
+longer handoff after fresh phone/backend checks.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

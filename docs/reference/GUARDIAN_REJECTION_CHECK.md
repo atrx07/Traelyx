@@ -557,8 +557,10 @@ cleanup passes. Final counts are 0/1/1/0/0; the real registration is unexpired.
 The configurable gate retains the 45-second default and allows an explicit
 maximum of 90 only within unchanged event/send/shutdown budgets. Fifty-one
 PowerShell checks include the measured UTC handoff, shortened waits, strict
-boundary refusal and no-send Plan mode. Twelve phone/probe tests pass. Full
-source CI and a replacement reviewed live pair remain required; actual duplicate
+boundary refusal and no-send Plan mode. Twelve phone/probe tests and full
+[source CI 38068318083](https://github.com/atrx07/Traelyx/actions/runs/38068318083)
+for `ee81423` pass, including both APK builds. Atomic non-overwriting gate
+publication passes locally. A replacement reviewed live pair remains required; actual duplicate
 suppression is unverified. No app/server/schema/dependency or access change.
 Ignored proof: `m6_8_context_duplicate_{first_only,disabled,cleanup_pass,closed}.jpg`.
 
