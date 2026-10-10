@@ -10,6 +10,18 @@
 
 ## Working
 
+- Actual duplicate suppression passes (2026-10-11 local), fixture 871–875:
+  two provider acceptances/receipts, first notice tap to unloaded Guardian and
+  background-only restart; second callback/receipt refuses the durable claim,
+  preserves the encrypted vault hash and creates no notice. Hosted attempts=2.
+  Both flags false, worker retired (digest/old 401/local deletion), USB wake 0,
+  approved marker cleanup and final counts 0/1/1/0/0 pass. Real registration,
+  profile/sign-in/trips remain intact. The delayed-start six-minute lease and
+  >300-second launch headroom checks passed; source CI 38068318083 is green.
+  Next: separately reviewed expiry/disconnect, then recorder and two-phone gates.
+
+Earlier duplicate attempts below are superseded by this completed live proof.
+
 - Pair 861–865 is closed (2026-10-11 local): first callback/receipt/claim/notice,
   tap and background restart pass. An automatic approval check stalled 90 seconds
   after enable verification was requested; only 167.8 seconds remained when the

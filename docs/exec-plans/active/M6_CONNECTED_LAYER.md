@@ -694,8 +694,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   final 0/1/1/0/0, both flags false and real registration/sign-in intact. No
   runtime/schema update, personal telemetry, scheduler or Google key change.
   See `GUARDIAN_PUSH_CHECK.md` and ignored cold positive/closed proof images.
-- [ ] Verify expiry/revocation and actual duplicate
-  FCM behavior under separately reviewed windows; complete recorder integration
+- [x] Verify actual duplicate FCM suppression: 871–875 proof and closure below.
+- [ ] Verify expiry/revocation FCM behavior under separately reviewed windows; complete recorder integration
   and two-phone gates before calling M6.8 complete.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
@@ -871,11 +871,23 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Hosted device_received/attempts=1/unclaimed/private marker and one unexpired
   registration pass. Both flags false, worker retired (digest/old 401/local
   deletion), USB wake 0, approved marker cleanup and counts 0/1/1/0/0 pass.
-- [ ] Review a replacement with a two-minute future start using the existing
+- [x] Review a replacement with a two-minute future start using the existing
   tested window contract, then launch only after start with >300 seconds remaining
   in both event and window. Do not refresh/extend a live window to recover tooling
   latency. If readiness or timing fails, close without sending. At most two sends,
   one guarded requeue and existing exact enable/cleanup gates remain mandatory.
+- [x] Complete 871–875 (2026-10-11 local), with lease
+  19:43:07.391–19:49:07.391 UTC on October 10 and fresh >300-second event/window
+  headroom. First provider acceptance 19:43:15.5326577 UTC; first callback,
+  receipt, durable claim, notice, tap to unloaded Guardian, vault baseline and
+  background-only restart pass. Guarded requeue and matching atomic local gate
+  pass. Second provider acceptance 19:44:28.9620267 UTC; callback/receipt pass,
+  claim refused, vault unchanged and notice_count=0. Hosted status device_received,
+  attempts=2/unclaimed/private marker and one unexpired real registration pass.
+  Both flags false, worker retired (digest/old 401/local deletion), USB wake 0,
+  approved marker cleanup and final counts 0/1/1/0/0 pass. No app/server/schema,
+  dependency, personal telemetry or Google key change. Expiry/disconnect still
+  require separate review and denial/callback evidence; second phone not needed.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

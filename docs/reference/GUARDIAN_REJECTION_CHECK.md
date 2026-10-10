@@ -1,6 +1,6 @@
 # M6.8 duplicate, expiry and revocation receiver checks
 
-**Current prerequisite (2026-10-10):** Fixture 831–835 is closed and cleaned with
+**Prior prerequisite (2026-10-10):** Fixture 831–835 is closed and cleaned with
 zero attempts and no send. Both functions are disabled. The interrupted operator
 left the previous enable window open beyond its approved deadline; see the
 [incident record](../issues/2026-10-10_guardian-processing-window-overrun.md).
@@ -9,18 +9,17 @@ Server-enforced processing expiry is implemented in `09089ac` and full CI
 Reviewed deployment and hosted expiry proof completed on 2026-10-10: malformed
 requests return 400 during the three-minute window and 503 after its deadline
 with both flags still true. Flags restored false; worker retired/deleted; no send.
-Review a fresh actual duplicate pair next. Every subsequent window
+Every subsequent window
 must supply the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract described in the
 [capability setup](GUARDIAN_CAPABILITY_SETUP.md).
 
-**Status:** Actual duplicate suppression remains unverified: first fixture expired
-after receipt/tap; replacement received once without an observed notice. Both
-windows are disabled/cleaned with workers retired. Debug-only receiver tracing
-passes local/device checks and full CI 37803704159 (`4aecd2e`), including twelve
-SQL suites, Flutter/native tests, analysis and debug/release builds. The single
-traced live message passes callback/receipt/claim/notice checks and is closed and
-cleaned; earlier absence did not reproduce. Review a fresh actual duplicate pair.
-**Owner:** agent/maintainer. **Updated:** 2026-10-08. M6.8 remains active.
+**Status:** Actual duplicate suppression passes with 871–875: second callback/
+receipt, refused durable claim, unchanged vault and no recreated notice. Both
+functions are disabled; worker retired/deleted and approved fixture cleanup
+passes with final counts 0/1/1/0/0. Full source CI 38068318083 (`ee81423`) is green.
+Expiry/disconnect remain separately gated; recorder/two-phone checks follow.
+Earlier incomplete attempts below are historical, superseded by the final proof.
+**Owner:** agent/maintainer. **Updated:** 2026-10-11. M6.8 remains active.
 
 ## Goal and references
 
@@ -30,19 +29,19 @@ Read only Guardian spec sections 3, 7, 8 and 10, the permission matrix, receipt 
 preflight / durable claim implementation, existing dispatcher and manual fixtures.
 Prior [locked/offline results](GUARDIAN_RECEIVER_CHECK.md) passed and are closed.
 
-## Proposed review boundary
+## Remaining review boundary
 
-At most **four synthetic FCM messages** across three sequential fixtures:
+Duplicate is complete. Review each remaining case separately, one synthetic FCM
+message per fixture:
 
 | Case | Reserved IDs | Sends | Expected result |
 |---|---|---|---|
-| Duplicate after dismissal/restart | 741–745 | 2, same delivery/generation | Two receipts/attempts; second message does not recreate the dismissed notice |
-| Server expiry after queuing | 751–755 | 1 | Shortened synthetic server expiry denies receipt/display after reconnection |
+| Duplicate after dismissal/restart (complete) | 871–875 | 2, same delivery/generation | Two receipts/attempts; second message did not recreate the dismissed notice |
+| Server expiry after queuing | 881–885 | 1 | Shortened synthetic server expiry denies receipt/display after reconnection |
 | Disconnect after queuing | 761–765 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
 
-Review each case separately. The first hosted window is the duplicate pair only
-(two sends). Expiry and disconnect require their own review and reliable callback
-observability; they are not authorized by approval of the duplicate pair.
+Expiry and disconnect require their own review and reliable callback observability;
+they are not authorized by approval of the completed duplicate pair.
 
 Use one explicitly reviewed temporary worker value, private ignored file and
 fixed-endpoint probe; retire to a fresh server-only value, prove old-value 401 and
@@ -124,7 +123,8 @@ No credential or private payload is logged. Syntax is checked without execution.
 - [x] Guarded SQL controls and isolated regression wrapper prepared.
 - [x] Ignored fixture copies reverse-verified; bounded helper syntax parsed.
 - [x] Isolated SQL CI and remaining affected checks pass (37646111095).
-- [ ] Obtain concrete hosted review and execute bounded cases.
+- [x] Execute the reviewed duplicate pair and complete its cleanup/persistence.
+- [ ] Obtain concrete hosted review and execute expiry/disconnect cases.
 - [ ] Record observed results/limits and complete cleanup/persistence.
 
 Initial isolated CI run 37645710237 caught an incorrect receipt API name in the
@@ -589,6 +589,35 @@ and phone readiness before start, then launch only with >300 seconds of both
 event and window lifetime. If tooling consumes that headroom, close without a
 send. Do not extend an already active window or relax operator/send/SQL guards.
 Fresh scope/exact-enable and permanent-cleanup confirmations remain required.
+
+### Actual duplicate proof — fixture 871–875 complete and closed
+
+On 2026-10-11 local, the reviewed lease was 19:43:07.391–19:49:07.391 UTC on
+October 10. A two-minute future start allowed configuration/readiness verification
+before activation; the prepared launcher admitted only after start with >300
+seconds of event/window headroom. First acceptance was 19:43:15.5326577 UTC:
+callback/receipt/claim/notice, actual tap to unloaded Guardian, preserved vault
+baseline and background-only restart passed. The guarded requeue returned true,
+and its exact matching local gate was published atomically without overwriting.
+
+Second acceptance was 19:44:28.9620267 UTC. The duplicate callback and receipt
+passed; the durable claim refused another notice, the encrypted vault hash stayed
+unchanged and notice_count=0. Hosted audit showed device_received, attempts=2,
+unclaimed, exact private marker and one unexpired real registration. This proves
+the dismissed notice did not reappear for this same delivery/generation after
+the tested background restart. It does not establish reboot/Doze guarantees.
+
+Both flags were closed immediately after success. Worker retirement digest,
+old-value 401 and exact local deletion pass; USB wake restored to 0. Approved
+marker cleanup returns three absence checks true and device_rows=1; final counts
+are 0/1/1/0/0. Real profile/registration/sign-in/trips and backend Google key remain
+intact. No source/app/schema/dependency or personal telemetry change. Source CI
+38068318083 is green; six additional no-send launch guard cases and script syntax
+pass. Ignored proof: `m6_8_future_duplicate_{staged,enabled,two_received,disabled,
+cleanup_pass,closed}.jpg` and `guardian-pair-875/{first,duplicate}-passed.json`.
+
+Next review is the one-message expiry-after-queue case, then disconnect. Preserve
+fixed callback/denial evidence, network restoration and each separate review gate.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

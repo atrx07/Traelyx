@@ -10,6 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Actual duplicate suppression now passes with 871–875 (2026-10-11 local):
+two receipts, one first notice/tap, background restart, second claim refused,
+unchanged encrypted vault and no recreated notice. The future-start six-minute
+lease and >300-second launch headroom passed; full source CI 38068318083 is green.
+Both functions disabled, worker retired/deleted, approved cleanup and final counts
+0/1/1/0/0 pass. Review expiry-after-queue next, then disconnect, recorder and
+two-phone gates. Second phone is not needed for the expiry/disconnect checks.
+
+The earlier operator attempts below describe superseded gates and their repairs.
+
 Automatic processing-window expiry is deployed and hosted proof passes.
 The 831–835 enable window overran after approval-service
 usage rejection stopped dispatch launch; on 2026-10-10 both flags were closed,
@@ -42,8 +52,8 @@ no requeue or second send occurred. Flags/worker/USB wake and approved cleanup
 are closed; final counts are 0/1/1/0/0. Prepare a reviewed future start under the
 existing six-minute server interval and require >300 seconds of event/window
 headroom before launching a replacement. Abort without sending if tooling stalls.
-Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
-remain pending. Second phone is not needed for this backend prerequisite.
+Those attempts did not establish duplicate suppression; 871–875 subsequently
+passed it as recorded above. Expiry/disconnect, recorder and two-phone gates remain.
 
 1. M6.7 pairing, account/revision guards, permissions, blocking and transient invite handling are implemented. All 273 Flutter tests, local SQL suites, analysis and debug/release builds pass.
 2. The approved production migration and rollback-only synthetic tests pass; all four deployment checks are true and no fixtures remain.
