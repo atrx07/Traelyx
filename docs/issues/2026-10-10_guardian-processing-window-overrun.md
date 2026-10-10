@@ -50,8 +50,10 @@ and cannot reopen through a clock rollback. See
 Local Node and pinned Deno suites pass all 35 function tests (six new expiry
 regressions), lint and type checks. Two network-free deployment-bundle tests pass:
 both actual entrypoints deny missing leases and expire while warm with flags still
-true. Twelve operator tests and 23 PowerShell gate checks pass. Source commit/CI
-evidence will be recorded after persistence.
+true. Twelve operator tests and 23 PowerShell gate checks pass. Source repair
+[09089ac](https://github.com/atrx07/Traelyx/commit/09089acb16b03c72d794c05422c118b83a00b439)
+and full [CI 38058389131](https://github.com/atrx07/Traelyx/actions/runs/38058389131)
+pass all jobs, including twelve SQL suites, app/native checks and both APK builds.
 No migration, dependency, app update, client payload or permission grant changed.
 
 ## Remaining limits

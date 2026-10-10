@@ -1,5 +1,16 @@
 # M6.8 duplicate, expiry and revocation receiver checks
 
+**Current prerequisite (2026-10-10):** Fixture 831–835 is closed and cleaned with
+zero attempts and no send. Both functions are disabled. The interrupted operator
+left the previous enable window open beyond its approved deadline; see the
+[incident record](../issues/2026-10-10_guardian-processing-window-overrun.md).
+Server-enforced processing expiry is implemented in `09089ac` and full CI
+[38058389131](https://github.com/atrx07/Traelyx/actions/runs/38058389131) passed.
+The verified deployment drafts are not deployed. Complete reviewed disabled
+deployment and hosted expiry proof before any new send. Every subsequent window
+must supply the finite `GUARDIAN_PROCESSING_WINDOW_V1` contract described in the
+[capability setup](GUARDIAN_CAPABILITY_SETUP.md).
+
 **Status:** Actual duplicate suppression remains unverified: first fixture expired
 after receipt/tap; replacement received once without an observed notice. Both
 windows are disabled/cleaned with workers retired. Debug-only receiver tracing

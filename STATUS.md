@@ -19,8 +19,9 @@
   Automatic finite-window enforcement is now implemented in source, with six
   new regressions: all 35 Node/Deno function tests, lint/type checks, twelve
   operator tests, 23 PowerShell checks and both deployment-bundle tests pass.
-  Full source CI, deployment and
-  hosted expiry proof are pending. No further live sends before those gates.
+  Full source CI 38058389131 (`09089ac`) passes every job, including app/native
+  checks and both APK builds. Verified single-file deployment drafts are ready;
+  deployment and hosted expiry proof are pending. No live sends before those gates.
   See `docs/issues/2026-10-10_guardian-processing-window-overrun.md`.
 
 - The reviewed bridge pair 821–825 expired before enable approval was received

@@ -819,7 +819,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   lint/type checks, two deployment-bundle tests, twelve operator tests and
   23 PowerShell checks pass. No
   migration, dependency, client payload, credential or permission grant added.
-- [ ] Verify full source CI, reviewed inert deployment and hosted expiry before
+- [x] Verify expiry-repair source CI 38058389131 (`09089ac`): all jobs pass,
+  including SQL/operator/app/native checks and both APK builds. Two dashboard
+  drafts match their tested single-file bundles (line endings normalized).
+- [ ] Complete reviewed inert deployment and hosted expiry before
   further live sends. Missing/invalid/expired config must deny on warm instances;
   retain manual false restoration, worker retirement and synthetic cleanup.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.

@@ -17,7 +17,9 @@ zero attempts verified and approved cleanup completed (0/1/1/0/0). Worker retire
 local file removed, real registration retained. The source finite-window repair
 passes 35 Node/Deno function tests, lint/type checks, two deployment-bundle tests
 and existing operator gates.
-Verify full CI, review inert deployment and prove hosted expiry without any send.
+Full source CI 38058389131 (`09089ac`) passes all jobs. Verified single-file
+drafts are prepared in both dashboard editors. Review inert deployment and prove
+hosted expiry without any send.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 
