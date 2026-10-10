@@ -20,7 +20,10 @@ provider acceptance, guarded event expiry, then callback/receipt response reject
 unchanged vault and no notice. Flags false, worker retired/deleted, network 1/0/0,
 approved cleanup and final counts 0/1/1/0/0 pass. Review disconnect next, then
 recorder and two-phone gates. Second phone is not needed for disconnect. Natural
-FCM TTL expiry, long outages and Doze remain unverified.
+FCM TTL expiry, long outages and Doze remain unverified. Fresh disconnect 891–895
+is prepared locally with UUID-only SQL checks, helper syntax and ten denial-parser
+regressions passing. First-phone readiness/network pass; nothing is staged/sent.
+Obtain its concrete one-message/network/control/exact-enable review before running.
 
 The earlier operator attempts below describe superseded gates and their repairs.
 

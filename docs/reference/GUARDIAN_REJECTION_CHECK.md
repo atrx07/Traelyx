@@ -40,7 +40,7 @@ one synthetic FCM message per fixture:
 |---|---|---|---|
 | Duplicate after dismissal/restart (complete) | 871–875 | 2, same delivery/generation | Two receipts/attempts; second message did not recreate the dismissed notice |
 | Server expiry after queuing (complete) | 881–885 | 1 | Callback/response rejection, unchanged vault and no notice after reconnection |
-| Disconnect after queuing | 761–765 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
+| Disconnect after queuing | 891–895 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
 
 Disconnect requires its own review and reliable callback observability;
 it is not authorized by approval of the completed duplicate or expiry case.
@@ -671,6 +671,29 @@ schema or dependency change; source CI 38068318083 remains green. Ignored proof:
 `m6_8_expiry_881_{control_pass,disabled,denied,cleanup_pass,closed}.jpg`, observed
 booleans and closed checkpoint. Preserve these artifacts; do not reuse delivery
 885, its signal or baseline. Next is a fresh separately reviewed disconnect case.
+
+### Prepared disconnect case 891–895 — review pending
+
+Fresh stage/lifetime/cleanup copies reverse-verify against 881–885 as UUID-only
+changes. The disconnect control reverse-verifies against the CI-tested
+`guardian_push_disconnect.sql`; it invokes the guarded connection change as the
+synthetic driver and requires revoked_receipt_denied, disconnect_audited and
+receipt_not_recorded. The unique 891 revocation signal, create-only observer
+baseline and fresh delivery 895 avoid reuse of completed evidence.
+
+Offline and future-start helpers pass PowerShell syntax; Node observer syntax and
+ten no-device/no-network denial-parser regressions pass. The observer requires
+CALLBACK then RECEIPT_RESPONSE_REJECTED, unchanged encrypted vault and no notice;
+transport failure or missing/malformed stages cannot pass. Initial read-only phone
+preflight confirms inactive recorder and readiness; network baseline is 1/0/0
+with an active default network. Recheck before running because phone state changes.
+
+Nothing is staged or sent. Obtain separate review for one synthetic FCM message,
+brief radio disconnection/restoration, guarded synthetic-driver disconnect, any
+needed background-only process restart and the exact six-minute enable change.
+Use the tested two-minute future start and >300-second launch headroom, close on
+failure, retire/delete the worker and preserve action-time fixture cleanup review.
+The second phone is not needed. No runtime/app/schema/dependency change.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

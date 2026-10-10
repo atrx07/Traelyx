@@ -907,6 +907,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   This establishes server expiry rejection after queuing, not natural provider
   TTL exhaustion, long outages or Doze. Disconnect requires its own reviewed
   window; recorder/two-phone gates remain, and the second phone is not needed yet.
+- [x] Prepare fresh disconnect-after-queue case 891–895 locally only. Four SQL
+  copies reverse-verify as UUID-only changes; disconnect control uses the existing
+  guarded synthetic-driver API and checks denial/audit/unrecorded receipt. Two
+  PowerShell helpers and Node observer syntax pass; ten denial-parser regressions
+  pass without device/network calls. The first-phone read-only preflight confirms
+  inactive recorder, existing receipt/provider state and active network at 1/0/0.
+  No fixture, worker or window staged. Review one send, bounded offline hold,
+  synthetic disconnect and exact finite enable before execution; cleanup retains
+  its action-time gate. No app/server/schema/dependency change.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
