@@ -10,6 +10,14 @@
 
 ## Working
 
+- Synthetic pair 841–845 stopped before job creation/send: the prepared launch
+  wrapper reparsed PowerShell JSON UTC date objects through local text, making
+  valid deadlines appear expired. Hosted attempts=0; both flags false, worker
+  retired (digest/401/local deletion), approved cleanup returns true/true/true/1.
+  Final counts are 0/1/1/0/0; USB wake remains 0. The versioned operator now accepts
+  strict `-ContextPath` input preserving UTC and precision; 37 PowerShell checks
+  and twelve phone/probe tests pass. Full repair CI remains pending before a pair.
+
 - On 2026-10-10, recovery of interrupted 831–835 found both test flags still true
   after a usage-limit rejection prevented dispatch launch. The six-minute window
   was not enforced: flags were true 20h53m54s, then closed at 13:44:13 UTC.

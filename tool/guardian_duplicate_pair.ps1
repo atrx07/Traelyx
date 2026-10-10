@@ -2,6 +2,7 @@
 # Run only after approval, fresh SQL lifetime checks and both enable confirmations.
 param(
   [ValidateSet('Plan','Run')][string]$Mode = 'Plan',
+  [string]$ContextPath,
   [string]$DeliveryId,
   [DateTimeOffset]$ExpiresAt,
   [DateTimeOffset]$WindowDeadline,
@@ -9,6 +10,41 @@ param(
   [string]$Serial,
   [string]$NodePath = 'node'
 )
+
+function Convert-GuardianPairUtc($Value) {
+  # PowerShell 7 ConvertFrom-Json may already produce DateTime. Parsing that
+  # value again through its culture-formatted string loses Kind and precision.
+  if($Value -is [DateTimeOffset]) {
+    if($Value.Offset -ne [TimeSpan]::Zero){throw 'operator_context_timestamp_invalid'}
+    return $Value
+  }
+  if($Value -is [DateTime]) {
+    if($Value.Kind -ne [DateTimeKind]::Utc){throw 'operator_context_timestamp_invalid'}
+    return [DateTimeOffset]$Value
+  }
+  if($Value -isnot [string] -or
+    $Value -notmatch '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,7})?Z$'){
+    throw 'operator_context_timestamp_invalid'
+  }
+  try {
+    return [DateTimeOffset]::Parse($Value,[Globalization.CultureInfo]::InvariantCulture)
+  } catch {throw 'operator_context_timestamp_invalid'}
+}
+
+function Convert-GuardianPairContext($Context) {
+  if($null -eq $Context -or $Context -is [Array] -or
+    (@($Context.PSObject.Properties.Name | Sort-Object) -join ',') -cne
+      'delivery,expires_at,window_deadline' -or
+    $Context.delivery -isnot [string] -or
+    $Context.delivery -notmatch '^00000000-0000-4000-9000-000000000[0-9]{2}5$'){
+    throw 'operator_context_invalid'
+  }
+  return [pscustomobject]@{
+    delivery=$Context.delivery
+    expires_at=(Convert-GuardianPairUtc $Context.expires_at)
+    window_deadline=(Convert-GuardianPairUtc $Context.window_deadline)
+  }
+}
 
 function Test-GuardianPairBudget($Now, $Expiry, $Deadline, [bool]$First) {
   # 45s dispatch + 75s phone observation + 45s browser shutdown margin.
@@ -112,6 +148,16 @@ function Invoke-PairPhase([string]$Phase) {
 
 Push-Location $pairRoot
 try{
+  if($ContextPath){
+    if($PSBoundParameters.ContainsKey('DeliveryId') -or
+      $PSBoundParameters.ContainsKey('ExpiresAt') -or
+      $PSBoundParameters.ContainsKey('WindowDeadline')){throw 'operator_context_mixed_inputs'}
+    $context=Convert-GuardianPairContext ([IO.File]::ReadAllText(
+      (Join-Path $pairRoot $ContextPath)) | ConvertFrom-Json)
+    $DeliveryId=$context.delivery
+    $ExpiresAt=$context.expires_at
+    $WindowDeadline=$context.window_deadline
+  }
   if($DeliveryId -notmatch '^00000000-0000-4000-9000-000000000[0-9]{2}5$' -or $Serial -notmatch '^[A-Za-z0-9]+$'){
     throw 'operator_input_invalid'
   }

@@ -21,8 +21,13 @@ Full source CI 38058389131 (`09089ac`) passes all jobs. Reviewed disabled
 deployment completed on 2026-10-10. The reviewed three-minute malformed-request
 window passes active 400 and expired 503 for both endpoints with flags still true.
 Both flags are restored false, the worker is retired/deleted and the window is
-expired. No send or fixture occurred. Recheck first-phone/operator readiness and
-review a fresh actual duplicate pair under mandatory server expiry.
+expired. No send or fixture occurred. Pair 841–845 subsequently stopped before
+job creation because the temporary wrapper reparsed JSON UTC objects as local
+time. Zero attempts verified; flags disabled, worker retired/deleted and approved
+fixture cleanup passed. The versioned operator now supports strict `-ContextPath`;
+37 local PowerShell checks and twelve phone/probe tests pass. Verify full source
+CI, then recheck first-phone readiness and review a fresh actual duplicate pair
+under mandatory server expiry. Do not use the old timestamp-parsing wrapper.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

@@ -833,6 +833,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   send, registration or phone change; final counts 0/1/1/0/0. Hosted instance
   reuse is not established; warm-instance behavior is covered by source/bundle
   regressions.
+- [x] Close pair 841–845 on 2026-10-10: operator stopped before job directory or
+  send sentinel creation; hosted pending/attempts=0/unclaimed/private marker pass.
+  Both flags false, worker retired (digest/old 401/local deletion), USB wake 0,
+  approved synthetic cleanup returns true/true/true/1; final counts 0/1/1/0/0.
+  No send or requeue.
+- [x] Repair operator UTC context parsing: `-ContextPath` preserves already parsed
+  UTC dates and precision, validates exact context fields and rejects ambiguous
+  dates. The real failed context now passes its original preflight budget in
+  regression. 37 PowerShell gates and twelve phone/probe tests pass.
+- [ ] Verify full UTC-context repair CI before reviewing a replacement pair.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

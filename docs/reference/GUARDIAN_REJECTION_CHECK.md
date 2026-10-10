@@ -457,6 +457,10 @@ checks and action-time enable approval. Prepare the command and requeue SQL
 before enabling; launch the prewritten command immediately afterward. Pass the
 fresh synthetic delivery UUID, hosted event expiry and six-minute window deadline
 as UTC `DateTimeOffset` values. No function/SQL mutation is performed by the script.
+Prefer `-ContextPath .dart_tool/<reviewed-context>.json` with exactly `delivery`,
+`expires_at` and `window_deadline`. This validated input preserves UTC date objects
+from PowerShell JSON as well as UTC ISO strings. Do not mix context input with
+explicit delivery/date parameters or reparse date objects through `.Parse`.
 
 The bridge allows at most two one-shot dispatch invocations. It rechecks lifetime,
 default network, absent/non-stopped app process and recipient preflight; captures
@@ -493,6 +497,7 @@ actual paired live run remains pending. No
 runtime, schema, dependency, receiver authorization or claim-policy change.
 Fresh pair scope and action-time enable/cleanup confirmations remain required.
 Actual duplicate suppression is still unverified; no fresh fixture is staged.
+
 The UUID-only 821–825 pair was reviewed and staged, but expired at
 16:30:36.990944 UTC while awaiting action-time enable approval. At resume,
 hosted pending/attempts=0/unclaimed/expired checks pass. No enable, requeue,
@@ -511,6 +516,26 @@ guards and fresh hosted lifetime, then immediately apply the exact approved enab
 change. This avoids consuming fixture lifetime while awaiting user response; it
 does not extend lifetime or waive action-time confirmation. A changed action or
 approval rejection still requires renewed review. Never use an expired fixture.
+
+### UTC launch-context repair — fixture 841–845 closed
+
+On 2026-10-10 the temporary launch wrapper reparsed already converted UTC JSON
+date objects through local culture text. The valid deadline lost milliseconds
+and became +05:30, causing the initial budget gate to fail before job creation.
+Read-only diagnostics confirm receiver/recorder/network readiness, no job/send
+sentinels and hosted pending/attempts=0/unclaimed with the exact private marker.
+Both flags were disabled immediately; the worker was retired (digest/old 401) and
+deleted locally. Approved marker cleanup returns all three absence checks true,
+device_rows=1; final counts 0/1/1/0/0 and USB wake remains 0. No send, requeue or
+duplicate evidence occurred.
+
+The versioned operator's new strict `-ContextPath` path fixes UTC/precision loss
+and rejects local/ambiguous dates, non-UTC offsets, malformed dates and extra
+context fields. Thirty-seven PowerShell checks and twelve phone/probe tests pass;
+full repair CI is pending. Legacy Windows PowerShell file execution was blocked
+by host authorization; the string-date path is covered in current PowerShell.
+See [the tooling entry](KNOWN_TOOLING_ISSUES.md). Retire the old temporary wrapper;
+review a fresh pair only after repair CI, with mandatory server processing expiry.
 
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining

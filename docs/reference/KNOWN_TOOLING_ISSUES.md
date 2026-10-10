@@ -4,6 +4,22 @@ This is a lightweight, failure-triggered runbook for recurring local tooling pro
 
 Use the matching safe fix before inventing another workaround. If it fails, investigate the current evidence and revise the entry only after validating the replacement. Keep product defects, transient external failures, and one-off operator mistakes out of this file.
 
+## PowerShell JSON timestamps lose UTC when reparsed through strings
+
+- **Scope:** PowerShell 7 operator contexts containing ISO UTC timestamps.
+- **Symptom:** A valid event/window appears expired before an operator job starts.
+- **Cause:** `ConvertFrom-Json` can produce UTC `DateTime` objects. Passing those
+  objects to `DateTimeOffset.Parse` first coerces them to culture-formatted text,
+  losing UTC kind and milliseconds; this host then interpreted them as +05:30.
+- **Safe fix:** Use the reviewed pair operator's `-ContextPath` input, which
+  preserves UTC objects and validates UTC ISO strings. Do not call `.Parse` on an
+  already parsed date object. Ambiguous/local dates and non-UTC offsets fail closed.
+- **Verification:** `tests/tool/test_guardian_duplicate_pair.ps1` passes 37 checks,
+  including the real context instant/budget, both string/object paths, precision
+  and malformed/ambiguous inputs. Validated on 2026-10-10 in PowerShell 7; execution
+  of the same file in legacy Windows PowerShell was blocked by host authorization.
+- **Do not:** Weaken execution policy or convert times through local/culture text.
+
 ## Gradle cannot find Java in a clean PowerShell session
 
 - **Scope:** Windows PowerShell; Android/Gradle commands.
