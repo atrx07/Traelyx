@@ -10,6 +10,15 @@
 
 ## Working
 
+- Pair 861–865 is closed (2026-10-11 local): first callback/receipt/claim/notice,
+  tap and background restart pass. An automatic approval check stalled 90 seconds
+  after enable verification was requested; only 167.8 seconds remained when the
+  first phase ended. The unchanged 165-second send/shutdown reserve cut the gate
+  to about three seconds. No requeue or duplicate invocation occurred; hosted
+  attempts=1. Both flags false, worker retired (digest/old 401/local deletion),
+  USB wake 0, approved cleanup and final counts 0/1/1/0/0 pass. Review a future
+  start and fresh launch headroom for the replacement; duplicate remains pending.
+
 - Pair 851–855 passed the first callback/receipt/claim/notice, tap to unloaded
   Guardian and background restart. Guarded requeue passed, but its local signal
   arrived about 68 seconds into a 45-second wait. Hosted attempts remain one;

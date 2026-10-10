@@ -35,7 +35,13 @@ The configurable handoff defaults to 45 seconds, permits an explicit maximum of
 90 and ends earlier when existing send/shutdown budgets require it. All 51
 PowerShell and twelve phone/probe checks pass. Full repair CI 38068318083
 (`ee81423`) passes all jobs. Review a replacement live pair with the bounded
-longer handoff after fresh phone/backend checks.
+longer handoff after fresh phone/backend checks. Pair 861–865 subsequently passed
+its first phone phase, but a 90-second approval-checker timeout consumed window
+time. The remaining 167.8 seconds shortened its gate to about three seconds;
+no requeue or second send occurred. Flags/worker/USB wake and approved cleanup
+are closed; final counts are 0/1/1/0/0. Prepare a reviewed future start under the
+existing six-minute server interval and require >300 seconds of event/window
+headroom before launching a replacement. Abort without sending if tooling stalls.
 Actual duplicate suppression, expiry/disconnect, recorder and two-phone gates
 remain pending. Second phone is not needed for this backend prerequisite.
 

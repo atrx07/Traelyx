@@ -862,6 +862,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   Atomic non-overwriting gate publication was verified locally. Actual duplicate
   suppression still requires second callback/receipt, refused claim, unchanged
   vault and no recreated notice together. No fixture/window is active.
+- [x] Close 861–865 (2026-10-11 local). The six-minute lease was
+  19:27:37.667–19:33:37.667 UTC on October 10. A 90-second automatic approval
+  review timeout interrupted verification after enable. Fresh recovery verified
+  the save and lifetime; first phone phase passed. At waiting (19:30:49.871636 UTC)
+  only 167.795364 seconds remained, so the unchanged 165-second reserve cut the
+  gate to about three seconds. No requeue/gate publication/duplicate send occurred.
+  Hosted device_received/attempts=1/unclaimed/private marker and one unexpired
+  registration pass. Both flags false, worker retired (digest/old 401/local
+  deletion), USB wake 0, approved marker cleanup and counts 0/1/1/0/0 pass.
+- [ ] Review a replacement with a two-minute future start using the existing
+  tested window contract, then launch only after start with >300 seconds remaining
+  in both event and window. Do not refresh/extend a live window to recover tooling
+  latency. If readiness or timing fails, close without sending. At most two sends,
+  one guarded requeue and existing exact enable/cleanup gates remain mandatory.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.

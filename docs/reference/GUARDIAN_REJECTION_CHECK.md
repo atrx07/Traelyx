@@ -564,6 +564,32 @@ publication passes locally. A replacement reviewed live pair remains required; a
 suppression is unverified. No app/server/schema/dependency or access change.
 Ignored proof: `m6_8_context_duplicate_{first_only,disabled,cleanup_pass,closed}.jpg`.
 
+### Verification timeout — fixture 861–865 closed
+
+The reviewed lease was 19:27:37.667–19:33:37.667 UTC on 2026-10-10 (October 11
+local). An automatic approval check timed out after 90 seconds during enable
+verification; recovery verified both true digests, the new lease and fresh event
+lifetime. First callback/receipt/claim/notice, tap, vault baseline and background
+restart passed. At 19:30:49.871636 UTC, only 167.795364 seconds remained. The
+unchanged 165-second reserve shortened the configured 90-second gate to about
+three seconds. No guarded requeue, local confirmation or second invocation
+occurred. Hosted attempts remain one, status device_received, unclaimed, with
+the exact private fixture marker and one unexpired real registration.
+
+Both flags are false; the worker retirement digest, old-value 401 and exact local
+deletion pass. USB wake is 0. Approved marker cleanup returns all three absence
+checks true and device_rows=1; final counts are 0/1/1/0/0. No app/source/schema,
+access contract or dependency changed. Ignored proof:
+`m6_8_handoff_duplicate_{staged,first_only,disabled,cleanup_pass,closed}.jpg`.
+
+For the replacement, review a two-minute future start while retaining the exact
+six-minute active interval. The existing source gate denies before start, opens
+at start and expires at the boundary (already covered by CI). Verify configuration
+and phone readiness before start, then launch only with >300 seconds of both
+event and window lifetime. If tooling consumes that headroom, close without a
+send. Do not extend an already active window or relax operator/send/SQL guards.
+Fresh scope/exact-enable and permanent-cleanup confirmations remain required.
+
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining
 M6.8 gates independently; M7 is not authorized.
