@@ -18,15 +18,18 @@ Both functions disabled, worker retired/deleted, approved cleanup and final coun
 0/1/1/0/0 pass. Server expiry after queuing also passes with 881–885: one offline
 provider acceptance, guarded event expiry, then callback/receipt response rejection,
 unchanged vault and no notice. Flags false, worker retired/deleted, network 1/0/0,
-approved cleanup and final counts 0/1/1/0/0 pass. Review disconnect next, then
-recorder and two-phone gates. Second phone is not needed for disconnect. Natural
+approved cleanup and final counts 0/1/1/0/0 pass. Disconnect after queuing passes
+with 901–905: one offline acceptance, guarded audited closure/revision 2, callback
+response rejection, unchanged vault and no notice. Flags disabled, worker retired,
+network restored and approved cleanup/final counts 0/1/1/0/0 pass. Proceed with
+recorder/driver-activation integration; second phone is needed later for the
+two-account end-to-end gate. Natural
 FCM TTL expiry, long outages and Doze remain unverified. Disconnect attempt 891–895
 stopped before enabling or sending because credential setup consumed launch
 headroom. Zero attempts, worker retirement and approved cleanup pass. Replacement
 901–905 is prepared with seven ID/path-only reverse checks and helper syntax
-passing. Complete worker setup/verification before staging the next fixture;
-preserve the two-minute future start and >300-second launch reserve. Obtain fresh
-one-message/network/control/exact-enable review before running the replacement.
+passing. Worker setup before staging preserved the two-minute future start and
+>300-second reserve; that replacement subsequently passed as recorded above.
 
 The earlier operator attempts below describe superseded gates and their repairs.
 

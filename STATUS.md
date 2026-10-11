@@ -10,6 +10,16 @@
 
 ## Working
 
+- Disconnect after queuing passes (2026-10-11 local), fixture 901–905: one
+  provider acceptance while offline, audited guarded disconnect to closed/revision
+  2, then callback/receipt response rejected after reconnection. Vault unchanged,
+  zero notices and no received acknowledgement. Both functions disabled, worker
+  retired (digest/old 401/local deletion), network restored to 1/0/0, approved
+  marker cleanup and final counts 0/1/1/0/0 pass. Worker setup before staging
+  preserved the two-minute future start and >300-second launch headroom. No
+  runtime/schema/dependency or trip upload change. Next: recorder/activation
+  integration, then two-phone and remaining reliability/completion gates.
+
 - Server expiry after queuing passes (2026-10-11 local), fixture 881–885:
   one provider acceptance while offline, guarded synthetic event expiry, then
   callback/receipt response rejected after reconnection. No receipt recorded,
@@ -20,9 +30,7 @@
   or long-outage/Doze behavior. Disconnect attempt 891–895 stopped before enabling
   or sending: setup consumed the future-start/headroom budget. Zero attempts,
   flags false, retired worker/old 401/local deletion and approved cleanup pass.
-  Replacement 901–905 is prepared with seven ID/path-only reverse checks and
-  helper syntax passing; verify worker before staging so setup does not consume
-  event lifetime. Review the replacement, then recorder/two-phone gates.
+  Replacement 901–905 subsequently passed and closed as recorded above.
 
 - Actual duplicate suppression passes (2026-10-11 local), fixture 871–875:
   two provider acceptances/receipts, first notice tap to unloaded Guardian and

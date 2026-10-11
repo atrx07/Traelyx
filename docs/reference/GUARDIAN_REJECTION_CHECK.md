@@ -19,7 +19,9 @@ functions are disabled; worker retired/deleted and approved fixture cleanup
 passes with final counts 0/1/1/0/0. Full source CI 38068318083 (`ee81423`) is green.
 Server expiry after queuing passes with 881–885: callback/response rejection,
 unchanged vault/no notice and approved cleanup, final counts 0/1/1/0/0. Disconnect
-remains separately gated; recorder/two-phone checks follow.
+after queuing passes with 901–905: audited closure/revision 2, callback response
+rejection, unchanged vault/no notice and approved cleanup, final counts 0/1/1/0/0.
+Receiver cases are complete; recorder/activation and two-phone checks follow.
 Earlier incomplete attempts below are historical, superseded by the final proof.
 **Owner:** agent/maintainer. **Updated:** 2026-10-11. M6.8 remains active.
 
@@ -33,14 +35,14 @@ Prior [locked/offline results](GUARDIAN_RECEIVER_CHECK.md) passed and are closed
 
 ## Remaining review boundary
 
-Duplicate and server expiry are complete. Review the remaining case separately,
-one synthetic FCM message per fixture:
+All three receiver cases are complete. Any new production window requires its
+own concrete review; completed-case approval does not authorize another send.
 
 | Case | Reserved IDs | Sends | Expected result |
 |---|---|---|---|
 | Duplicate after dismissal/restart (complete) | 871–875 | 2, same delivery/generation | Two receipts/attempts; second message did not recreate the dismissed notice |
 | Server expiry after queuing (complete) | 881–885 | 1 | Callback/response rejection, unchanged vault and no notice after reconnection |
-| Disconnect after queuing | 901–905 | 1 | Guarded driver disconnect increments revision/audits; queued receipt/display denied |
+| Disconnect after queuing (complete) | 901–905 | 1 | Audited closed/revision 2, callback response rejection, unchanged vault and no notice |
 
 Disconnect requires its own review and reliable callback observability;
 it is not authorized by approval of the completed duplicate or expiry case.
@@ -127,8 +129,8 @@ No credential or private payload is logged. Syntax is checked without execution.
 - [x] Isolated SQL CI and remaining affected checks pass (37646111095).
 - [x] Execute the reviewed duplicate pair and complete its cleanup/persistence.
 - [x] Execute the separately reviewed server expiry case and complete cleanup.
-- [ ] Obtain concrete hosted review and execute the disconnect case.
-- [ ] Record observed results/limits and complete cleanup/persistence.
+- [x] Execute the separately reviewed disconnect case.
+- [x] Record observed receiver results/limits and complete cleanup/persistence.
 
 Initial isolated CI run 37645710237 caught an incorrect receipt API name in the
 new wrapper. Corrected to the existing `receive_guardian_alert_v1`; no runtime or
@@ -724,3 +726,32 @@ replacement is staged or sent, and the second phone is not needed.
 These checks do not prove natural Doze, long outages, reboot/direct boot, recorder
 integration, two-phone delivery or emergency reliability. Complete those remaining
 M6.8 gates independently; M7 is not authorized.
+
+### Disconnect proof — fixture 901–905 complete and closed
+
+On 2026-10-11 local, the separately reviewed lease was 20:39:10.786–20:45:10.786
+UTC on October 10. Worker setup/digest verification completed before staging,
+preserving the reviewed two-minute future start and >300-second launch headroom.
+Recorder-inactive, process-absent and network checks passed. Exactly one data-only
+message was provider-accepted while the phone had no active default network.
+
+The exact-marker control invoked the existing guarded API as only the synthetic
+driver. revoked_receipt_denied, disconnect_audited and receipt_not_recorded all
+returned true before reconnection. After restoration, fixed stages were CALLBACK
+then RECEIPT_RESPONSE_REJECTED, matching notice count zero and encrypted vault
+hash unchanged. Hosted audit confirmed provider_accepted/attempts=1, canonical
+connection status closed/revision 2, receipt denied and one unexpired real device.
+An initial read-only audit expected the wrong status literal `disconnected`;
+checking the committed API and canonical `closed` corrected that audit predicate.
+No product change was needed, and transport failure was not counted as denial.
+
+Both functions were disabled immediately after observation. Worker retirement
+digest, old-value 401 and exact local deletion pass. Independent radio checks
+confirm baseline 1/0/0. Approved marker cleanup returned three absence checks
+true and device_rows=1; final counts 0/1/1/0/0 pass. Real profile/device/trips and
+backend Google key remain intact. No runtime/app/schema/dependency or trip upload
+change; source CI 38068318083 remains green. Ignored proof:
+`m6_8_disconnect_901_{control_pass,disabled,denied,cleanup_pass,closed}.jpg`,
+observed booleans and closed checkpoint. Preserve delivery 905 evidence; do not
+reuse its signal/baseline. Continue recorder/activation integration and later
+two-phone/reliability gates; M6.8 is not complete.

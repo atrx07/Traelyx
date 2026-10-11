@@ -696,7 +696,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   See `GUARDIAN_PUSH_CHECK.md` and ignored cold positive/closed proof images.
 - [x] Verify actual duplicate FCM suppression: 871–875 proof and closure below.
 - [x] Verify server expiry after queuing: 881–885 proof and closure below.
-- [ ] Verify revocation FCM behavior under a separately reviewed window; complete recorder integration
+- [x] Verify revocation FCM behavior: reviewed 901–905 proof and closure below.
+- [ ] Complete recorder/driver activation integration
   and two-phone gates before calling M6.8 complete.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
@@ -926,6 +927,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   syntax passes. Verify the worker before staging the replacement so credential
   setup does not consume event lifetime. Keep all timing/send limits unchanged;
   replacement scope/exact enable and cleanup remain separately reviewed.
+- [x] Complete reviewed 901–905 disconnect-after-queue proof (2026-10-11 local).
+  Worker verified before staging; lease 20:39:10.786–20:45:10.786 UTC on October
+  10, with >300-second event/window launch headroom. Exactly one offline provider
+  acceptance; guarded synthetic driver disconnect returns denial/audit/unrecorded
+  receipt true. After network restoration, CALLBACK then RECEIPT_RESPONSE_REJECTED,
+  zero notices and unchanged encrypted vault pass. Hosted provider_accepted,
+  attempts=1, closed connection/revision 2, receipt denied and one unexpired real
+  registration pass. Both functions disabled, worker retired (digest/old 401/local
+  deletion), independently restored network 1/0/0, approved marker cleanup and
+  final counts 0/1/1/0/0 pass. No app/server/schema/dependency, personal telemetry
+  or Google key change. Runtime source CI remains 38068318083. This completes the
+  receiver duplicate/expiry/disconnect gate; recorder/activation, two-phone and
+  reliability/completion gates remain. Second phone is not needed for inspection.
 - [x] Finish reviewed locked/offline pair closure in `GUARDIAN_RECEIVER_CHECK.md`.
   Both physical cases passed on 2026-10-07: one send each, normal one-attempt
   receipt, generic notice tap to unloaded Guardian and no viewed acknowledgement.
