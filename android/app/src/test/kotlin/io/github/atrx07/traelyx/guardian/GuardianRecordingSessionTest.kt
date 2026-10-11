@@ -112,6 +112,7 @@ class GuardianRecordingSessionTest {
         val reads = f.vault.reads; val writes = f.vault.writes
         handle.offer(sample)
         assertSame(sample, f.workers.single().offered)
+        assertEquals(GuardianRecordingObservation(true, GuardianEvaluationAvailability.CALIBRATING), f.session.observation())
         val motion = RawImuSample(sensorType = ImuSensorType.ACCELEROMETER,
             tripElapsedNanos = 10_000_000_000, sourceTimestampNanos = 10_000_000_000,
             x = 0f, y = 0f, z = 9.80665f, accuracyStatus = 3, qualityFlags = emptySet())
@@ -176,6 +177,7 @@ class GuardianRecordingSessionTest {
         f.vault.failWrite = true; f.detect(); f.drain()
         assertNull(f.vault.value.lease)
         assertEquals(GuardianEvaluationAvailability.EVIDENCE_UNAVAILABLE, handle.availability)
+        assertEquals(GuardianEvaluationAvailability.EVIDENCE_UNAVAILABLE, f.session.observation().availability)
         f.detect(f.workers.single()); f.drain()
         assertTrue(f.vault.value.alerts.isEmpty())
     }

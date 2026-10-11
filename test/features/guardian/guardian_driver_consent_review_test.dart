@@ -31,6 +31,8 @@ void main() {
     );
     expect(confirm().onPressed, isNull);
     expect(find.textContaining('not emergency assistance'), findsOneWidget);
+    expect(find.textContaining('monitoring stops'), findsOneWidget);
+    expect(find.textContaining('Saved consent alone'), findsOneWidget);
 
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();

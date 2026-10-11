@@ -209,6 +209,16 @@ Partner cannot:
 
 Never use dark patterns to broaden sharing.
 
+### M6.8 local driver-status check
+
+Guardian offers an explicit local check below existing pairing/registration
+actions. Show the last-check time and distinguish off, reactivation required,
+waiting for a recorded trip, calibration, experimental evaluation and unavailable
+evidence. Clear the observation on background/account changes; no automatic
+polling, activation or send. Explain that process death/phone restart requires a
+fresh driver review and that saved consent does not imply active monitoring.
+Activation/cancellation/sending controls remain unavailable pending their gates.
+
 ## 14. Account UX
 
 Account creation is positioned as unlocking online features, not as the gate to the app.

@@ -59,6 +59,10 @@ class GuardianRecordingSession(
     private var run: Run? = null
     private var blockedActivation: Pair<String, String>? = null
     val isEvaluating get() = run != null
+    fun observation() = GuardianRecordingObservation(
+        recording = handle?.isClosed == false,
+        availability = handle?.availability ?: GuardianEvaluationAvailability.DISABLED,
+    )
 
     /** No vault IO during valid monitoring; expiry/clock failure still stops a quiet session. */
     fun tick() {

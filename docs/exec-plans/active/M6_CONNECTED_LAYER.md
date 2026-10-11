@@ -734,6 +734,32 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     closes only the bounded native integration, not active-device or M6.8 gates.
   - [ ] Validate active recording/performance, process recovery UX, explicit
     activation/cancellation and sender integration before overall M6.8 completion.
+  Next bounded unit: expose credential-free, account-checked local driver status
+  through a new native method and an explicit foreground check. Distinguish
+  restored consent requiring reactivation from waiting for a trip, calibration,
+  experimental evaluation and unavailable evidence. Display the check time and
+  clear status on background/account change; never infer delivery from a lease.
+  Explain process-death reactivation in the dormant consent review. No activation
+  control, sender, network request, timer, migration or permission change. Require
+  strict wire/owner/restart/failure tests, Flutter/native checks, configured build,
+  inactive physical screen proof and exact-source CI before bounded closure.
+  - [x] New account-checked `driverStatus` bridge returns only state/expiry. The
+    local-only foreground panel requires a tap, labels its last-check time and
+    clears on background/account changes. No activation, polling, sender or Auth
+    request is added. Dormant driver consent explains process-death reactivation.
+  - [x] Six new Flutter status/wire/timeout/lifecycle checks and four native
+    owner/restart/expiry/state checks pass. All 340 Flutter and 375 app native tests
+    plus dependency suites pass; analysis, app lint and configured debug build
+    pass. A pairing test now waits for scroll geometry to settle after preview
+    removal, retaining every acceptance/confirmation assertion. Document the
+    Java-21/all-native and app-target-lint host commands without new permissions
+    or plugin/test suppression.
+  - [x] First phone update opens; local check reports monitoring off plus check
+    time. Home/resume clears that observation without an automatic recheck. You
+    remains signed in; all 11,857 recorder hashes and recipient vault match, and
+    driver vault stays absent. Private preservation/QA artifacts are ignored.
+    No activation, recording, registration, network request or trip upload.
+  - [ ] Inspect/commit/push, require exact-source CI and persist bounded closure.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
   guarded disconnect controls plus disposable SQL regression suite are wired

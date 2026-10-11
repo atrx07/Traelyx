@@ -19,7 +19,8 @@ object AndroidGuardianActivationRuntime {
         val app = context.applicationContext
         worker.execute {
             val result = runCatching {
-                val current = bridge ?: GuardianActivationBridge(coordinator(app)).also { bridge = it }
+                val current = bridge ?: GuardianActivationBridge(coordinator(app),
+                    { recording?.observation() ?: GuardianRecordingObservation() }).also { bridge = it }
                 try { current.dispatch(method, arguments) } finally {
                     recording?.refresh()
                     syncRecordingWatchdog()

@@ -1,7 +1,10 @@
 package io.github.atrx07.traelyx.guardian
 
 /** Foreground-only bridge. Its proposal contains a credential: never log bridge arguments or results. */
-class GuardianActivationBridge(private val coordinator: GuardianActivationCoordinator) {
+class GuardianActivationBridge(
+    private val coordinator: GuardianActivationCoordinator,
+    private val recordingObservation: () -> GuardianRecordingObservation = { GuardianRecordingObservation() },
+) {
     fun dispatch(method: String, rawArguments: Any?): Any? {
         val arguments = rawArguments as? Map<*, *> ?: throw IllegalArgumentException("Invalid Guardian request")
         fun exact(vararg names: String) { require(arguments.keys == names.toSet()) }
@@ -43,6 +46,13 @@ class GuardianActivationBridge(private val coordinator: GuardianActivationCoordi
                 val lease = coordinator.snapshot(owner()).lease
                 mapOf("localLeasePresent" to (lease != null), "expiresEpochMillis" to lease?.expiresEpochMillis)
             }
+            DRIVER_STATUS -> {
+                exact("ownerId")
+                // Validate the bound owner before observing a live recording handle.
+                val lease = coordinator.snapshot(owner()).lease
+                val fresh = coordinator.recordingSnapshot()?.lease != null
+                guardianDriverStatus(lease, fresh, recordingObservation())
+            }
             else -> throw IllegalArgumentException("Unknown Guardian request")
         }
     }
@@ -55,6 +65,7 @@ class GuardianActivationBridge(private val coordinator: GuardianActivationCoordi
         const val ABORT = "abort"
         const val DISABLE = "disable"
         const val SNAPSHOT = "snapshot"
-        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, SNAPSHOT)
+        const val DRIVER_STATUS = "driverStatus"
+        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, SNAPSHOT, DRIVER_STATUS)
     }
 }

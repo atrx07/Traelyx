@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_driver_status_panel.dart';
 import 'package:traelyx/features/guardian/guardian_inbox.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
 import 'package:traelyx/features/guardian/guardian_recipient_consent_review.dart';
@@ -520,6 +521,11 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         TextButton(
           onPressed: () => context.go('/social'),
           child: const Text('Back to Social'),
+        ),
+        const SizedBox(height: 24),
+        GuardianDriverStatusPanel(
+          key: ValueKey(widget.owner),
+          owner: widget.owner,
         ),
       ],
     );

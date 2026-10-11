@@ -49,7 +49,16 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 
 - **Verification:** The intended Gradle task starts with that JDK and completes with its expected result.
 - **Do not:** Change the user's global `JAVA_HOME`, system `PATH`, or Android Studio installation to repair one task shell.
-- **Last validated / notes:** Validated on 2026-08-11 during the M2.7 closeout. Rediscover the configured JDK if Android Studio moves.
+- **Last validated / notes:** Revalidated on 2026-10-11: the bundled runtime is Java 21. Android SDK 36 dependency Robolectric tests reject Java 17 before running; use Java 21 for the complete `testDebugUnitTest` task. Rediscover the configured JDK if Android Studio moves.
+
+## Unqualified Android lint also checks dependency modules in isolation
+
+- **Scope:** Direct Gradle lint on the Flutter Android project.
+- **Symptom:** `lintDebug` fails in a plugin's own source/manifest (observed: `flutter_secure_storage` reports `USE_BIOMETRIC` missing), while the app target passes.
+- **Cause:** The unqualified task runs each subproject's standalone lint, beyond the app's merged-manifest check.
+- **Fast safe fix:** Run the intended app gate explicitly: `:app:lintDebug`. Keep `testDebugUnitTest` for all native suites; use Java 21 when Android 36 Robolectric tests are included. Inspect the failing module before choosing a target.
+- **Verification:** On 2026-10-11, all native suites plus `:app:lintDebug` passed together; all 375 app tests had zero failures/errors/skips.
+- **Do not:** Add app permissions, edit plugin cache source, suppress lint errors, or change test assertions to silence an isolated dependency-manifest failure. A failure in `:app:lintDebug` still requires investigation.
 
 ## Windows escaping in `android/local.properties` breaks Android lint
 

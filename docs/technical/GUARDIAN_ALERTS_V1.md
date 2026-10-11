@@ -36,6 +36,18 @@ Same-process service restart recalibrates with persisted cooldowns. Lease presen
 must not be shown as active monitoring. See
 `../decisions/ADR-0029-guardian-recorder-sidecar.md` for isolation and restart limits.
 
+The foreground `driverStatus` method accepts only the bound owner's ID and returns
+only `state` plus nullable `expiresEpochMillis`; it exports no capability, account,
+activation/event identity or telemetry. Native state distinguishes disabled,
+reactivation required, waiting for a trip, calibrating, experimental monitoring
+and unavailable evidence. Restored or expired consent overrides an observer's
+monitoring claim. Flutter rejects unknown/extra fields and inconsistent/expired
+or over-eight-hour expiry. Guardian's local status panel checks only on tap,
+labels the observation/check time and clears on background/account change;
+timeouts/late replies never restore it. There is no polling, activation, sender
+or Auth/network call in this path. Only the inactive state is physically verified
+so far; live states have synthetic tests. Exact-source CI is pending for this unit.
+
 The driver must first confirm a rigid mount and device-forward direction.
 Missing confirmation is disabled. A stationary three-second window requires
 GNSS speed at most 1 m/s, gyro magnitude at most 0.05 rad/s, accelerometer norm

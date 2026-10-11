@@ -10,6 +10,19 @@
 
 ## Working
 
+- Local Guardian driver-status UI is implemented under source-CI validation
+  (2026-10-11). An explicit account-checked local query returns only state/expiry,
+  distinguishing fresh consent, recorded-trip calibration/evaluation, restored
+  consent requiring reactivation and unavailable evidence. The screen displays a
+  last-check time and clears on background/account change; it does not activate,
+  poll, refresh Auth or send. The dormant consent review explains process-death
+  reactivation. Six new Flutter and four native regressions, all 340 Flutter tests,
+  all 375 app native tests plus dependency suites, analysis, app lint and configured
+  debug build pass. Physical inactive check/clear and saved sign-in pass; all
+  11,857 recorder hashes and recipient vault remain unchanged, driver vault absent.
+  Source CI is pending. Active device states, consent/cancellation/sender and
+  two-phone gates remain; production functions stay disabled.
+
 - Native recorder/Guardian sidecar bounded integration passes (2026-10-11).
   Raw-writer acceptance precedes offer-only evaluation; owner/lease/handle checks
   gate atomic encrypted cooldown/event insertion. Unknown or restored-only

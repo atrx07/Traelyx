@@ -161,6 +161,11 @@ The isolated experimental native evaluator and alert lifecycle are specified in
 and remains inactive without explicit driver activation; pairing cannot enable it.
 Restored lease presence after full process death does not restart evaluation;
 fresh driver activation is required and must be explained in its future UI.
+The local driver-status check is now reachable below the existing Guardian
+actions. It labels the last-check time, clears when backgrounded/account-changed
+and never activates or sends. The dormant activation review explains that an app
+process ending or phone restart stops monitoring and requires another review.
+Saved consent and experimental evaluation never imply delivery or assistance.
 Alert delivery remains unavailable until consent, persistence,
 server authorization, push delivery and physical validation gates pass.
 

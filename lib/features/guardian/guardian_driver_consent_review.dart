@@ -27,6 +27,12 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
               ),
               const SizedBox(height: 12),
               const Text(
+                'If Android ends the app process or the phone restarts, monitoring stops. '
+                'Open Traelyx and review driver alerts again before relying on the setting. '
+                'Saved consent alone does not mean monitoring is running.',
+              ),
+              const SizedBox(height: 12),
+              const Text(
                 'Mount the phone rigidly. Choose which part of the mounted phone points toward the front of the vehicle. '
                 'If the mount moves, stop and review the direction again.',
               ),

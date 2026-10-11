@@ -364,6 +364,8 @@ void main() {
         connections: [connection()],
       );
       await tester.ensureVisible(find.text('Reload Guardian'));
+      // Let scroll metrics settle after the preview is removed.
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Reload Guardian'));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(

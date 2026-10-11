@@ -10,6 +10,13 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Local driver status and process-restart disclosure now have a production route,
+with no activation or send control. All 340 Flutter tests, 375 app native tests,
+dependency suites, analysis, app lint, configured build and inactive physical
+check/background clearing/data preservation pass. Require exact-source CI before
+bounded closure, then integrate consent/cancellation and the minimized sender.
+Active-device and two-phone gates remain; no second phone is needed for this unit.
+
 The native recorder sidecar bounded integration passes: account/lease/handle
 gates, unchanged offer-only samples, encrypted cooldown/event insertion and
 Guardian-only failure cleanup. All 371 native tests (14 new integration cases),

@@ -19,9 +19,12 @@ class GuardianActivationBridgeTest {
         val credential = "a".repeat(64)
         var now = GuardianClock(1_800_000_000_000, 10_000, "boot-1")
         val vault = MemoryVault()
-        val bridge = GuardianActivationBridge(GuardianActivationCoordinator(
+        val coordinator = GuardianActivationCoordinator(
             GuardianOutbox(vault), { now }, { activation }, { credential },
-        ))
+        )
+        var observation = GuardianRecordingObservation()
+        var observationReads = 0
+        val bridge = GuardianActivationBridge(coordinator) { observationReads++; observation }
         fun bind(value: String?) = bridge.dispatch(GuardianActivationBridge.BIND_OWNER, mapOf("ownerId" to value))
         fun begin() = bridge.dispatch(GuardianActivationBridge.BEGIN,
             mapOf("ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)) as Map<*, *>
@@ -77,5 +80,61 @@ class GuardianActivationBridgeTest {
             mapOf("ownerId" to owner, "activationId" to proposal["activationId"],
                 "serverExpiresEpochMillis" to f.now.epochMillis + 1_000)) }
         assertNull(f.vault.value.lease)
+    }
+
+    private fun status(f: Fixture) = f.bridge.dispatch(GuardianActivationBridge.DRIVER_STATUS,
+        mapOf("ownerId" to owner)) as Map<*, *>
+    private fun commit(f: Fixture) {
+        f.begin()
+        f.bridge.dispatch(GuardianActivationBridge.COMMIT, mapOf("ownerId" to owner,
+            "activationId" to activation, "serverExpiresEpochMillis" to f.now.epochMillis + 60_000L))
+    }
+
+    @Test fun `driver state rejects wrong owner and extras before observing recorder`() {
+        val f = Fixture()
+        rejected { status(f) }
+        f.bind(owner)
+        rejected { f.bridge.dispatch(GuardianActivationBridge.DRIVER_STATUS, mapOf("ownerId" to other)) }
+        rejected { f.bridge.dispatch(GuardianActivationBridge.DRIVER_STATUS,
+            mapOf("ownerId" to owner, "extra" to true)) }
+        assertEquals(0, f.observationReads)
+    }
+
+    @Test fun `consent alone never reports live evaluation and status contains no capability`() {
+        val f = Fixture(); f.bind(owner)
+        assertEquals(mapOf("state" to "disabled", "expiresEpochMillis" to null), status(f))
+        commit(f)
+        assertEquals("waiting_for_trip", status(f)["state"])
+        f.observation = GuardianRecordingObservation(true, GuardianEvaluationAvailability.CALIBRATING)
+        assertEquals("calibrating", status(f)["state"])
+        f.observation = f.observation.copy(availability = GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
+        val monitoring = status(f)
+        assertEquals("monitoring_experimental", monitoring["state"])
+        assertEquals(setOf("state", "expiresEpochMillis"), monitoring.keys)
+        assertFalse(monitoring.toString().contains(f.credential))
+        assertFalse(monitoring.toString().contains(activation))
+        assertFalse(monitoring.toString().contains(owner))
+        f.observation = f.observation.copy(availability = GuardianEvaluationAvailability.DISABLED)
+        assertEquals("evidence_unavailable", status(f)["state"])
+        f.observation = f.observation.copy(availability = GuardianEvaluationAvailability.EVIDENCE_UNAVAILABLE)
+        assertEquals("evidence_unavailable", status(f)["state"])
+    }
+
+    @Test fun `restored lease requires a new review even if an observer claims monitoring`() {
+        val f = Fixture(); f.bind(owner); commit(f)
+        val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now })
+        restarted.bindOwner(owner)
+        val bridge = GuardianActivationBridge(restarted) {
+            GuardianRecordingObservation(true, GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
+        }
+        val status = bridge.dispatch(GuardianActivationBridge.DRIVER_STATUS, mapOf("ownerId" to owner)) as Map<*, *>
+        assertEquals("reactivation_required", status["state"])
+    }
+
+    @Test fun `expired lease denies monitoring even before sidecar refresh`() {
+        val f = Fixture(); f.bind(owner); commit(f)
+        f.observation = GuardianRecordingObservation(true, GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
+        f.now = f.now.copy(epochMillis = f.now.epochMillis + 60_000, elapsedMillis = f.now.elapsedMillis + 60_000)
+        assertEquals(mapOf("state" to "disabled", "expiresEpochMillis" to null), status(f))
     }
 }
