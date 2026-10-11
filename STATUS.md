@@ -10,7 +10,7 @@
 
 ## Working
 
-- Local Guardian driver-status UI is implemented under source-CI validation
+- Local Guardian driver-status UI passes its bounded validation
   (2026-10-11). An explicit account-checked local query returns only state/expiry,
   distinguishing fresh consent, recorded-trip calibration/evaluation, restored
   consent requiring reactivation and unavailable evidence. The screen displays a
@@ -20,7 +20,7 @@
   all 375 app native tests plus dependency suites, analysis, app lint and configured
   debug build pass. Physical inactive check/clear and saved sign-in pass; all
   11,857 recorder hashes and recipient vault remain unchanged, driver vault absent.
-  Source CI is pending. Active device states, consent/cancellation/sender and
+  Full source CI 38135386431 passes for `dae26e7`. Active device states, consent/cancellation/sender and
   two-phone gates remain; production functions stay disabled.
 
 - Native recorder/Guardian sidecar bounded integration passes (2026-10-11).

@@ -46,7 +46,8 @@ or over-eight-hour expiry. Guardian's local status panel checks only on tap,
 labels the observation/check time and clears on background/account change;
 timeouts/late replies never restore it. There is no polling, activation, sender
 or Auth/network call in this path. Only the inactive state is physically verified
-so far; live states have synthetic tests. Exact-source CI is pending for this unit.
+so far; live states have synthetic tests. Full source CI 38135386431 passes for
+`dae26e7`, closing only this bounded local-status unit.
 
 The driver must first confirm a rigid mount and device-forward direction.
 Missing confirmation is disabled. A stationary three-second window requires

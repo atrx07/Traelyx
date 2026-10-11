@@ -13,9 +13,11 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 Local driver status and process-restart disclosure now have a production route,
 with no activation or send control. All 340 Flutter tests, 375 app native tests,
 dependency suites, analysis, app lint, configured build and inactive physical
-check/background clearing/data preservation pass. Require exact-source CI before
-bounded closure, then integrate consent/cancellation and the minimized sender.
-Active-device and two-phone gates remain; no second phone is needed for this unit.
+check/background clearing/data preservation pass. Full source CI 38135386431
+passes for `dae26e7`, closing this bounded unit. Integrate consent/cancellation
+and the minimized sender; active-device and two-phone gates remain. The maintainer
+has connected both phones for two-account pairing setup: Tecno Pova 5 Pro as the
+existing phone and Redmi Note 9 as a fresh installation. Keep alert sending disabled.
 
 The native recorder sidecar bounded integration passes: account/lease/handle
 gates, unchanged offer-only samples, encrypted cooldown/event insertion and

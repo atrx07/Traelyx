@@ -759,7 +759,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     remains signed in; all 11,857 recorder hashes and recipient vault match, and
     driver vault stays absent. Private preservation/QA artifacts are ignored.
     No activation, recording, registration, network request or trip upload.
-  - [ ] Inspect/commit/push, require exact-source CI and persist bounded closure.
+  - [x] Exact diff inspected, source committed/pushed as `dae26e7`; full
+    exact-source CI 38135386431 passes all three jobs. Persist bounded closure;
+    active-device and overall M6.8 gates remain open.
+  Next bounded setup: the maintainer has connected the Tecno Pova 5 Pro and a
+  fresh Redmi Note 9. Check both devices, install the configured normal app on
+  Redmi without data clearing, and request manual sign-in with a different
+  account. Establish private profiles and reviewed two-sided Guardian pairing
+  before driver activation. Keep both production functions disabled; recipient
+  registration requires its own in-app consent, and no real alert is sent.
+  - [ ] Verify Redmi startup/account callback and account separation.
+  - [ ] Complete reviewed pairing and preserve the existing Tecno data/session.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
   guarded disconnect controls plus disposable SQL regression suite are wired
