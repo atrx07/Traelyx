@@ -121,14 +121,22 @@ class GuardianSafetyEvaluatorTest {
     }
 
     @Test fun `sidecar output failure remains inside worker and fails closed`() {
-        val worker = GuardianSafetyWorker(FrameVector3.DEVICE_TOP) { throw IllegalStateException("synthetic IO failure") }
+        val failures = java.util.concurrent.atomic.AtomicInteger()
+        val reported = CountDownLatch(1)
+        val worker = GuardianSafetyWorker(FrameVector3.DEVICE_TOP, onFailure = {
+            failures.incrementAndGet(); reported.countDown()
+            throw IllegalStateException("synthetic reporting failure")
+        }) { throw IllegalStateException("synthetic IO failure") }
         try {
             replay(GuardianSafetyEvaluator(FrameVector3.DEVICE_TOP), impact = true, worker = worker)
             val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
             while (!worker.failed && System.nanoTime() < deadline) Thread.sleep(10)
             assertTrue(worker.failed)
+            assertTrue(reported.await(3, TimeUnit.SECONDS))
+            assertEquals(1, failures.get())
             assertEquals(GuardianEvaluationAvailability.EVIDENCE_UNAVAILABLE, worker.availability)
         } finally { worker.close() }
+        assertEquals(1, failures.get())
     }
 
     private fun replay(

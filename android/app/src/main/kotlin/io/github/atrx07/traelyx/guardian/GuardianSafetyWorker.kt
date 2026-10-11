@@ -17,21 +17,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 class GuardianSafetyWorker(
     forward: FrameVector3,
     restoredCooldowns: GuardianSafetyCooldowns = GuardianSafetyCooldowns(),
+    private val onFailure: () -> Unit = {},
     private val onDetection: (GuardianDetection) -> Unit,
-) : AutoCloseable {
+) : GuardianRecordingWorker {
     private val queue = ArrayBlockingQueue<Input>(1024)
     private val stopped = AtomicBoolean(false)
     private val evaluator = GuardianSafetyEvaluator(forward, restoredCooldowns)
-    @Volatile var cooldowns = restoredCooldowns
+    @Volatile override var cooldowns = restoredCooldowns
         private set
     @Volatile var failed = false
         private set
-    @Volatile var availability = GuardianEvaluationAvailability.CALIBRATING
+    @Volatile override var availability = GuardianEvaluationAvailability.CALIBRATING
         private set
     private val worker = Thread(::run, "guardian-safety-v1").apply { isDaemon = true; start() }
 
-    fun offer(sample: RawGnssSample) = offer(Input(sample.sourceTimestampNanos, 0, sample, null))
-    fun offer(sample: RawImuSample) = offer(Input(sample.sourceTimestampNanos,
+    override fun offer(sample: RawGnssSample) = offer(Input(sample.sourceTimestampNanos, 0, sample, null))
+    override fun offer(sample: RawImuSample) = offer(Input(sample.sourceTimestampNanos,
         if (sample.sensorType == ImuSensorType.GYROSCOPE) 1 else 2, null, sample))
 
     private fun offer(input: Input) {
@@ -40,11 +41,12 @@ class GuardianSafetyWorker(
     }
 
     private fun fail() {
+        if (!stopped.compareAndSet(false, true)) return
         failed = true
         availability = GuardianEvaluationAvailability.EVIDENCE_UNAVAILABLE
-        stopped.set(true)
         queue.clear()
         worker.interrupt()
+        try { onFailure() } catch (_: Exception) { /* Failure reporting cannot reach acquisition. */ }
     }
 
     private fun run() {

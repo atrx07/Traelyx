@@ -18,6 +18,8 @@ import android.os.Looper
 import android.os.SystemClock
 import io.github.atrx07.traelyx.MainActivity
 import io.github.atrx07.traelyx.R
+import io.github.atrx07.traelyx.guardian.AndroidGuardianActivationRuntime
+import io.github.atrx07.traelyx.guardian.GuardianRecorderHandle
 import java.util.UUID
 
 /**
@@ -34,6 +36,7 @@ class RecorderService : Service() {
     private var gnssAcquisition: AndroidGnssAcquisition? = null
     private var imuAcquisition: AndroidImuAcquisition? = null
     private var telemetryRecorder: TelemetryChunkRecorder? = null
+    @Volatile private var guardianRecording: GuardianRecorderHandle? = null
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate() {
@@ -98,6 +101,7 @@ class RecorderService : Service() {
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
+        startGuardianRecording()
         if (!startGnssAcquisition(outcome.snapshot)) {
             stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
@@ -131,6 +135,7 @@ class RecorderService : Service() {
             stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
+        startGuardianRecording()
         if (!startGnssAcquisition(outcome.snapshot)) {
             stopTelemetryRecorder()
             stopForegroundAndSelf(startId)
@@ -233,7 +238,10 @@ class RecorderService : Service() {
             AndroidGnssAcquisition(
                 context = applicationContext,
                 tripStartedAtElapsedRealtimeNanos = tripEpoch,
-                consumeSample = { telemetryRecorder?.accept(it) },
+                consumeSample = {
+                    if (telemetryRecorder?.accept(it) == true) guardianRecording?.offer(it)
+                    else guardianRecording?.close()
+                },
                 publishHealth = { latestGnssHealth = it },
             )
         gnssAcquisition = acquisition
@@ -263,7 +271,10 @@ class RecorderService : Service() {
             AndroidImuAcquisition(
                 context = applicationContext,
                 tripStartedAtElapsedRealtimeNanos = tripEpoch,
-                consumeSample = { telemetryRecorder?.accept(it) },
+                consumeSample = {
+                    if (telemetryRecorder?.accept(it) == true) guardianRecording?.offer(it)
+                    else guardianRecording?.close()
+                },
                 publishHealth = { latestImuHealth = it },
             )
         imuAcquisition = acquisition
@@ -306,6 +317,7 @@ class RecorderService : Service() {
     }
 
     private fun stopTelemetryRecorder(): Boolean {
+        stopGuardianRecording()
         val recorder = telemetryRecorder ?: return true
         val stopped = recorder.stop()
         telemetryRecorder = null
@@ -313,6 +325,7 @@ class RecorderService : Service() {
     }
 
     private fun handleTelemetryFatalError(errorCode: String) {
+        guardianRecording?.close() // Lost raw evidence cannot continue optional evaluation.
         mainHandler.post {
             coordinator.markError(errorCode)
             stopSelf()
@@ -320,9 +333,22 @@ class RecorderService : Service() {
     }
 
     private fun stopAcquisition(): Boolean {
+        stopGuardianRecording()
         stopImuAcquisition()
         stopGnssAcquisition()
         return stopTelemetryRecorder()
+    }
+
+    private fun startGuardianRecording() {
+        if (guardianRecording != null) return
+        try { guardianRecording = AndroidGuardianActivationRuntime.startRecording(applicationContext) }
+        catch (_: Exception) { /* Optional Guardian cannot prevent accountless recording. */ }
+    }
+
+    private fun stopGuardianRecording() {
+        val handle = guardianRecording ?: return
+        guardianRecording = null
+        AndroidGuardianActivationRuntime.stopRecording(handle)
     }
 
     private fun promote(snapshot: RecorderStateSnapshot): Boolean {

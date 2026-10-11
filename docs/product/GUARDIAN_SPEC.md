@@ -157,8 +157,11 @@ is disabled pending deployment and hosted expiry proof. A finite test window
 does not authorize continuous driver monitoring or replace participant consent.
 
 The isolated experimental native evaluator and alert lifecycle are specified in
-`../technical/GUARDIAN_ALERTS_V1.md`. They are not yet connected to recording or
-enabled by pairing. Alert delivery remains unavailable until consent, persistence,
+`../technical/GUARDIAN_ALERTS_V1.md`. Recorder sidecar integration is under validation
+and remains inactive without explicit driver activation; pairing cannot enable it.
+Restored lease presence after full process death does not restart evaluation;
+fresh driver activation is required and must be explained in its future UI.
+Alert delivery remains unavailable until consent, persistence,
 server authorization, push delivery and physical validation gates pass.
 
 The foreground alert inbox is implemented: opening the pairing screen performs

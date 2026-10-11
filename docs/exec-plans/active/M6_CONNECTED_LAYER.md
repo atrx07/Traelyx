@@ -699,6 +699,38 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
 - [x] Verify revocation FCM behavior: reviewed 901–905 proof and closure below.
 - [ ] Complete recorder/driver activation integration
   and two-phone gates before calling M6.8 complete.
+  First bounded implementation: connect a native offer-only recorder sidecar to
+  the existing account-bound activation coordinator and encrypted outbox. Keep
+  driver activation UI and network dispatch dormant. Reuse raw samples without
+  changing acquisition/persistence, rates, permissions or wake behavior. Serialize
+  authority and disk operations on the existing Guardian worker; acquisition must
+  never wait on vault IO, evaluator shutdown or cloud access. Unknown owner,
+  missing/expired lease, reboot and stale callbacks deny evaluation/enqueue;
+  evidence/storage failure disables only Guardian until a new activation. Stop
+  discards late evidence and never prevents trip finalization. Required gates:
+  authority/failure/restart races with fake worker/storage, native suites/lint,
+  configured build and data-preserving inactive startup; active physical recording
+  and field sensitivity remain separate validation gates.
+  - [x] Implement offer-only service hookup after raw-writer acceptance, immediate
+    stop/error forwarding closure, serialized authority/outbox control and
+    clock-only active watchdog. No disk work/shutdown on acquisition; no new
+    subscriptions/rates/wake locks, activation UI or sender.
+  - [x] Enforce fresh in-process activation for telemetry evaluation; restored
+    lease/owner binding alone cannot resume it. Record ADR-0029 and update specs.
+  - [x] Fourteen new integration regressions plus existing worker failure-report
+    isolation pass; all 371 native tests have zero failures/errors/skips. Android
+    lint and configured debug build pass; repository validation/diff checks pass.
+    The documented temporary local.properties escaping remedy fixed the host
+    lint representation error; exact original ignored bytes were restored.
+  - [x] Data-preserving inactive physical update opens normally and You shows
+    Signed in. All 11,857 recorder file hashes and encrypted recipient vault match
+    the private pre-update manifests; driver vault remains absent. No recording,
+    account change, activation, registration, alert or trip upload occurred.
+    Initial Android launch output was inconclusive; subsequent top-instance
+    Status: ok and visible app/sign-in checks pass. No startup-time claim.
+  - [ ] Inspect exact diff, commit/push and require green source CI before bounded closure.
+  - [ ] Validate active recording/performance, process recovery UX, explicit
+    activation/cancellation and sender integration before overall M6.8 completion.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
   guarded disconnect controls plus disposable SQL regression suite are wired

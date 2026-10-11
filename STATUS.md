@@ -10,6 +10,19 @@
 
 ## Working
 
+- Native recorder/Guardian sidecar implementation is under validation (2026-10-11).
+  Raw-writer acceptance precedes offer-only evaluation; owner/lease/handle checks
+  gate atomic encrypted cooldown/event insertion. Unknown or restored-only
+  authority is inert; full process death requires fresh activation (ADR-0029).
+  Failure and stop isolate Guardian from raw recording, with no sender/UI caller.
+  Fourteen new integration regressions and all 371 native tests pass without skips;
+  Android lint, configured debug build and repository validation pass. Physical
+  data-preserving update opens signed in, keeps all 11,857 recorder file hashes and
+  encrypted recipient vault unchanged, and creates no driver vault. Source CI
+  is pending; active recording/performance,
+  consent/cancellation/sender and two-phone gates remain. No schema, sampling,
+  scoring version, dependency, permission or production enable change.
+
 - Disconnect after queuing passes (2026-10-11 local), fixture 901–905: one
   provider acceptance while offline, audited guarded disconnect to closed/revision
   2, then callback/receipt response rejected after reconnection. Vault unchanged,

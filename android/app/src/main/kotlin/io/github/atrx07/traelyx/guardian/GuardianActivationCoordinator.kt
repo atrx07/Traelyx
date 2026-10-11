@@ -30,10 +30,14 @@ class GuardianActivationCoordinator(
     private var owner: String? = null
     private var bound = false
     private var proposal: GuardianActivationProposal? = null
+    private var recordingActivationId: String? = null
 
     @Synchronized fun bindOwner(nextOwner: String?) {
         nextOwner?.let(::guardianUuid)
-        if (!bound || owner != nextOwner) proposal = null
+        if (!bound || owner != nextOwner) {
+            proposal = null
+            recordingActivationId = null
+        }
         // Clear in-memory authority before any fallible persistence operation.
         owner = null
         bound = false
@@ -69,6 +73,7 @@ class GuardianActivationCoordinator(
         val lease = GuardianDriverLease(expectedOwner, activationId, pending.credential,
             start.epochMillis, start.elapsedMillis, expiry, start.bootId, pending.forwardAxis)
         outbox.activate(lease, now)
+        recordingActivationId = lease.activationId
         return lease
     }
 
@@ -84,6 +89,7 @@ class GuardianActivationCoordinator(
     }
 
     private fun eraseAuthority(restoreOwner: String) {
+        recordingActivationId = null
         owner = null
         bound = false
         outbox.revoke()
@@ -99,6 +105,14 @@ class GuardianActivationCoordinator(
     @Synchronized fun snapshot(expectedOwner: String): GuardianVaultSnapshot {
         require(bound && owner == expectedOwner)
         return outbox.recover(expectedOwner, clock())
+    }
+
+    /** A restored lease is status/outbox evidence, not permission to restart live evaluation. */
+    @Synchronized fun recordingSnapshot(): GuardianVaultSnapshot? {
+        val current = owner
+        if (!bound || current == null || recordingActivationId == null) return null
+        val snapshot = outbox.recover(current, clock())
+        return snapshot.takeIf { it.lease?.activationId == recordingActivationId }
     }
 
     companion object { const val REVIEW_TTL_MILLIS = 120_000L }

@@ -2,10 +2,10 @@
 
 ## Status
 
-M6.8 is in progress. The native evaluator and lifecycle are implemented as an
-isolated prerequisite. They are **not connected to RecorderService or enabled
-in the application**. Hosted delivery, consent UI and physical validation remain
-required. These are experimental synthetic baselines, not field-validated crash
+M6.8 is in progress. The native evaluator and lifecycle are implemented as a
+prerequisite. Recorder sidecar integration is under validation; production driver
+activation and network sending remain unavailable. Consent UI and active physical
+validation remain required. These are experimental synthetic baselines, not field-validated crash
 detection, emergency protection, or calibrated confidence probabilities.
 
 ## Local evaluation
@@ -17,6 +17,23 @@ Overflow, late input, callback failure or 1.5 seconds without input after startu
 disables that worker. It does not block or fail the independent raw recorder.
 There are no new sensor subscriptions, rates, wake locks, network calls or SDKs.
 Stopping discards unqualified evidence; it does not flush a late alert.
+
+The M6.8 recorder sidecar offers unchanged samples only after the raw writer accepts
+them. An immediate-close handle stops forwarding on trip stop/error; Guardian
+shutdown and encrypted writes stay on the existing owner executor. Unknown owner
+or missing/expired consent starts no evaluator or timer. Qualified callbacks recheck
+the exact handle/lease and clocks before atomic cooldown/event insertion; they
+never send anything. Worker/enqueue failure stops Guardian and attempts local
+revocation without changing recorder success/failure. A clock-only one-second
+watchdog exists only while evaluation is active; acquisition rates, permissions,
+wake locks and raw storage remain unchanged. Performance/device gates are pending.
+
+Live evaluation requires a two-stage activation committed in the current process.
+An encrypted lease recovered after full process death does not itself restart
+evaluation, even after owner binding; the driver must explicitly reactivate.
+Same-process service restart recalibrates with persisted cooldowns. Lease presence
+must not be shown as active monitoring. See
+`../decisions/ADR-0029-guardian-recorder-sidecar.md` for isolation and restart limits.
 
 The driver must first confirm a rigid mount and device-forward direction.
 Missing confirmation is disabled. A stationary three-second window requires
