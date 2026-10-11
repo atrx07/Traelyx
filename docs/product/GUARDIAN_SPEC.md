@@ -157,7 +157,7 @@ is disabled pending deployment and hosted expiry proof. A finite test window
 does not authorize continuous driver monitoring or replace participant consent.
 
 The isolated experimental native evaluator and alert lifecycle are specified in
-`../technical/GUARDIAN_ALERTS_V1.md`. Recorder sidecar integration is under validation
+`../technical/GUARDIAN_ALERTS_V1.md`. Bounded recorder sidecar integration passes its gates
 and remains inactive without explicit driver activation; pairing cannot enable it.
 Restored lease presence after full process death does not restart evaluation;
 fresh driver activation is required and must be explained in its future UI.

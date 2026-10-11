@@ -728,7 +728,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     account change, activation, registration, alert or trip upload occurred.
     Initial Android launch output was inconclusive; subsequent top-instance
     Status: ok and visible app/sign-in checks pass. No startup-time claim.
-  - [ ] Inspect exact diff, commit/push and require green source CI before bounded closure.
+  - [x] Exact diff inspected; source committed/pushed as `98f9a49`, with HEAD equal
+    to origin/main. Full source CI 38133415539 passes all three jobs, including
+    Flutter/native tests, debug/release builds and size/repository checks. This
+    closes only the bounded native integration, not active-device or M6.8 gates.
   - [ ] Validate active recording/performance, process recovery UX, explicit
     activation/cancellation and sender integration before overall M6.8 completion.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends

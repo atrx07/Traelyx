@@ -3,7 +3,8 @@
 ## Status
 
 M6.8 is in progress. The native evaluator and lifecycle are implemented as a
-prerequisite. Recorder sidecar integration is under validation; production driver
+prerequisite. Bounded recorder sidecar integration passes local/inactive-device
+checks and full source CI 38133415539 (`98f9a49`); production driver
 activation and network sending remain unavailable. Consent UI and active physical
 validation remain required. These are experimental synthetic baselines, not field-validated crash
 detection, emergency protection, or calibrated confidence probabilities.

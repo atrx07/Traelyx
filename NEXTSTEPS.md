@@ -10,12 +10,12 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-The native recorder sidecar is implemented under validation: account/lease/handle
+The native recorder sidecar bounded integration passes: account/lease/handle
 gates, unchanged offer-only samples, encrypted cooldown/event insertion and
 Guardian-only failure cleanup. All 371 native tests (14 new integration cases),
 lint, configured debug build and repository checks pass. Inactive physical update
 opens signed in, preserves all 11,857 recorder file hashes and the recipient vault,
-and leaves driver authority absent. Require green source CI before bounded closure. Then expose
+and leaves driver authority absent. Full source CI 38133415539 passes (`98f9a49`). Next expose
 driver activation, monitoring/cancellation state and bounded sender integration;
 active recorder/performance and two-phone checks remain. ADR-0029 requires fresh
 driver activation after full process death; restored lease presence is not active
