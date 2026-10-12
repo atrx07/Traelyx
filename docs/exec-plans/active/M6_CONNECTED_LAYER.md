@@ -762,14 +762,38 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   - [x] Exact diff inspected, source committed/pushed as `dae26e7`; full
     exact-source CI 38135386431 passes all three jobs. Persist bounded closure;
     active-device and overall M6.8 gates remain open.
-  Next bounded setup: the maintainer has connected the Tecno Pova 5 Pro and a
-  fresh Redmi Note 9. Check both devices, install the configured normal app on
-  Redmi without data clearing, and request manual sign-in with a different
-  account. Establish private profiles and reviewed two-sided Guardian pairing
-  before driver activation. Keep both production functions disabled; recipient
-  registration requires its own in-app consent, and no real alert is sent.
-  - [ ] Verify Redmi startup/account callback and account separation.
-  - [ ] Complete reviewed pairing and preserve the existing Tecno data/session.
+  Next bounded setup: the maintainer selected Tecno Pova 5 Pro plus the existing
+  Pixel_10 emulator after Redmi Note 9 blocked USB installation/input behind
+  Xiaomi account/SIM checks. Use the Google Play emulator for account/pairing
+  setup; do not count it as physical-device reliability evidence. Install the
+  configured normal app without data clearing and request email-link sign-in with
+  a different account. Establish a private profile and reviewed two-sided Guardian
+  pairing before driver activation. Keep both production functions disabled;
+  recipient registration requires its own in-app consent, and no real alert is sent.
+  - [x] Pixel_10 API-37 Google Play emulator boots, accepts ADB input and installs
+    the tested configured recipient-pilot APK. Account opens normally; no
+    recorder service or driver vault exists. Google OAuth is not implemented;
+    the maintainer opened the new email link inside the emulator. Private
+    UI observations emit only allowlisted labels, never email/link contents.
+  - [x] Both Account screens signed in, and an in-memory comparison confirmed
+    different account emails without outputting or storing either address. Pixel
+    saved a private profile with zero queued changes; no vehicle or trip data was
+    entered on the emulator.
+  - [x] One single-use Guardian invite was accepted on Pixel and confirmed on
+    Tecno. Both screens still show `Paired. Delivery not available yet.` after
+    explicit reload. Possible-crash preference alone is on; location, speed and
+    trip history remain off. Tecno sign-in and existing local trips were preserved;
+    no recorder service was active during setup.
+  - [x] Pixel's first recipient review failed with Android notification permission
+    off. The Guardian flow now requests the existing OS permission after explicit
+    review, stops before token acquisition on denial and offers app settings for
+    a settings-required state. All 341 Flutter tests, analysis, repository
+    validation, configured debug build and data-preserving Pixel update pass. The
+    maintainer repeated both acknowledgements and allowed the Android prompt;
+    Pixel shows local registration. Read-only hosted SQL reports two device rows,
+    both unexpired. No token values were read; both production enable secret
+    digests match SHA-256 of `false` after the power outage.
+    This establishes emulator receiver setup, not physical push reliability.
   Preparation is concrete in `GUARDIAN_REJECTION_CHECK.md`: at most four sends
   across fresh 741–745/751–755/761–765 fixtures. Exact-marker requeue, expiry and
   guarded disconnect controls plus disposable SQL regression suite are wired

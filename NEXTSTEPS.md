@@ -16,8 +16,15 @@ dependency suites, analysis, app lint, configured build and inactive physical
 check/background clearing/data preservation pass. Full source CI 38135386431
 passes for `dae26e7`, closing this bounded unit. Integrate consent/cancellation
 and the minimized sender; active-device and two-phone gates remain. The maintainer
-has connected both phones for two-account pairing setup: Tecno Pova 5 Pro as the
-existing phone and Redmi Note 9 as a fresh installation. Keep alert sending disabled.
+has selected Tecno Pova 5 Pro plus the existing Pixel_10 emulator for two-account
+pairing setup after Redmi Note 9 blocked USB installation/input. The Google Play
+API-37 emulator signed in through a different email-link account, saved a private
+profile, accepted the reviewed invite and shows the paired state after the Tecno
+confirmation. Pixel Guardian notice registration now requests Android permission
+after separate consent; the retest passed locally and the hosted count shows two
+unexpired devices. Google OAuth is not implemented. Emulator checks do not close
+physical-device reliability gates. Keep alert sending disabled while integrating
+the remaining driver activation/cancellation and minimized sender controls.
 
 The native recorder sidecar bounded integration passes: account/lease/handle
 gates, unchanged offer-only samples, encrypted cooldown/event insertion and

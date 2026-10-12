@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/data/supabase_account_gateway.dart';
 import 'package:traelyx/features/account/data/supabase_client_source.dart';
@@ -212,7 +214,152 @@ final class FakeRecipientTransport implements GuardianDeviceRpcTransport {
   }
 }
 
+final class FakeGuardianNotificationPermissions
+    implements RecorderPermissionActions {
+  RecorderPermissionState notificationState =
+      RecorderPermissionState.settingsRequired;
+  int requests = 0;
+  int settingsOpens = 0;
+
+  RecorderPermissionStatus get status => RecorderPermissionStatus(
+    contractVersion: 1,
+    platformApiLevel: 37,
+    locationState: RecorderPermissionState.requestable,
+    notificationState: notificationState,
+    fineLocationGranted: false,
+    coarseLocationGranted: false,
+    gpsProviderEnabled: false,
+    canRequestLocation: true,
+    canRequestNotification:
+        notificationState == RecorderPermissionState.requestable,
+    backgroundLocationRequired: false,
+    recordingReady: false,
+    foregroundNotificationVisible:
+        notificationState == RecorderPermissionState.granted,
+  );
+
+  @override
+  Future<RecorderPermissionStatus> requestNotification() async {
+    requests++;
+    return status;
+  }
+
+  @override
+  Future<RecorderPermissionStatus> openAppSettings() async {
+    settingsOpens++;
+    return status;
+  }
+
+  @override
+  Future<RecorderPermissionStatus> requestLocation() async => status;
+
+  @override
+  Future<RecorderPermissionStatus> openLocationSettings() async => status;
+
+  @override
+  void refresh() {}
+}
+
 void main() {
+  testWidgets(
+    'Guardian notification permission gates registration after review',
+    (tester) async {
+      final account = FakeAccount(ownerA);
+      final ownerPort = FakeOwnerPort();
+      final tokenPort = FakeRecipientTokenPort();
+      final transport = FakeRecipientTransport(account);
+      final permissions = FakeGuardianNotificationPermissions();
+      final receiptPort = FakeRecipientReceiptPort(ownerPort);
+      final bound = GuardianBoundAccountGateway(
+        account,
+        ownerPort,
+        deviceRevoker: GuardianDeviceServerGateway(transport),
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      final service = GuardianRecipientRegistrationService(
+        account: bound,
+        ownerPort: ownerPort,
+        tokenPort: tokenPort,
+        server: GuardianDeviceServerGateway(transport),
+        receiptPort: receiptPort,
+        identitySource: FakeRecipientIdentitySource(),
+      );
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            accountGatewayProvider.overrideWithValue(bound),
+            guardianRecipientPilotProvider.overrideWithValue(true),
+            guardianRecipientRegistrationProvider.overrideWithValue(service),
+            recorderPermissionControllerProvider.overrideWithValue(permissions),
+          ],
+          child: const MaterialApp(home: Scaffold(body: GuardianScreen())),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Check this phone'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Check this phone'));
+      await tester.pumpAndSettle();
+
+      Future<void> review() async {
+        await tester.scrollUntilVisible(
+          find.text('Review phone registration'),
+          250,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.tap(find.text('Review phone registration'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('guardian-recipient-limits')),
+        );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(
+          find.byKey(const ValueKey('guardian-recipient-provider')),
+        );
+        await tester.tap(
+          find.byKey(const ValueKey('guardian-recipient-provider')),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey('guardian-recipient-confirm-review')),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      await review();
+      expect(permissions.requests, 1);
+      expect(tokenPort.calls, 0);
+      expect(transport.calls, isEmpty);
+      expect(find.text('Open Android app settings'), findsOneWidget);
+      await tester.tap(find.text('Open Android app settings'));
+      expect(permissions.settingsOpens, 1);
+
+      permissions.notificationState = RecorderPermissionState.granted;
+      await review();
+      expect(permissions.requests, 2);
+      expect(tokenPort.calls, 1);
+      expect(transport.calls, hasLength(1));
+      expect(receiptPort.calls, 1);
+      expect(ownerPort.status, isNotNull);
+      expect(find.text('Open Android app settings'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('This phone has a local Guardian registration.'),
+        -200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(
+        find.text('This phone has a local Guardian registration.'),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets('Guardian screen requires a check and review before token use', (
     tester,
   ) async {

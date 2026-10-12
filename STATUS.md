@@ -10,6 +10,29 @@
 
 ## Working
 
+- Second-account setup (2026-10-12): the maintainer selected the existing
+  Pixel_10 emulator after Redmi Note 9 rejected USB install/input and required
+  Xiaomi account/SIM checks for its extra developer settings. Pixel_10 boots on
+  API 37 with Google Play services and accepts ADB input. The existing tested,
+  account-configured recipient-pilot APK installs and opens Account normally;
+  no recorder service or driver vault exists. The maintainer completed an email
+  link on Pixel; both accounts were confirmed signed in and different without
+  recording their addresses. Pixel's profile was saved privately with zero queued
+  changes. A single-use invite was accepted on Pixel and confirmed on Tecno;
+  both screens showed the paired state with only possible-crash preference on,
+  and location, speed and trip history off. Play Store sign-in does not
+  authenticate Traelyx; Google OAuth is not implemented. The first Pixel notice
+  registration review failed because Android notifications were disabled. The
+  Guardian flow now requests that OS permission after explicit review and stops
+  before token acquisition on denial. All 341 Flutter tests, analysis,
+  repository validation and a configured debug build pass. A data-preserving
+  Pixel update prompted the maintainer to allow notifications. Traelyx reports
+  local registration, and a read-only hosted aggregate shows two device rows,
+  both unexpired. Both devices still show the paired state after an explicit
+  reload. Both production enable secret digests match SHA-256 of `false`; no
+  alert was sent in this setup. Emulator
+  results do not replace required physical-device reliability checks.
+
 - Local Guardian driver-status UI passes its bounded validation
   (2026-10-11). An explicit account-checked local query returns only state/expiry,
   distinguishing fresh consent, recorded-trip calibration/evaluation, restored

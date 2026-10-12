@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
+import 'package:traelyx/core/platform/recorder_bridge.dart';
+import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status_panel.dart';
@@ -62,6 +64,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
   bool _recipientBusy = false;
   bool _recipientReviewInterrupted = false;
   bool? _recipientRegistered;
+  bool _recipientNeedsNotificationSettings = false;
   String? _recipientNotice;
   GuardianController get controller =>
       ref.read(guardianControllerProvider(widget.owner).notifier);
@@ -113,6 +116,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
     setState(() {
       _recipientBusy = true;
       _recipientNotice = null;
+      _recipientNeedsNotificationSettings = false;
     });
     try {
       final registered = await service.isRegistered(widget.owner);
@@ -146,8 +150,27 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
     setState(() {
       _recipientBusy = true;
       _recipientNotice = null;
+      _recipientNeedsNotificationSettings = false;
     });
     try {
+      final permission = await ref
+          .read(recorderPermissionControllerProvider)
+          .requestNotification();
+      if (permission.notificationState != RecorderPermissionState.granted &&
+          permission.notificationState != RecorderPermissionState.notRequired) {
+        if (mounted) {
+          setState(() {
+            _recipientRegistered = false;
+            _recipientNeedsNotificationSettings =
+                permission.notificationState ==
+                RecorderPermissionState.settingsRequired;
+            _recipientNotice =
+                'Android notifications are off. Enable them before registering this phone for Guardian notices.';
+          });
+        }
+        return;
+      }
+      if (!mounted) return;
       await service.registerAfterExplicitConsent(review);
       if (mounted) {
         setState(() {
@@ -407,6 +430,13 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         }),
         if (_recipientNotice != null)
           Semantics(liveRegion: true, child: Text(_recipientNotice!)),
+        if (_recipientNeedsNotificationSettings)
+          TextButton(
+            onPressed: () => ref
+                .read(recorderPermissionControllerProvider)
+                .openAppSettings(),
+            child: const Text('Open Android app settings'),
+          ),
         if (_recipientBusy) const LinearProgressIndicator(),
         Wrap(
           spacing: 8,

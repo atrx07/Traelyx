@@ -169,6 +169,13 @@ Saved consent and experimental evaluation never imply delivery or assistance.
 Alert delivery remains unavailable until consent, persistence,
 server authorization, push delivery and physical validation gates pass.
 
+Recipient phone registration requests Android notification permission only
+after the recipient completes the separate Guardian review. A denial or a
+settings-required state stops registration before a Firebase token or private
+server row is created; the screen offers Android app settings and requires a
+fresh review before retrying. Pairing alone does not request permission or
+register a device.
+
 The foreground alert inbox is implemented: opening the pairing screen performs
 no request; Reload alerts explicitly calls the account-guarded list API. Each
 row distinguishes provider acceptance, device receipt and recipient opening.
