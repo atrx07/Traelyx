@@ -137,4 +137,17 @@ class GuardianActivationBridgeTest {
         f.now = f.now.copy(epochMillis = f.now.epochMillis + 60_000, elapsedMillis = f.now.elapsedMillis + 60_000)
         assertEquals(mapOf("state" to "disabled", "expiresEpochMillis" to null), status(f))
     }
+
+    @Test fun `stop returns only exact revoke identity after erasing local authority`() {
+        val f = Fixture(); f.bind(owner); commit(f)
+        rejected { f.bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to other)) }
+        rejected { f.bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to owner, "extra" to true)) }
+        assertNotNull(f.vault.value.lease)
+        val stopped = f.bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to owner)) as Map<*, *>
+        assertEquals(mapOf("activationId" to activation), stopped)
+        assertFalse(stopped.toString().contains(f.credential))
+        assertNull(f.vault.value.lease)
+        assertEquals(mapOf("activationId" to null),
+            f.bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to owner)))
+    }
 }

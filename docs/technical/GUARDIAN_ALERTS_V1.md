@@ -207,6 +207,18 @@ proposal/abort, synthetic local commit, active snapshot and disable; the normal
 app and sign-in were restored without changing recorder storage. Neither proof
 exercises a hosted session, real user consent or alert delivery.
 
+The dormant explicit stop path now erases local driver authority before returning
+only the activation UUID to the foreground coordinator. The coordinator uses
+that UUID for an owner-checked, activation-matched server revoke; it never
+returns the capability or exposes the UUID to the UI. A vault-read failure still
+attempts local erasure, and a failed server revoke is reported as unconfirmed:
+the erased capability cannot originate another alert from this phone, while the
+server lease and previously queued delivery may remain until their own expiry.
+A durable server-revoke retry or equivalent owner-only recovery is still required
+before exposing Stop as a complete cancellation control. The path has no
+production UI caller yet and has not
+been exercised with a real account or physical active recording.
+
 The dormant Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing
 acknowledgements. Its result is ephemeral. The activation service rejects a

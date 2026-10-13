@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-13
 
 ## Context budget / references
 
@@ -734,6 +734,21 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     closes only the bounded native integration, not active-device or M6.8 gates.
   - [ ] Validate active recording/performance, process recovery UX, explicit
     activation/cancellation and sender integration before overall M6.8 completion.
+  - [x] Add a dormant exact-revoke stop contract: native erases the local lease
+    before returning only its activation UUID, and the account-bound Flutter
+    service attempts the matching owner-checked server revoke. No capability,
+    alert, account or trip data reaches UI or logs. Wrong-owner, malformed
+    response, missing lease, vault-read failure and server-failure regressions
+    pass. All 344 Flutter and 377 app native tests pass, analysis and configured
+    debug build and app lint pass, and repository validation passes. No UI caller, hosted
+    revoke, migration, sender or production enable change; active physical and
+    two-device reliability checks remain open. Add a retryable server revoke
+    before claiming user-facing cancellation complete; queued remote delivery
+    may continue if the server revoke fails.
+    Resume audit on 2026-10-13: Pixel_10 restarted with saved data; both devices
+    remain paired and locally registered, neither has a recorder service, and
+    the Tecno reconnects after restoring Wi-Fi from off. Both production enable
+    secret digests still match `false`. No activation or alert send occurred.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

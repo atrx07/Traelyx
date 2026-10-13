@@ -90,6 +90,7 @@ final class NativePort implements GuardianNativeActivationPort {
   NativePort(this.events);
   final List<String> events;
   int aborts = 0, disables = 0, commits = 0;
+  String? stoppedActivation = activation;
   Future<void> Function()? beforeCommit;
 
   @override
@@ -126,12 +127,21 @@ final class NativePort implements GuardianNativeActivationPort {
     events.add('disable');
     disables++;
   }
+
+  @override
+  Future<String?> stop(String owner) async {
+    events.add('stop');
+    final previous = stoppedActivation;
+    stoppedActivation = null;
+    return previous;
+  }
 }
 
 final class Server implements GuardianDriverSessionGateway {
   Server(this.events);
   final List<String> events;
   Future<GuardianSessionConfirmation> Function()? onActivate;
+  Future<void> Function()? onRevoke;
   int revokes = 0;
 
   @override
@@ -153,6 +163,7 @@ final class Server implements GuardianDriverSessionGateway {
   Future<void> revoke(String owner, String activationId) async {
     events.add('revoke');
     revokes++;
+    await onRevoke?.call();
   }
 }
 
@@ -414,4 +425,78 @@ void main() {
       isNot(contains(capability)),
     );
   });
+
+  test('stop erases locally before an exact server revoke', () async {
+    final events = <String>[];
+    final account = TestAccount();
+    final bound = GuardianBoundAccountGateway(account, OwnerPort());
+    final native = NativePort(events);
+    final server = Server(events);
+    addTearDown(() async {
+      await bound.dispose();
+      await account.changes.close();
+    });
+    final service = GuardianDriverActivationService(bound, native, server);
+    await service.stop(ownerA);
+    expect(events, ['stop', 'revoke']);
+    await service.stop(ownerA);
+    expect(events, ['stop', 'revoke', 'stop']);
+    await expectLater(
+      service.stop(ownerB),
+      throwsA(isA<GuardianActivationException>()),
+    );
+    expect(events, ['stop', 'revoke', 'stop']);
+  });
+
+  test(
+    'failed server revoke reports local stop without retrying authority',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events)
+        ..onRevoke = () => throw StateError('synthetic network failure');
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      final service = GuardianDriverActivationService(bound, native, server);
+      await expectLater(
+        service.stop(ownerA),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(events, ['stop', 'revoke']);
+      await service.stop(ownerA);
+      expect(events, ['stop', 'revoke', 'stop']);
+    },
+  );
+
+  test(
+    'native stop bridge accepts only a redacted activation response',
+    () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            expect(call.method, 'stop');
+            expect(call.arguments, {'ownerId': ownerA});
+            return {'activationId': activation};
+          });
+      expect(
+        await const MethodChannelGuardianActivationPort().stop(ownerA),
+        activation,
+      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (call) async => {
+              'activationId': activation,
+              'credential': capability,
+            },
+          );
+      await expectLater(
+        const MethodChannelGuardianActivationPort().stop(ownerA),
+        throwsFormatException,
+      );
+    },
+  );
 }

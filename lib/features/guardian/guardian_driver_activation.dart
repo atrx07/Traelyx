@@ -70,6 +70,7 @@ abstract interface class GuardianNativeActivationPort {
   );
   Future<void> abort(String owner, String activation);
   Future<void> disable(String owner);
+  Future<String?> stop(String owner);
 }
 
 final class MethodChannelGuardianActivationPort
@@ -141,6 +142,22 @@ final class MethodChannelGuardianActivationPort
   @override
   Future<void> disable(String owner) =>
       _channel.invokeMethod<void>('disable', {'ownerId': owner});
+
+  @override
+  Future<String?> stop(String owner) async {
+    final raw = await _channel.invokeMethod<Object?>('stop', {
+      'ownerId': owner,
+    });
+    if (raw is! Map || raw.length != 1 || !raw.containsKey('activationId')) {
+      throw const FormatException('Invalid Guardian stop response');
+    }
+    final activation = raw['activationId'];
+    if (activation != null &&
+        (activation is! String || !_uuid.hasMatch(activation))) {
+      throw const FormatException('Invalid Guardian stopped activation');
+    }
+    return activation as String?;
+  }
 }
 
 abstract interface class GuardianDriverSessionGateway {
@@ -212,6 +229,30 @@ final class GuardianDriverActivationService {
   final GuardianBoundAccountGateway account;
   final GuardianNativeActivationPort native;
   final GuardianDriverSessionGateway server;
+
+  /// Stops local authority before attempting an exact, owner-checked server revoke.
+  /// A failed network revoke cannot restore the erased local capability.
+  Future<void> stop(String owner) async {
+    if (!_uuid.hasMatch(owner) ||
+        account.currentIdentity?.userId != owner ||
+        !await account.ensureCurrentOwnerBound()) {
+      throw const GuardianActivationException('Guardian account unavailable.');
+    }
+    final activation = await native.stop(owner);
+    if (activation == null) return;
+    if (account.currentIdentity?.userId != owner) {
+      throw const GuardianActivationException(
+        'Guardian stopped locally. Server confirmation is unavailable.',
+      );
+    }
+    try {
+      await server.revoke(owner, activation);
+    } catch (_) {
+      throw const GuardianActivationException(
+        'Guardian stopped locally. Server confirmation is unavailable.',
+      );
+    }
+  }
 
   Future<DateTime> prepareAfterExplicitConsent(
     GuardianDriverConsent consent,

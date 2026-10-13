@@ -10,6 +10,18 @@
 
 ## Working
 
+- M6.8 driver stop prerequisite (2026-10-12): a dormant native stop now erases
+  the local lease before returning only its activation UUID to the account-bound
+  coordinator for an exact server revoke. A failed server revoke is reported,
+  while the local capability remains erased. All 344 Flutter and 377 app native
+  tests, analysis, app lint, configured debug build and repository validation pass. This
+  has no UI caller, hosted revoke or real-drive validation yet; alert sending
+  remains disabled. The preceding Pixel-registration source CI 38261122466
+  passed on its one failed-job rerun after a native asset hash mismatch.
+  On 2026-10-13 Pixel restarted with saved sign-in; both devices remain paired
+  and locally registered, with no recorder service. Tecno Wi-Fi was restored
+  from off and its hosted reload succeeds. Both Guardian enable digests are false.
+
 - Second-account setup (2026-10-12): the maintainer selected the existing
   Pixel_10 emulator after Redmi Note 9 rejected USB install/input and required
   Xiaomi account/SIM checks for its extra developer settings. Pixel_10 boots on

@@ -82,6 +82,17 @@ class GuardianActivationCoordinator(
         if (bound && owner == expectedOwner && proposal?.activationId == activationId) proposal = null
     }
 
+    /** Erase first, then return only the activation ID needed for a guarded server revoke. */
+    @Synchronized fun stop(expectedOwner: String): String? {
+        require(bound && owner == expectedOwner)
+        proposal = null
+        try {
+            return outbox.recover(expectedOwner, clock()).lease?.activationId
+        } finally {
+            eraseAuthority(expectedOwner)
+        }
+    }
+
     @Synchronized fun disable(expectedOwner: String) {
         require(bound && owner == expectedOwner)
         proposal = null

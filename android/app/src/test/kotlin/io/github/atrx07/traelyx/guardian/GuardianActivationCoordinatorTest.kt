@@ -10,8 +10,9 @@ class GuardianActivationCoordinatorTest {
     private class MemoryVault : GuardianVault {
         var value = GuardianVaultSnapshot()
         var failErase = false
+        var failRead = false
         var failWrite = false
-        override fun read() = value
+        override fun read(): GuardianVaultSnapshot { check(!failRead); return value }
         override fun write(snapshot: GuardianVaultSnapshot) { check(!failWrite); value = snapshot }
         override fun erase() { check(!failErase); value = GuardianVaultSnapshot() }
     }
@@ -112,5 +113,14 @@ class GuardianActivationCoordinatorTest {
         val replacement = f.coordinator.begin(a, "-x", true)
         assertEquals("-x", replacement.forwardAxis)
         assertNull(f.vault.value.lease)
+    }
+
+    @Test fun `stop erases local lease even when status read fails`() {
+        val f = Fixture(); f.begin(); f.commit()
+        f.vault.failRead = true
+        rejected { f.coordinator.stop(a) }
+        assertNull(f.vault.value.lease)
+        f.vault.failRead = false
+        assertNull(f.coordinator.stop(a))
     }
 }

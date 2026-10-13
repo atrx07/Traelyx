@@ -41,6 +41,10 @@ class GuardianActivationBridge(
                 coordinator.disable(owner())
                 null
             }
+            STOP -> {
+                exact("ownerId")
+                mapOf("activationId" to coordinator.stop(owner()))
+            }
             SNAPSHOT -> {
                 exact("ownerId")
                 val lease = coordinator.snapshot(owner()).lease
@@ -64,8 +68,9 @@ class GuardianActivationBridge(
         const val COMMIT = "commit"
         const val ABORT = "abort"
         const val DISABLE = "disable"
+        const val STOP = "stop"
         const val SNAPSHOT = "snapshot"
         const val DRIVER_STATUS = "driverStatus"
-        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, SNAPSHOT, DRIVER_STATUS)
+        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, STOP, SNAPSHOT, DRIVER_STATUS)
     }
 }
