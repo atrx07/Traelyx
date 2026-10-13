@@ -424,13 +424,14 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         val file = File(context.noBackupFilesDir, "guardian/$namespace.vault")
         val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
         val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault)
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
         val bridge = io.github.atrx07.traelyx.guardian.GuardianActivationBridge(
             io.github.atrx07.traelyx.guardian.GuardianActivationCoordinator(outbox, clock = {
                 val boot = Settings.Global.getInt(context.contentResolver, Settings.Global.BOOT_COUNT, -1)
                 check(boot >= 0) { "Boot identity unavailable." }
                 io.github.atrx07.traelyx.guardian.GuardianClock(
                     System.currentTimeMillis(), SystemClock.elapsedRealtime(), "boot:$boot")
-            }),
+            }, revokeJournal = journal),
         )
         val owner = UUID.randomUUID().toString()
         try {
@@ -451,13 +452,18 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(file.isFile && !file.readText(Charsets.ISO_8859_1).contains(credential))
             val present = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
             check(present["localLeasePresent"] == true)
-            bridge.dispatch("disable", mapOf("ownerId" to owner))
+            check(bridge.dispatch("stop", mapOf("ownerId" to owner)) == mapOf("activationId" to activation))
+            val reopenedJournal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
+            check(reopenedJournal.pending() == listOf(
+                io.github.atrx07.traelyx.guardian.GuardianDriverRevokeTicket(owner, activation)))
+            bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "activationId" to activation))
+            check(reopenedJournal.pending().isEmpty())
             val absent = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
             check(absent["localLeasePresent"] == false && !file.exists())
-        } finally { vault.erase() }
+        } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
-        return "M6.8 synthetic activation proof passed: boot clock, native proposal/commit/disable, " +
+        return "M6.8 synthetic activation proof passed: boot clock, native proposal/commit/stop and revoke journal, " +
             "encrypted scoped cleanup; no hosted session, Firebase initialization or trip change."
     }
 

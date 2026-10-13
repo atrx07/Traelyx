@@ -22,6 +22,7 @@ class GuardianActivationProposal internal constructor(
 class GuardianActivationCoordinator(
     private val outbox: GuardianOutbox,
     private val clock: () -> GuardianClock,
+    private val revokeJournal: GuardianDriverRevokeJournal,
     private val newId: () -> String = { UUID.randomUUID().toString() },
     private val newCredential: () -> String = {
         ByteArray(32).also { SecureRandom().nextBytes(it) }.joinToString("") { "%02x".format(it.toInt() and 255) }
@@ -49,6 +50,9 @@ class GuardianActivationCoordinator(
     @Synchronized fun begin(expectedOwner: String, forwardAxis: String, rigidMountConfirmed: Boolean): GuardianActivationProposal {
         require(bound && owner == expectedOwner && rigidMountConfirmed)
         require(forwardAxis in setOf("+x", "-x", "+y", "-y", "+z", "-z"))
+        val stops = revokeJournal.pending()
+        check(stops.size < GuardianDriverRevokeJournalCodec.MAX_TICKETS &&
+            stops.none { it.ownerId == expectedOwner }) { "Driver stop confirmation pending" }
         val now = clock()
         proposal?.let { if (!fresh(it.created, now)) proposal = null }
         check(proposal == null) { "Activation review already pending" }
@@ -87,10 +91,22 @@ class GuardianActivationCoordinator(
         require(bound && owner == expectedOwner)
         proposal = null
         try {
-            return outbox.recover(expectedOwner, clock()).lease?.activationId
+            val activation = outbox.activationToRevoke(expectedOwner)
+            activation?.let { revokeJournal.record(GuardianDriverRevokeTicket(expectedOwner, it)) }
+            return activation
         } finally {
             eraseAuthority(expectedOwner)
         }
+    }
+
+    @Synchronized fun pendingRevokes(expectedOwner: String): List<GuardianDriverRevokeTicket> {
+        require(bound && owner == expectedOwner)
+        return revokeJournal.pending().filter { it.ownerId == expectedOwner }
+    }
+
+    @Synchronized fun confirmRevoke(expectedOwner: String, activation: String) {
+        require(bound && owner == expectedOwner)
+        revokeJournal.confirm(GuardianDriverRevokeTicket(expectedOwner, activation))
     }
 
     @Synchronized fun disable(expectedOwner: String) {

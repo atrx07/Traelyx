@@ -10,14 +10,17 @@
 
 ## Working
 
-- M6.8 driver stop prerequisite (2026-10-12): a dormant native stop now erases
-  the local lease before returning only its activation UUID to the account-bound
-  coordinator for an exact server revoke. A failed server revoke is reported,
-  while the local capability remains erased. All 344 Flutter and 377 app native
-  tests, analysis, app lint, configured debug build and repository validation pass. This
-  has no UI caller, hosted revoke or real-drive validation yet; alert sending
-  remains disabled. The preceding Pixel-registration source CI 38261122466
-  passed on its one failed-job rerun after a native asset hash mismatch.
+- M6.8 driver stop retries (2026-10-13): a separate encrypted no-backup journal
+  preserves exact owner/activation stop tickets before local authority erasure.
+  Only a confirmed same-owner server revoke clears a ticket; reviewed activation
+  retries outstanding stops first. Full/corrupt journal health denies activation.
+  Local Stop does not wait for unrelated recipient cleanup over the network.
+  All 348 Flutter and 387 app native tests, analysis, app lint and configured debug build
+  pass. The isolated physical Keystore stop/journal proof passes; all 11,857
+  recorder hashes and the real recipient vault remain unchanged, driver authority
+  absent. Pixel update preserves its receiver vault. Driver UI, account-loss
+  cleanup, hosted revoke and active recording remain unverified; sending stays
+  disabled. The preceding stop prerequisite `5dd2d5c` has green CI 38424057362.
   On 2026-10-13 Pixel restarted with saved sign-in; both devices remain paired
   and locally registered, with no recorder service. Tecno Wi-Fi was restored
   from off and its hosted reload succeeds. Both Guardian enable digests are false.

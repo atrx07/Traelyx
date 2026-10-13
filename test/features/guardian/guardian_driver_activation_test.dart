@@ -55,6 +55,7 @@ final class TestAccount implements AccountGateway {
 
 final class OwnerPort implements GuardianOwnerPort {
   final owners = <String?>[];
+  final recipientRevokes = <GuardianRecipientLocalStatus>[];
   @override
   Future<void> bindOwner(String? ownerId) async => owners.add(ownerId);
 
@@ -65,7 +66,7 @@ final class OwnerPort implements GuardianOwnerPort {
   @override
   Future<List<GuardianRecipientLocalStatus>> pendingRevokes(
     String ownerId,
-  ) async => [];
+  ) async => List.of(recipientRevokes);
 
   @override
   Future<void> recordRegistrationAttempt(
@@ -91,6 +92,8 @@ final class NativePort implements GuardianNativeActivationPort {
   final List<String> events;
   int aborts = 0, disables = 0, commits = 0;
   String? stoppedActivation = activation;
+  final pending = <String>[];
+  int confirmations = 0;
   Future<void> Function()? beforeCommit;
 
   @override
@@ -133,7 +136,17 @@ final class NativePort implements GuardianNativeActivationPort {
     events.add('stop');
     final previous = stoppedActivation;
     stoppedActivation = null;
+    if (previous != null && !pending.contains(previous)) pending.add(previous);
     return previous;
+  }
+
+  @override
+  Future<List<String>> pendingRevokes(String owner) async => List.of(pending);
+
+  @override
+  Future<void> confirmRevoke(String owner, String activation) async {
+    confirmations++;
+    pending.remove(activation);
   }
 }
 
@@ -161,6 +174,8 @@ final class Server implements GuardianDriverSessionGateway {
 
   @override
   Future<void> revoke(String owner, String activationId) async {
+    expect(owner, ownerA);
+    expect(activationId, activation);
     events.add('revoke');
     revokes++;
     await onRevoke?.call();
@@ -449,7 +464,7 @@ void main() {
   });
 
   test(
-    'failed server revoke reports local stop without retrying authority',
+    'failed server revoke preserves an exact retry without restoring authority',
     () async {
       final events = <String>[];
       final account = TestAccount();
@@ -467,8 +482,13 @@ void main() {
         throwsA(isA<GuardianActivationException>()),
       );
       expect(events, ['stop', 'revoke']);
+      expect(native.pending, [activation]);
+      expect(native.confirmations, 0);
+      server.onRevoke = null;
       await service.stop(ownerA);
-      expect(events, ['stop', 'revoke', 'stop']);
+      expect(events, ['stop', 'revoke', 'stop', 'revoke']);
+      expect(native.pending, isEmpty);
+      expect(native.confirmations, 1);
     },
   );
 
@@ -497,6 +517,98 @@ void main() {
         const MethodChannelGuardianActivationPort().stop(ownerA),
         throwsFormatException,
       );
+    },
+  );
+
+  test(
+    'new activation reconciles an outstanding stop before proposal',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events)..pending.add(activation);
+      final server = Server(events);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await GuardianDriverActivationService(
+        bound,
+        native,
+        server,
+      ).prepareAfterExplicitConsent(reviewed('+y'));
+      expect(events, ['revoke', 'begin', 'server', 'commit']);
+      expect(native.pending, isEmpty);
+    },
+  );
+
+  test(
+    'account change during stop retry preserves the unconfirmed ticket',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events)
+        ..onRevoke = () async => account.change(ownerB);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await expectLater(
+        GuardianDriverActivationService(bound, native, server).stop(ownerA),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(native.pending, [activation]);
+      expect(native.confirmations, 0);
+    },
+  );
+
+  test(
+    'pending stop bridge rejects duplicate and credential-bearing replies',
+    () async {
+      for (final reply in [
+        [
+          {'activationId': activation},
+          {'activationId': activation},
+        ],
+        [
+          {'activationId': activation, 'credential': capability},
+        ],
+        [
+          {'activationId': 'invalid'},
+        ],
+      ]) {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async => reply);
+        await expectLater(
+          const MethodChannelGuardianActivationPort().pendingRevokes(ownerA),
+          throwsFormatException,
+        );
+      }
+    },
+  );
+
+  test(
+    'local stop does not depend on recipient cleanup reaching the network',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final ownerPort = OwnerPort()
+        ..recipientRevokes.add(
+          const GuardianRecipientLocalStatus(ownerB, ownerB),
+        );
+      final bound = GuardianBoundAccountGateway(account, ownerPort);
+      final native = NativePort(events);
+      final server = Server(events);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isFalse);
+      await GuardianDriverActivationService(bound, native, server).stop(ownerA);
+      expect(events, ['stop', 'revoke']);
+      expect(native.pending, isEmpty);
     },
   );
 }

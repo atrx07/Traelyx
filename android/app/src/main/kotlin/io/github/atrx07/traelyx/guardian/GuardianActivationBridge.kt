@@ -45,6 +45,15 @@ class GuardianActivationBridge(
                 exact("ownerId")
                 mapOf("activationId" to coordinator.stop(owner()))
             }
+            PENDING_REVOKES -> {
+                exact("ownerId")
+                coordinator.pendingRevokes(owner()).map { mapOf("activationId" to it.activationId) }
+            }
+            CONFIRM_REVOKE -> {
+                exact("ownerId", "activationId")
+                coordinator.confirmRevoke(owner(), requireNotNull(arguments["activationId"] as? String))
+                null
+            }
             SNAPSHOT -> {
                 exact("ownerId")
                 val lease = coordinator.snapshot(owner()).lease
@@ -69,8 +78,11 @@ class GuardianActivationBridge(
         const val ABORT = "abort"
         const val DISABLE = "disable"
         const val STOP = "stop"
+        const val PENDING_REVOKES = "pendingRevokes"
+        const val CONFIRM_REVOKE = "confirmRevoke"
         const val SNAPSHOT = "snapshot"
         const val DRIVER_STATUS = "driverStatus"
-        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, STOP, SNAPSHOT, DRIVER_STATUS)
+        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, STOP, PENDING_REVOKES,
+            CONFIRM_REVOKE, SNAPSHOT, DRIVER_STATUS)
     }
 }

@@ -749,6 +749,29 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     remain paired and locally registered, neither has a recorder service, and
     the Tecno reconnects after restoring Wi-Fi from off. Both production enable
     secret digests still match `false`. No activation or alert send occurred.
+  Next bounded unit: persist exact driver-stop revocation tickets in a separate
+  encrypted, no-backup journal before erasing the local lease. A failed request
+  keeps its ticket across process restart; only the same signed-in owner can
+  enumerate/retry/confirm it. Reconcile outstanding stops before another driver
+  activation, with no automatic network call from status or screen opening.
+  Keep driver UI and sender dormant. Validate strict wire/owner guards,
+  disk failure, capacity/corruption, restart, network retry and account races;
+  require full Flutter/native suites, analysis/lint/build and exact-source CI.
+  - [x] Implement durable explicit-stop retries: separate schema-1 AES-GCM
+    no-backup journal stores only owner/activation IDs, capped at eight tickets
+    and 4,096 bytes. Record before local erasure; confirm only after an exact
+    same-owner server revoke. Pending stops and full/uncertain journal health
+    deny new activation. No automatic status/startup request, schema migration,
+    new dependency, monitoring UI or sender. Local Stop does not wait for
+    recipient cleanup to reach the network. All 348 Flutter and 387 native tests,
+    analysis, app lint, configured debug build and isolated proof compilation pass.
+    The physical synthetic activation/stop proof reopens the Keystore journal,
+    confirms its exact ticket and destroys only its proof key/file. All 11,857
+    recorder file hashes and the real recipient vault are unchanged; driver
+    authority remains absent. Pixel update preserves its recipient vault.
+    Account-loss/activation-timeout teardown, replacement-conflict recovery,
+    active recording and production UI/sender gates remain. Prior prerequisite
+    commit `5dd2d5c` has full green source CI 38424057362.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

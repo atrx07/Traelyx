@@ -38,7 +38,7 @@ class GuardianRecordingSessionTest {
         var nextId = generation
         val vault = MemoryVault()
         val outbox = GuardianOutbox(vault)
-        val activation = GuardianActivationCoordinator(outbox, { now }, { nextId }, { "a".repeat(64) })
+        val activation = GuardianActivationCoordinator(outbox, { now }, TestDriverRevokeJournal(), { nextId }, { "a".repeat(64) })
         val tasks = ArrayDeque<() -> Unit>()
         val workers = mutableListOf<FakeWorker>()
         var confirmedForward: FrameVector3? = null
@@ -91,7 +91,7 @@ class GuardianRecordingSessionTest {
 
     @Test fun `fresh process owner binding cannot resume telemetry from retained lease`() {
         val f = Fixture(); f.activate()
-        val restarted = GuardianActivationCoordinator(f.outbox, { f.now })
+        val restarted = GuardianActivationCoordinator(f.outbox, { f.now }, TestDriverRevokeJournal())
         restarted.bindOwner(owner)
         assertNotNull(restarted.snapshot(owner).lease)
         assertNull(restarted.recordingSnapshot())

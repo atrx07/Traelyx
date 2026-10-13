@@ -43,6 +43,16 @@ Offline server failure leaves that Auth owner and local binding available for
 retry; a failure after confirmed server revoke retries local cleanup without
 repeating the RPC. This does not reconcile unexpected account replacement.
 
+Driver stop uses a separate ID-only, encrypted no-backup journal before local
+lease erasure. It records only owner/activation UUIDs, with schema 1 capped at
+eight tickets and 4,096 plaintext bytes. An explicit same-owner retry confirms
+the existing activation-matched revoke before removing the exact ticket;
+reviewed activation reconciles pending stops first. Unknown integrity or full
+capacity denies new activation, and local clocks never discard unconfirmed work.
+A server conflict preserves the ticket rather than revoking a newer activation.
+This is an explicit-stop prerequisite; driver account-loss/activation-timeout
+cleanup and user-facing activation remain separate integration gates.
+
 Events carry no trip ID, coordinates, speed, raw samples, name, or arbitrary text.
 They are explicitly **experimental client-reported signals**, not server-verified
 crashes. The server validates the exact versioned envelope, at least 30 seconds

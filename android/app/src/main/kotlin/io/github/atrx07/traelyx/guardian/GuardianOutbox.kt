@@ -22,6 +22,14 @@ class GuardianOutbox(private val vault: GuardianVault) {
 
     @Synchronized fun revoke() { vault.erase() }
 
+    /** Exact cleanup identity only; expired or rebooted authority still needs server revocation. */
+    @Synchronized fun activationToRevoke(owner: String): String? {
+        guardianUuid(owner)
+        val lease = vault.read().lease ?: return null
+        require(lease.ownerId == owner)
+        return lease.activationId
+    }
+
     /** Recovery performs no IO to a server; invalid consent/boot clears the local capability. */
     @Synchronized fun recover(owner: String, now: GuardianClock): GuardianVaultSnapshot {
         guardianUuid(owner)

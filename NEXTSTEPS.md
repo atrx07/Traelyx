@@ -10,16 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-The dormant driver stop path now erases native authority before yielding only
-an activation UUID for an exact owner-checked server revoke; local safety does
-not depend on the revoke succeeding. All 344 Flutter and 377 app native tests,
-analysis, app lint, configured debug build and repository validation pass. Next integrate
-the reviewed activation/stop UI and the minimized sender, then validate active
-recording and two-account delivery. Guardian sending stays disabled during
-implementation. The Pixel emulator supports account/pairing and receiver tests,
-but does not close the second physical phone reliability gate. Before exposing
-Stop, make failed server revocation retryable so an already queued delivery is
-not left active behind a locally erased lease.
+The dormant driver stop now journals exact owner/activation IDs before erasing
+local authority. Failed server revocation remains retryable across restart;
+confirmed same-owner revocation alone clears the ticket. Reviewed activation
+reconciles pending stops first. All 348 Flutter and 387 native tests, analysis, app lint,
+configured build and isolated physical Keystore proof pass. Recorder and receiver
+data are preserved on both devices. Next integrate driver account-loss/failed
+activation cleanup, replacement-conflict recovery, the reviewed UI and minimized
+sender, then validate active recording and two-account delivery. Guardian sending
+stays disabled during implementation. Pixel supports account/pairing and receiver
+tests; it does not close the second physical phone reliability gate.
 
 Local driver status and process-restart disclosure now have a production route,
 with no activation or send control. All 340 Flutter tests, 375 app native tests,

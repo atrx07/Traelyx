@@ -73,7 +73,8 @@ object AndroidGuardianActivationRuntime {
     }
 
     private fun coordinator(context: Context): GuardianActivationCoordinator = coordinator ?:
-        GuardianActivationCoordinator(AndroidGuardianVault.outbox(context), { clock(context) })
+        GuardianActivationCoordinator(AndroidGuardianVault.outbox(context), { clock(context) },
+            AndroidGuardianDriverRevokeJournal(context))
             .also { coordinator = it }
 
     private fun clock(context: Context): GuardianClock {

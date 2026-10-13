@@ -19,7 +19,8 @@ class GuardianActivationCoordinatorTest {
     private inner class Fixture {
         var now = GuardianClock(1_800_000_000_000, 10_000, "boot-1")
         val vault = MemoryVault()
-        val coordinator = GuardianActivationCoordinator(GuardianOutbox(vault), { now }, { generation }, { "a".repeat(64) })
+        val journal = TestDriverRevokeJournal()
+        val coordinator = GuardianActivationCoordinator(GuardianOutbox(vault), { now }, journal, { generation }, { "a".repeat(64) })
         fun begin(): GuardianActivationProposal { coordinator.bindOwner(a); return coordinator.begin(a, "+y", true) }
         fun commit() = coordinator.commit(a, generation, now.epochMillis + 28_800_000)
         fun advance(ms: Long) { now = now.copy(epochMillis = now.epochMillis + ms, elapsedMillis = now.elapsedMillis + ms) }
@@ -122,5 +123,49 @@ class GuardianActivationCoordinatorTest {
         assertNull(f.vault.value.lease)
         f.vault.failRead = false
         assertNull(f.coordinator.stop(a))
+    }
+
+    @Test fun `pending stop survives restart and blocks activation until exact confirmation`() {
+        val f = Fixture(); f.begin(); f.commit()
+        assertEquals(generation, f.coordinator.stop(a))
+        assertNull(f.vault.value.lease)
+        val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now }, f.journal)
+        restarted.bindOwner(b)
+        assertTrue(restarted.pendingRevokes(b).isEmpty())
+        rejected { restarted.pendingRevokes(a) }
+        restarted.bindOwner(a)
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), restarted.pendingRevokes(a))
+        rejected { restarted.begin(a, "+y", true) }
+        restarted.confirmRevoke(a, b)
+        rejected { restarted.begin(a, "+y", true) }
+        restarted.confirmRevoke(a, generation)
+        restarted.begin(a, "+y", true)
+    }
+
+    @Test fun `journal write failure cannot leave local monitoring active`() {
+        val f = Fixture(); f.begin(); f.commit()
+        f.journal.failRecord = true
+        rejected { f.coordinator.stop(a) }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+    }
+
+    @Test fun `stop retains the exact cleanup identity after local lease expiry`() {
+        val f = Fixture(); f.begin(); f.commit()
+        f.advance(28_800_000)
+        assertEquals(generation, f.coordinator.stop(a))
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+        assertNull(f.vault.value.lease)
+    }
+
+    @Test fun `full journal refuses a new activation without discarding another owner ticket`() {
+        val f = Fixture()
+        repeat(GuardianDriverRevokeJournalCodec.MAX_TICKETS) {
+            f.journal.record(GuardianDriverRevokeTicket(b,
+                "${it.toString().padStart(8, '0')}-3333-4333-8333-333333333333"))
+        }
+        f.coordinator.bindOwner(a)
+        rejected { f.coordinator.begin(a, "+y", true) }
+        assertEquals(GuardianDriverRevokeJournalCodec.MAX_TICKETS, f.journal.tickets.size)
     }
 }

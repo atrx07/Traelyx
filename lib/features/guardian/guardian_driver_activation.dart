@@ -71,6 +71,8 @@ abstract interface class GuardianNativeActivationPort {
   Future<void> abort(String owner, String activation);
   Future<void> disable(String owner);
   Future<String?> stop(String owner);
+  Future<List<String>> pendingRevokes(String owner);
+  Future<void> confirmRevoke(String owner, String activation);
 }
 
 final class MethodChannelGuardianActivationPort
@@ -158,6 +160,33 @@ final class MethodChannelGuardianActivationPort
     }
     return activation as String?;
   }
+
+  @override
+  Future<List<String>> pendingRevokes(String owner) async {
+    final raw = await _channel.invokeMethod<Object?>('pendingRevokes', {
+      'ownerId': owner,
+    });
+    if (raw is! List || raw.length > 8) throw const FormatException();
+    final result = <String>[];
+    for (final item in raw) {
+      if (item is! Map || item.length != 1 || item['activationId'] is! String) {
+        throw const FormatException('Invalid Guardian revoke ticket');
+      }
+      final activation = item['activationId'] as String;
+      if (!_uuid.hasMatch(activation) || result.contains(activation)) {
+        throw const FormatException('Invalid Guardian revoke identity');
+      }
+      result.add(activation);
+    }
+    return result;
+  }
+
+  @override
+  Future<void> confirmRevoke(String owner, String activation) =>
+      _channel.invokeMethod<void>('confirmRevoke', {
+        'ownerId': owner,
+        'activationId': activation,
+      });
 }
 
 abstract interface class GuardianDriverSessionGateway {
@@ -233,24 +262,43 @@ final class GuardianDriverActivationService {
   /// Stops local authority before attempting an exact, owner-checked server revoke.
   /// A failed network revoke cannot restore the erased local capability.
   Future<void> stop(String owner) async {
-    if (!_uuid.hasMatch(owner) ||
-        account.currentIdentity?.userId != owner ||
-        !await account.ensureCurrentOwnerBound()) {
+    if (!_uuid.hasMatch(owner) || account.currentIdentity?.userId != owner) {
       throw const GuardianActivationException('Guardian account unavailable.');
     }
-    final activation = await native.stop(owner);
-    if (activation == null) return;
-    if (account.currentIdentity?.userId != owner) {
+    // Native verifies its bound owner. Local stop must not wait for an unrelated
+    // recipient-reconciliation request or Auth refresh before erasing authority.
+    try {
+      await native.stop(owner);
+    } catch (_) {
       throw const GuardianActivationException(
-        'Guardian stopped locally. Server confirmation is unavailable.',
+        'Guardian local stop could not be confirmed. Check driver state and try again.',
       );
     }
     try {
-      await server.revoke(owner, activation);
+      await _reconcileStops(owner);
     } catch (_) {
       throw const GuardianActivationException(
         'Guardian stopped locally. Server confirmation is unavailable.',
       );
+    }
+  }
+
+  Future<void> _reconcileStops(String owner) async {
+    void checkOwner() {
+      if (account.currentIdentity?.userId != owner) {
+        throw const GuardianActivationException('Signed-in account changed.');
+      }
+    }
+
+    checkOwner();
+    final pending = await native.pendingRevokes(owner);
+    checkOwner();
+    for (final activation in pending) {
+      checkOwner();
+      await server.revoke(owner, activation);
+      checkOwner();
+      await native.confirmRevoke(owner, activation);
+      checkOwner();
     }
   }
 
@@ -267,6 +315,7 @@ final class GuardianDriverActivationService {
     }
     GuardianActivationDraft? draft;
     try {
+      await _reconcileStops(owner);
       final preparedAt = DateTime.now().toUtc();
       draft = await native.begin(owner, forwardAxis);
       if (draft.ownerId != owner ||

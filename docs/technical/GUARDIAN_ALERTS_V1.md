@@ -207,17 +207,25 @@ proposal/abort, synthetic local commit, active snapshot and disable; the normal
 app and sign-in were restored without changing recorder storage. Neither proof
 exercises a hosted session, real user consent or alert delivery.
 
-The dormant explicit stop path now erases local driver authority before returning
-only the activation UUID to the foreground coordinator. The coordinator uses
-that UUID for an owner-checked, activation-matched server revoke; it never
-returns the capability or exposes the UUID to the UI. A vault-read failure still
-attempts local erasure, and a failed server revoke is reported as unconfirmed:
-the erased capability cannot originate another alert from this phone, while the
-server lease and previously queued delivery may remain until their own expiry.
-A durable server-revoke retry or equivalent owner-only recovery is still required
-before exposing Stop as a complete cancellation control. The path has no
-production UI caller yet and has not
-been exercised with a real account or physical active recording.
+The dormant explicit stop path writes the exact owner/activation identity into
+a separate encrypted no-backup journal, then erases the local driver lease before
+returning. Neither the capability nor telemetry enters this journal or its
+foreground replies. Journal schema 1 permits at most eight tickets and 4,096
+plaintext bytes, with no eviction based on local clocks. A full or unhealthy
+journal refuses new activation. Native status and account binding perform no
+server request. A subsequent explicit Stop or reviewed activation retries
+outstanding stops under the same signed-in owner; only a confirmed exact server
+revoke removes a ticket. Account changes or server conflicts leave it pending
+and cannot revoke a replacement session. A read/write failure still attempts
+local lease erasure and reports uncertainty rather than successful cancellation.
+Already queued remote delivery may continue while server revocation is
+unconfirmed, and an in-flight generic push cannot be retracted.
+
+The physical synthetic proof verifies Keystore storage, journal reopening and
+exact confirmation in a random disposable namespace; it preserves the normal
+recipient vault and recorder data. This journal currently records explicit
+stops. Account-loss/activation-timeout teardown, replacement-conflict recovery,
+the production UI caller and active physical recording remain integration gates.
 
 The dormant Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing

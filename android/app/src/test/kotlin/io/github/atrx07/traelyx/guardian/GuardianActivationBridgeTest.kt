@@ -20,7 +20,7 @@ class GuardianActivationBridgeTest {
         var now = GuardianClock(1_800_000_000_000, 10_000, "boot-1")
         val vault = MemoryVault()
         val coordinator = GuardianActivationCoordinator(
-            GuardianOutbox(vault), { now }, { activation }, { credential },
+            GuardianOutbox(vault), { now }, TestDriverRevokeJournal(), { activation }, { credential },
         )
         var observation = GuardianRecordingObservation()
         var observationReads = 0
@@ -122,7 +122,7 @@ class GuardianActivationBridgeTest {
 
     @Test fun `restored lease requires a new review even if an observer claims monitoring`() {
         val f = Fixture(); f.bind(owner); commit(f)
-        val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now })
+        val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now }, TestDriverRevokeJournal())
         restarted.bindOwner(owner)
         val bridge = GuardianActivationBridge(restarted) {
             GuardianRecordingObservation(true, GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
@@ -149,5 +149,15 @@ class GuardianActivationBridgeTest {
         assertNull(f.vault.value.lease)
         assertEquals(mapOf("activationId" to null),
             f.bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to owner)))
+        assertEquals(listOf(mapOf("activationId" to activation)),
+            f.bridge.dispatch(GuardianActivationBridge.PENDING_REVOKES, mapOf("ownerId" to owner)))
+        rejected { f.bridge.dispatch(GuardianActivationBridge.CONFIRM_REVOKE,
+            mapOf("ownerId" to other, "activationId" to activation)) }
+        rejected { f.bridge.dispatch(GuardianActivationBridge.PENDING_REVOKES,
+            mapOf("ownerId" to owner, "extra" to true)) }
+        f.bridge.dispatch(GuardianActivationBridge.CONFIRM_REVOKE,
+            mapOf("ownerId" to owner, "activationId" to activation))
+        assertEquals(emptyList<Any>(),
+            f.bridge.dispatch(GuardianActivationBridge.PENDING_REVOKES, mapOf("ownerId" to owner)))
     }
 }
