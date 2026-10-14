@@ -33,13 +33,13 @@ select public.set_guardian_push_device_v1('22222222-2222-4222-8222-222222222222'
  '77777777-7777-4777-8777-777777777777','synthetic-fcm-routing-token',repeat('b',64));
 select pg_temp.alert_denied($q$select public.set_guardian_push_device_v1('11111111-1111-4111-8111-111111111111',gen_random_uuid(),gen_random_uuid(),'synthetic-token-wrong',repeat('c',64))$q$);
 select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
-insert into alert_test_data values('activation',public.set_guardian_driver_session_v1('11111111-1111-4111-8111-111111111111',
- '88888888-8888-4888-8888-888888888888',repeat('a',64)));
+insert into alert_test_data values('activation',public.set_guardian_driver_session_v2('11111111-1111-4111-8111-111111111111',
+ '88888888-8888-4888-8888-888888888888',repeat('a',64),0));
 select pg_temp.alert_check((select (v->>'enabled')::boolean from alert_test_data where k='activation'),'explicit driver activation');
-select pg_temp.alert_check(public.set_guardian_driver_session_v1('11111111-1111-4111-8111-111111111111',
- '88888888-8888-4888-8888-888888888888',repeat('a',64))=(select v from alert_test_data where k='activation'),'activation retry fixed expiry');
-select pg_temp.alert_denied($q$select public.set_guardian_driver_session_v1('11111111-1111-4111-8111-111111111111','88888888-8888-4888-8888-888888888888',repeat('c',64))$q$);
-select pg_temp.alert_denied($q$select public.set_guardian_driver_session_v1('11111111-1111-4111-8111-111111111111',gen_random_uuid(),null)$q$);
+select pg_temp.alert_check(public.set_guardian_driver_session_v2('11111111-1111-4111-8111-111111111111',
+ '88888888-8888-4888-8888-888888888888',repeat('a',64),0)=(select v from alert_test_data where k='activation'),'activation retry fixed expiry');
+select pg_temp.alert_denied($q$select public.set_guardian_driver_session_v2('11111111-1111-4111-8111-111111111111','88888888-8888-4888-8888-888888888888',repeat('c',64),0)$q$);
+select pg_temp.alert_check(public.set_guardian_driver_session_v1('11111111-1111-4111-8111-111111111111',gen_random_uuid(),null)='{"enabled":false}'::jsonb,'superseded cleanup settles without revoking current session');
 select pg_temp.alert_denied($q$select * from public.guardian_alert_events$q$);
 select pg_temp.alert_denied($q$select * from public.guardian_push_devices$q$);
 

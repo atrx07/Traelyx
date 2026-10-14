@@ -58,6 +58,11 @@ available, retaining Auth on unconfirmed server cleanup. These paths add no
 startup/status network request. Uncommitted activation-timeout cleanup,
 replacement-conflict recovery and user-facing activation remain separate gates.
 
+The prepared revision contract in ADR-0030 addresses delayed activation and
+superseded cleanup without an unbounded tombstone history. It is locally
+validated but requires reviewed production deployment and native/client
+integration; the currently deployed driver contract remains v1.
+
 Events carry no trip ID, coordinates, speed, raw samples, name, or arbitrary text.
 They are explicitly **experimental client-reported signals**, not server-verified
 crashes. The server validates the exact versioned envelope, at least 30 seconds

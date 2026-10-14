@@ -793,6 +793,20 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     production enable or send change. Hosted driver revoke, uncommitted proposal
     teardown and replacement conflicts remain gates. Prior durable-stop commit
     `1647f3f` has full green source CI 38427561887.
+  Next bounded prerequisite: add an owner-only driver revision contract so a
+  revoke also invalidates delayed activation requests and old cleanup can settle
+  without changing a newer session. Keep one private revision row per owner,
+  preserve exact-session delivery revocation and fixed retry expiry, and make the
+  legacy RPC cleanup-only. Prepare migration, access/race/upgrade SQL checks and
+  atomic rollback-safe deployment bundle before requesting production approval.
+  No activation or push window is part of this unit. Native proposal reservation
+  and the v2 client remain a following integration unit after hosted verification.
+  Prior account-teardown commit `0345e78` has full green source CI 38598534975.
+  - [ ] Validate and deploy the driver revision prerequisite.
+    Local preparation passes all 13 SQL suites, legacy-session preservation and
+    cleanup upgrade checks, repository validation and an atomic bundle with
+    migration history plus rollback-only synthetic assertions. No mobile or
+    production change. Review/full CI/hosted validation remain gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -238,6 +238,27 @@ it preserves the normal recipient vault and recorder data. Uncommitted
 activation-timeout teardown, replacement-conflict recovery, the production UI
 caller, hosted driver revoke and active physical recording remain integration gates.
 
+### Prepared driver revision contract
+
+Migration `20261014000000_guardian_driver_revisions.sql` is locally validated,
+not deployed. `get_guardian_driver_revision_v2(expected_user_id)` returns only
+the current owner's bigint revision as decimal text. A new activation through
+`set_guardian_driver_session_v2(expected_user_id, activation, credential,
+expected_revision)` requires that reviewed revision under the stable owner row
+lock. Success advances it; an exact existing-session retry preserves expiry.
+With `credential = null`, the RPC advances revision even when that activation is
+absent, deletes only a matching session and revokes only its event deliveries.
+Old cleanup can settle without erasing a newer session. A delayed activation with
+an earlier revision cannot recreate a revoked session. Conflicting concurrent
+reviews fail conservatively and must obtain a new review/revision.
+
+The private RLS-enabled control table contains one revision row per owner, with
+no direct client or worker grants. Both v2 RPCs are signed-in owner-only. The
+legacy v1 RPC becomes cleanup-only; activation from older dormant builds is
+denied. Existing session rows are preserved. This adds no telemetry, recipient
+access, startup request or processing enable. Proposal journaling, v2 client
+attachment and hosted validation remain required. See ADR-0030.
+
 The dormant Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing
 acknowledgements. Its result is ephemeral. The activation service rejects a

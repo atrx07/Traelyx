@@ -1,0 +1,50 @@
+# ADR-0030: Fence delayed Guardian activation with an owner revision
+
+- Date: 2026-10-14
+- Status: prepared; local SQL tests pass, production deployment pending review
+
+## Context
+
+An activation HTTP request can finish after its caller times out. The old exact
+revoke deletes a matching session or succeeds when none exists; a delayed
+activation can then recreate that session. An old revoke also conflicts with a
+replacement, leaving cleanup tickets unable to settle. Persistent local proposal
+IDs are necessary but cannot close this server ordering race by themselves.
+
+## Decision
+
+Keep one private `guardian_driver_controls` row per owner with a nonnegative
+bigint revision. Its RLS is enabled and all direct client/worker privileges are
+revoked. An explicit signed-in owner-only read returns the revision as decimal
+text, without exposing sessions, credentials or another account's revision.
+
+The v2 activation requires that reviewed revision to match under the same stable
+`auth.users` row lock already used by ingestion/dispatch. A successful new
+activation advances it. An exact retry with matching credential and an existing
+session keeps its original expiry; it cannot recreate an absent session from a
+stale revision. Every exact revoke advances the revision, including an absent or
+superseded session, invalidating earlier activation requests. It deletes only a
+matching session and revokes only deliveries belonging to that activation.
+Cleanup of an old activation therefore settles without stopping a newer session.
+Concurrent reviews may be rejected conservatively and require a fresh review.
+
+The legacy v1 RPC becomes cleanup-only. Older dormant clients cannot bypass the
+revision check; their exact cleanup remains usable. Existing session identities,
+credential hashes and expiry timestamps are preserved by the migration. No
+unbounded tombstone history, new dependency, event field, scheduler or processing
+enable is introduced. Revision exhaustion rejects mutation without wrapping.
+
+## Integration and validation
+
+Local rollback-only SQL checks cover access denial, stale activation after
+revoke, fixed retry expiry, replacement preservation, exact delivery cleanup,
+replay denial and bigint boundaries. A disposable upgrade check applies and
+rolls back the migration around a legacy session. All existing SQL suites remain
+required, as does full CI and separately reviewed hosted rollback-only proof.
+
+The following native/client unit must reserve exact proposal IDs durably before
+any activation request, stop local authority before retrying cleanup, obtain a
+revision only after cleanup and recheck consent/account identity. It must use
+fresh activation UUIDs; this contract fences delayed requests, not deliberate
+reuse of an old UUID with a freshly obtained revision by its signed-in owner.
+Driver controls and sending remain dormant until their remaining gates pass.

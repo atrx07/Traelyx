@@ -10,6 +10,16 @@
 
 ## Working
 
+- M6.8 driver revision prerequisite prepared (2026-10-14): migration
+  `20261014000000_guardian_driver_revisions.sql` adds one private owner revision
+  row and two signed-in owner-only RPCs. Exact revokes invalidate earlier delayed
+  activations and preserve newer sessions/deliveries. Legacy v1 becomes
+  cleanup-only. All 13 local SQL suites, legacy-session upgrade preservation,
+  repository validation and the atomic migration/synthetic rollback bundle pass.
+  No production deployment, mobile change, alert or enable change has occurred.
+  Production access review/hosted proof precede proposal reservation and v2 client
+  attachment. Account-teardown source `0345e78` has green full CI 38598534975.
+
 - M6.8 driver account teardown (2026-10-14): recipient cleanup failure now
   still attempts driver authority removal. Retained lease IDs enter the encrypted
   revoke journal before account loss/change, expiry, reboot or clock rollback

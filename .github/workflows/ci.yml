@@ -69,6 +69,8 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927000000_guardian_pairing.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927010000_guardian_alert_delivery.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20260927020000_guardian_dispatch_worker.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_driver_revisions_upgrade.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/migrations/20261014000000_guardian_driver_revisions.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/connected_foundation.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/summary_sync.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/profile_vehicle_sync.sql
@@ -81,6 +83,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_receipt_fixture.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_push_fixture.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_receiver_controls.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_driver_revisions.sql
           node --test tests/tool/test_guardian_push_probe.mjs
           node --test tests/tool/test_guardian_duplicate_phone.mjs
 
