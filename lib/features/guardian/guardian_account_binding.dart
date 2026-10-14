@@ -47,9 +47,15 @@ final class MethodChannelGuardianOwnerPort implements GuardianOwnerPort {
   @override
   Future<void> bindOwner(String? ownerId) async {
     // Sign-out waits for both local authorities to be cleared before Auth exits.
-    await _recipientChannel.invokeMethod<void>('bindOwner', {
-      'ownerId': ownerId,
-    });
+    try {
+      await _recipientChannel.invokeMethod<void>('bindOwner', {
+        'ownerId': ownerId,
+      });
+    } catch (_) {
+      // A recipient failure must still remove the previous driver's authority.
+      await _driverChannel.invokeMethod<void>('bindOwner', {'ownerId': null});
+      rethrow;
+    }
     await _driverChannel.invokeMethod<void>('bindOwner', {'ownerId': ownerId});
   }
 
@@ -177,6 +183,7 @@ final class GuardianBoundAccountGateway
     this._account,
     this._guardian, {
     this.deviceRevoker,
+    this.driverStopper,
   }) {
     _subscription = _account.identityChanges.listen((_) => _updateOwner());
     _updateOwner();
@@ -185,6 +192,7 @@ final class GuardianBoundAccountGateway
   final AccountGateway _account;
   final GuardianOwnerPort _guardian;
   final GuardianDeviceRevoker? deviceRevoker;
+  final Future<void> Function(String owner)? driverStopper;
 
   @override
   SupabaseClient? get accountClient => accountClientOf(_account);
@@ -361,6 +369,14 @@ final class GuardianBoundAccountGateway
           _desiredOwner != owner ||
           !_hasBoundOwner ||
           _boundOwner != owner) {
+        throw const GuardianLocalCleanupException();
+      }
+      try {
+        await driverStopper?.call(owner);
+      } catch (_) {
+        throw const GuardianLocalCleanupException();
+      }
+      if (_account.currentIdentity?.userId != owner) {
         throw const GuardianLocalCleanupException();
       }
       final GuardianRecipientLocalStatus? status;

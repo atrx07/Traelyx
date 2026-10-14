@@ -460,10 +460,24 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             check(reopenedJournal.pending().isEmpty())
             val absent = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
             check(absent["localLeasePresent"] == false && !file.exists())
+            val second = bridge.dispatch("begin", mapOf(
+                "ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)) as Map<*, *>
+            val secondActivation = second["activationId"] as String
+            bridge.dispatch("commit", mapOf("ownerId" to owner, "activationId" to secondActivation,
+                "serverExpiresEpochMillis" to System.currentTimeMillis() + 60_000L))
+            val otherOwner = UUID.randomUUID().toString()
+            bridge.dispatch("bindOwner", mapOf("ownerId" to otherOwner))
+            check(!file.exists())
+            check((bridge.dispatch("pendingRevokes", mapOf("ownerId" to otherOwner)) as List<*>).isEmpty())
+            check(reopenedJournal.pending() == listOf(
+                io.github.atrx07.traelyx.guardian.GuardianDriverRevokeTicket(owner, secondActivation)))
+            bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
+            bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "activationId" to secondActivation))
+            check(reopenedJournal.pending().isEmpty())
         } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
-        return "M6.8 synthetic activation proof passed: boot clock, native proposal/commit/stop and revoke journal, " +
+        return "M6.8 synthetic activation proof passed: boot clock, proposal/commit/stop, owner-loss revoke journal, " +
             "encrypted scoped cleanup; no hosted session, Firebase initialization or trip change."
     }
 

@@ -81,7 +81,8 @@ class AndroidGuardianVault(context: Context, namespace: String = "primary") : Gu
         private val LOCK = Any()
         @Volatile private var outbox: GuardianOutbox? = null
         fun outbox(context: Context): GuardianOutbox = synchronized(LOCK) {
-            outbox ?: GuardianOutbox(AndroidGuardianVault(context.applicationContext)).also { outbox = it }
+            outbox ?: GuardianOutbox(AndroidGuardianVault(context.applicationContext),
+                AndroidGuardianDriverRevokeJournal(context.applicationContext)::record).also { outbox = it }
         }
     }
 }

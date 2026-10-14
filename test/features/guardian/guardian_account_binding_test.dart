@@ -513,7 +513,7 @@ void main() {
   );
 
   test(
-    'recipient cleanup failure prevents the driver bind from claiming success',
+    'recipient cleanup failure clears driver authority and still reports failure',
     () async {
       TestWidgetsFlutterBinding.ensureInitialized();
       const recipient = MethodChannel(
@@ -524,13 +524,13 @@ void main() {
       );
       final messenger =
           TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-      var driverCalls = 0;
+      final driverOwners = <Object?>[];
       messenger.setMockMethodCallHandler(
         recipient,
         (_) async => throw PlatformException(code: 'cleanup_failed'),
       );
-      messenger.setMockMethodCallHandler(driver, (_) async {
-        driverCalls++;
+      messenger.setMockMethodCallHandler(driver, (call) async {
+        driverOwners.add((call.arguments as Map)['ownerId']);
         return null;
       });
       addTearDown(() {
@@ -538,11 +538,13 @@ void main() {
         messenger.setMockMethodCallHandler(driver, null);
       });
 
-      await expectLater(
-        const MethodChannelGuardianOwnerPort().bindOwner(null),
-        throwsA(isA<PlatformException>()),
-      );
-      expect(driverCalls, 0);
+      for (final owner in [null, ownerA.userId]) {
+        await expectLater(
+          const MethodChannelGuardianOwnerPort().bindOwner(owner),
+          throwsA(isA<PlatformException>()),
+        );
+      }
+      expect(driverOwners, [null, null]);
     },
   );
 
@@ -1411,6 +1413,106 @@ void main() {
       expect(port.calls.first, ownerA.userId);
       expect(port.calls.skip(1), everyElement(isNull));
       expect(port.calls.last, null);
+    },
+  );
+
+  test(
+    'sign-out waits for driver stop before recipient cleanup and Auth',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort();
+      final stopped = Completer<void>();
+      final owners = <String>[];
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        driverStopper: (owner) {
+          owners.add(owner);
+          return stopped.future;
+        },
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      final statusCalls = port.statusCalls;
+      final signingOut = bound.signOut();
+      await Future<void>.delayed(Duration.zero);
+      expect(owners, [ownerA.userId]);
+      expect(port.statusCalls, statusCalls);
+      expect(port.calls.last, ownerA.userId);
+      expect(account.signOutCount, 0);
+      stopped.complete();
+      await signingOut;
+      expect(account.signOutCount, 1);
+      expect(port.calls.last, null);
+    },
+  );
+
+  test(
+    'driver stop failure retains Auth and permits exact cleanup retry',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort();
+      var failStop = true;
+      var stopCalls = 0;
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        driverStopper: (_) async {
+          stopCalls++;
+          if (failStop) throw StateError('offline');
+        },
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      final statusCalls = port.statusCalls;
+      await expectLater(
+        bound.signOut(),
+        throwsA(isA<GuardianLocalCleanupException>()),
+      );
+      expect(account.currentIdentity, ownerA);
+      expect(account.signOutCount, 0);
+      expect(port.statusCalls, statusCalls);
+      expect(port.calls.last, ownerA.userId);
+      failStop = false;
+      await bound.signOut();
+      expect(stopCalls, 2);
+      expect(account.signOutCount, 1);
+    },
+  );
+
+  test(
+    'account change during driver stop cannot sign out the new account',
+    () async {
+      final account = FakeAccount(ownerA);
+      final port = FakeOwnerPort();
+      final stopped = Completer<void>();
+      final bound = GuardianBoundAccountGateway(
+        account,
+        port,
+        driverStopper: (_) => stopped.future,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.close();
+      });
+      expect(await bound.ensureCurrentOwnerBound(), isTrue);
+      final signingOut = bound.signOut();
+      final rejectedSignOut = expectLater(
+        signingOut,
+        throwsA(isA<GuardianLocalCleanupException>()),
+      );
+      await Future<void>.delayed(Duration.zero);
+      account.emit(ownerB);
+      stopped.complete();
+      await rejectedSignOut;
+      expect(account.currentIdentity, ownerB);
+      expect(account.signOutCount, 0);
     },
   );
 

@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-10-13
+**Last updated:** 2026-10-14
 
 ## Context budget / references
 
@@ -772,6 +772,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Account-loss/activation-timeout teardown, replacement-conflict recovery,
     active recording and production UI/sender gates remain. Prior prerequisite
     commit `5dd2d5c` has full green source CI 38424057362.
+  Next bounded unit: make account teardown clear driver authority even when
+  recipient cleanup fails. Journal retained driver identities before owner-loss,
+  expiry or reboot erasure; expose no IDs to a different owner. Explicit sign-out
+  uses the existing exact driver-stop service while Auth is still available,
+  retaining Auth on unconfirmed server cleanup. Keep driver activation UI and
+  sending dormant. Require failure/account-race/expiry tests, full app suites,
+  analysis/lint/build, isolated physical cleanup proof and inactive data preservation.
+  - [x] Implement driver account teardown: retained lease IDs are journaled before
+    owner-loss/change and invalid recovery erasure, including outbox background
+    paths. Recipient cleanup failure still attempts driver teardown. Explicit
+    sign-out stops/reconciles under the original Auth owner before recipient
+    cleanup, retaining Auth on unconfirmed cleanup; account races cannot clear
+    the new owner. Three new Flutter and seven native regressions, all 351 Flutter
+    and 394 native tests, analysis, app lint, configured debug build and repository
+    validation pass. Isolated physical proof verifies owner-loss capture, journal
+    reopening and owner filtering before destroying only its synthetic key/file.
+    All 11,857 recorder hashes and both receiver vaults remain unchanged, normal
+    apps open with saved sign-ins and real driver authority is absent. No schema/provider/dependency,
+    production enable or send change. Hosted driver revoke, uncommitted proposal
+    teardown and replacement conflicts remain gates. Prior durable-stop commit
+    `1647f3f` has full green source CI 38427561887.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -42,7 +42,8 @@ class GuardianActivationCoordinator(
         // Clear in-memory authority before any fallible persistence operation.
         owner = null
         bound = false
-        if (nextOwner == null) outbox.revoke() else outbox.recover(nextOwner, clock())
+        if (nextOwner == null) outbox.revoke(revokeJournal::record)
+        else outbox.recover(nextOwner, clock(), revokeJournal::record)
         owner = nextOwner
         bound = true
     }
@@ -131,14 +132,14 @@ class GuardianActivationCoordinator(
     /** Read-only local lease status; presence does not imply that monitoring/delivery is running. */
     @Synchronized fun snapshot(expectedOwner: String): GuardianVaultSnapshot {
         require(bound && owner == expectedOwner)
-        return outbox.recover(expectedOwner, clock())
+        return outbox.recover(expectedOwner, clock(), revokeJournal::record)
     }
 
     /** A restored lease is status/outbox evidence, not permission to restart live evaluation. */
     @Synchronized fun recordingSnapshot(): GuardianVaultSnapshot? {
         val current = owner
         if (!bound || current == null || recordingActivationId == null) return null
-        val snapshot = outbox.recover(current, clock())
+        val snapshot = outbox.recover(current, clock(), revokeJournal::record)
         return snapshot.takeIf { it.lease?.activationId == recordingActivationId }
     }
 

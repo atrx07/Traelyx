@@ -10,6 +10,21 @@
 
 ## Working
 
+- M6.8 driver account teardown (2026-10-14): recipient cleanup failure now
+  still attempts driver authority removal. Retained lease IDs enter the encrypted
+  revoke journal before account loss/change, expiry, reboot or clock rollback
+  erasure, including background outbox recovery. Explicit sign-out stops the
+  driver and confirms exact pending server revokes before recipient cleanup/Auth
+  removal; unconfirmed cleanup retains Auth for retry. Account races cannot sign
+  out a new owner. All 351 Flutter and 394 native tests, analysis, app lint,
+  configured debug build and isolated physical owner-loss Keystore proof pass.
+  All 11,857 recorder hashes and both receiver vaults are unchanged; normal apps
+  open with saved sign-ins, driver authority absent. No migration, dependency,
+  send or enable change.
+  Hosted driver revoke, uncommitted activation cleanup, replacement conflicts,
+  reviewed activation/sender and active physical recording remain gates.
+  Prior durable-stop commit `1647f3f` has green full source CI 38427561887.
+
 - M6.8 driver stop retries (2026-10-13): a separate encrypted no-backup journal
   preserves exact owner/activation stop tickets before local authority erasure.
   Only a confirmed same-owner server revoke clears a ticket; reviewed activation

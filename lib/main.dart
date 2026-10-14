@@ -8,6 +8,7 @@ import 'package:traelyx/features/account/application/initialize_account.dart';
 import 'package:traelyx/features/account/data/supabase_client_source.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 import 'package:traelyx/features/guardian/guardian_device_registration.dart';
+import 'package:traelyx/features/guardian/guardian_driver_activation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,13 @@ Future<void> main() async {
   final accountGateway = GuardianBoundAccountGateway(
     rawAccount,
     const MethodChannelGuardianOwnerPort(),
+    driverStopper: accountClient == null
+        ? null
+        : GuardianDriverStopService(
+            rawAccount,
+            const MethodChannelGuardianActivationPort(),
+            SupabaseGuardianDriverSessionGateway(accountClient),
+          ).stop,
     deviceRevoker: accountClient == null
         ? null
         : GuardianDeviceServerGateway(

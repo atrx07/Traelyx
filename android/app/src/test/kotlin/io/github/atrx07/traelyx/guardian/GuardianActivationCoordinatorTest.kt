@@ -168,4 +168,77 @@ class GuardianActivationCoordinatorTest {
         rejected { f.coordinator.begin(a, "+y", true) }
         assertEquals(GuardianDriverRevokeJournalCodec.MAX_TICKETS, f.journal.tickets.size)
     }
+
+    @Test fun `owner loss journals committed lease before erasing and hides it from the new owner`() {
+        for (nextOwner in listOf(b, null)) {
+            val f = Fixture(); f.begin(); f.commit()
+            f.coordinator.bindOwner(nextOwner)
+            assertNull(f.vault.value.lease)
+            assertNull(f.coordinator.recordingSnapshot())
+            assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+            if (nextOwner != null) assertTrue(f.coordinator.pendingRevokes(nextOwner).isEmpty())
+            rejected { f.coordinator.pendingRevokes(a) }
+            f.coordinator.bindOwner(a)
+            assertEquals(f.journal.tickets, f.coordinator.pendingRevokes(a))
+            rejected { f.coordinator.begin(a, "+y", true) }
+        }
+    }
+
+    @Test fun `invalid retained leases journal expiry reboot and rollback cleanup`() {
+        for (readFromRecorder in listOf(false, true)) {
+            for (change in listOf<(Fixture) -> Unit>(
+                { it.advance(28_800_000) },
+                { it.now = it.now.copy(bootId = "boot-2") },
+                { it.now = it.now.copy(epochMillis = it.now.epochMillis - 1) },
+                { it.now = it.now.copy(elapsedMillis = it.now.elapsedMillis - 1) },
+            )) {
+                val f = Fixture(); f.begin(); f.commit(); change(f)
+                if (readFromRecorder) assertNull(f.coordinator.recordingSnapshot())
+                else assertNull(f.coordinator.snapshot(a).lease)
+                assertNull(f.vault.value.lease)
+                assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+            }
+        }
+    }
+
+    @Test fun `owner cleanup journal failure still erases and refuses the new binding`() {
+        val f = Fixture(); f.begin(); f.commit()
+        f.journal.failRecord = true
+        rejected { f.coordinator.bindOwner(b) }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+        rejected { f.coordinator.snapshot(a) }
+        rejected { f.coordinator.snapshot(b) }
+    }
+
+    @Test fun `fresh same owner binding preserves monitoring and writes no revoke`() {
+        val f = Fixture(); f.begin(); val lease = f.commit()
+        f.advance(1_000); f.coordinator.bindOwner(a)
+        assertEquals(lease, f.coordinator.recordingSnapshot()?.lease)
+        assertTrue(f.journal.tickets.isEmpty())
+    }
+
+    @Test fun `invalid lease journal failure still removes recording authority`() {
+        val f = Fixture(); f.begin(); f.commit(); f.advance(28_800_000)
+        f.journal.failRecord = true
+        rejected { f.coordinator.recordingSnapshot() }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+    }
+
+    @Test fun `outbox reservation also journals an expired lease without a foreground status check`() {
+        val f = Fixture(); f.begin(); f.commit(); f.advance(28_800_000)
+        val outbox = GuardianOutbox(f.vault, f.journal::record)
+        assertNull(outbox.reserveNext(a, f.now))
+        assertNull(f.vault.value.lease)
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+    }
+
+    @Test fun `unreadable lease account recovery attempts erasure and refuses binding`() {
+        val f = Fixture(); f.begin(); f.commit(); f.vault.failRead = true
+        rejected { f.coordinator.bindOwner(b) }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+        rejected { f.coordinator.snapshot(b) }
+    }
 }

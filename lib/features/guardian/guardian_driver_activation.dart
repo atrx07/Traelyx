@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
 import 'package:traelyx/features/guardian/guardian_driver_consent.dart';
 
@@ -252,10 +253,10 @@ final class SupabaseGuardianDriverSessionGateway
   }
 }
 
-/// Not exposed in the UI until recorder, recipient opt-in and delivery gates pass.
-final class GuardianDriverActivationService {
-  const GuardianDriverActivationService(this.account, this.native, this.server);
-  final GuardianBoundAccountGateway account;
+/// Reusable by explicit sign-out while the original Auth owner is still present.
+final class GuardianDriverStopService {
+  const GuardianDriverStopService(this.account, this.native, this.server);
+  final AccountGateway account;
   final GuardianNativeActivationPort native;
   final GuardianDriverSessionGateway server;
 
@@ -301,6 +302,17 @@ final class GuardianDriverActivationService {
       checkOwner();
     }
   }
+}
+
+/// Not exposed in the UI until recorder, recipient opt-in and delivery gates pass.
+final class GuardianDriverActivationService {
+  const GuardianDriverActivationService(this.account, this.native, this.server);
+  final GuardianBoundAccountGateway account;
+  final GuardianNativeActivationPort native;
+  final GuardianDriverSessionGateway server;
+
+  Future<void> stop(String owner) =>
+      GuardianDriverStopService(account, native, server).stop(owner);
 
   Future<DateTime> prepareAfterExplicitConsent(
     GuardianDriverConsent consent,
@@ -315,7 +327,11 @@ final class GuardianDriverActivationService {
     }
     GuardianActivationDraft? draft;
     try {
-      await _reconcileStops(owner);
+      await GuardianDriverStopService(
+        account,
+        native,
+        server,
+      )._reconcileStops(owner);
       final preparedAt = DateTime.now().toUtc();
       draft = await native.begin(owner, forwardAxis);
       if (draft.ownerId != owner ||

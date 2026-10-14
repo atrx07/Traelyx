@@ -221,11 +221,22 @@ local lease erasure and reports uncertainty rather than successful cancellation.
 Already queued remote delivery may continue while server revocation is
 unconfirmed, and an in-flight generic push cannot be retracted.
 
-The physical synthetic proof verifies Keystore storage, journal reopening and
-exact confirmation in a random disposable namespace; it preserves the normal
-recipient vault and recorder data. This journal currently records explicit
-stops. Account-loss/activation-timeout teardown, replacement-conflict recovery,
-the production UI caller and active physical recording remain integration gates.
+Owner loss/change and expiry, reboot or clock rollback recovery now capture
+retained lease IDs in the same journal before erasure. A different owner cannot
+enumerate or confirm those tickets. Journal/read failure still attempts lease
+erasure and reports failure; successful cleanup cannot be claimed if persistence
+is uncertain. Recipient cleanup failure also attempts driver owner teardown.
+Explicit sign-out stops the driver before recipient cleanup and before removing
+Auth, and retains Auth if an exact server revoke cannot be confirmed. Unexpected
+Auth loss has no signed-in server authority; a later same-owner explicit retry
+or reviewed activation reconciles the ticket. No network request is added to
+native status/account binding.
+
+The physical synthetic proof verifies Keystore storage, journal reopening,
+owner-loss capture and exact confirmation in a random disposable namespace;
+it preserves the normal recipient vault and recorder data. Uncommitted
+activation-timeout teardown, replacement-conflict recovery, the production UI
+caller, hosted driver revoke and active physical recording remain integration gates.
 
 The dormant Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing

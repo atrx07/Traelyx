@@ -50,8 +50,13 @@ the existing activation-matched revoke before removing the exact ticket;
 reviewed activation reconciles pending stops first. Unknown integrity or full
 capacity denies new activation, and local clocks never discard unconfirmed work.
 A server conflict preserves the ticket rather than revoking a newer activation.
-This is an explicit-stop prerequisite; driver account-loss/activation-timeout
-cleanup and user-facing activation remain separate integration gates.
+Retained leases now journal the same IDs on account loss/change, expiry, reboot
+or clock rollback before erasure. Another owner cannot enumerate or confirm
+those tickets. Recipient cleanup failure also attempts driver teardown, and
+explicit sign-out stops/reconciles the driver while the old Auth owner remains
+available, retaining Auth on unconfirmed server cleanup. These paths add no
+startup/status network request. Uncommitted activation-timeout cleanup,
+replacement-conflict recovery and user-facing activation remain separate gates.
 
 Events carry no trip ID, coordinates, speed, raw samples, name, or arbitrary text.
 They are explicitly **experimental client-reported signals**, not server-verified

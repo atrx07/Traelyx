@@ -8,7 +8,10 @@ class GuardianDispatchAttempt(val lease: GuardianDriverLease, val alert: Guardia
 }
 
 /** One coordinator per app process, called on a worker thread, never on acquisition callbacks. */
-class GuardianOutbox(private val vault: GuardianVault) {
+class GuardianOutbox(
+    private val vault: GuardianVault,
+    private val journalInvalidLease: ((GuardianDriverRevokeTicket) -> Unit)? = null,
+) {
     @Synchronized fun activate(lease: GuardianDriverLease, now: GuardianClock) {
         require(lease.valid(now, lease.ownerId))
         val old = vault.read()
@@ -20,7 +23,13 @@ class GuardianOutbox(private val vault: GuardianVault) {
         vault.write(GuardianVaultSnapshot(lease))
     }
 
-    @Synchronized fun revoke() { vault.erase() }
+    @Synchronized fun revoke(beforeErase: ((GuardianDriverRevokeTicket) -> Unit)? = null) {
+        try {
+            if (beforeErase != null) vault.read().lease?.let {
+                beforeErase(GuardianDriverRevokeTicket(it.ownerId, it.activationId))
+            }
+        } finally { vault.erase() }
+    }
 
     /** Exact cleanup identity only; expired or rebooted authority still needs server revocation. */
     @Synchronized fun activationToRevoke(owner: String): String? {
@@ -31,12 +40,17 @@ class GuardianOutbox(private val vault: GuardianVault) {
     }
 
     /** Recovery performs no IO to a server; invalid consent/boot clears the local capability. */
-    @Synchronized fun recover(owner: String, now: GuardianClock): GuardianVaultSnapshot {
+    @Synchronized fun recover(owner: String, now: GuardianClock,
+        beforeInvalidErase: ((GuardianDriverRevokeTicket) -> Unit)? = journalInvalidLease): GuardianVaultSnapshot {
         guardianUuid(owner)
-        val old = vault.read()
+        val old = try { vault.read() } catch (failure: Exception) {
+            vault.erase()
+            throw failure
+        }
         val lease = old.lease ?: return old
         if (!lease.valid(now, owner)) {
-            vault.erase()
+            try { beforeInvalidErase?.invoke(GuardianDriverRevokeTicket(lease.ownerId, lease.activationId)) }
+            finally { vault.erase() }
             return GuardianVaultSnapshot()
         }
         val alerts = old.alerts.filter {

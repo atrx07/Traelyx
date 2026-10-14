@@ -132,11 +132,16 @@ temporary service failures, rejected requests, and unknown local errors.
 Only transport failures suggest checking the connection. Raw provider error
 bodies, email addresses, and tokens are not exposed in diagnostics.
 
-M6.8 explicit sign-out checks for an opted-in Guardian recipient device before
-removing Auth. If one exists, it first requires a confirmed signed-in server
-device revoke, then local provider deletion; failure cancels sign-out and
+M6.8 explicit sign-out first stops local driver authority and confirms all
+pending exact driver-session revokes under the current Auth owner. Offline or
+unconfirmed cleanup retains Auth and the encrypted ID-only retry tickets; a
+changed owner cannot clear the new account's Auth. It then checks for an opted-in
+Guardian recipient device before removing Auth. If one exists, it requires a
+confirmed signed-in server device revoke, then local provider deletion; failure cancels sign-out and
 preserves a retry path. No device is registered by this check. Unexpected
-session loss or replacement still needs reconciliation before Guardian
-registration can be enabled.
+session loss or replacement clears local driver authority and journals retained
+driver-session IDs for a later same-owner retry. Recipient cleanup failure still
+attempts driver teardown and reports failure. No activation, registration or
+driver-session request runs merely from startup/status checks.
 
 Future optional MFA can be added if useful.
