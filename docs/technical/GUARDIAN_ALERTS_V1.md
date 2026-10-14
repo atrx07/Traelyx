@@ -238,10 +238,12 @@ it preserves the normal recipient vault and recorder data. Uncommitted
 activation-timeout teardown, replacement-conflict recovery, the production UI
 caller, hosted driver revoke and active physical recording remain integration gates.
 
-### Prepared driver revision contract
+### Driver revision contract (deployed 2026-10-14)
 
-Migration `20261014000000_guardian_driver_revisions.sql` is locally validated,
-not deployed. `get_guardian_driver_revision_v2(expected_user_id)` returns only
+Migration `20261014000000_guardian_driver_revisions.sql` passed all 13 local SQL
+suites, legacy-session upgrade checks and full CI 38603573947 before its approved
+atomic hosted deployment. All four hosted verification checks pass and synthetic
+state is rolled back. `get_guardian_driver_revision_v2(expected_user_id)` returns only
 the current owner's bigint revision as decimal text. A new activation through
 `set_guardian_driver_session_v2(expected_user_id, activation, credential,
 expected_revision)` requires that reviewed revision under the stable owner row
@@ -256,8 +258,9 @@ The private RLS-enabled control table contains one revision row per owner, with
 no direct client or worker grants. Both v2 RPCs are signed-in owner-only. The
 legacy v1 RPC becomes cleanup-only; activation from older dormant builds is
 denied. Existing session rows are preserved. This adds no telemetry, recipient
-access, startup request or processing enable. Proposal journaling, v2 client
-attachment and hosted validation remain required. See ADR-0030.
+access, startup request or processing enable. Both Guardian enable digests remain
+`false`. Proposal journaling, v2 client attachment and active-device validation
+remain required. See ADR-0030.
 
 The dormant Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing

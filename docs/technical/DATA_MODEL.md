@@ -185,3 +185,12 @@ and delivery transitions retain no route, raw sample, speed or trip identifier.
 ADR-0026 defines exact expiry, quotas, revision/generation binding, access and
 bounded retention. Native persistence/UI/dispatch integration remains pending;
 local Drift stays at schema 3 and pairing does not activate alerts.
+
+The approved 2026-10-14 driver revision migration adds private
+`guardian_driver_controls(user_id, revision)`, keyed to `auth.users` with account
+deletion cascade and no direct client/worker privileges. No backfill rewrites
+existing sessions. Missing control state reads as revision zero; exact owner
+mutations create one row lazily. The bigint revision fences delayed activation
+after revoke and is returned only as decimal text to that signed-in owner.
+Legacy activation becomes unavailable while exact legacy cleanup remains usable.
+See ADR-0030; native proposal journaling/v2 client integration remain pending.

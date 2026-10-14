@@ -169,3 +169,26 @@ passed. Hosted checks verify migration history, all four private RLS tables,
 exact guarded RPC grants and rollback of every synthetic account/fixture. The
 permission test edits only its synthetic relationship. Deployment bundle SHA-256:
 `1f935ac821efc15f0a55a018e3392357fc65a7a00ee3d5d3151b7156fac91b16`.
+
+## M6.8 driver revisions (deployed 2026-10-14)
+
+Migration `20261014000000_guardian_driver_revisions.sql` adds one private
+RLS-enabled control row per owner: `user_id` references `auth.users` with deletion
+cascade; nonnegative bigint `revision` defaults to zero. Existing sessions are
+preserved without backfill; missing control state reads as zero. All direct
+table privileges are revoked from PUBLIC, anon, authenticated and service_role.
+
+Only authenticated callers may execute the two owner-guarded v2 RPCs. Revision
+read returns decimal text. New activation requires the reviewed revision under
+the stable owner lock and advances it on success. Existing exact retries keep
+expiry. Exact revoke advances revision even for an absent/superseded activation,
+deletes only the matching session and revokes only its event deliveries.
+Legacy v1 becomes cleanup-only. No recipient access, telemetry field, scheduler
+or processing enable is added. See ADR-0030 and `GUARDIAN_ALERTS_V1.md`.
+
+All 13 local SQL suites, legacy upgrade checks and full source CI 38603573947
+(`b301544`) pass. The approved atomic hosted bundle verifies migration history,
+private RLS, owner-only grants and synthetic rollback, all true. Both Guardian
+flags remain false; native proposal reservation and v2 client remain pending.
+Deployment bundle SHA-256:
+`09b0ae2a27620ba4f7f20a3e18aa6bbd7587cbe4bbafb88db32d037d321744fb`.

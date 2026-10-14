@@ -17,12 +17,12 @@ before recipient cleanup and Auth removal; failure retains Auth for retry.
 All 351 Flutter and 394 native tests, analysis, app lint, configured build and
 isolated physical owner-loss Keystore proof pass. Recorder and receiver data are
 preserved on both devices. Durable-stop source CI 38427561887 passes (`1647f3f`).
-The driver revision migration is prepared and passes all 13 local SQL suites,
+The approved driver revision migration is deployed and passes all 13 local SQL suites,
 legacy-session upgrade preservation and atomic deployment-bundle checks. It
 adds an owner-only revision fence for delayed activation and makes legacy v1
-cleanup-only; production remains unchanged. Obtain deployment review and hosted
-rollback-only proof, then integrate durable proposal reservations and the v2
-client, followed by the reviewed UI and minimized
+cleanup-only. Full source CI 38603573947 (`b301544`) and all four hosted atomic
+deployment/rollback checks pass; both functions remain disabled. Next integrate
+durable proposal reservations and the v2 client, followed by the reviewed UI and minimized
 sender, then validate active recording and two-account delivery. Guardian sending
 stays disabled during implementation. Pixel supports account/pairing and receiver
 tests; it does not close the second physical phone reliability gate.

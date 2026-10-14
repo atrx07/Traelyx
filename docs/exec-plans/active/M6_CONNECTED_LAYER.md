@@ -802,11 +802,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   No activation or push window is part of this unit. Native proposal reservation
   and the v2 client remain a following integration unit after hosted verification.
   Prior account-teardown commit `0345e78` has full green source CI 38598534975.
-  - [ ] Validate and deploy the driver revision prerequisite.
+  - [x] Validate and deploy the driver revision prerequisite.
     Local preparation passes all 13 SQL suites, legacy-session preservation and
     cleanup upgrade checks, repository validation and an atomic bundle with
-    migration history plus rollback-only synthetic assertions. No mobile or
-    production change. Review/full CI/hosted validation remain gates.
+    migration history plus rollback-only synthetic assertions. Source `b301544`
+    has full green CI 38603573947. After exact Run/confirmation approval, the
+    atomic production bundle passes migration history, private control RLS,
+    owner-only RPC grants and synthetic-fixture rollback, all true. Fresh hosted
+    enable digests remain SHA-256 of `false`; no mobile change, alert or trip upload.
+    Legacy activation is now denied; durable proposal reservation and the v2
+    client remain next. Approved deployment bundle SHA-256:
+    `09b0ae2a27620ba4f7f20a3e18aa6bbd7587cbe4bbafb88db32d037d321744fb`.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

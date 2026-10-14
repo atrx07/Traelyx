@@ -1,7 +1,7 @@
 # ADR-0030: Fence delayed Guardian activation with an owner revision
 
 - Date: 2026-10-14
-- Status: prepared; local SQL tests pass, production deployment pending review
+- Status: server deployed; local, full CI and approved hosted checks pass; native/client integration pending
 
 ## Context
 
@@ -40,7 +40,10 @@ Local rollback-only SQL checks cover access denial, stale activation after
 revoke, fixed retry expiry, replacement preservation, exact delivery cleanup,
 replay denial and bigint boundaries. A disposable upgrade check applies and
 rolls back the migration around a legacy session. All existing SQL suites remain
-required, as does full CI and separately reviewed hosted rollback-only proof.
+required. All 13 suites, upgrade checks and full source CI 38603573947 (`b301544`)
+pass. The approved atomic deployment verifies migration history, private RLS,
+owner-only RPC grants and synthetic rollback, all true. Both enable flags remain
+false; no real activation or push was performed.
 
 The following native/client unit must reserve exact proposal IDs durably before
 any activation request, stop local authority before retrying cleanup, obtain a
