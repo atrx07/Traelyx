@@ -887,6 +887,36 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     including native suites, debug/release builds, server policies and artifacts,
     closing this bounded unit. Minimized sending, event-cancellation UI, live
     pilot activation/revoke and active physical reliability remain gates.
+  Next bounded unit: implement the dormant minimized-ingest HTTPS adapter before
+  runtime scheduling/cancellation notification integration. Accept only an existing
+  reserved attempt, serialize exactly the current capability ingest allowlist and
+  validate the fixed project HTTPS endpoint before constructing any request.
+  Keep response parsing bounded, exact and duplicate-key rejecting; backend
+  acceptance must name this event and cannot imply receipt/display. Treat
+  authorization denial separately from retryable/unconfirmed results. Reuse the
+  unchanged 128-byte bounded no-redirect transport;
+  clear request bytes on every outcome. No runtime caller, scheduling, network
+  request, event UI, migration, dependency or live activation belongs to this
+  prerequisite. Validate malformed/mismatched authority, redaction, strict wire
+  contracts, retries/denials, buffer cleanup and transport limits using synthetic
+  native tests; require native suites/lint/build, repository checks and exact-source
+  CI before connecting runtime dispatch. Physical network/lifecycle behavior
+  remains an explicit later gate.
+  - [x] Implement and locally validate the dormant ingest adapter: fixed HTTPS
+    endpoint, exact owner/capability plus six-field envelope, reservation/binding/
+    clock guards and strict 128-byte current-event acceptance parsing. Explicit
+    duplicate replies follow both deployed response forms; 401/403 are separate
+    denial, with failures/rate limits/other statuses unconfirmed. Mutable request
+    bytes are zeroed on success, loss and exception. Eleven new synthetic native
+    cases cover the wire allowlist, malformed/duplicate response fields, endpoint
+    confusion, invalid authority/clocks, durable cancellation/write failure,
+    reopened retries and stale acceptance after revoke/replacement. All 409 app
+    native tests have zero failures/errors/skips; dependency suites, debug APK and
+    app lint pass. The documented local.properties escaping/cache fix was used
+    for lint and exact original ignored bytes restored. No runtime caller, timer,
+    acquisition change, migration, dependency, device update, activation, enable
+    change, production request, send or trip upload. Exact-source CI is required
+    on the completion push; runtime/cancellation UI and physical gates stay open.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

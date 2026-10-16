@@ -10,6 +10,17 @@
 
 ## Working
 
+- M6.8 dormant minimized-ingest adapter (2026-10-17): validates reserved-attempt
+  owner/activation/boot/time binding and the fixed HTTPS endpoint; emits only
+  capability authorization and the six approved event fields. Strict bounded
+  parsing rejects extra/duplicate fields and wrong-event acceptance, with separate
+  authorization-denied/unconfirmed outcomes and request-buffer cleanup. Eleven
+  synthetic wire/outbox regressions pass; all 409 native app tests, dependency
+  suites, debug build and app lint pass. No runtime caller, scheduling, recording
+  change, migration, dependency, device update or production request. Driver
+  controls and hosted sending stay off. Exact-source CI is required on push;
+  network scheduling, cancellation UI and live/physical validation remain open.
+
 - M6.8 gated driver Review/Stop (2026-10-17): a separate default-false debug
   pilot exposes account-checked driver review and local-first Stop. Ordinary and
   release builds keep the controls hidden. Review checks recorder idle state,

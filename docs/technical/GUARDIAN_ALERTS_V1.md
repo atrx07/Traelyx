@@ -117,6 +117,35 @@ Backend acceptance is its own state; it never means recipient receipt or view.
 Persistence and dispatch integration must enforce these transitions and remain
 disabled until separate consent, authorization and delivery tests pass.
 
+## Dormant minimized-ingest adapter
+
+`GuardianCapabilityIngestGateway` accepts the native reserved-attempt shape,
+checks owner/activation/boot binding, reservation state, the completed 30-second
+cancellation window, server-safe timestamp range and current lease/event expiry, and serializes only the capability ingest authorization plus the six
+approved envelope fields above. The URL must be the fixed project HTTPS
+`guardian-capability` endpoint, with no port, credentials, suffix or query.
+It uses the existing transport interface; the bounded HTTPS implementation has
+no redirects, 3-second connect/read timeouts and a 128-byte response limit.
+
+Only HTTP 200 with an exact current-event `backend_accepted` reply is accepted.
+The reply must have a Boolean duplicate flag and an integer recipient-device
+count from 0 through 30; only an explicit duplicate may omit that count, matching
+the deployed RPC. Unknown/duplicate fields, malformed JSON, trailing content,
+wrong event IDs and oversized replies are unconfirmed. HTTP 401/403 are a separate
+authorization-denied result; rate limits, other statuses, exceptions and missing
+replies remain unconfirmed. No backend reply means receipt, display or assistance.
+Mutable request bytes are zeroed on every transport outcome; no request/reply
+body or credential is logged. Retry reservations and late callback protection
+remain owned by the encrypted outbox, not by this adapter.
+
+This adapter has synthetic wire/outbox tests and **no runtime caller**. Before
+connecting it, the runtime must serialize reservation/current-owner checks,
+recheck live authority at handoff, use a separate bounded network worker and
+marshal completion back onto the vault worker. Runtime scheduling, pre-handoff
+cancellation UI/notification, deadline handling and physical network/lifecycle
+validation remain gates. No production request or additional activation is
+performed by this prerequisite.
+
 ## Encrypted outbox prerequisite (implemented; not activated)
 
 `AndroidGuardianVault` persists a bounded version-1 binary snapshot under app-private

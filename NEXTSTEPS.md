@@ -10,6 +10,13 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+The dormant minimized-ingest adapter now passes 11 synthetic regressions and
+all 409 native app tests, dependency suites, app lint and a debug build. It has
+no runtime caller and adds no network activity. Require exact-source CI before
+connecting serialized reservations/live authority checks to a separate bounded
+network worker and adding pre-handoff event cancellation controls/notification.
+Those runtime, live-device and physical reliability gates remain open.
+
 Driver Review/Stop controls now have a separate default-false debug pilot and
 376 passing Flutter tests, clean analysis and a configured pilot-off build.
 Per-review cancellation covers background/navigation/account races through
