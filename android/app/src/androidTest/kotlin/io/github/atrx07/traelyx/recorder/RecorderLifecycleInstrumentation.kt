@@ -444,11 +444,15 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             val credential = proposal["credential"] as String
             check(credential.matches(Regex("[a-f0-9]{64}")))
             check(!file.exists()) { "Proposal persisted before confirmation." }
+            val reopenedProposalJournal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
+            check(reopenedProposalJournal.pending() == listOf(
+                io.github.atrx07.traelyx.guardian.GuardianDriverRevokeTicket(owner, activation)))
             val confirmation = bridge.dispatch("commit", mapOf(
                 "ownerId" to owner, "activationId" to activation,
                 "serverExpiresEpochMillis" to System.currentTimeMillis() + 60_000L)) as Map<*, *>
             check(confirmation.keys == setOf("localLeasePresent", "expiresEpochMillis"))
             check(confirmation["localLeasePresent"] == true)
+            check(reopenedProposalJournal.pending().isEmpty())
             check(file.isFile && !file.readText(Charsets.ISO_8859_1).contains(credential))
             val present = bridge.dispatch("snapshot", mapOf("ownerId" to owner)) as Map<*, *>
             check(present["localLeasePresent"] == true)
@@ -474,11 +478,25 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
             bridge.dispatch("bindOwner", mapOf("ownerId" to owner))
             bridge.dispatch("confirmRevoke", mapOf("ownerId" to owner, "activationId" to secondActivation))
             check(reopenedJournal.pending().isEmpty())
+            val abandoned = bridge.dispatch("begin", mapOf(
+                "ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)) as Map<*, *>
+            val abandonedId = abandoned["activationId"] as String
+            val restarted = io.github.atrx07.traelyx.guardian.GuardianActivationCoordinator(outbox, clock = {
+                io.github.atrx07.traelyx.guardian.GuardianClock(System.currentTimeMillis(), SystemClock.elapsedRealtime(), "proof-restarted")
+            }, revokeJournal = reopenedJournal)
+            restarted.bindOwner(owner)
+            check(restarted.pendingRevokes(owner) == listOf(
+                io.github.atrx07.traelyx.guardian.GuardianDriverRevokeTicket(owner, abandonedId)))
+            check(runCatching { restarted.begin(owner, "+y", true) }.isFailure)
+            restarted.stop(owner); restarted.confirmRevoke(owner, abandonedId)
+            check(runCatching { bridge.dispatch("commit", mapOf("ownerId" to owner,
+                "activationId" to abandonedId, "serverExpiresEpochMillis" to System.currentTimeMillis() + 60_000L)) }.isFailure)
+            check(!file.exists() && reopenedJournal.pending().isEmpty())
         } finally { vault.erase(); journal.eraseProofState() }
         check(!file.exists())
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 synthetic activation proof passed: boot clock, proposal/commit/stop, owner-loss revoke journal, " +
-            "encrypted scoped cleanup; no hosted session, Firebase initialization or trip change."
+            "durable proposal restart/late-commit rejection, encrypted scoped cleanup; no hosted session, Firebase initialization or trip change."
     }
 
     private fun runCleanupProof(tripId: String): String {

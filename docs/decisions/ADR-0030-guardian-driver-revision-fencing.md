@@ -1,7 +1,7 @@
 # ADR-0030: Fence delayed Guardian activation with an owner revision
 
 - Date: 2026-10-14
-- Status: server deployed; local, full CI and approved hosted checks pass; native/client integration pending
+- Status: server deployed; local, full CI and approved hosted checks pass; native/client integration implemented; live driver validation pending
 
 ## Context
 
@@ -45,9 +45,14 @@ pass. The approved atomic deployment verifies migration history, private RLS,
 owner-only RPC grants and synthetic rollback, all true. Both enable flags remain
 false; no real activation or push was performed.
 
-The following native/client unit must reserve exact proposal IDs durably before
-any activation request, stop local authority before retrying cleanup, obtain a
-revision only after cleanup and recheck consent/account identity. It must use
-fresh activation UUIDs; this contract fences delayed requests, not deliberate
+The native/client integration now reserves exact proposal IDs durably before
+returning a capability. Stop erases local authority before retrying cleanup; the
+client obtains a revision only after cleanup and checks consent/account state
+after awaits. Commit clears the reservation only after a durable lease write;
+failed confirmation attempts erasure and retains cleanup. Reviews serialize per
+bound account, while Stop/sign-out invalidate their callbacks. Exact abort cannot
+erase a newer lease. The wire adapter uses validated decimal text across the full
+bigint range. No revision read is added to startup/status. It uses fresh
+activation UUIDs; this contract fences delayed requests, not deliberate
 reuse of an old UUID with a freshly obtained revision by its signed-in owner.
 Driver controls and sending remain dormant until their remaining gates pass.

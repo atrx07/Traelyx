@@ -189,6 +189,8 @@ or processing enable is added. See ADR-0030 and `GUARDIAN_ALERTS_V1.md`.
 All 13 local SQL suites, legacy upgrade checks and full source CI 38603573947
 (`b301544`) pass. The approved atomic hosted bundle verifies migration history,
 private RLS, owner-only grants and synthetic rollback, all true. Both Guardian
-flags remain false; native proposal reservation and v2 client remain pending.
+flags remain false. The dormant v2 client now sends strictly validated decimal
+revision text and exact null-credential revokes; native proposal reservations
+survive interrupted calls. Live hosted driver activation/revoke remains pending.
 Deployment bundle SHA-256:
 `09b0ae2a27620ba4f7f20a3e18aa6bbd7587cbe4bbafb88db32d037d321744fb`.

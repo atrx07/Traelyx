@@ -10,6 +10,26 @@
 
 ## Working
 
+- M6.8 durable proposals/v2 client (2026-10-16): native code reserves exact
+  owner/activation IDs in the existing encrypted revoke journal before returning
+  a capability. Commit clears the reservation only after durable lease write;
+  interrupted or failed work retains exact cleanup. Exact abort preserves newer
+  proposals/leases. Reviewed transactions serialize per account, check freshness
+  after awaits and are invalidated by Stop/sign-out/account changes. The dormant
+  SDK adapter uses the deployed v2 revision read/activation/revoke contract and
+  preserves bigint precision as decimal text; startup/status add no request.
+  All 362 Flutter and 398 native tests, analysis, app lint, configured debug build,
+  repository validation and isolated physical Keystore restart/late-commit proof
+  pass. Both normal apps retain sign-in/pairing and report driver monitoring off;
+  all 11,857 Tecno recorder hashes and both receiver vaults are unchanged (Pixel
+  has no recorder files). Pixel was restarted without wiping its saved AVD after
+  a stale ADB session; USB authorization and device responsiveness are restored.
+  Tecno network was reconnected and both read-only pairing reloads pass.
+  Both hosted enable digests freshly match `false`; no new migration, dependency,
+  registration, real driver activation, send or trip upload occurred. Reviewed
+  activation/sender UI, live hosted cleanup, active recording and reliability
+  on two physical devices remain open. Full source CI runs on the completion push.
+
 - M6.8 driver revision prerequisite deployed (2026-10-14): approved migration
   `20261014000000_guardian_driver_revisions.sql` adds one private owner revision
   row and two signed-in owner-only RPCs. Exact revokes invalidate earlier delayed
@@ -19,8 +39,8 @@
   Full source CI 38603573947 passes for `b301544`. Approved atomic production
   deployment verifies migration history, private control RLS, owner-only RPC
   grants and synthetic rollback, all true. Both enable digests remain `false`.
-  No mobile change, alert or trip upload. Proposal reservation and v2 client
-  attachment remain next; activation from older dormant builds is now denied.
+  No mobile change, alert or trip upload in that deployment. The subsequent
+  mobile integration is recorded above; older dormant activation is denied.
 
 - M6.8 driver account teardown (2026-10-14): recipient cleanup failure now
   still attempts driver authority removal. Retained lease IDs enter the encrypted

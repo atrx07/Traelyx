@@ -91,14 +91,18 @@ final class NativePort implements GuardianNativeActivationPort {
   NativePort(this.events);
   final List<String> events;
   int aborts = 0, disables = 0, commits = 0;
-  String? stoppedActivation = activation;
+  String? stoppedActivation;
   final pending = <String>[];
   int confirmations = 0;
   Future<void> Function()? beforeCommit;
+  Future<void> Function()? afterBegin;
+  bool failAbort = false;
 
   @override
   Future<GuardianActivationDraft> begin(String owner, String axis) async {
     events.add('begin');
+    pending.add(activation);
+    await afterBegin?.call();
     return GuardianActivationDraft(
       ownerId: owner,
       activationId: activation,
@@ -116,6 +120,8 @@ final class NativePort implements GuardianNativeActivationPort {
     events.add('commit');
     commits++;
     await beforeCommit?.call();
+    pending.remove(activationId);
+    stoppedActivation = activationId;
     return expiry;
   }
 
@@ -123,6 +129,11 @@ final class NativePort implements GuardianNativeActivationPort {
   Future<void> abort(String owner, String activationId) async {
     events.add('abort');
     aborts++;
+    if (failAbort) throw StateError('local cleanup failed');
+    if (stoppedActivation == activationId) {
+      stoppedActivation = null;
+      if (!pending.contains(activationId)) pending.add(activationId);
+    }
   }
 
   @override
@@ -155,14 +166,26 @@ final class Server implements GuardianDriverSessionGateway {
   final List<String> events;
   Future<GuardianSessionConfirmation> Function()? onActivate;
   Future<void> Function()? onRevoke;
+  Future<void> Function()? onRevision;
+
+  @override
+  Future<GuardianDriverRevision> revision(String owner) async {
+    expect(owner, ownerA);
+    events.add('revision');
+    await onRevision?.call();
+    return GuardianDriverRevision.parse({'revision': '0'});
+  }
+
   int revokes = 0;
 
   @override
   Future<GuardianSessionConfirmation> activate(
     GuardianActivationDraft draft,
     DateTime preparedAt,
+    GuardianDriverRevision revision,
   ) async {
     events.add('server');
+    expect(revision.value, '0');
     expect(draft.ownerId, ownerA);
     expect(draft.credential, capability);
     return await onActivate?.call() ??
@@ -260,7 +283,7 @@ void main() {
       server,
     ).prepareAfterExplicitConsent(reviewed('+y'));
     expect(expiry.isAfter(DateTime.now()), isTrue);
-    expect(events, ['begin', 'server', 'commit']);
+    expect(events, ['stop', 'revision', 'begin', 'server', 'commit']);
     expect(native.disables, 0);
     expect(server.revokes, 0);
   });
@@ -334,7 +357,15 @@ void main() {
         ).prepareAfterExplicitConsent(reviewed('+x')),
         throwsA(isA<GuardianActivationException>()),
       );
-      expect(events, ['begin', 'server', 'disable', 'revoke']);
+      expect(events, [
+        'stop',
+        'revision',
+        'begin',
+        'server',
+        'abort',
+        'revoke',
+      ]);
+      expect(native.pending, isEmpty);
       expect(native.commits, 0);
     },
   );
@@ -445,7 +476,7 @@ void main() {
     final events = <String>[];
     final account = TestAccount();
     final bound = GuardianBoundAccountGateway(account, OwnerPort());
-    final native = NativePort(events);
+    final native = NativePort(events)..stoppedActivation = activation;
     final server = Server(events);
     addTearDown(() async {
       await bound.dispose();
@@ -469,7 +500,7 @@ void main() {
       final events = <String>[];
       final account = TestAccount();
       final bound = GuardianBoundAccountGateway(account, OwnerPort());
-      final native = NativePort(events);
+      final native = NativePort(events)..stoppedActivation = activation;
       final server = Server(events)
         ..onRevoke = () => throw StateError('synthetic network failure');
       addTearDown(() async {
@@ -537,7 +568,14 @@ void main() {
         native,
         server,
       ).prepareAfterExplicitConsent(reviewed('+y'));
-      expect(events, ['revoke', 'begin', 'server', 'commit']);
+      expect(events, [
+        'stop',
+        'revoke',
+        'revision',
+        'begin',
+        'server',
+        'commit',
+      ]);
       expect(native.pending, isEmpty);
     },
   );
@@ -548,7 +586,7 @@ void main() {
       final events = <String>[];
       final account = TestAccount();
       final bound = GuardianBoundAccountGateway(account, OwnerPort());
-      final native = NativePort(events);
+      final native = NativePort(events)..stoppedActivation = activation;
       final server = Server(events)
         ..onRevoke = () async => account.change(ownerB);
       addTearDown(() async {
@@ -599,7 +637,7 @@ void main() {
           const GuardianRecipientLocalStatus(ownerB, ownerB),
         );
       final bound = GuardianBoundAccountGateway(account, ownerPort);
-      final native = NativePort(events);
+      final native = NativePort(events)..stoppedActivation = activation;
       final server = Server(events);
       addTearDown(() async {
         await bound.dispose();
@@ -609,6 +647,309 @@ void main() {
       await GuardianDriverActivationService(bound, native, server).stop(ownerA);
       expect(events, ['stop', 'revoke']);
       expect(native.pending, isEmpty);
+    },
+  );
+  test('revision parser rejects lossy or noncanonical counters', () {
+    for (final value in ['0', '9007199254740993', '9223372036854775807']) {
+      expect(GuardianDriverRevision.parse({'revision': value}).value, value);
+    }
+    for (final raw in [
+      null,
+      {'revision': 0},
+      {'revision': '-1'},
+      {'revision': '01'},
+      {'revision': ' 1'},
+      {'revision': '1\n'},
+      {'revision': '9223372036854775808'},
+      {'revision': '1', 'extra': true},
+    ]) {
+      expect(() => GuardianDriverRevision.parse(raw), throwsFormatException);
+    }
+  });
+
+  test('two service instances cannot overlap one account review', () async {
+    final events = <String>[];
+    final account = TestAccount();
+    final bound = GuardianBoundAccountGateway(account, OwnerPort());
+    final native = NativePort(events);
+    final reply = Completer<GuardianSessionConfirmation>();
+    final server = Server(events)..onActivate = () => reply.future;
+    addTearDown(() async {
+      await bound.dispose();
+      await account.changes.close();
+    });
+    final first = GuardianDriverActivationService(
+      bound,
+      native,
+      server,
+    ).prepareAfterExplicitConsent(reviewed('+y'));
+    await Future<void>.delayed(Duration.zero);
+    await expectLater(
+      GuardianDriverActivationService(
+        bound,
+        native,
+        server,
+      ).prepareAfterExplicitConsent(reviewed('+y')),
+      throwsA(isA<GuardianActivationException>()),
+    );
+    expect(native.aborts, 0);
+    expect(events.where((e) => e == 'begin').length, 1);
+    reply.complete(
+      GuardianSessionConfirmation(
+        activation,
+        DateTime.now().toUtc().add(const Duration(hours: 7)),
+      ),
+    );
+    await first;
+    expect(native.commits, 1);
+  });
+
+  test('Stop during revision read cancels review before proposal', () async {
+    final events = <String>[];
+    final account = TestAccount();
+    final bound = GuardianBoundAccountGateway(account, OwnerPort());
+    final native = NativePort(events);
+    final reply = Completer<void>();
+    final server = Server(events)..onRevision = () => reply.future;
+    addTearDown(() async {
+      await bound.dispose();
+      await account.changes.close();
+    });
+    final service = GuardianDriverActivationService(bound, native, server);
+    final first = service.prepareAfterExplicitConsent(reviewed('+y'));
+    await Future<void>.delayed(Duration.zero);
+    await service.stop(ownerA);
+    reply.complete();
+    await expectLater(first, throwsA(isA<GuardianActivationException>()));
+    expect(events, ['stop', 'revision', 'stop']);
+  });
+
+  test(
+    'Stop during server activation prevents delayed native commit',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final reply = Completer<GuardianSessionConfirmation>();
+      final server = Server(events)..onActivate = () => reply.future;
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      final service = GuardianDriverActivationService(bound, native, server);
+      final first = service.prepareAfterExplicitConsent(reviewed('+y'));
+      await Future<void>.delayed(Duration.zero);
+      await service.stop(ownerA);
+      expect(native.pending, isEmpty);
+      reply.complete(
+        GuardianSessionConfirmation(
+          activation,
+          DateTime.now().toUtc().add(const Duration(hours: 7)),
+        ),
+      );
+      await expectLater(first, throwsA(isA<GuardianActivationException>()));
+      expect(native.commits, 0);
+      expect(native.aborts, 1);
+      expect(native.disables, 0);
+    },
+  );
+
+  test(
+    'sign-out invalidates review without waiting for delayed activation',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final native = NativePort(events);
+      final reply = Completer<GuardianSessionConfirmation>();
+      final server = Server(events)..onActivate = () => reply.future;
+      late GuardianBoundAccountGateway bound;
+      bound = GuardianBoundAccountGateway(
+        account,
+        OwnerPort(),
+        driverStopper: (owner) =>
+            GuardianDriverStopService(account, native, server).stop(owner),
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      final first = GuardianDriverActivationService(
+        bound,
+        native,
+        server,
+      ).prepareAfterExplicitConsent(reviewed('+y'));
+      await Future<void>.delayed(Duration.zero);
+      await bound.signOut();
+      reply.complete(
+        GuardianSessionConfirmation(
+          activation,
+          DateTime.now().toUtc().add(const Duration(hours: 7)),
+        ),
+      );
+      await expectLater(first, throwsA(isA<GuardianActivationException>()));
+      expect(native.commits, 0);
+      expect(native.disables, 0);
+    },
+  );
+
+  test(
+    'failed activation and failed revoke retain a retryable reservation',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events)
+        ..onActivate = () {
+          throw StateError('response lost');
+        }
+        ..onRevoke = () {
+          throw StateError('offline');
+        };
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      final service = GuardianDriverActivationService(bound, native, server);
+      await expectLater(
+        service.prepareAfterExplicitConsent(reviewed('+y')),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(native.pending, [activation]);
+      expect(native.confirmations, 0);
+      server.onRevoke = null;
+      await service.stop(ownerA);
+      expect(native.pending, isEmpty);
+      expect(native.commits, 0);
+    },
+  );
+  test(
+    'review expiry during revision read cannot create native authority',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      var clock = DateTime.now().toUtc();
+      final consent = reviewed('+y', at: clock);
+      final server = Server(events)
+        ..onRevision = () async {
+          clock = clock.add(const Duration(minutes: 2));
+        };
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await expectLater(
+        GuardianDriverActivationService(
+          bound,
+          native,
+          server,
+          now: () => clock,
+        ).prepareAfterExplicitConsent(consent),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(events, ['stop', 'revision']);
+    },
+  );
+
+  test(
+    'review expiry during activation response cleans only its exact proposal',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      var clock = DateTime.now().toUtc();
+      final consent = reviewed('+y', at: clock);
+      final server = Server(events)
+        ..onActivate = () async {
+          clock = clock.add(const Duration(minutes: 2));
+          return GuardianSessionConfirmation(
+            activation,
+            clock.add(const Duration(hours: 7)),
+          );
+        };
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await expectLater(
+        GuardianDriverActivationService(
+          bound,
+          native,
+          server,
+          now: () => clock,
+        ).prepareAfterExplicitConsent(consent),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(events, [
+        'stop',
+        'revision',
+        'begin',
+        'server',
+        'abort',
+        'revoke',
+      ]);
+      expect(native.commits, 0);
+      expect(native.pending, isEmpty);
+    },
+  );
+  test(
+    'lost native proposal reply retains identity for next explicit Stop',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events)
+        ..afterBegin = () async {
+          throw StateError('bridge reply lost');
+        };
+      final server = Server(events);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      final service = GuardianDriverActivationService(bound, native, server);
+      await expectLater(
+        service.prepareAfterExplicitConsent(reviewed('+y')),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(events, ['stop', 'revision', 'begin']);
+      expect(native.pending, [activation]);
+      await service.stop(ownerA);
+      expect(native.pending, isEmpty);
+      expect(server.revokes, 1);
+    },
+  );
+
+  test(
+    'server cleanup success cannot discard ticket when local abort is uncertain',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events)..failAbort = true;
+      final server = Server(events)
+        ..onActivate = () async {
+          throw StateError('response lost');
+        };
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await expectLater(
+        GuardianDriverActivationService(
+          bound,
+          native,
+          server,
+        ).prepareAfterExplicitConsent(reviewed('+y')),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(server.revokes, 1);
+      expect(native.confirmations, 0);
+      expect(native.pending, [activation]);
     },
   );
 }

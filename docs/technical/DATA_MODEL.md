@@ -193,4 +193,9 @@ existing sessions. Missing control state reads as revision zero; exact owner
 mutations create one row lazily. The bigint revision fences delayed activation
 after revoke and is returned only as decimal text to that signed-in owner.
 Legacy activation becomes unavailable while exact legacy cleanup remains usable.
-See ADR-0030; native proposal journaling/v2 client integration remain pending.
+The dormant v2 client transmits revisions as validated decimal text. Native
+proposal IDs now reserve a slot in the existing schema-1 encrypted revoke
+journal before capability return; successful durable lease commit clears the
+reservation, while interruptions retain exact cleanup. No capability or telemetry
+enters that journal and no local schema migration is needed. See ADR-0030; live
+activation/revoke and active-device integration remain pending.

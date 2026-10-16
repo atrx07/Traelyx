@@ -57,6 +57,12 @@ class GuardianRecordingSessionTest {
             activation.begin(owner, "+y", true)
             activation.commit(owner, nextId, now.epochMillis + 28_800_000)
         }
+        // Simulate an exact successful server revoke before a fresh reviewed activation.
+        fun settleStop() {
+            activation.stop(owner)
+            assertEquals(listOf(GuardianDriverRevokeTicket(owner, generation)), activation.pendingRevokes(owner))
+            activation.confirmRevoke(owner, generation)
+        }
         fun start() = GuardianRecorderHandle().also(session::start)
         fun drain() { while (tasks.isNotEmpty()) tasks.removeFirst().invoke() }
         fun detect(worker: FakeWorker = workers.last()) {
@@ -95,6 +101,9 @@ class GuardianRecordingSessionTest {
         restarted.bindOwner(owner)
         assertNotNull(restarted.snapshot(owner).lease)
         assertNull(restarted.recordingSnapshot())
+        restarted.stop(owner)
+        assertEquals(listOf(GuardianDriverRevokeTicket(owner, generation)), restarted.pendingRevokes(owner))
+        restarted.confirmRevoke(owner, generation)
         val proposal = restarted.begin(owner, "+y", true)
         restarted.commit(owner, proposal.activationId, f.now.epochMillis + 28_800_000)
         assertNotNull(restarted.recordingSnapshot()?.lease)
@@ -140,7 +149,7 @@ class GuardianRecordingSessionTest {
             when (action) {
                 0 -> { handle.close(); f.session.stop(handle) }
                 1 -> { f.activation.bindOwner(null); f.session.refresh() }
-                2 -> { f.nextId = replacement; f.activate(); f.session.refresh() }
+                2 -> { f.settleStop(); f.nextId = replacement; f.activate(); f.session.refresh() }
             }
             f.drain()
             assertTrue(f.vault.value.alerts.isEmpty())
@@ -151,7 +160,7 @@ class GuardianRecordingSessionTest {
     @Test fun `late failure cannot revoke a new activation`() {
         val f = Fixture(); f.activate(); f.start()
         f.workers.single().failed()
-        f.nextId = replacement; f.activate(); f.session.refresh(); f.drain()
+        f.settleStop(); f.nextId = replacement; f.activate(); f.session.refresh(); f.drain()
         assertEquals(replacement, f.vault.value.lease?.activationId)
         assertFalse(f.workers.last().closed)
     }
@@ -187,7 +196,7 @@ class GuardianRecordingSessionTest {
         f.vault.failErase = true; f.workers.single().failed(); f.drain()
         f.session.stop(first); f.activation.bindOwner(owner); f.start()
         assertEquals(1, f.workers.size)
-        f.vault.failErase = false; f.nextId = replacement; f.activate(); f.session.refresh()
+        f.vault.failErase = false; f.settleStop(); f.nextId = replacement; f.activate(); f.session.refresh()
         assertEquals(2, f.workers.size)
     }
 
@@ -196,7 +205,7 @@ class GuardianRecordingSessionTest {
         f.start()
         assertFalse(f.session.isEvaluating)
         assertNull(f.vault.value.lease)
-        f.failCreate = false; f.nextId = replacement; f.activate()
+        f.failCreate = false; f.settleStop(); f.nextId = replacement; f.activate()
         val handle = f.start(); f.workers.last().failClose = true; f.session.stop(handle)
         assertFalse(f.session.isEvaluating)
     }

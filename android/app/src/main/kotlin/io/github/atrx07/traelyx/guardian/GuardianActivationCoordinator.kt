@@ -51,16 +51,17 @@ class GuardianActivationCoordinator(
     @Synchronized fun begin(expectedOwner: String, forwardAxis: String, rigidMountConfirmed: Boolean): GuardianActivationProposal {
         require(bound && owner == expectedOwner && rigidMountConfirmed)
         require(forwardAxis in setOf("+x", "-x", "+y", "-y", "+z", "-z"))
+        check(proposal == null) { "Activation review already pending" }
+        // Replacement must first settle its old exact identity. Never overwrite it.
+        stop(expectedOwner)
         val stops = revokeJournal.pending()
         check(stops.size < GuardianDriverRevokeJournalCodec.MAX_TICKETS &&
             stops.none { it.ownerId == expectedOwner }) { "Driver stop confirmation pending" }
         val now = clock()
-        proposal?.let { if (!fresh(it.created, now)) proposal = null }
-        check(proposal == null) { "Activation review already pending" }
         val activation = newId().also(::guardianUuid)
         val credential = newCredential().also { require(it.matches(Regex("[a-f0-9]{64}"))) }
-        // Starting replacement disables the old local lease; failure cannot leave it dispatching.
-        eraseAuthority(expectedOwner)
+        // A lost bridge reply or process death must leave exact server cleanup possible.
+        revokeJournal.record(GuardianDriverRevokeTicket(expectedOwner, activation))
         return GuardianActivationProposal(expectedOwner, activation, credential, forwardAxis, now).also { proposal = it }
     }
 
@@ -77,14 +78,29 @@ class GuardianActivationCoordinator(
         require(expiry > now.epochMillis)
         val lease = GuardianDriverLease(expectedOwner, activationId, pending.credential,
             start.epochMillis, start.elapsedMillis, expiry, start.bootId, pending.forwardAxis)
-        outbox.activate(lease, now)
+        val ticket = GuardianDriverRevokeTicket(expectedOwner, activationId)
+        check(ticket in revokeJournal.pending()) { "Activation reservation unavailable" }
+        try {
+            outbox.activate(lease, now)
+            revokeJournal.confirm(ticket)
+        } catch (failure: Exception) {
+            eraseAuthority(expectedOwner)
+            throw failure
+        }
         recordingActivationId = lease.activationId
         return lease
     }
 
     /** A late failed request must not cancel a newer proposal or another account's lease. */
     @Synchronized fun abort(expectedOwner: String, activationId: String) {
-        if (bound && owner == expectedOwner && proposal?.activationId == activationId) proposal = null
+        guardianUuid(expectedOwner); guardianUuid(activationId)
+        if (!bound || owner != expectedOwner) return
+        if (proposal?.activationId == activationId) proposal = null
+        val current = try { outbox.activationToRevoke(expectedOwner) } catch (failure: Exception) {
+            eraseAuthority(expectedOwner)
+            throw failure
+        }
+        if (current == activationId) stop(expectedOwner)
     }
 
     /** Erase first, then return only the activation ID needed for a guarded server revoke. */
@@ -107,13 +123,14 @@ class GuardianActivationCoordinator(
 
     @Synchronized fun confirmRevoke(expectedOwner: String, activation: String) {
         require(bound && owner == expectedOwner)
+        check(proposal?.activationId != activation && outbox.activationToRevoke(expectedOwner) != activation) {
+            "Stop local activation before confirming revoke"
+        }
         revokeJournal.confirm(GuardianDriverRevokeTicket(expectedOwner, activation))
     }
 
     @Synchronized fun disable(expectedOwner: String) {
-        require(bound && owner == expectedOwner)
-        proposal = null
-        eraseAuthority(expectedOwner)
+        stop(expectedOwner)
     }
 
     private fun eraseAuthority(restoreOwner: String) {

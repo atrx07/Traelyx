@@ -164,13 +164,17 @@ Primary platform references:
 `GuardianActivationCoordinator` now binds foreground account identity, explicit
 rigid-mount confirmation and forward axis to a single-use activation proposal.
 Its random capability stays in memory until the caller confirms the server lease;
-only then is the encrypted local lease committed. Proposals expire after two
+only then is the encrypted local lease committed. Before returning the proposal,
+native code durably reserves its exact owner/activation IDs in the encrypted
+revoke journal; no credential or axis enters that journal. Proposals expire after two
 minutes on both clocks. Local duration is capped at eight hours from preparation,
 so network delay cannot extend consent. Replacement first removes old local
-authority. Account changes, sign-out, cancellation, reboot, clock rollback and
+authority and confirms its exact server cleanup. An expired or interrupted
+proposal still requires cleanup; time alone never discards its reservation.
+Account changes, sign-out, cancellation, reboot, clock rollback and
 failed cleanup invalidate pending activation; a late response cannot restore it.
 Failures to erase leave the coordinator unbound. Status never means monitoring
-or delivery is running. Nine unit regressions cover these boundaries. The
+or delivery is running. Native regressions cover these boundaries. The
 foreground Android method bridge now serializes coordinator and encrypted-vault
 calls on one process worker, including across Activity recreation. It accepts
 exact request fields, returns the credential only from `begin`, and keeps
@@ -193,12 +197,19 @@ foreground two-stage call. It requires the current Auth owner and native owner
 binding, accepts only a reviewed forward axis, validates the exact native
 proposal and signed-in server response, and commits locally only after a
 matching, bounded server lease. Failure removes local authority and attempts
-an activation-matched server revoke. If a request finishes after account
+an activation-matched v2 server revoke. A bound-account transaction serializes
+reviews across service instances and excludes recipient registration. Explicit
+Stop/sign-out or an account change invalidates every later stage, including a
+review waiting for a revision or activation response. Consent freshness is checked
+after each asynchronous stage; failed cleanup uses exact abort rather than a
+generic disable, so stale callbacks cannot erase a newer proposal or lease.
+If a request finishes after account
 change or revocation cannot reach the server, the server session may remain
 until its eight-hour expiry, but the native capability is unavailable. The
 service has no UI caller yet; mount confirmation, recorder use, recipient push
-and full end-to-end validation remain required. Six synthetic flow/bridge tests
-cover ordering, response shape and account races. A separate physical Android
+and full end-to-end validation remain required. Synthetic flow/bridge/SDK tests
+cover ordering, wire shapes, bigint precision, expiry, Stop/sign-out, concurrent
+reviews, account races and retryable failed cleanup. A separate physical Android
 instrumentation proof exercises the native bridge and encrypted vault with a
 random test namespace and synthetic confirmation, then destroys its key and
 ciphertext. A later physical Flutter alternate entrypoint exercises the
@@ -212,7 +223,13 @@ a separate encrypted no-backup journal, then erases the local driver lease befor
 returning. Neither the capability nor telemetry enters this journal or its
 foreground replies. Journal schema 1 permits at most eight tickets and 4,096
 plaintext bytes, with no eviction based on local clocks. A full or unhealthy
-journal refuses new activation. Native status and account binding perform no
+journal refuses new activation. Successful commit removes a proposal reservation
+only after the encrypted lease is durable. A failed lease write or reservation
+confirmation attempts lease erasure and retains exact cleanup. After a crash
+between those writes, a restored lease cannot resume evaluation (ADR-0029); its
+reservation remains available for explicit cleanup. Revoke confirmation is refused
+while that exact proposal or lease is still locally active. Native status and
+account binding perform no
 server request. A subsequent explicit Stop or reviewed activation retries
 outstanding stops under the same signed-in owner; only a confirmed exact server
 revoke removes a ticket. Account changes or server conflicts leave it pending
@@ -234,9 +251,11 @@ native status/account binding.
 
 The physical synthetic proof verifies Keystore storage, journal reopening,
 owner-loss capture and exact confirmation in a random disposable namespace;
-it preserves the normal recipient vault and recorder data. Uncommitted
-activation-timeout teardown, replacement-conflict recovery, the production UI
-caller, hosted driver revoke and active physical recording remain integration gates.
+it preserves the normal recipient vault and recorder data. It also reopens a
+proposal reservation before commit and after a simulated coordinator restart,
+then confirms cleanup and rejects the original delayed commit. Production UI,
+hosted timeout/replacement recovery, driver revoke and active physical recording
+remain integration gates.
 
 ### Driver revision contract (deployed 2026-10-14)
 
@@ -259,7 +278,12 @@ no direct client or worker grants. Both v2 RPCs are signed-in owner-only. The
 legacy v1 RPC becomes cleanup-only; activation from older dormant builds is
 denied. Existing session rows are preserved. This adds no telemetry, recipient
 access, startup request or processing enable. Both Guardian enable digests remain
-`false`. Proposal journaling, v2 client attachment and active-device validation
+`false`. The dormant client now reads the revision only after explicit local
+Stop/cleanup and transmits it as strictly validated decimal text, preserving the
+full signed bigint range. Revoke sends null credential/revision and an exact
+activation ID. The adapter checks the Auth owner before and after every request;
+startup/status add no revision read. Proposal journaling and v2 client attachment
+are implemented; live hosted activation/revoke and active-device validation
 remain required. See ADR-0030.
 
 The dormant Flutter review component collects a phone-forward axis and separate

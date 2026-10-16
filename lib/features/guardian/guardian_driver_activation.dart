@@ -190,10 +190,30 @@ final class MethodChannelGuardianActivationPort
       });
 }
 
+/// Decimal text preserves the full PostgreSQL bigint range on every Dart target.
+final class GuardianDriverRevision {
+  const GuardianDriverRevision._(this.value);
+  final String value;
+
+  static GuardianDriverRevision parse(Object? raw) {
+    if (raw is! Map || raw.length != 1 || raw['revision'] is! String) {
+      throw const FormatException('Invalid Guardian revision');
+    }
+    final value = raw['revision'] as String;
+    if (!RegExp(r'^(0|[1-9][0-9]{0,18})$').hasMatch(value) ||
+        BigInt.parse(value) > BigInt.parse('9223372036854775807')) {
+      throw const FormatException('Invalid Guardian revision');
+    }
+    return GuardianDriverRevision._(value);
+  }
+}
+
 abstract interface class GuardianDriverSessionGateway {
+  Future<GuardianDriverRevision> revision(String owner);
   Future<GuardianSessionConfirmation> activate(
     GuardianActivationDraft draft,
     DateTime preparedAt,
+    GuardianDriverRevision revision,
   );
   Future<void> revoke(String owner, String activation);
 }
@@ -210,18 +230,33 @@ final class SupabaseGuardianDriverSessionGateway
   }
 
   @override
+  Future<GuardianDriverRevision> revision(String owner) async {
+    _checkOwner(owner);
+    final raw = await client
+        .rpc<Object?>(
+          'get_guardian_driver_revision_v2',
+          params: {'expected_user_id': owner},
+        )
+        .timeout(const Duration(seconds: 20));
+    _checkOwner(owner);
+    return GuardianDriverRevision.parse(raw);
+  }
+
+  @override
   Future<GuardianSessionConfirmation> activate(
     GuardianActivationDraft draft,
     DateTime preparedAt,
+    GuardianDriverRevision revision,
   ) async {
     _checkOwner(draft.ownerId);
     final Object? raw = await client
         .rpc<Object?>(
-          'set_guardian_driver_session_v1',
+          'set_guardian_driver_session_v2',
           params: {
             'expected_user_id': draft.ownerId,
             'activation': draft.activationId,
             'credential': draft.credential,
+            'expected_revision': revision.value,
           },
         )
         .timeout(const Duration(seconds: 20));
@@ -238,11 +273,12 @@ final class SupabaseGuardianDriverSessionGateway
     _checkOwner(owner);
     final Object? raw = await client
         .rpc<Object?>(
-          'set_guardian_driver_session_v1',
+          'set_guardian_driver_session_v2',
           params: {
             'expected_user_id': owner,
             'activation': activation,
             'credential': null,
+            'expected_revision': null,
           },
         )
         .timeout(const Duration(seconds: 20));
@@ -262,9 +298,14 @@ final class GuardianDriverStopService {
 
   /// Stops local authority before attempting an exact, owner-checked server revoke.
   /// A failed network revoke cannot restore the erased local capability.
-  Future<void> stop(String owner) async {
+  Future<void> stop(String owner) => _stop(owner, invalidateReview: true);
+
+  Future<void> _stop(String owner, {required bool invalidateReview}) async {
     if (!_uuid.hasMatch(owner) || account.currentIdentity?.userId != owner) {
       throw const GuardianActivationException('Guardian account unavailable.');
+    }
+    if (invalidateReview && account is GuardianBoundAccountGateway) {
+      (account as GuardianBoundAccountGateway).invalidateDriverReview();
     }
     // Native verifies its bound owner. Local stop must not wait for an unrelated
     // recipient-reconciliation request or Auth refresh before erasing authority.
@@ -306,10 +347,16 @@ final class GuardianDriverStopService {
 
 /// Not exposed in the UI until recorder, recipient opt-in and delivery gates pass.
 final class GuardianDriverActivationService {
-  const GuardianDriverActivationService(this.account, this.native, this.server);
+  const GuardianDriverActivationService(
+    this.account,
+    this.native,
+    this.server, {
+    this.now = DateTime.now,
+  });
   final GuardianBoundAccountGateway account;
   final GuardianNativeActivationPort native;
   final GuardianDriverSessionGateway server;
+  final DateTime Function() now;
 
   Future<void> stop(String owner) =>
       GuardianDriverStopService(account, native, server).stop(owner);
@@ -320,67 +367,76 @@ final class GuardianDriverActivationService {
     final owner = consent.ownerId;
     final forwardAxis = consent.forwardAxis;
     if (!_uuid.hasMatch(owner) ||
-        !consent.isFreshAt(DateTime.now().toUtc()) ||
-        account.currentIdentity?.userId != owner ||
-        !await account.ensureCurrentOwnerBound()) {
+        !consent.isFreshAt(now().toUtc()) ||
+        account.currentIdentity?.userId != owner) {
       throw const GuardianActivationException('Guardian account unavailable.');
     }
     GuardianActivationDraft? draft;
     try {
-      await GuardianDriverStopService(
-        account,
-        native,
-        server,
-      )._reconcileStops(owner);
-      final preparedAt = DateTime.now().toUtc();
-      draft = await native.begin(owner, forwardAxis);
-      if (draft.ownerId != owner ||
-          draft.forwardAxis != forwardAxis ||
-          !_uuid.hasMatch(draft.activationId) ||
-          !_credential.hasMatch(draft.credential) ||
-          account.currentIdentity?.userId != owner) {
-        throw const FormatException('Guardian proposal changed');
-      }
-      final confirmed = await server.activate(draft, preparedAt);
-      if (confirmed.activationId != draft.activationId ||
-          account.currentIdentity?.userId != owner ||
-          !await account.ensureCurrentOwnerBound()) {
-        throw const FormatException('Guardian owner or confirmation changed');
-      }
-      final expiry = await native.commit(
-        owner,
-        draft.activationId,
-        confirmed.expiresAt,
-      );
-      if (account.currentIdentity?.userId != owner ||
-          !await account.ensureCurrentOwnerBound()) {
-        throw const FormatException('Guardian owner changed during commit');
-      }
-      return expiry;
+      return await account.runDriverActivation(owner, (generation) async {
+        void checkReview() {
+          if (!consent.isFreshAt(now().toUtc()) ||
+              !account.canContinueDriverActivation(owner, generation)) {
+            throw const GuardianActivationException('Guardian review changed.');
+          }
+        }
+
+        checkReview();
+        await GuardianDriverStopService(
+          account,
+          native,
+          server,
+        )._stop(owner, invalidateReview: false);
+        checkReview();
+        final revision = await server.revision(owner);
+        checkReview();
+        final preparedAt = now().toUtc();
+        final proposal = await native.begin(owner, forwardAxis);
+        draft = proposal;
+        if (proposal.ownerId != owner ||
+            proposal.forwardAxis != forwardAxis ||
+            !_uuid.hasMatch(proposal.activationId) ||
+            !_credential.hasMatch(proposal.credential)) {
+          throw const FormatException('Guardian proposal changed');
+        }
+        checkReview();
+        final confirmed = await server.activate(proposal, preparedAt, revision);
+        checkReview();
+        if (confirmed.activationId != proposal.activationId) {
+          throw const FormatException('Guardian owner or confirmation changed');
+        }
+        final expiry = await native.commit(
+          owner,
+          proposal.activationId,
+          confirmed.expiresAt,
+        );
+        checkReview();
+        return expiry;
+      });
     } catch (_) {
       var localCleanupFailed = false;
       if (draft != null) {
         try {
-          if (account.currentIdentity?.userId == owner) {
-            await native.disable(owner);
-          } else {
-            await native.abort(owner, draft.activationId);
-          }
+          await native.abort(owner, draft!.activationId);
         } catch (_) {
           localCleanupFailed = true;
         }
         if (account.currentIdentity?.userId == owner) {
           try {
-            await server.revoke(owner, draft.activationId);
+            await server.revoke(owner, draft!.activationId);
+            if (!localCleanupFailed &&
+                account.currentIdentity?.userId == owner) {
+              await native.confirmRevoke(owner, draft!.activationId);
+            }
           } catch (_) {
-            // The native capability is unavailable; server TTL is the fallback.
+            // The exact native ticket remains available for a later Stop retry.
           }
         }
       }
       throw GuardianActivationException(
         localCleanupFailed
-            ? 'Guardian local cleanup could not be confirmed. Alerts remain unavailable.'
-            : 'Guardian activation could not be confirmed. Alerts remain unavailable.',
+            ? 'Guardian local cleanup could not be confirmed. Check driver state and try Stop.'
+            : 'This Guardian activation could not be confirmed.',
       );
     }
   }

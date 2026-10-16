@@ -32,11 +32,13 @@ class GuardianActivationCoordinatorTest {
         val f = Fixture()
         val p = f.begin()
         assertNull(f.vault.value.lease)
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
         assertFalse(p.toString().contains(p.credential))
         f.advance(1_000)
         val lease = f.commit()
         assertEquals(28_800_000, lease.expiresEpochMillis - lease.startedEpochMillis)
         assertEquals(lease, f.coordinator.snapshot(a).lease)
+        assertTrue(f.journal.tickets.isEmpty())
         rejected { f.commit() }
     }
     @Test fun `owner and mount consent are required`() {
@@ -107,13 +109,63 @@ class GuardianActivationCoordinatorTest {
             rejected { f.coordinator.snapshot(a) }
         }
     }
-    @Test fun `pending reviews block duplicates but expire without extending authority`() {
+    @Test fun `expired reviews still require exact cleanup before replacement`() {
         val f = Fixture(); f.begin()
         rejected { f.coordinator.begin(a, "+y", true) }
         f.advance(120_000)
+        rejected { f.coordinator.begin(a, "-x", true) }
+        rejected { f.coordinator.confirmRevoke(a, generation) }
+        f.coordinator.stop(a)
+        f.coordinator.confirmRevoke(a, generation)
         val replacement = f.coordinator.begin(a, "-x", true)
         assertEquals("-x", replacement.forwardAxis)
         assertNull(f.vault.value.lease)
+    }
+
+    @Test fun `lost proposal reply survives restart and blocks replacement`() {
+        val f = Fixture(); f.begin()
+        val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now }, f.journal)
+        restarted.bindOwner(a)
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), restarted.pendingRevokes(a))
+        rejected { restarted.begin(a, "+y", true) }
+        restarted.stop(a); restarted.confirmRevoke(a, generation)
+        // An old process callback cannot commit once exact cleanup was confirmed.
+        rejected { f.commit() }
+        assertNull(f.vault.value.lease)
+        restarted.begin(a, "+y", true)
+    }
+
+    @Test fun `proposal reservation must persist before capability is returned`() {
+        val f = Fixture(); f.coordinator.bindOwner(a); f.journal.failRecord = true
+        rejected { f.coordinator.begin(a, "+y", true) }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+        rejected { f.commit() }
+    }
+
+    @Test fun `failed reservation confirmation erases lease and retains exact cleanup`() {
+        val f = Fixture(); f.begin(); f.journal.failConfirm = true
+        rejected { f.commit() }
+        assertNull(f.vault.value.lease)
+        assertNull(f.coordinator.recordingSnapshot())
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+    }
+
+    @Test fun `stale abort cannot erase newer proposal or committed lease`() {
+        for (committed in listOf(false, true)) {
+            val f = Fixture()
+            var next = generation
+            val c = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now }, f.journal, { next }, { "a".repeat(64) })
+            c.bindOwner(a); c.begin(a, "+y", true); c.stop(a); c.confirmRevoke(a, generation)
+            next = b
+            c.begin(a, "-x", true)
+            if (committed) c.commit(a, b, f.now.epochMillis + 28_800_000)
+            c.abort(a, generation)
+            if (!committed) c.commit(a, b, f.now.epochMillis + 28_800_000)
+            assertEquals(b, c.snapshot(a).lease?.activationId)
+            c.abort(b, b)
+            assertEquals(b, c.snapshot(a).lease?.activationId)
+        }
     }
 
     @Test fun `stop erases local lease even when status read fails`() {

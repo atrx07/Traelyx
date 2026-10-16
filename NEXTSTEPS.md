@@ -21,9 +21,14 @@ The approved driver revision migration is deployed and passes all 13 local SQL s
 legacy-session upgrade preservation and atomic deployment-bundle checks. It
 adds an owner-only revision fence for delayed activation and makes legacy v1
 cleanup-only. Full source CI 38603573947 (`b301544`) and all four hosted atomic
-deployment/rollback checks pass; both functions remain disabled. Next integrate
-durable proposal reservations and the v2 client, followed by the reviewed UI and minimized
-sender, then validate active recording and two-account delivery. Guardian sending
+deployment/rollback checks pass; both functions remain disabled. Durable proposal
+reservations and the v2 client now pass 362 Flutter/398 native tests, analysis,
+app lint, configured build and isolated physical restart/late-commit proof. Exact
+recorder/receiver preservation and saved sign-in/pairing pass on both updated
+devices; local driver monitoring remains off. No real hosted activation/revoke
+was exercised. Full source CI runs on this completion push. Next attach the
+reviewed activation/cancellation UI and minimized sender, then validate live
+hosted cleanup, active recording and two-account delivery. Guardian sending
 stays disabled during implementation. Pixel supports account/pairing and receiver
 tests; it does not close the second physical phone reliability gate.
 

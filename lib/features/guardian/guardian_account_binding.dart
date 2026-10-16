@@ -185,7 +185,10 @@ final class GuardianBoundAccountGateway
     this.deviceRevoker,
     this.driverStopper,
   }) {
-    _subscription = _account.identityChanges.listen((_) => _updateOwner());
+    _subscription = _account.identityChanges.listen((identity) {
+      if (identity?.userId != _desiredOwner) invalidateDriverReview();
+      _updateOwner();
+    });
     _updateOwner();
   }
 
@@ -207,8 +210,58 @@ final class GuardianBoundAccountGateway
   String? _boundOwner;
   bool _recipientRegistrationStarting = false;
   bool _recipientRegistrationActive = false;
+  bool _driverActivationInProgress = false;
+  int _driverReviewGeneration = 0;
+
+  /// Stop and sign-out invalidate callbacks even if the same owner stays signed in.
+  void invalidateDriverReview() => _driverReviewGeneration++;
+
+  bool canContinueDriverActivation(String owner, int generation) =>
+      generation == _driverReviewGeneration &&
+      _account.currentIdentity?.userId == owner &&
+      _desiredOwner == owner &&
+      _hasBoundOwner &&
+      _boundOwner == owner &&
+      !_preparingSignOut &&
+      !_signingOut &&
+      !_localCleanupRequired &&
+      !_recipientRegistrationStarting &&
+      !_recipientRegistrationActive;
+
+  /// Serializes reviews across service instances; local Stop/sign-out stay available.
+  Future<T> runDriverActivation<T>(
+    String owner,
+    Future<T> Function(int generation) operation,
+  ) async {
+    if (_driverActivationInProgress ||
+        _recipientRegistrationStarting ||
+        _recipientRegistrationActive ||
+        _preparingSignOut ||
+        _signingOut ||
+        _localCleanupRequired) {
+      throw const GuardianLocalCleanupException();
+    }
+    _driverActivationInProgress = true;
+    final generation = _driverReviewGeneration;
+    try {
+      if (!await ensureCurrentOwnerBound() ||
+          !canContinueDriverActivation(owner, generation)) {
+        throw const GuardianLocalCleanupException();
+      }
+      final result = await operation(generation);
+      if (!canContinueDriverActivation(owner, generation)) {
+        throw const GuardianLocalCleanupException();
+      }
+      return result;
+    } finally {
+      _driverActivationInProgress = false;
+    }
+  }
 
   void _updateOwner() {
+    if (_desiredOwner != _account.currentIdentity?.userId) {
+      invalidateDriverReview();
+    }
     _desiredOwner = _signingOut || _localCleanupRequired
         ? null
         : _account.currentIdentity?.userId;
@@ -295,6 +348,7 @@ final class GuardianBoundAccountGateway
   ) async {
     if (_recipientRegistrationStarting ||
         _recipientRegistrationActive ||
+        _driverActivationInProgress ||
         _signingOut ||
         _preparingSignOut ||
         _localCleanupRequired) {
@@ -351,6 +405,7 @@ final class GuardianBoundAccountGateway
       throw const GuardianLocalCleanupException();
     }
     _preparingSignOut = true;
+    invalidateDriverReview();
     try {
       await _signOutGuarded();
     } finally {

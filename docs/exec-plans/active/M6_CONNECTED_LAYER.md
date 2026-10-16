@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-10-14
+**Last updated:** 2026-10-16
 
 ## Context budget / references
 
@@ -813,6 +813,38 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Legacy activation is now denied; durable proposal reservation and the v2
     client remain next. Approved deployment bundle SHA-256:
     `09b0ae2a27620ba4f7f20a3e18aa6bbd7587cbe4bbafb88db32d037d321744fb`.
+  Next bounded unit: reserve exact proposal IDs in the existing encrypted driver
+  journal before returning a native capability. Commit removes that reservation
+  only after durable lease write; failures/abort/restart retain it for exact
+  cleanup. Stale callbacks must not disable a newer activation. Serialize driver
+  reviews, allow local Stop/sign-out to invalidate in-flight review, and attach
+  the deployed v2 revision RPCs with owner/freshness checks after awaits. Keep
+  activation controls and sender dormant; no hosted activation/send is approved
+  by this unit. Require race/failure/restart/wire tests, full Flutter/native
+  suites, analysis/lint/build, isolated physical proof and data-preserving updates.
+  - [x] Implement and locally/device-validate durable proposals and the v2 client.
+    The existing schema-1 encrypted journal reserves exact IDs before capability
+    return. Durable lease commit clears the reservation; failed writes/confirmation,
+    lost replies, abort and restart retain exact cleanup. Expiry does not evict it.
+    Stale exact abort preserves newer authority. Account review serialization and
+    a process-local invalidation generation reject Stop/sign-out/account races;
+    consent freshness is checked after awaits. The v2 adapter preserves bigint as
+    decimal text and guards owner before/after every request. Startup/status add
+    no revision request. Four new native and eleven new Flutter cases (including
+    one loopback SDK wire test) bring totals to 398 native/362 Flutter, all passing.
+    Analysis, app lint, configured build, repository validation and the isolated
+    physical Keystore proof pass, including reopen-before-commit, coordinator
+    restart and original late-commit rejection after exact cleanup. Updated normal
+    apps preserve saved sign-in/pairing, report driver monitoring off and retain
+    all 11,857 Tecno recorder hashes plus both encrypted receiver vault hashes;
+    Pixel has no recorder files. Stale Pixel ADB recovered via a non-wiping AVD
+    restart and renewed USB authorization; Tecno network reconnect/ping and both
+    hosted read-only pairing reloads pass. The disposable test APK/key/files are
+    removed. Both hosted enable digests freshly match `false`. No new migration,
+    provider/dependency, registration, real hosted driver session, send or trip
+    upload. Inspect/commit/push this bounded unit and require full exact-source CI
+    before further implementation. Reviewed UI/sender, live timeout/replacement
+    cleanup and active physical reliability remain gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
