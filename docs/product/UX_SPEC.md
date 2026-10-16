@@ -217,7 +217,18 @@ waiting for a recorded trip, calibration, experimental evaluation and unavailabl
 evidence. Clear the observation on background/account changes; no automatic
 polling, activation or send. Explain that process death/phone restart requires a
 fresh driver review and that saved consent does not imply active monitoring.
-Activation/cancellation/sending controls remain unavailable pending their gates.
+Ordinary and release builds keep activation/Stop controls hidden. A separately
+configured debug driver pilot can expose Review driver alerts and Stop driver
+alerts below this check. Review requires an idle-recorder preflight before the
+dialog and again before activation, a fresh account-bound review, mount/axis
+choices and all acknowledgements. Cancelling, backgrounding, navigation or account
+change cannot produce late success. Describe the account session and private
+lease (up to eight hours), and distinguish saved consent from observed monitoring.
+Stop stays available during activation, stops only Guardian and reports incomplete
+confirmation honestly. Explain that already handed-off notices cannot be retracted.
+The pilot explicitly says sending is unavailable; event-cancellation and sending
+controls remain separate integration gates. The installed validation build keeps
+the driver pilot off.
 
 ## 14. Account UX
 

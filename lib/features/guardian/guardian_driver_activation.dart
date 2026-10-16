@@ -345,7 +345,46 @@ final class GuardianDriverStopService {
   }
 }
 
-/// Not exposed in the UI until recorder, recipient opt-in and delivery gates pass.
+/// Cancels only its owning review; it cannot invalidate a newer activation.
+final class GuardianDriverReviewCancellation {
+  bool _cancelled = false;
+  bool _accepted = false;
+  bool _started = false;
+  Future<void> Function()? _cleanup;
+  bool get isCancelled => _cancelled;
+
+  void _claim() {
+    if (_started || _accepted || _cancelled) {
+      throw const GuardianActivationException(
+        'Driver review is no longer available.',
+      );
+    }
+    _started = true;
+  }
+
+  Future<void> cancel() {
+    if (_accepted) return Future<void>.value();
+    _cancelled = true;
+    return _cleanup?.call() ?? Future<void>.value();
+  }
+
+  void _bindCleanup(Future<void> Function() cleanup) {
+    _cleanup = cleanup;
+    if (_cancelled) unawaited(cancel());
+  }
+
+  /// The foreground caller consumes success synchronously before displaying it.
+  /// Until then, cancellation still settles that exact committed activation.
+  void acceptCompletion() {
+    if (_cancelled) {
+      throw const GuardianActivationException('Driver review interrupted.');
+    }
+    _accepted = true;
+    _cleanup = null;
+  }
+}
+
+/// Only an explicitly reviewed, current foreground action may call this service.
 final class GuardianDriverActivationService {
   const GuardianDriverActivationService(
     this.account,
@@ -362,20 +401,52 @@ final class GuardianDriverActivationService {
       GuardianDriverStopService(account, native, server).stop(owner);
 
   Future<DateTime> prepareAfterExplicitConsent(
-    GuardianDriverConsent consent,
-  ) async {
+    GuardianDriverConsent consent, {
+    GuardianDriverReviewCancellation? cancellation,
+  }) async {
     final owner = consent.ownerId;
     final forwardAxis = consent.forwardAxis;
-    if (!_uuid.hasMatch(owner) ||
+    if (cancellation?.isCancelled == true ||
+        !_uuid.hasMatch(owner) ||
         !consent.isFreshAt(now().toUtc()) ||
         account.currentIdentity?.userId != owner) {
       throw const GuardianActivationException('Guardian account unavailable.');
     }
+    cancellation?._claim();
     GuardianActivationDraft? draft;
+    Future<void>? cleanup;
+    var localCleanupFailed = false;
+    Future<void> cleanupExact() async {
+      final pending = draft;
+      if (pending == null) return;
+      cleanup ??= () async {
+        try {
+          await native.abort(owner, pending.activationId);
+        } catch (_) {
+          localCleanupFailed = true;
+        }
+        if (account.currentIdentity?.userId == owner) {
+          try {
+            await server.revoke(owner, pending.activationId);
+            if (!localCleanupFailed &&
+                account.currentIdentity?.userId == owner) {
+              await native.confirmRevoke(owner, pending.activationId);
+            }
+          } catch (_) {
+            // The exact native ticket remains available for a later Stop retry.
+          }
+        }
+      }();
+      await cleanup;
+    }
+
     try {
-      return await account.runDriverActivation(owner, (generation) async {
+      final result = await account.runDriverActivation(owner, (
+        generation,
+      ) async {
         void checkReview() {
-          if (!consent.isFreshAt(now().toUtc()) ||
+          if (cancellation?.isCancelled == true ||
+              !consent.isFreshAt(now().toUtc()) ||
               !account.canContinueDriverActivation(owner, generation)) {
             throw const GuardianActivationException('Guardian review changed.');
           }
@@ -393,6 +464,7 @@ final class GuardianDriverActivationService {
         final preparedAt = now().toUtc();
         final proposal = await native.begin(owner, forwardAxis);
         draft = proposal;
+        cancellation?._bindCleanup(cleanupExact);
         if (proposal.ownerId != owner ||
             proposal.forwardAxis != forwardAxis ||
             !_uuid.hasMatch(proposal.activationId) ||
@@ -413,26 +485,12 @@ final class GuardianDriverActivationService {
         checkReview();
         return expiry;
       });
-    } catch (_) {
-      var localCleanupFailed = false;
-      if (draft != null) {
-        try {
-          await native.abort(owner, draft!.activationId);
-        } catch (_) {
-          localCleanupFailed = true;
-        }
-        if (account.currentIdentity?.userId == owner) {
-          try {
-            await server.revoke(owner, draft!.activationId);
-            if (!localCleanupFailed &&
-                account.currentIdentity?.userId == owner) {
-              await native.confirmRevoke(owner, draft!.activationId);
-            }
-          } catch (_) {
-            // The exact native ticket remains available for a later Stop retry.
-          }
-        }
+      if (cancellation?.isCancelled == true) {
+        throw const GuardianActivationException('Driver review interrupted.');
       }
+      return result;
+    } catch (_) {
+      await cleanupExact();
       throw GuardianActivationException(
         localCleanupFailed
             ? 'Guardian local cleanup could not be confirmed. Check driver state and try Stop.'

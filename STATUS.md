@@ -10,6 +10,26 @@
 
 ## Working
 
+- M6.8 gated driver Review/Stop (2026-10-17): a separate default-false debug
+  pilot exposes account-checked driver review and local-first Stop. Ordinary and
+  release builds keep the controls hidden. Review checks recorder idle state,
+  disclosures/mount/axis, owner and freshness; Stop stays available during
+  activation and leaves raw recording alone. A single-use token covers
+  background/navigation/account interruption through foreground consumption of
+  the commit result, with memoized exact cleanup and no late success. After the
+  result is accepted, normal backgrounding does not revoke completed consent.
+  All 376 Flutter tests, analysis, configured driver-pilot-off build and repository
+  validation pass; both default-off updates retain sign-in/pairing, show local
+  receiver registration and monitoring off, and hide Review/Stop controls. All
+  11,857 Tecno recorder hashes and both receiver vault hashes are unchanged,
+  with driver authority absent. Pixel restarted
+  without wiping saved data; both accounts remain signed in and internet checks
+  pass. The installed build keeps driver controls off. No new migration,
+  dependency, permission, registration, live driver session, enable change, send
+  or trip upload. Hosted flags were freshly read as `false`. Live pilot UI/
+  activation/revoke, event-cancellation/sender, active recording and physical
+  reliability remain gates. Full exact-source CI is required on the completion push.
+
 - M6.8 durable proposals/v2 client (2026-10-16): native code reserves exact
   owner/activation IDs in the existing encrypted revoke journal before returning
   a capability. Commit clears the reservation only after durable lease write;

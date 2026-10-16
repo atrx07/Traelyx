@@ -56,3 +56,15 @@ bigint range. No revision read is added to startup/status. It uses fresh
 activation UUIDs; this contract fences delayed requests, not deliberate
 reuse of an old UUID with a freshly obtained revision by its signed-in owner.
 Driver controls and sending remain dormant until their remaining gates pass.
+
+
+## Foreground result consumption (2026-10-17)
+
+The default-off debug driver controls give each foreground activation a single-use
+cancellation token. It remains cancellable until the controller synchronously
+accepts the completed result. This closes the gap between durable native commit
+and UI consumption: background/navigation/account loss can still start memoized
+exact abort/revoke cleanup, while late success cannot appear. After acceptance,
+ordinary backgrounding does not revoke completed consent. The same owner/exact
+activation checks and journal handle failed cleanup; an old token cannot target a
+newer review. This adds no provider, schema, server access grant or automatic send.

@@ -7,6 +7,7 @@ import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_driver_controls_panel.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status_panel.dart';
 import 'package:traelyx/features/guardian/guardian_inbox.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
@@ -555,6 +556,10 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
         const SizedBox(height: 24),
         GuardianDriverStatusPanel(
           key: ValueKey(widget.owner),
+          owner: widget.owner,
+        ),
+        GuardianDriverControlsPanel(
+          key: ValueKey('driver-controls-${widget.owner}'),
           owner: widget.owner,
         ),
       ],

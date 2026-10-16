@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:traelyx/features/guardian/guardian_driver_controls.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status.dart';
 
 class GuardianDriverStatusPanel extends ConsumerStatefulWidget {
@@ -42,9 +43,12 @@ class _GuardianDriverStatusPanelState
           'Driver state at last check',
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        const Text(
-          'This checks only this phone. It does not enable monitoring or send an alert. '
-          'Driver activation and sending are unavailable in this test build.',
+        Text(
+          ref.watch(guardianDriverPilotProvider)
+              ? 'This checks only this phone. It does not enable monitoring or send an alert. '
+                    'Alert sending is unavailable in this build.'
+              : 'This checks only this phone. It does not enable monitoring or send an alert. '
+                    'Driver activation and sending are unavailable in this test build.',
         ),
         if (check.status != null) ...[
           Semantics(liveRegion: true, child: Text(check.status!.state.label)),

@@ -94,7 +94,7 @@ final class NativePort implements GuardianNativeActivationPort {
   String? stoppedActivation;
   final pending = <String>[];
   int confirmations = 0;
-  Future<void> Function()? beforeCommit;
+  Future<void> Function()? beforeCommitReply;
   Future<void> Function()? afterBegin;
   bool failAbort = false;
 
@@ -119,9 +119,10 @@ final class NativePort implements GuardianNativeActivationPort {
   ) async {
     events.add('commit');
     commits++;
-    await beforeCommit?.call();
+    // Native writes on one serialized worker before returning its bridge reply.
     pending.remove(activationId);
     stoppedActivation = activationId;
+    await beforeCommitReply?.call();
     return expiry;
   }
 
@@ -411,7 +412,7 @@ void main() {
       final ownerPort = OwnerPort();
       final bound = GuardianBoundAccountGateway(account, ownerPort);
       final native = NativePort(events)
-        ..beforeCommit = () async => account.change(ownerB);
+        ..beforeCommitReply = () async => account.change(ownerB);
       final server = Server(events);
       addTearDown(() async {
         await bound.dispose();
@@ -950,6 +951,105 @@ void main() {
       expect(server.revokes, 1);
       expect(native.confirmations, 0);
       expect(native.pending, [activation]);
+    },
+  );
+  test(
+    'per-review cancellation before start cannot create any authority',
+    () async {
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final events = <String>[];
+      final token = GuardianDriverReviewCancellation();
+      await token.cancel();
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await expectLater(
+        GuardianDriverActivationService(
+          bound,
+          NativePort(events),
+          Server(events),
+        ).prepareAfterExplicitConsent(reviewed('+y'), cancellation: token),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(events, isEmpty);
+    },
+  );
+
+  test(
+    'per-review cancellation after server response or commit retains exact cleanup',
+    () async {
+      for (final cancelDuringCommit in [false, true]) {
+        final account = TestAccount();
+        final bound = GuardianBoundAccountGateway(account, OwnerPort());
+        final events = <String>[];
+        final native = NativePort(events);
+        final server = Server(events);
+        final token = GuardianDriverReviewCancellation();
+        if (cancelDuringCommit) {
+          native.beforeCommitReply = () async {
+            await token.cancel();
+          };
+        } else {
+          server.onActivate = () async {
+            await token.cancel();
+            return GuardianSessionConfirmation(
+              activation,
+              DateTime.now().toUtc().add(const Duration(hours: 7)),
+            );
+          };
+        }
+        await expectLater(
+          GuardianDriverActivationService(
+            bound,
+            native,
+            server,
+          ).prepareAfterExplicitConsent(reviewed('+y'), cancellation: token),
+          throwsA(isA<GuardianActivationException>()),
+        );
+        expect(native.aborts, 1);
+        expect(native.disables, 0);
+        expect(native.pending, isEmpty);
+        expect(native.stoppedActivation, isNull);
+        expect(server.revokes, 1);
+        await bound.dispose();
+        await account.changes.close();
+      }
+    },
+  );
+  test(
+    'completed review stays cancellable until foreground accepts the result',
+    () async {
+      for (final accepted in [false, true]) {
+        final account = TestAccount();
+        final bound = GuardianBoundAccountGateway(account, OwnerPort());
+        final events = <String>[];
+        final native = NativePort(events);
+        final server = Server(events);
+        final token = GuardianDriverReviewCancellation();
+        final service = GuardianDriverActivationService(bound, native, server);
+        await service.prepareAfterExplicitConsent(
+          reviewed('+y'),
+          cancellation: token,
+        );
+        if (accepted) token.acceptCompletion();
+        await token.cancel();
+        await token.cancel();
+        expect(server.revokes, accepted ? 0 : 1);
+        expect(native.stoppedActivation, accepted ? activation : isNull);
+        final before = List.of(events);
+        await expectLater(
+          service.prepareAfterExplicitConsent(
+            reviewed('+y'),
+            cancellation: token,
+          ),
+          throwsA(isA<GuardianActivationException>()),
+        );
+        expect(events, before);
+        await bound.dispose();
+        await account.changes.close();
+      }
     },
   );
 }

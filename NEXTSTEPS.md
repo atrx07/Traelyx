@@ -10,6 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Driver Review/Stop controls now have a separate default-false debug pilot and
+376 passing Flutter tests, clean analysis and a configured pilot-off build.
+Per-review cancellation covers background/navigation/account races through
+foreground acceptance of the commit result; exact cleanup remains journaled on
+failure. Normal/release and installed builds keep controls hidden. Both device
+updates preserve recorder/receiver data and no driver session was activated.
+Require full exact-source CI before the following bounded unit: the minimized
+outbox sender and pre-handoff event cancellation UI, then reviewed live pilot
+activation/revoke, active recording and two-account delivery. Sending stays off.
+
 Driver account teardown now journals retained lease identities on owner loss,
 expiry/reboot/rollback, including background recovery. Recipient cleanup failure
 still attempts driver teardown. Explicit sign-out stops/reconciles the driver
@@ -27,8 +37,8 @@ app lint, configured build and isolated physical restart/late-commit proof. Exac
 recorder/receiver preservation and saved sign-in/pairing pass on both updated
 devices; local driver monitoring remains off. No real hosted activation/revoke
 was exercised. Full source CI 38926552436 passes for `a3bde81`, closing this
-bounded unit. Next attach the
-reviewed activation/cancellation UI and minimized sender, then validate live
+bounded unit. The following gated Review/Stop work is recorded above; minimized
+sender and event-cancellation integration remain next, followed by live
 hosted cleanup, active recording and two-account delivery. Guardian sending
 stays disabled during implementation. Pixel supports account/pairing and receiver
 tests; it does not close the second physical phone reliability gate.

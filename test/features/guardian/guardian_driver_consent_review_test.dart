@@ -33,12 +33,18 @@ void main() {
     expect(find.textContaining('not emergency assistance'), findsOneWidget);
     expect(find.textContaining('monitoring stops'), findsOneWidget);
     expect(find.textContaining('Saved consent alone'), findsOneWidget);
+    expect(find.textContaining('temporary driver session'), findsOneWidget);
+    expect(find.textContaining('sending is unavailable'), findsOneWidget);
 
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
     expect(result, isNull);
 
     await tester.tap(find.text('Review setup'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('guardian-forward-axis')),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('guardian-forward-axis')));
     await tester.pumpAndSettle();

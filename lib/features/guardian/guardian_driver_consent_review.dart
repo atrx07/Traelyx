@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:traelyx/features/guardian/guardian_driver_consent.dart';
 
-/// Open only from a deliberate activation action after delivery gates pass.
+/// Open only from a deliberate action in the controlled debug driver pilot.
 /// Reviewing alone neither persists consent nor enables monitoring.
 Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
   BuildContext context,
@@ -24,6 +24,12 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
               const Text(
                 'Guardian alerts are experimental. They may miss a serious event or send a false alarm. '
                 'They are not emergency assistance and delivery is not guaranteed.',
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Confirming stores a temporary driver session in your Traelyx account and a private lease on this phone, '
+                'lasting up to eight hours. This review uploads no trip data. '
+                'Alert sending is unavailable in this build.',
               ),
               const SizedBox(height: 12),
               const Text(

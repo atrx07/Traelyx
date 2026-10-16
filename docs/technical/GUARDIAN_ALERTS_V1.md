@@ -286,13 +286,38 @@ startup/status add no revision read. Proposal journaling and v2 client attachmen
 are implemented; live hosted activation/revoke and active-device validation
 remain required. See ADR-0030.
 
-The dormant Flutter review component collects a phone-forward axis and separate
+The Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing
 acknowledgements. Its result is ephemeral. The activation service rejects a
 review older than two minutes, from the future or missing any acknowledgement
 before asking native code for a proposal. Cancelling returns no review. The
-component is not reachable from the production Guardian screen until delivery
-gates pass; it has no hosted activation or device-registration side effect.
+component alone returns ephemeral consent, with no hosted activation or device
+registration side effect. A separate `TRAELYX_GUARDIAN_DRIVER_PILOT` gate requires
+a deliberately configured debug build before the Guardian screen exposes driver
+Review/Stop controls. It defaults false independently of the recipient pilot;
+release builds cannot expose it. Installed validation builds keep it false.
+
+The gated controller reads recorder status only for explicit review preflights,
+never at startup or on a timer. It repeats that check after review, rechecks the
+owner/freshness and invokes the v2 service. The review discloses the temporary
+account session and private local lease, bounded to eight hours. UI state says
+consent saved, not monitoring or delivery; sending remains unavailable. Stop
+remains usable during activation and invokes the exact local-first stop service
+without stopping raw recording. Failure is reported as uncertain confirmation,
+not a promise that a previously handed-off message was retracted.
+
+Each pending foreground operation owns a single-use cancellation token. On
+background, route disposal or owner change, cancellation starts memoized exact
+abort/revoke cleanup once the proposal ID is known, with the existing journal
+retaining unsuccessful cleanup. It also covers a local commit whose asynchronous
+result has not yet been consumed by the foreground controller. Only synchronous
+foreground result acceptance releases that cancellation hook; subsequent ordinary
+backgrounding does not revoke completed consent. Old tokens cannot invalidate
+new reviews. Late success is suppressed; native/server owner and exact-activation
+checks remain authoritative. The native MethodChannel and owner worker serialize
+commit/abort; the fake models durable commit before its bridge reply. No sender,
+event-cancellation UI, automatic registration, migration or new dependency is
+introduced. Live pilot activation/revoke and active recording remain separate gates.
 
 The separate recipient review is also dormant. It requires explicit
 acknowledgement of experimental detection/delivery limits and of Firebase

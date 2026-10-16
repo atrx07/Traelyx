@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-10-16
+**Last updated:** 2026-10-17
 
 ## Context budget / references
 
@@ -847,6 +847,44 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     including Android debug/release builds and artifact gates, closing this
     bounded unit. Reviewed UI/sender, live timeout/replacement cleanup and active
     physical reliability remain gates.
+  Next bounded unit: add debug-only driver review/Stop controls behind a separate
+  default-false pilot flag. Require a fresh explicit review and an idle-recorder
+  preflight; Stop remains available during activation and does not stop recording.
+  Background/navigation/account changes cancel only their own in-flight review,
+  suppress late success and retain exact cleanup through the v2 service. Report
+  saved consent separately from observed monitoring and explicitly disclose that
+  sending is unavailable. No event-cancellation claim, sender, real activation,
+  production enable, migration or new dependency belongs to this unit. Test
+  default-off startup, consent cancellation, lifecycle/account races, Stop during
+  activation, failure/redaction and accessible layouts; run the full Flutter,
+  analysis/build/CI gates and default-off data-preserving device checks.
+  - [x] Implement and locally/device-validate the gated driver review/Stop UI.
+    A separate debug-only `TRAELYX_GUARDIAN_DRIVER_PILOT` defaults false;
+    ordinary/release and installed builds hide the controls. Explicit review
+    preflights recorder idle state before the dialog and again before activation.
+    It discloses the temporary account session/local lease, bounded duration,
+    restart requirements and unavailable sending. Stop stays usable during
+    activation and changes only Guardian authority. Per-review single-use
+    cancellation remains effective through native commit until synchronous
+    foreground acceptance; memoized exact cleanup handles interruption without
+    late success or cancellation of a newer review. After acceptance, ordinary
+    backgrounding does not revoke completed consent. All 376 Flutter tests pass
+    (14 new control/lifecycle/service cases), analysis is clean, and repository
+    validation plus the explicitly pilot-off configured build pass. Existing
+    consent assertions are retained with real scroll-to-visible interactions for
+    the expanded disclosure. No Kotlin/sensor/acquisition code changed.
+    Both default-off updates preserve saved sign-in, pairing and local receiver
+    registration, report driver monitoring off and hide Review/Stop controls.
+    All 11,857 Tecno recorder hashes and both receiver vault hashes remain exact;
+    Pixel has no recorder files and both driver vaults are absent. Pixel boots
+    without wiping saved data; both network pings pass. A recurring Android Fast
+    Pair popup covered Tecno briefly; the maintainer cleared it and final checks
+    passed. Supabase routine GitHub sign-in resumed without a new credential or
+    grant; both hosted enable digests freshly match `false`. No live driver
+    session, registration, send, trip upload, migration, dependency or permission
+    change occurred. Inspect/commit/push and require full exact-source CI before
+    the following bounded unit. Minimized sending, event-cancellation UI, live
+    pilot activation/revoke and active physical reliability remain gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
