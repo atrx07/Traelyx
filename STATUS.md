@@ -18,8 +18,10 @@
   synthetic wire/outbox regressions pass; all 409 native app tests, dependency
   suites, debug build and app lint pass. No runtime caller, scheduling, recording
   change, migration, dependency, device update or production request. Driver
-  controls and hosted sending stay off. Exact-source CI is required on push;
-  network scheduling, cancellation UI and live/physical validation remain open.
+  controls and hosted sending stay off. Source `ba4df40` has full green CI
+  [39014126703](https://github.com/atrx07/Traelyx/actions/runs/39014126703),
+  including native suites, both APK builds, server policies and artifacts. Network
+  scheduling, cancellation UI and live/physical validation remain open.
 
 - M6.8 gated driver Review/Stop (2026-10-17): a separate default-false debug
   pilot exposes account-checked driver review and local-first Stop. Ordinary and

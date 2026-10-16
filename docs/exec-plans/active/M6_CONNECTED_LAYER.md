@@ -915,8 +915,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     app lint pass. The documented local.properties escaping/cache fix was used
     for lint and exact original ignored bytes restored. No runtime caller, timer,
     acquisition change, migration, dependency, device update, activation, enable
-    change, production request, send or trip upload. Exact-source CI is required
-    on the completion push; runtime/cancellation UI and physical gates stay open.
+    change, production request, send or trip upload. Source `ba4df40` is committed/
+    pushed with HEAD verified equal to origin/main. Full exact-source CI
+    39014126703 passes all three jobs, including native suites, both APK builds,
+    server policies and artifacts, closing this dormant prerequisite. Runtime
+    scheduling/cancellation UI and live/physical gates stay open.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
