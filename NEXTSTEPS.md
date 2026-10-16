@@ -26,7 +26,8 @@ reservations and the v2 client now pass 362 Flutter/398 native tests, analysis,
 app lint, configured build and isolated physical restart/late-commit proof. Exact
 recorder/receiver preservation and saved sign-in/pairing pass on both updated
 devices; local driver monitoring remains off. No real hosted activation/revoke
-was exercised. Full source CI runs on this completion push. Next attach the
+was exercised. Full source CI 38926552436 passes for `a3bde81`, closing this
+bounded unit. Next attach the
 reviewed activation/cancellation UI and minimized sender, then validate live
 hosted cleanup, active recording and two-account delivery. Guardian sending
 stays disabled during implementation. Pixel supports account/pairing and receiver

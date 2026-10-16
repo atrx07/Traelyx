@@ -842,9 +842,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     hosted read-only pairing reloads pass. The disposable test APK/key/files are
     removed. Both hosted enable digests freshly match `false`. No new migration,
     provider/dependency, registration, real hosted driver session, send or trip
-    upload. Inspect/commit/push this bounded unit and require full exact-source CI
-    before further implementation. Reviewed UI/sender, live timeout/replacement
-    cleanup and active physical reliability remain gates.
+    upload. Reviewed source `a3bde81` is committed/pushed, with local HEAD verified
+    equal to origin/main. Full exact-source CI 38926552436 passes all three jobs,
+    including Android debug/release builds and artifact gates, closing this
+    bounded unit. Reviewed UI/sender, live timeout/replacement cleanup and active
+    physical reliability remain gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

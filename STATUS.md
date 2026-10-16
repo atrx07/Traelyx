@@ -28,7 +28,9 @@
   Both hosted enable digests freshly match `false`; no new migration, dependency,
   registration, real driver activation, send or trip upload occurred. Reviewed
   activation/sender UI, live hosted cleanup, active recording and reliability
-  on two physical devices remain open. Full source CI runs on the completion push.
+  on two physical devices remain open. Source `a3bde81` has full green CI
+  [38926552436](https://github.com/atrx07/Traelyx/actions/runs/38926552436),
+  including both APK builds, native suites, server policy and artifact gates.
 
 - M6.8 driver revision prerequisite deployed (2026-10-14): approved migration
   `20261014000000_guardian_driver_revisions.sql` adds one private owner revision
