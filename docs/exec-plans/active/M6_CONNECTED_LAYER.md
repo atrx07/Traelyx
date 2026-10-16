@@ -882,8 +882,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     passed. Supabase routine GitHub sign-in resumed without a new credential or
     grant; both hosted enable digests freshly match `false`. No live driver
     session, registration, send, trip upload, migration, dependency or permission
-    change occurred. Inspect/commit/push and require full exact-source CI before
-    the following bounded unit. Minimized sending, event-cancellation UI, live
+    change occurred. Source `14ce8af` is committed/pushed with HEAD verified
+    equal to origin/main. Full exact-source CI 39012717528 passes all three jobs,
+    including native suites, debug/release builds, server policies and artifacts,
+    closing this bounded unit. Minimized sending, event-cancellation UI, live
     pilot activation/revoke and active physical reliability remain gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish

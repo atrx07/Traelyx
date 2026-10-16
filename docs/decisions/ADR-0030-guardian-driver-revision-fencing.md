@@ -57,7 +57,6 @@ activation UUIDs; this contract fences delayed requests, not deliberate
 reuse of an old UUID with a freshly obtained revision by its signed-in owner.
 Driver controls and sending remain dormant until their remaining gates pass.
 
-
 ## Foreground result consumption (2026-10-17)
 
 The default-off debug driver controls give each foreground activation a single-use

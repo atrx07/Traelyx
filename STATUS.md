@@ -22,13 +22,15 @@
   validation pass; both default-off updates retain sign-in/pairing, show local
   receiver registration and monitoring off, and hide Review/Stop controls. All
   11,857 Tecno recorder hashes and both receiver vault hashes are unchanged,
-  with driver authority absent. Pixel restarted
-  without wiping saved data; both accounts remain signed in and internet checks
-  pass. The installed build keeps driver controls off. No new migration,
+  with driver authority absent. Pixel restarted without wiping saved data;
+  both accounts remain signed in and internet checks pass. The installed build
+  keeps driver controls off. No new migration,
   dependency, permission, registration, live driver session, enable change, send
   or trip upload. Hosted flags were freshly read as `false`. Live pilot UI/
   activation/revoke, event-cancellation/sender, active recording and physical
-  reliability remain gates. Full exact-source CI is required on the completion push.
+  reliability remain gates. Source `14ce8af` has full green CI
+  [39012717528](https://github.com/atrx07/Traelyx/actions/runs/39012717528),
+  including native suites, both APK builds, server policies and artifact gates.
 
 - M6.8 durable proposals/v2 client (2026-10-16): native code reserves exact
   owner/activation IDs in the existing encrypted revoke journal before returning

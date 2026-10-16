@@ -16,9 +16,10 @@ Per-review cancellation covers background/navigation/account races through
 foreground acceptance of the commit result; exact cleanup remains journaled on
 failure. Normal/release and installed builds keep controls hidden. Both device
 updates preserve recorder/receiver data and no driver session was activated.
-Require full exact-source CI before the following bounded unit: the minimized
-outbox sender and pre-handoff event cancellation UI, then reviewed live pilot
-activation/revoke, active recording and two-account delivery. Sending stays off.
+Full exact-source CI 39012717528 passes for `14ce8af`, closing this bounded
+unit. Next: the minimized outbox sender and pre-handoff event cancellation UI,
+then reviewed live pilot activation/revoke, active recording and two-account
+delivery. Sending stays off.
 
 Driver account teardown now journals retained lease identities on owner loss,
 expiry/reboot/rollback, including background recovery. Recipient cleanup failure
