@@ -120,7 +120,7 @@ final class NativePort implements GuardianNativeActivationPort {
     events.add('commit');
     commits++;
     // Native writes on one serialized worker before returning its bridge reply.
-    pending.remove(activationId);
+    // The independent cleanup ticket survives for the entire committed lease.
     stoppedActivation = activationId;
     await beforeCommitReply?.call();
     return expiry;
@@ -157,6 +157,9 @@ final class NativePort implements GuardianNativeActivationPort {
 
   @override
   Future<void> confirmRevoke(String owner, String activation) async {
+    if (stoppedActivation == activation) {
+      throw StateError('Stop local activation before confirming revoke');
+    }
     confirmations++;
     pending.remove(activation);
   }
@@ -287,7 +290,41 @@ void main() {
     expect(events, ['stop', 'revision', 'begin', 'server', 'commit']);
     expect(native.disables, 0);
     expect(server.revokes, 0);
+    expect(native.pending, [activation]);
   });
+
+  test(
+    'lost vault authority still permits exact Stop retry from retained ticket',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events);
+      final service = GuardianDriverActivationService(bound, native, server);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await service.prepareAfterExplicitConsent(reviewed('+y'));
+      native.stoppedActivation =
+          null; // Destructive native vault failure, separate journal intact.
+      server.onRevoke = () async => throw StateError('offline');
+      await expectLater(
+        service.stop(ownerA),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(native.pending, [activation]);
+      expect(native.confirmations, 0);
+      server.onRevoke = null;
+      await service.stop(ownerA);
+      expect(native.pending, isEmpty);
+      expect(native.confirmations, 1);
+      expect(server.revokes, 2);
+      expect(native.commits, 1);
+      expect(events.sublist(5), ['stop', 'revoke', 'stop', 'revoke']);
+    },
+  );
 
   test('stale or incomplete review cannot reach the native proposal', () async {
     final events = <String>[];
@@ -577,7 +614,7 @@ void main() {
         'server',
         'commit',
       ]);
-      expect(native.pending, isEmpty);
+      expect(native.pending, [activation]);
     },
   );
 

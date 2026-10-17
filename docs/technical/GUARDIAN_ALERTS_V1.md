@@ -280,10 +280,14 @@ a separate encrypted no-backup journal, then erases the local driver lease befor
 returning. Neither the capability nor telemetry enters this journal or its
 foreground replies. Journal schema 1 permits at most eight tickets and 4,096
 plaintext bytes, with no eviction based on local clocks. A full or unhealthy
-journal refuses new activation. Successful commit removes a proposal reservation
-only after the encrypted lease is durable. A failed lease write or reservation
-confirmation attempts lease erasure and retains exact cleanup. After a crash
-between those writes, a restored lease cannot resume evaluation (ADR-0029); its
+journal refuses new activation. Successful commit retains the proposal reservation
+for the entire lease lifetime; only a subsequent exact server revoke can clear
+it after local authority is stopped. Valid-lease outbox writes and replacement
+retain cleanup IDs before any destructive vault operation. Binding adopts a
+readable older lease into the journal before exposing authority; recovery writes
+also journal before pruning. A failed vault write/readback may destroy its key
+and file but cannot erase the independent, already durable cleanup reservation.
+After process death, a restored lease cannot resume evaluation (ADR-0029); its
 reservation remains available for explicit cleanup. Revoke confirmation is refused
 while that exact proposal or lease is still locally active. Native status and
 account binding perform no
@@ -294,6 +298,16 @@ and cannot revoke a replacement session. A read/write failure still attempts
 local lease erasure and reports uncertainty rather than successful cancellation.
 Already queued remote delivery may continue while server revocation is
 unconfirmed, and an in-flight generic push cannot be retracted.
+
+The journal retains IDs only, not a second capability or outbox. Repeated records
+are idempotent without rewriting the journal. Journal uncertainty blocks a new
+outbox state write or replacement before it starts; Stop/invalid-authority cleanup
+still attempts local erasure. A failed server-cleanup confirmation retains the
+ticket for explicit retry. This does not guarantee cleanup after loss/corruption
+of both independent stores, app-data removal, or an older lease already unreadable
+before adoption. Local failure/off status is never proof of hosted revocation.
+Synthetic authenticated-encryption tests cover these storage boundaries; physical
+Keystore/disk-failure injection and reviewed hosted Stop remain separate gates.
 
 Owner loss/change and expiry, reboot or clock rollback recovery now capture
 retained lease IDs in the same journal before erasure. A different owner cannot

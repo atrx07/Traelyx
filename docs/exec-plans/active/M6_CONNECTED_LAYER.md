@@ -958,9 +958,38 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     39034069372 passes all three jobs, including both APKs, native/Flutter tests,
     server policies and artifacts, closing this bounded unit. Before Android
     attachment, validate exact cleanup-ID retention through destructive vault-write
-    failures; a dispatch failure flag does not prove hosted revocation. Android
+    failures (repair and validation below); a dispatch failure flag does not prove hosted revocation. Android
     scheduling/cancellation UI, reviewed live activation and physical reliability
     remain separate gates.
+  - [x] Reproduce and locally repair exact cleanup-ID loss through destructive
+    vault writes. The authenticated-encryption regression fails before repair:
+    commit cleared the reservation, then failed enqueue destroyed the sole lease
+    identity. Commit now retains its independent ID-only reservation throughout
+    the lease; outbox writes/replacement journal affected IDs before destructive
+    mutation, and binding adopts readable legacy leases before exposing authority.
+    Active tickets cannot be confirmed; explicit Stop/server-revoke confirmation
+    alone clears them. Journal uncertainty/capacity denies mutation without
+    discarding prior tickets/authority. Nine new native encrypted-store tests
+    cover write/readback failure across enqueue/reservation/cancellation/recovery/
+    completion/replacement, idempotence, legacy adoption, restart, exact-owner
+    isolation and failed cleanup confirmation. A new foreground test verifies
+    offline server-revoke retry after local vault authority loss. Existing tests
+    now assert lifetime retention instead of removal at commit. All 438 native
+    app and 377 Flutter tests, dependency suites, app lint and debug APK pass;
+    the documented lint-only local.properties normalization restores exact ignored
+    bytes. ADR-0030, the delivery contract and the new product issue record define
+    guarantees and loss-of-both-stores/legacy-unreadable limitations. The configured
+    pilot-off Tecno update and isolated physical Keystore proof pass: the lifetime
+    ticket survives scoped capability key/file loss and reopening, active exact
+    confirmation is refused, and synthetic Stop/confirmation clears only its
+    ticket. All 11,857 recorder hashes and the recipient vault remain unchanged;
+    ordinary app startup retains sign-in with controls hidden. Pixel remains
+    connected/authorized; it was not updated in this unit. No recorder sample,
+    permission, schema, dependency, hosted activation, enable change, production
+    request or trip upload. Physical Keystore/disk-failure injection
+    and hosted live Stop are unverified. Exact-source CI remains pending before
+    closing this bounded unit. Next: cancellation controls/notification and
+    eligibility proof, then Android runtime dispatch attachment.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

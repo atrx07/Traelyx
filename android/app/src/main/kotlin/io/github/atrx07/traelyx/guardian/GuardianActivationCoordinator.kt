@@ -43,7 +43,10 @@ class GuardianActivationCoordinator(
         owner = null
         bound = false
         if (nextOwner == null) outbox.revoke(revokeJournal::record)
-        else outbox.recover(nextOwner, clock(), revokeJournal::record)
+        else outbox.recover(nextOwner, clock(), revokeJournal::record).lease?.let {
+            // Adopt readable leases from older builds before exposing any local authority.
+            revokeJournal.record(GuardianDriverRevokeTicket(it.ownerId, it.activationId))
+        }
         owner = nextOwner
         bound = true
     }
@@ -82,11 +85,12 @@ class GuardianActivationCoordinator(
         check(ticket in revokeJournal.pending()) { "Activation reservation unavailable" }
         try {
             outbox.activate(lease, now)
-            revokeJournal.confirm(ticket)
         } catch (failure: Exception) {
             eraseAuthority(expectedOwner)
             throw failure
         }
+        // Keep the independent ID-only reservation until an exact server revoke succeeds.
+        // A later destructive vault failure must not erase the only cleanup identity.
         recordingActivationId = lease.activationId
         return lease
     }

@@ -38,7 +38,7 @@ class GuardianActivationCoordinatorTest {
         val lease = f.commit()
         assertEquals(28_800_000, lease.expiresEpochMillis - lease.startedEpochMillis)
         assertEquals(lease, f.coordinator.snapshot(a).lease)
-        assertTrue(f.journal.tickets.isEmpty())
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
         rejected { f.commit() }
     }
     @Test fun `owner and mount consent are required`() {
@@ -143,12 +143,19 @@ class GuardianActivationCoordinatorTest {
         rejected { f.commit() }
     }
 
-    @Test fun `failed reservation confirmation erases lease and retains exact cleanup`() {
+    @Test fun `commit retains reservation and only stopped server cleanup can confirm it`() {
         val f = Fixture(); f.begin(); f.journal.failConfirm = true
-        rejected { f.commit() }
+        val lease = f.commit()
+        assertEquals(lease, f.coordinator.recordingSnapshot()?.lease)
+        rejected { f.coordinator.confirmRevoke(a, generation) }
+        f.coordinator.stop(a)
+        rejected { f.coordinator.confirmRevoke(a, generation) }
         assertNull(f.vault.value.lease)
         assertNull(f.coordinator.recordingSnapshot())
         assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
+        f.journal.failConfirm = false
+        f.coordinator.confirmRevoke(a, generation)
+        assertTrue(f.journal.tickets.isEmpty())
     }
 
     @Test fun `stale abort cannot erase newer proposal or committed lease`() {
@@ -263,11 +270,11 @@ class GuardianActivationCoordinatorTest {
         rejected { f.coordinator.snapshot(b) }
     }
 
-    @Test fun `fresh same owner binding preserves monitoring and writes no revoke`() {
+    @Test fun `fresh same owner binding preserves monitoring and its cleanup reservation`() {
         val f = Fixture(); f.begin(); val lease = f.commit()
         f.advance(1_000); f.coordinator.bindOwner(a)
         assertEquals(lease, f.coordinator.recordingSnapshot()?.lease)
-        assertTrue(f.journal.tickets.isEmpty())
+        assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
     }
 
     @Test fun `invalid lease journal failure still removes recording authority`() {

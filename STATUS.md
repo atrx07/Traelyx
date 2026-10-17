@@ -10,6 +10,23 @@
 
 ## Working
 
+- M6.8 cleanup retention repair (2026-10-17): a synthetic destructive vault-write
+  test reproduced loss of the exact server-cleanup ID after successful commit.
+  The independent encrypted reservation now stays for the lease lifetime;
+  outbox mutations/replacement journal first, and binding adopts readable older
+  leases. Only confirmed exact server cleanup after local Stop removes a ticket.
+  Nine new encrypted-store regressions pass, including readback failure,
+  restart, journal failure/capacity and replacement isolation. All 438 native app
+  and 377 Flutter tests, dependency suites, app lint and debug build pass.
+  The isolated physical Keystore proof passes lifetime retention after scoped
+  capability key/file loss, with all 11,857 recorder files and the receiver vault
+  unchanged. The configured pilot-off update opens signed in. The issue and
+  ADR-0030 document guarantees and limits. Exact-source CI is pending. No
+  schema/dependency/permission change, hosted activation, enable change,
+  production request or trip upload. Physical storage fault
+  injection and hosted Stop remain unverified. Cancellation/eligibility and
+  Android dispatch scheduling remain the next implementation gates.
+
 - M6.8 dormant dispatch coordinator (2026-10-17): persists attempts before
   separate network work; requires current authority and a per-event handoff gate.
   One-use queued permits and exact control-worker completion checks fence owner,

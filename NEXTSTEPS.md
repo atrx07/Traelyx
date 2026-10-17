@@ -10,13 +10,24 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Cleanup-ID retention now has a durable lifetime reservation plus guarded outbox
+mutations and readable-legacy adoption. The destructive-write regression failed
+before repair and passes afterward; nine new encrypted-store cases, all 438
+native app and 377 Flutter tests, dependency suites, lint and configured debug
+build pass. The scoped physical Keystore loss/reopening proof passes; all 11,857
+recorder files and the receiver vault are unchanged, and saved sign-in remains.
+Exact-source CI remains the closing gate for this repair. Then add cancellation
+controls/notification and eligibility proof, followed by serialized Android
+dispatch scheduling with owner/Stop invalidation. Physical storage fault
+injection, reviewed live activation/Stop and physical reliability remain open.
+
 Dormant dispatch coordination now passes 20 new synthetic tests and all 429
 native app tests, dependency suites, app lint and a debug build. No Android runtime
 caller or timer is connected. Full exact-source CI 39034069372 passes for
 `3184303`, closing this bounded unit. Next add cancellation controls/notification
 and eligibility proof, then attach serialized dispatch scheduling with explicit
-owner/Stop invalidation and bounded IO. Before attachment, validate exact cleanup-ID retention through destructive
-vault-write failures; a dispatch failure flag does not prove hosted revocation.
+owner/Stop invalidation and bounded IO. The cleanup retention repair above covers
+destructive vault-write failures synthetically; a dispatch failure flag does not prove hosted revocation.
 Reviewed live activation and physical reliability remain later gates.
 
 The dormant minimized-ingest adapter now passes 11 synthetic regressions and

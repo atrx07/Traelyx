@@ -48,14 +48,33 @@ false; no real activation or push was performed.
 The native/client integration now reserves exact proposal IDs durably before
 returning a capability. Stop erases local authority before retrying cleanup; the
 client obtains a revision only after cleanup and checks consent/account state
-after awaits. Commit clears the reservation only after a durable lease write;
-failed confirmation attempts erasure and retains cleanup. Reviews serialize per
-bound account, while Stop/sign-out invalidate their callbacks. Exact abort cannot
+after awaits. Commit retains its independent cleanup reservation throughout the
+lease lifetime; only exact server cleanup after local Stop can confirm it.
+Reviews serialize per bound account, while Stop/sign-out invalidate their callbacks. Exact abort cannot
 erase a newer lease. The wire adapter uses validated decimal text across the full
 bigint range. No revision read is added to startup/status. It uses fresh
 activation UUIDs; this contract fences delayed requests, not deliberate
 reuse of an old UUID with a freshly obtained revision by its signed-in owner.
 Driver controls and sending remain dormant until their remaining gates pass.
+
+## Cleanup retention through vault failure (2026-10-17)
+
+A synthetic destructive-write regression showed that removing the proposal
+reservation at commit could lose the only exact cleanup identity when a later
+outbox write destroyed its key/file. Keep that ID-only reservation after commit,
+independently encrypted from the capability/outbox. Before outbox mutation or
+replacement, journal the affected lease IDs; journal uncertainty denies the
+mutation before destructive IO. Owner binding adopts a readable older lease, and
+recovery journals before a pruning write. Repeated retention does not rewrite a
+present ticket. Active/proposed identities still cannot be confirmed as revoked.
+
+No schema, provider, network field, automatic reconciliation or server grant
+changes. Explicit Stop still erases local authority before retrying the guarded
+server revoke. Journal failure and hosted failure remain visible uncertainty;
+loss of both stores or a legacy identity already unreadable before adoption
+cannot be repaired by this contract. Synthetic regression tests reopen both real
+authenticated-encryption stores after failures. Physical fault injection and
+hosted live Stop are unverified.
 
 ## Foreground result consumption (2026-10-17)
 

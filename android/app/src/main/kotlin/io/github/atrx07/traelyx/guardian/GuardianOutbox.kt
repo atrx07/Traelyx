@@ -10,7 +10,7 @@ class GuardianDispatchAttempt(val lease: GuardianDriverLease, val alert: Guardia
 /** One coordinator per app process, called on a worker thread, never on acquisition callbacks. */
 class GuardianOutbox(
     private val vault: GuardianVault,
-    private val journalInvalidLease: ((GuardianDriverRevokeTicket) -> Unit)? = null,
+    private val journalLease: ((GuardianDriverRevokeTicket) -> Unit)? = null,
 ) {
     @Synchronized fun activate(lease: GuardianDriverLease, now: GuardianClock) {
         require(lease.valid(now, lease.ownerId))
@@ -19,11 +19,13 @@ class GuardianOutbox(
             require(old.lease == lease) // Idempotent retry cannot extend/replace existing authority.
             return
         }
+        retainCleanup(old.lease)
+        retainCleanup(lease)
         vault.erase() // A failed replacement can never restore the previous owner's authority.
         vault.write(GuardianVaultSnapshot(lease))
     }
 
-    @Synchronized fun revoke(beforeErase: ((GuardianDriverRevokeTicket) -> Unit)? = null) {
+    @Synchronized fun revoke(beforeErase: ((GuardianDriverRevokeTicket) -> Unit)? = journalLease) {
         try {
             if (beforeErase != null) vault.read().lease?.let {
                 beforeErase(GuardianDriverRevokeTicket(it.ownerId, it.activationId))
@@ -41,7 +43,7 @@ class GuardianOutbox(
 
     /** Recovery performs no IO to a server; invalid consent/boot clears the local capability. */
     @Synchronized fun recover(owner: String, now: GuardianClock,
-        beforeInvalidErase: ((GuardianDriverRevokeTicket) -> Unit)? = journalInvalidLease): GuardianVaultSnapshot {
+        beforeInvalidErase: ((GuardianDriverRevokeTicket) -> Unit)? = journalLease): GuardianVaultSnapshot {
         guardianUuid(owner)
         val old = try { vault.read() } catch (failure: Exception) {
             vault.erase()
@@ -58,7 +60,13 @@ class GuardianOutbox(
                 now.elapsedMillis - it.createdAtElapsedMillis < GuardianPendingAlert.TTL_MILLIS &&
                 now.epochMillis - it.occurredAtEpochMillis < GuardianPendingAlert.TTL_MILLIS
         }.map { it.advance(now.elapsedMillis, now.epochMillis, now.bootId, owner, lease.activationId) }
-        return old.copy(alerts = alerts).also { if (it != old) vault.write(it) }
+        return old.copy(alerts = alerts).also {
+            if (it != old) {
+                // The explicit recovery journal also protects older leases during upgrade.
+                beforeInvalidErase?.invoke(GuardianDriverRevokeTicket(lease.ownerId, lease.activationId))
+                persist(it)
+            }
+        }
     }
 
     @Synchronized fun enqueue(
@@ -83,7 +91,7 @@ class GuardianOutbox(
         }
         val alert = GuardianPendingAlert(eventId, owner, activation, detection.kind, now.epochMillis,
             now.elapsedMillis, now.bootId, detection.ruleVersion)
-        vault.write(old.copy(cooldowns = cooldowns, alerts = old.alerts + alert))
+        persist(old.copy(cooldowns = cooldowns, alerts = old.alerts + alert))
         return alert
     }
 
@@ -92,7 +100,7 @@ class GuardianOutbox(
         val alert = old.alerts.find { it.eventId == eventId } ?: return false
         val cancelled = alert.cancel()
         if (cancelled.state != GuardianSendState.CANCELLED) return false
-        if (cancelled != alert) vault.write(old.copy(alerts = old.alerts.map { if (it.eventId == eventId) cancelled else it }))
+        if (cancelled != alert) persist(old.copy(alerts = old.alerts.map { if (it.eventId == eventId) cancelled else it }))
         return true
     }
 
@@ -102,7 +110,7 @@ class GuardianOutbox(
         val lease = old.lease ?: return null
         val alert = old.alerts.firstOrNull { it.readyToAttempt(now.elapsedMillis) } ?: return null
         val reserved = alert.reserveAttempt(now.elapsedMillis)
-        vault.write(old.copy(alerts = old.alerts.map { if (it.eventId == reserved.eventId) reserved else it }))
+        persist(old.copy(alerts = old.alerts.map { if (it.eventId == reserved.eventId) reserved else it }))
         return GuardianDispatchAttempt(lease, reserved)
     }
 
@@ -114,6 +122,16 @@ class GuardianOutbox(
         val alert = live.alerts.find { it.eventId == attempt.alert.eventId } ?: return
         if (alert != attempt.alert) return
         val updated = alert.result(accepted, denied)
-        vault.write(live.copy(alerts = live.alerts.map { if (it.eventId == alert.eventId) updated else it }))
+        persist(live.copy(alerts = live.alerts.map { if (it.eventId == alert.eventId) updated else it }))
+    }
+
+    private fun retainCleanup(lease: GuardianDriverLease?) {
+        lease?.let { journalLease?.invoke(GuardianDriverRevokeTicket(it.ownerId, it.activationId)) }
+    }
+
+    private fun persist(snapshot: GuardianVaultSnapshot) {
+        // Journal uncertainty denies the mutation before the vault can destroy its key/file.
+        retainCleanup(snapshot.lease)
+        vault.write(snapshot)
     }
 }
