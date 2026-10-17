@@ -10,6 +10,20 @@
 
 ## Working
 
+- M6.8 dormant dispatch coordinator (2026-10-17): persists attempts before
+  separate network work; requires current authority and a per-event handoff gate.
+  One-use queued permits and exact control-worker completion checks fence owner,
+  Stop and activation changes. A local ten-second deadline ignores late acceptance
+  while retaining the busy slot until actual completion, bounding stuck-worker
+  resource use. Twenty new synthetic cases and all 429 native app tests pass,
+  as do dependency suites, app lint, debug build and repository validation.
+  ADR-0031 records this boundary. Pixel restarts with saved sign-in/pairing and
+  local receiver receipt; both devices have internet and report driver off with
+  controls hidden. No Android runtime caller, timer, recorder/service change,
+  schema, dependency, device update, activation or ingest/dispatch request.
+  Exact-source CI is required on push. Runtime cancellation/scheduling and live/
+  physical validation remain open; hosted sending is not enabled by this unit.
+
 - M6.8 dormant minimized-ingest adapter (2026-10-17): validates reserved-attempt
   owner/activation/boot/time binding and the fixed HTTPS endpoint; emits only
   capability authorization and the six approved event fields. Strict bounded

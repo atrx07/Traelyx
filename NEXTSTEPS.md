@@ -10,6 +10,13 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Dormant dispatch coordination now passes 20 new synthetic tests and all 429
+native app tests, dependency suites, app lint and a debug build. No Android runtime
+caller or timer is connected. Require exact-source CI before the next bounded
+unit: add cancellation controls/notification and eligibility proof, then attach
+serialized dispatch scheduling with explicit owner/Stop invalidation and bounded
+IO. Reviewed live activation and physical reliability remain later gates.
+
 The dormant minimized-ingest adapter now passes 11 synthetic regressions and
 all 409 native app tests, dependency suites, app lint and a debug build. It has
 no runtime caller and adds no network activity. Full exact-source CI

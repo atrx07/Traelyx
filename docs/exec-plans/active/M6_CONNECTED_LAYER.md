@@ -920,6 +920,42 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     39014126703 passes all three jobs, including native suites, both APK builds,
     server policies and artifacts, closing this dormant prerequisite. Runtime
     scheduling/cancellation UI and live/physical gates stay open.
+  Next bounded unit: implement a dormant serialized dispatch coordinator and
+  bounded separate network worker. Reserve in the existing encrypted outbox
+  before handoff, require current bound authority and an explicit cancellation-
+  affordance gate, invalidate queued permits before Stop/account/activation
+  changes, and marshal every completion back to the control worker. Permit only
+  one unsettled network operation; a local deadline ignores late acceptance but
+  retains the busy slot until actual worker completion, preventing retry/thread
+  buildup if transport stalls. Preserve durable retry identity/backoff and exact
+  pre-reservation cancellation without claiming retraction after reservation.
+  Add no Android runtime caller, timer, recorder change, live network request,
+  migration, dependency or permission. Test control/network separation, queued
+  invalidation, callback races, deadlines, stuck workers, retry/cancel/replacement,
+  failed persistence/submission and shutdown. Require native suites, app lint,
+  debug build, repository validation and exact-source CI. Runtime notification/
+  cancellation controls, scheduling, reviewed live activation and physical
+  reliability remain later gates.
+  - [x] Implement and locally validate dormant dispatch coordination: one
+    unsettled operation, persisted reservation before separate network submission,
+    exact cancellation before reservation, per-event handoff gate, one-use queued
+    permit and control-worker completion marshalling. The local ten-second
+    deadline rejects delayed handoff and ignores late acceptance, retaining the
+    busy slot until actual transport completion. Existing retry identity/backoff
+    and six-attempt cap remain unchanged. Twenty new synthetic coordinator/worker
+    cases cover timing, owner/lease replacement, cancellation, stale/duplicate/
+    inline callbacks, persistence/submit failure, shutdown and executor bounds.
+    All 429 native app tests have zero failures/errors/skips; dependency suites,
+    app lint and debug build pass. The documented temporary local.properties
+    escaping fix was used for lint and exact original ignored bytes restored.
+    ADR-0031 records worker isolation and the local-deadline limitation. Pixel_10
+    restarted without wiping saved data; saved sign-in, read-only pairing reload
+    and local recipient receipt remain present. Both devices pass ping and
+    report local driver monitoring off with controls hidden. No app update,
+    recorder/service hook, schema, permission, dependency, activation, enable
+    change, ingest/dispatch request or trip upload. Exact-source CI is required
+    on push before this bounded unit closes. Android scheduling/cancellation UI,
+    reviewed live activation and physical reliability remain separate gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

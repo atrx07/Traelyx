@@ -2,6 +2,10 @@ package io.github.atrx07.traelyx.guardian
 
 internal enum class GuardianIngestResult { BACKEND_ACCEPTED, AUTHORIZATION_DENIED, UNCONFIRMED }
 
+internal fun interface GuardianIngestPort {
+    fun ingest(attempt: GuardianDispatchAttempt): GuardianIngestResult
+}
+
 /** Dormant adapter: only a durably reserved outbox attempt may be handed to this port.
  * The future runtime must recheck authority immediately before IO on its separate network worker.
  * No Auth refresh token, trip identity or raw evidence is accepted by this interface.
@@ -10,8 +14,8 @@ internal class GuardianCapabilityIngestGateway(
     private val endpoint: String,
     private val transport: GuardianReceiptTransport,
     private val clock: () -> GuardianClock,
-) {
-    fun ingest(attempt: GuardianDispatchAttempt): GuardianIngestResult {
+) : GuardianIngestPort {
+    override fun ingest(attempt: GuardianDispatchAttempt): GuardianIngestResult {
         val lease = attempt.lease
         val alert = attempt.alert
         if (!ENDPOINT.matches(endpoint) || alert.ownerId != lease.ownerId ||

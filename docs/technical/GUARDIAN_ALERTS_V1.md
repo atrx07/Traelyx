@@ -121,7 +121,8 @@ disabled until separate consent, authorization and delivery tests pass.
 
 `GuardianCapabilityIngestGateway` accepts the native reserved-attempt shape,
 checks owner/activation/boot binding, reservation state, the completed 30-second
-cancellation window, server-safe timestamp range and current lease/event expiry, and serializes only the capability ingest authorization plus the six
+cancellation window, server-safe timestamp range and current lease/event expiry,
+and serializes only the capability ingest authorization plus the six
 approved envelope fields above. The URL must be the fixed project HTTPS
 `guardian-capability` endpoint, with no port, credentials, suffix or query.
 It uses the existing transport interface; the bounded HTTPS implementation has
@@ -138,13 +139,40 @@ Mutable request bytes are zeroed on every transport outcome; no request/reply
 body or credential is logged. Retry reservations and late callback protection
 remain owned by the encrypted outbox, not by this adapter.
 
-This adapter has synthetic wire/outbox tests and **no runtime caller**. Before
-connecting it, the runtime must serialize reservation/current-owner checks,
+This adapter has synthetic wire/outbox tests and **no Android runtime caller**.
+Before connecting it, the runtime must serialize reservation/current-owner checks,
 recheck live authority at handoff, use a separate bounded network worker and
 marshal completion back onto the vault worker. Runtime scheduling, pre-handoff
 cancellation UI/notification, deadline handling and physical network/lifecycle
 validation remain gates. No production request or additional activation is
 performed by this prerequisite.
+
+## Dormant dispatch coordination
+
+`GuardianOutboxDispatchCoordinator` serializes reservation, exact cancellation
+and result persistence through its future control-worker host. Its explicit
+per-event handoff gate must represent validated cancellation-affordance readiness,
+including the cancellation window; it must not be inferred from pairing or
+lease presence. One unsettled operation is allowed. Queued work owns a one-use
+atomic permit, invalidated before account/activation/Stop changes. The permit
+also rejects delayed handoff after the local ten-second deadline, reboot,
+rollback or clock failure. Network work uses `GuardianIngestWorker`, a separate
+single-thread executor with one bounded transient queued slot and no vault/Auth
+access. Results marshal back to the control worker and match the exact persisted
+lease/attempt before changing state.
+
+A local deadline records an unconfirmed result and ignores late acceptance;
+it does not claim to cancel a remote request. The busy slot remains until actual
+worker completion, so a stuck transport cannot accumulate retries or threads.
+Only the returned monotonic wake is needed; no polling timer is created here.
+Control/storage errors fail dispatch closed. Existing six-attempt limits, stable
+IDs, backoff and encrypted schema remain unchanged. See
+`../decisions/ADR-0031-guardian-dispatch-worker-isolation.md`.
+
+Twenty synthetic coordinator/worker tests cover these boundaries. Neither class
+has an Android runtime caller, so no app path starts this executor or ingests an
+event yet. Actual runtime scheduling, cancellation controls/notification,
+reviewed live authority and physical network/lifecycle validation remain open.
 
 ## Encrypted outbox prerequisite (implemented; not activated)
 
