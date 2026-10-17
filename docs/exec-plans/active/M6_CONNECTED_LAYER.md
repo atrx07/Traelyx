@@ -992,6 +992,51 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     all three jobs, including both APKs, native/Flutter checks, server policies
     and artifacts, closing this bounded unit. Next: cancellation controls/notification and
     eligibility proof, then Android runtime dispatch attachment.
+  Next bounded unit: implement account/exact-event cancellation controls and a
+  private generic Android cancellation notification without attaching ingest or
+  dispatch. A fresh in-process driver lease must back every control. Require an
+  observed active notification followed by a full 30-second monotonic and wall
+  clock window before handoff eligibility; event age alone is insufficient.
+  Keep eligibility ephemeral and bounded to the 16-event outbox: process restart
+  restores no proof and cannot resume evaluation under ADR-0029. Failed/blocked
+  notification, clock uncertainty, owner/Stop/replacement and terminal events
+  deny eligibility. A non-exported immutable notification action and explicit
+  pilot-only local UI check/cancel must recheck the exact owner/activation/event
+  and persist cancellation before reporting success. Never claim retraction
+  after reservation. Preserve raw acquisition, current permission flows and
+  the default-off driver pilot; add no network request, backend enable, schema
+  or dependency. Require synthetic native/bridge/Flutter/widget race/failure
+  tests, lint/build/analysis, isolated physical notification-action proof and
+  preservation checks, plus exact-source full CI before bounded closure.
+  - [x] Implement and locally validate cancellation controls and observed offers:
+    strict owner/exact-event foreground metadata and mutation, pilot-only check/
+    cancel UI, review disclosure and a generic private local Android notification.
+    Its immutable explicit action targets a non-exported receiver on the existing
+    serialized worker. First reservation closes cancellation; persistence precedes
+    success. Bounded in-memory proof starts after observing the exact notice and
+    requires 30 seconds on both clocks; dismissal/permission loss during the
+    unfinished window denies proof without reposting. A direct reservation cannot
+    manufacture maturity; restart restores no proof. ADR-0032 records this contract
+    and the older-Android stale-notice limitation. Nineteen new control tests and
+    two bridge tests cover timing, authority, failed persistence/notification,
+    cancellation/retry, restart/expiry/rollback, bounded state and wire isolation.
+    Seven new Flutter tests cover strict parsing, explicit operations, lifecycle/
+    owner races, denial/error wording and large text. All 459 native app and 384
+    Flutter tests, analysis, app lint, configured debug/test builds and repository
+    validation pass. The documented lint normalization restores exact ignored
+    local.properties bytes. The isolated Tecno proof passes generic private notice,
+    immutable/private action, unbound production-receiver denial, a real full
+    30-second window, scoped durable cancellation and exact notice cleanup, with
+    Firebase inactive and no hosted call. All 11,857 recorder hashes and the
+    real receiver vault are unchanged; ordinary startup retains sign-in with
+    pilot controls hidden. No schema, dependency, permission request, sampling/
+    wake change, added polling timer, hosted activation, enable change, ingest/
+    dispatch request or trip upload. Exact-source CI remains pending before
+    bounded closure. Accepted action under a live driver lease, active recording
+    and physical/two-account reliability remain separate gates. Next attach
+    serialized dispatch scheduling using offer maturity and retry timing, with
+    permit invalidation before owner/Stop and separate bounded network IO;
+    renewed sending consent and reviewed live activation remain required.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

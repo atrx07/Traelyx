@@ -33,6 +33,12 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
               ),
               const SizedBox(height: 12),
               const Text(
+                'During a recorded trip, this phone may show a generic local alert with a Cancel alert action. '
+                'You can also check pending alerts here while parked. Cancellation is available before a send attempt starts. '
+                'This build does not send those alerts.',
+              ),
+              const SizedBox(height: 12),
+              const Text(
                 'If Android ends the app process or the phone restarts, monitoring stops. '
                 'Open Traelyx and review driver alerts again before relying on the setting. '
                 'Saved consent alone does not mean monitoring is running.',

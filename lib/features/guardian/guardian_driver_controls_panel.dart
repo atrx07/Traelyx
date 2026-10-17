@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/features/guardian/guardian_driver_consent_review.dart';
 import 'package:traelyx/features/guardian/guardian_driver_controls.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status.dart';
+import 'package:traelyx/features/guardian/guardian_pending_alerts.dart';
 
 class GuardianDriverControlsPanel extends ConsumerStatefulWidget {
   const GuardianDriverControlsPanel({super.key, required this.owner});
@@ -19,6 +20,7 @@ class _GuardianDriverControlsPanelState
   bool get _reviewOpen => _reviewAttempt != null;
   int _reviewEpoch = 0;
   GuardianDriverControlsController? _controller;
+  GuardianPendingAlertsController? _pending;
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,7 @@ class _GuardianDriverControlsPanelState
     if (state != AppLifecycleState.resumed) {
       _reviewEpoch++;
       _controller?.interrupt();
+      _pending?.clear();
     }
   }
 
@@ -57,6 +60,7 @@ class _GuardianDriverControlsPanelState
       );
       if (review == null || !mounted || epoch != _reviewEpoch) return;
       ref.read(guardianDriverStatusProvider(widget.owner).notifier).clear();
+      _pending?.clear();
       await controller.activate(review);
     } finally {
       if (mounted && identical(attempt, _reviewAttempt)) {
@@ -68,6 +72,7 @@ class _GuardianDriverControlsPanelState
   Future<void> _stop() async {
     _reviewEpoch++;
     ref.read(guardianDriverStatusProvider(widget.owner).notifier).clear();
+    _pending?.clear();
     await _controller!.stop();
   }
 
@@ -78,6 +83,11 @@ class _GuardianDriverControlsPanelState
     final state = ref.watch(provider);
     final controller = ref.read(provider.notifier);
     _controller = controller;
+    final pending = ref.watch(guardianPendingAlertsProvider(widget.owner));
+    final pendingController = ref.read(
+      guardianPendingAlertsProvider(widget.owner).notifier,
+    );
+    _pending = pendingController;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -112,6 +122,53 @@ class _GuardianDriverControlsPanelState
           'Stop removes Guardian authority on this phone before checking server revocation. '
           'Trip recording continues. Already handed-off notices cannot be retracted.',
         ),
+        const SizedBox(height: 16),
+        Text(
+          'Local pending alerts',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const Text(
+          'Check only while parked. This is a local observation, not a delivery confirmation. Sending is unavailable in this build.',
+        ),
+        OutlinedButton(
+          onPressed:
+              !controller.available ||
+                  pending.busy ||
+                  state.activating ||
+                  state.stopping
+              ? null
+              : pendingController.check,
+          child: const Text('Check pending alerts'),
+        ),
+        if (pending.busy) const LinearProgressIndicator(),
+        if (pending.checked && pending.alerts.isEmpty)
+          const Text('No local alerts in the current driver session.'),
+        if (pending.notice != null)
+          Semantics(liveRegion: true, child: Text(pending.notice!)),
+        for (final alert in pending.alerts)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(alert.label),
+                Text(alert.status),
+                if (alert.canCancel &&
+                    alert.readyInMillis != null &&
+                    alert.readyInMillis! > 0)
+                  Text(
+                    'About ${(alert.readyInMillis! / 1000).ceil()} seconds remained in the cancellation window at this check.',
+                  ),
+                if (alert.canCancel)
+                  OutlinedButton(
+                    onPressed: pending.busy || state.stopping
+                        ? null
+                        : () => pendingController.cancel(alert),
+                    child: const Text('Cancel alert'),
+                  ),
+              ],
+            ),
+          ),
       ],
     );
   }

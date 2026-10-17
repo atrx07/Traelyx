@@ -43,6 +43,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-provider-marker" -> runGuardianProviderMarkerProof()
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
+                    "guardian-cancellation" -> runGuardianCancellationProof()
                     "index" ->
                         runIndexProof(
                             requireNotNull(instrumentationArguments?.getString("tripId")),
@@ -416,6 +417,65 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient bridge proof passed: scoped commit, redacted status, account-switch erasure; " +
             "Firebase inactive, no server registration or trip change."
+    }
+
+    private fun runGuardianCancellationProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val owner = UUID.randomUUID().toString()
+        val activation = UUID.randomUUID().toString()
+        val event = UUID.randomUUID().toString()
+        val ref = io.github.atrx07.traelyx.guardian.GuardianEventReference(owner, activation, event)
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
+        val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault, journal::record)
+        val notices = io.github.atrx07.traelyx.guardian.AndroidGuardianCancellationNotice(context)
+        fun clock() = io.github.atrx07.traelyx.guardian.GuardianClock(
+            System.currentTimeMillis(), SystemClock.elapsedRealtime(), "synthetic-proof-boot")
+        fun awaitCondition(timeout: Long = 3_000, condition: () -> Boolean) {
+            val end = SystemClock.elapsedRealtime() + timeout
+            while (!condition()) { check(SystemClock.elapsedRealtime() < end); SystemClock.sleep(100) }
+        }
+        val manager = context.getSystemService(NotificationManager::class.java)
+        fun ownNotices() = manager.activeNotifications.filter { it.tag == "guardian-pending:$owner:$activation:$event" }
+        try {
+            check(notices.available()) { "Existing notification permission/channel unavailable; no permission requested." }
+            val start = clock()
+            outbox.activate(io.github.atrx07.traelyx.guardian.GuardianDriverLease(owner, activation, "a".repeat(64),
+                start.epochMillis, start.elapsedMillis, start.epochMillis + 120_000, start.bootId, "+y"), start)
+            outbox.enqueue(owner, activation, io.github.atrx07.traelyx.guardian.GuardianDetection(
+                io.github.atrx07.traelyx.guardian.GuardianAlertKind.SEVERE_DRIVE, 0, start.elapsedMillis * 1_000_000),
+                io.github.atrx07.traelyx.guardian.GuardianSafetyCooldowns(start.elapsedMillis * 1_000_000, null), start, event)
+            val controls = io.github.atrx07.traelyx.guardian.GuardianCancellationControls(outbox,
+                { outbox.recover(owner, clock()) }, ::clock, notices)
+            awaitCondition { controls.refresh(); controls.views(owner).single()["cancellationReadyInMillis"] != null }
+            check(!controls.allows(outbox.recover(owner, clock()).alerts.single()))
+            val notice = ownNotices().single().notification
+            check(notice.extras.getCharSequence(android.app.Notification.EXTRA_TITLE)?.toString() == "Guardian alert pending")
+            check(notice.visibility == android.app.Notification.VISIBILITY_PRIVATE)
+            val action = requireNotNull(notice.actions?.single()?.actionIntent)
+            check(action.creatorPackage == context.packageName)
+            if (Build.VERSION.SDK_INT >= 31) check(action.isImmutable)
+            val receiver = context.packageManager.getReceiverInfo(android.content.ComponentName(context,
+                io.github.atrx07.traelyx.guardian.GuardianCancelAlertReceiver::class.java), 0)
+            check(!receiver.exported)
+            // Actual production receiver has no fresh matching driver lease: reject the isolated ID.
+            // Immutable fill-in must not replace its identity or add an extra.
+            val finished = java.util.concurrent.CountDownLatch(1)
+            action.send(context, 0, Intent().putExtra("eventId", UUID.randomUUID().toString()),
+                { _, _, _, _, _ -> finished.countDown() }, android.os.Handler(context.mainLooper))
+            check(finished.await(5, java.util.concurrent.TimeUnit.SECONDS))
+            check(outbox.recover(owner, clock()).alerts.single().attempts == 0)
+            awaitCondition(33_000) { controls.allows(outbox.recover(owner, clock()).alerts.single()) }
+            check(controls.cancel(ref))
+            check(outbox.recover(owner, clock()).alerts.single().state == io.github.atrx07.traelyx.guardian.GuardianSendState.CANCELLED)
+            awaitCondition { ownNotices().isEmpty() }
+            check(outbox.reserveNext(owner, clock()) == null)
+            check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        } finally { notices.remove(ref); vault.erase(); journal.eraseProofState() }
+        return "M6.8 local cancellation proof passed: generic private notice, immutable non-exported action, " +
+            "unbound receiver denial, full observed 30-second window, scoped durable cancellation and exact notice cleanup; " +
+            "no production driver activation, ingest, Firebase initialization or trip change."
     }
 
     private fun runGuardianActivationProof(): String {

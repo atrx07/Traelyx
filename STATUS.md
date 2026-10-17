@@ -10,6 +10,23 @@
 
 ## Working
 
+- M6.8 local cancellation controls (2026-10-17): pilot-only explicit check/cancel,
+  strict credential-free bridge metadata and a generic private Android notice.
+  Exact current lease/event authority and durable cancellation precede success;
+  reserved attempts cannot be retracted. Eligibility requires an observed notice
+  and a full dual-clock 30-second window; dismissal/permission loss during the
+  window denies proof without reposting. Restart restores no proof. All 459 native
+  app and 384 Flutter tests, analysis, app lint, configured debug/test builds and
+  repository checks pass. The isolated physical notice/private immutable action,
+  unbound receiver denial, full window and scoped durable cancellation proof pass.
+  All 11,857 recorder hashes and the receiver vault are unchanged; normal startup
+  retains sign-in with controls hidden. Exact-source CI remains pending.
+  ADR-0032 documents boundaries and older-Android stale-notice limitations.
+  Ingest/dispatch remain disconnected; no new dependency, persisted schema,
+  permission request, sampling/wake change, hosted activation, enable change or
+  trip upload. Accepted action under a live driver lease, active recording and
+  physical two-account reliability remain later gates.
+
 - M6.8 cleanup retention repair (2026-10-17): a synthetic destructive vault-write
   test reproduced loss of the exact server-cleanup ID after successful commit.
   The independent encrypted reservation now stays for the lease lifetime;

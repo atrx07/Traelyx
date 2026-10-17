@@ -226,9 +226,14 @@ change cannot produce late success. Describe the account session and private
 lease (up to eight hours), and distinguish saved consent from observed monitoring.
 Stop stays available during activation, stops only Guardian and reports incomplete
 confirmation honestly. Explain that already handed-off notices cannot be retracted.
-The pilot explicitly says sending is unavailable; event-cancellation and sending
-controls remain separate integration gates. The installed validation build keeps
-the driver pilot off.
+The pilot explicitly says sending is unavailable. It now offers Check pending
+alerts and exact local Cancel alert actions, with experimental labels and honest
+local/attempted/backend-accepted states. A generic private Android notice also
+offers cancellation; review discloses it. Neither a stale check nor a notification
+means delivery. Clear observations on background/account changes, and report
+uncertain cancellation without claiming success or retraction. Sending integration
+and reviewed active-device validation remain gates. The installed validation build
+keeps the driver pilot off.
 
 ## 14. Account UX
 

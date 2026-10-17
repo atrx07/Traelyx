@@ -4,6 +4,8 @@ package io.github.atrx07.traelyx.guardian
 class GuardianActivationBridge(
     private val coordinator: GuardianActivationCoordinator,
     private val recordingObservation: () -> GuardianRecordingObservation = { GuardianRecordingObservation() },
+    private val pendingAlerts: (String) -> List<Map<String, Any?>> = { emptyList() },
+    private val cancelAlert: (GuardianEventReference) -> Boolean = { false },
 ) {
     fun dispatch(method: String, rawArguments: Any?): Any? {
         val arguments = rawArguments as? Map<*, *> ?: throw IllegalArgumentException("Invalid Guardian request")
@@ -66,6 +68,18 @@ class GuardianActivationBridge(
                 val fresh = coordinator.recordingSnapshot()?.lease != null
                 guardianDriverStatus(lease, fresh, recordingObservation())
             }
+            PENDING_ALERTS -> {
+                exact("ownerId")
+                coordinator.snapshot(owner()) // Reject an unbound/other owner before reading controls.
+                pendingAlerts(owner())
+            }
+            CANCEL_ALERT -> {
+                exact("ownerId", "activationId", "eventId")
+                val ref = GuardianEventReference(owner(), requireNotNull(arguments["activationId"] as? String),
+                    requireNotNull(arguments["eventId"] as? String))
+                coordinator.snapshot(owner())
+                cancelAlert(ref)
+            }
             else -> throw IllegalArgumentException("Unknown Guardian request")
         }
     }
@@ -82,7 +96,9 @@ class GuardianActivationBridge(
         const val CONFIRM_REVOKE = "confirmRevoke"
         const val SNAPSHOT = "snapshot"
         const val DRIVER_STATUS = "driverStatus"
+        const val PENDING_ALERTS = "pendingAlerts"
+        const val CANCEL_ALERT = "cancelAlert"
         val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, STOP, PENDING_REVOKES,
-            CONFIRM_REVOKE, SNAPSHOT, DRIVER_STATUS)
+            CONFIRM_REVOKE, SNAPSHOT, DRIVER_STATUS, PENDING_ALERTS, CANCEL_ALERT)
     }
 }

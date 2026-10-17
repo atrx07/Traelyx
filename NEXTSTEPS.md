@@ -10,6 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Local cancellation controls and observed-notice eligibility now pass 459 native
+app/384 Flutter tests, analysis, app lint, configured builds and repository checks.
+The isolated physical notification/action-denial/full-window/cancellation proof
+passes, preserving all 11,857 recorder hashes, the receiver vault and saved sign-in.
+The driver pilot remains default-off and the dispatcher is disconnected.
+Exact-source CI remains the closing gate. Next attach serialized dispatch
+scheduling using offer maturity and retry timing, with permit invalidation before
+owner/Stop changes and bounded separate IO. Renewed sending consent, reviewed
+hosted activation/Stop and active physical/two-account reliability remain open.
+
 Cleanup-ID retention now has a durable lifetime reservation plus guarded outbox
 mutations and readable-legacy adoption. The destructive-write regression failed
 before repair and passes afterward; nine new encrypted-store cases, all 438
@@ -17,8 +27,8 @@ native app and 377 Flutter tests, dependency suites, lint and configured debug
 build pass. The scoped physical Keystore loss/reopening proof passes; all 11,857
 recorder files and the receiver vault are unchanged, and saved sign-in remains.
 Full exact-source CI 39036370579 passes for `6e4b50d`, closing this bounded repair.
-Next add cancellation controls/notification and eligibility proof, followed by serialized Android
-dispatch scheduling with owner/Stop invalidation. Physical storage fault
+Cancellation controls/notification and eligibility proof are recorded above;
+serialized Android dispatch scheduling and owner/Stop invalidation follow. Physical storage fault
 injection, reviewed live activation/Stop and physical reliability remain open.
 
 Dormant dispatch coordination now passes 20 new synthetic tests and all 429

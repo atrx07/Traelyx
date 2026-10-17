@@ -33,6 +33,9 @@ class GuardianActivationCoordinator(
     private var proposal: GuardianActivationProposal? = null
     private var recordingActivationId: String? = null
 
+    /** In-memory host check; no vault IO before invalidating a changed owner's queued work. */
+    @Synchronized internal fun isBoundTo(expectedOwner: String?) = bound && owner == expectedOwner
+
     @Synchronized fun bindOwner(nextOwner: String?) {
         nextOwner?.let(::guardianUuid)
         if (!bound || owner != nextOwner) {

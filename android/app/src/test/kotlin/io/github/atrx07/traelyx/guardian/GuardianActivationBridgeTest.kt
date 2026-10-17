@@ -24,7 +24,7 @@ class GuardianActivationBridgeTest {
         )
         var observation = GuardianRecordingObservation()
         var observationReads = 0
-        val bridge = GuardianActivationBridge(coordinator) { observationReads++; observation }
+        val bridge = GuardianActivationBridge(coordinator, recordingObservation = { observationReads++; observation })
         fun bind(value: String?) = bridge.dispatch(GuardianActivationBridge.BIND_OWNER, mapOf("ownerId" to value))
         fun begin() = bridge.dispatch(GuardianActivationBridge.BEGIN,
             mapOf("ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)) as Map<*, *>
@@ -124,9 +124,9 @@ class GuardianActivationBridgeTest {
         val f = Fixture(); f.bind(owner); commit(f)
         val restarted = GuardianActivationCoordinator(GuardianOutbox(f.vault), { f.now }, TestDriverRevokeJournal())
         restarted.bindOwner(owner)
-        val bridge = GuardianActivationBridge(restarted) {
+        val bridge = GuardianActivationBridge(restarted, recordingObservation = {
             GuardianRecordingObservation(true, GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
-        }
+        })
         val status = bridge.dispatch(GuardianActivationBridge.DRIVER_STATUS, mapOf("ownerId" to owner)) as Map<*, *>
         assertEquals("reactivation_required", status["state"])
     }
@@ -136,6 +136,32 @@ class GuardianActivationBridgeTest {
         f.observation = GuardianRecordingObservation(true, GuardianEvaluationAvailability.MONITORING_EXPERIMENTAL)
         f.now = f.now.copy(epochMillis = f.now.epochMillis + 60_000, elapsedMillis = f.now.elapsedMillis + 60_000)
         assertEquals(mapOf("state" to "disabled", "expiresEpochMillis" to null), status(f))
+    }
+
+    @Test fun `pending event bridge rejects foreign owners and extra fields before observing controls`() {
+        val f = Fixture()
+        var reads = 0
+        val bridge = GuardianActivationBridge(f.coordinator, pendingAlerts = { reads++; emptyList() })
+        rejected { bridge.dispatch("pendingAlerts", mapOf("ownerId" to owner)) }
+        f.bind(owner)
+        rejected { bridge.dispatch("pendingAlerts", mapOf("ownerId" to other)) }
+        rejected { bridge.dispatch("pendingAlerts", mapOf("ownerId" to owner, "credential" to f.credential)) }
+        assertEquals(0, reads)
+        assertEquals(emptyList<Any>(), bridge.dispatch("pendingAlerts", mapOf("ownerId" to owner)))
+        assertEquals(1, reads)
+    }
+
+    @Test fun `event cancellation bridge passes only exact validated identity and Boolean result`() {
+        val f = Fixture(); f.bind(owner)
+        var cancelled: GuardianEventReference? = null
+        val bridge = GuardianActivationBridge(f.coordinator, cancelAlert = { cancelled = it; true })
+        val arguments = mapOf("ownerId" to owner, "activationId" to activation, "eventId" to other)
+        rejected { bridge.dispatch("cancelAlert", arguments + ("ownerId" to other)) }
+        rejected { bridge.dispatch("cancelAlert", arguments + ("eventId" to "invalid")) }
+        rejected { bridge.dispatch("cancelAlert", arguments + ("credential" to f.credential)) }
+        assertNull(cancelled)
+        assertEquals(true, bridge.dispatch("cancelAlert", arguments))
+        assertEquals(GuardianEventReference(owner, activation, other), cancelled)
     }
 
     @Test fun `stop returns only exact revoke identity after erasing local authority`() {

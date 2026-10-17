@@ -14,15 +14,25 @@ object AndroidGuardianActivationRuntime {
     private var coordinator: GuardianActivationCoordinator? = null
     private var recording: GuardianRecordingSession? = null
     private var recordingWatchdog: ScheduledFuture<*>? = null
+    private var cancellation: GuardianCancellationControls? = null
 
     fun dispatch(context: Context, method: String, arguments: Any?, complete: (Result<Any?>) -> Unit) {
         val app = context.applicationContext
         worker.execute {
             val result = runCatching {
                 val current = bridge ?: GuardianActivationBridge(coordinator(app),
-                    { recording?.observation() ?: GuardianRecordingObservation() }).also { bridge = it }
+                    recordingObservation = { recording?.observation() ?: GuardianRecordingObservation() },
+                    pendingAlerts = { controls(app).views(it) },
+                    cancelAlert = { controls(app).cancel(it) }).also { bridge = it }
+                val ownerChanges = method == GuardianActivationBridge.BIND_OWNER &&
+                    !coordinator(app).isBoundTo((arguments as? Map<*, *>)?.get("ownerId") as? String)
+                if (ownerChanges || method in setOf(GuardianActivationBridge.BEGIN,
+                        GuardianActivationBridge.STOP, GuardianActivationBridge.DISABLE, GuardianActivationBridge.ABORT)) {
+                    cancellation?.invalidate()
+                }
                 try { current.dispatch(method, arguments) } finally {
                     recording?.refresh()
+                    cancellation?.refresh()
                     syncRecordingWatchdog()
                 }
             }
@@ -43,8 +53,9 @@ object AndroidGuardianActivationRuntime {
                         enqueue = { lease, detection, cooldowns, now ->
                             AndroidGuardianVault.outbox(app).enqueue(lease.ownerId, lease.activationId,
                                 detection, cooldowns, now)
+                            controls(app).refresh()
                         },
-                        revoke = { coordinator(app).disable(it) },
+                        revoke = { cancellation?.invalidate(); coordinator(app).disable(it) },
                         post = { worker.execute(it) },
                     ).also { recording = it }
                     session.start(handle)
@@ -67,6 +78,7 @@ object AndroidGuardianActivationRuntime {
         } else if (recordingWatchdog == null) {
             recordingWatchdog = worker.scheduleWithFixedDelay({
                 recording?.tick()
+                if (cancellation?.needsRefresh == true) cancellation?.refresh()
                 syncRecordingWatchdog()
             }, 1, 1, TimeUnit.SECONDS)
         }
@@ -76,6 +88,15 @@ object AndroidGuardianActivationRuntime {
         GuardianActivationCoordinator(AndroidGuardianVault.outbox(context), { clock(context) },
             AndroidGuardianDriverRevokeJournal(context))
             .also { coordinator = it }
+
+    private fun controls(context: Context): GuardianCancellationControls = cancellation ?:
+        GuardianCancellationControls(AndroidGuardianVault.outbox(context), { coordinator(context).recordingSnapshot() },
+            { clock(context) }, AndroidGuardianCancellationNotice(context)).also { cancellation = it }
+
+    fun cancelEvent(context: Context, reference: GuardianEventReference, complete: () -> Unit) {
+        val app = context.applicationContext
+        worker.execute { try { controls(app).cancel(reference) } finally { complete() } }
+    }
 
     private fun clock(context: Context): GuardianClock {
         // Without a readable boot count, no lease may be recovered or activated.

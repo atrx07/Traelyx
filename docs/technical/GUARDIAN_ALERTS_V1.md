@@ -117,6 +117,35 @@ Backend acceptance is its own state; it never means recipient receipt or view.
 Persistence and dispatch integration must enforce these transitions and remain
 disabled until separate consent, authorization and delivery tests pass.
 
+### Local cancellation controls and offer proof
+
+The default-off driver pilot exposes explicit local pending-alert check/cancel
+controls. Foreground replies contain only exact activation/event UUIDs, kind,
+local state, cancellability and optional remaining offer time (0–30,000 ms), with
+at most 16 unique events. They contain no capability, trip ID or raw evidence.
+No automatic Flutter read/polling or server request is added. Account/background
+changes clear observations; native authority is checked again before mutation.
+Durable cancellation precedes success; reserved attempts cannot be retracted.
+
+`GuardianCancellationControls` observes a generic private Android cancellation
+notice before starting a full 30-second dual-clock window. Its bounded in-memory
+proof binds the exact lease and immutable event metadata. A delayed notification
+cannot borrow event age; blocked/unobserved posting, clock uncertainty, authority
+loss, expiry or restart denies eligibility. Submitting a notice is not observation
+or proof a person saw it. The separate channel uses an immutable explicit action
+and non-exported receiver; only exact owner/activation/event UUIDs enter that
+action. It cannot reconstruct driver authority after process death. A notice
+dismissed before observation is not repeatedly reposted. Android 26+ timeout is
+bounded by remaining event/lease life; older Android may leave a stale generic
+notice after process death, with no restored authority or send permission.
+
+Runtime offer handling reuses the serialized worker and existing evaluation
+watchdog, only watching pending work. Raw acquisition and permissions are
+unchanged. ADR-0032 defines the proof and physical limitations. The dispatcher
+remains disconnected: future scheduling must use offer maturity as well as retry
+timing, invalidate permits before Stop/account changes, and keep the network
+worker separate. Pilot controls explicitly state sending is unavailable.
+
 ## Dormant minimized-ingest adapter
 
 `GuardianCapabilityIngestGateway` accepts the native reserved-attempt shape,

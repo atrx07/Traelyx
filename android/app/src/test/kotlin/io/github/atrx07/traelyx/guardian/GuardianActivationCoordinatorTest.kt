@@ -272,6 +272,9 @@ class GuardianActivationCoordinatorTest {
 
     @Test fun `fresh same owner binding preserves monitoring and its cleanup reservation`() {
         val f = Fixture(); f.begin(); val lease = f.commit()
+        assertTrue(f.coordinator.isBoundTo(a))
+        assertFalse(f.coordinator.isBoundTo(b))
+        assertFalse(f.coordinator.isBoundTo(null))
         f.advance(1_000); f.coordinator.bindOwner(a)
         assertEquals(lease, f.coordinator.recordingSnapshot()?.lease)
         assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)

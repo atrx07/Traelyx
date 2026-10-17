@@ -170,7 +170,12 @@ session/private local lease and unavailable sending, as well as the app process
 ending or phone restart requiring another review. Recording must be idle for the
 review preflight; Stop does not stop trip recording. A cancelled or interrupted
 review cleans up its exact proposal/lease under the original owner and cannot
-cancel a newer activation. These controls have synthetic tests, not live hosted
+cancel a newer activation. Pilot local pending-alert check/cancel controls and a
+generic private cancellation notice now require exact current driver authority;
+an observed notice must precede a full 30-second dual-clock eligibility window.
+Process restart restores no eligibility proof. Cancellation persists before
+success and cannot retract a reserved attempt. These controls do not attach the
+dispatcher or add sending. Synthetic/isolated checks do not replace live hosted
 driver activation/revoke validation.
 Saved consent and experimental evaluation never imply delivery or assistance.
 Alert delivery remains unavailable until consent, persistence,
