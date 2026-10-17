@@ -1031,8 +1031,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     real receiver vault are unchanged; ordinary startup retains sign-in with
     pilot controls hidden. No schema, dependency, permission request, sampling/
     wake change, added polling timer, hosted activation, enable change, ingest/
-    dispatch request or trip upload. Exact-source CI remains pending before
-    bounded closure. Accepted action under a live driver lease, active recording
+    dispatch request or trip upload. Source `8d346aa` is committed/pushed with
+    HEAD verified equal to origin/main. Full exact-source CI 39039569866 passes
+    all three jobs, including both APKs, native/Flutter checks, server policies
+    and artifacts, closing this bounded unit. Accepted action under a live driver lease, active recording
     and physical/two-account reliability remain separate gates. Next attach
     serialized dispatch scheduling using offer maturity and retry timing, with
     permit invalidation before owner/Stop and separate bounded network IO;

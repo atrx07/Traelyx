@@ -1,7 +1,7 @@
 # ADR-0032: Require an observed cancellation offer before Guardian handoff
 
 - Date: 2026-10-17
-- Status: local and isolated physical checks pass; source CI pending; dispatcher remains disconnected
+- Status: local, isolated physical and full source CI checks pass; dispatcher remains disconnected
 
 ## Decision
 
@@ -66,5 +66,12 @@ operations, stale account/lifecycle results, no retraction claim and large text.
 An isolated Android proof checks the real generic notice/private immutable
 action, unbound receiver denial, full elapsed window and scoped durable cancel.
 Results and exact-source CI belong in the active M6 execution plan.
+
+Source `8d346aa` passes full CI
+[39039569866](https://github.com/atrx07/Traelyx/actions/runs/39039569866), including
+both APKs, native/Flutter checks, server policies and artifacts. Local validation
+passes all 459 native app and 384 Flutter tests, analysis, app lint and configured
+builds. The scoped Tecno proof passes with real data preserved; live accepted
+action/recording and two-account physical reliability remain unverified.
 
 Android API behavior reference: [NotificationManager](https://developer.android.com/reference/android/app/NotificationManager).

@@ -171,9 +171,9 @@ remain owned by the encrypted outbox, not by this adapter.
 This adapter has synthetic wire/outbox tests and **no Android runtime caller**.
 Before connecting it, the runtime must serialize reservation/current-owner checks,
 recheck live authority at handoff, use a separate bounded network worker and
-marshal completion back onto the vault worker. Runtime scheduling, pre-handoff
-cancellation UI/notification, deadline handling and physical network/lifecycle
-validation remain gates. No production request or additional activation is
+marshal completion back onto the vault worker. Cancellation controls/offer proof
+are implemented above; runtime dispatch scheduling/deadline integration and
+reviewed physical network/lifecycle validation remain gates. No production request or additional activation is
 performed by this prerequisite.
 
 ## Dormant dispatch coordination
@@ -200,7 +200,7 @@ IDs, backoff and encrypted schema remain unchanged. See
 
 Twenty synthetic coordinator/worker tests cover these boundaries. Neither class
 has an Android runtime caller, so no app path starts this executor or ingests an
-event yet. Actual runtime scheduling, cancellation controls/notification,
+event yet. Actual dispatch scheduling and attachment to the cancellation gate,
 reviewed live authority and physical network/lifecycle validation remain open.
 
 ## Encrypted outbox prerequisite (implemented; not activated)
@@ -415,9 +415,10 @@ foreground result acceptance releases that cancellation hook; subsequent ordinar
 backgrounding does not revoke completed consent. Old tokens cannot invalidate
 new reviews. Late success is suppressed; native/server owner and exact-activation
 checks remain authoritative. The native MethodChannel and owner worker serialize
-commit/abort; the fake models durable commit before its bridge reply. No sender,
-event-cancellation UI, automatic registration, migration or new dependency is
-introduced. Live pilot activation/revoke and active recording remain separate gates.
+commit/abort; the fake models durable commit before its bridge reply. That
+Review/Stop unit introduced no sender, automatic registration, migration or new
+dependency. Local event cancellation is implemented in the separate section above.
+Live pilot activation/revoke and active recording remain separate gates.
 
 The separate recipient review is also dormant. It requires explicit
 acknowledgement of experimental detection/delivery limits and of Firebase
@@ -558,8 +559,9 @@ startup registration path.
 
 ### Integration still required
 
-- Connect the tested native encrypted outbox to consent, cancellation notification
-  and account-change teardown; no duplicated Supabase refresh-token ownership.
+- Attach the tested minimized sender to the existing consent, cancellation-offer
+  and account-change teardown paths, with serialized scheduling and queued-permit
+  invalidation; no duplicated Supabase refresh-token ownership.
 - Current server permission and connection-generation checks at ingest,
   dispatch, receipt and detail reads, with quotas and bounded retention.
 - The capability Edge function provides exact bounded ingestion/receipt requests

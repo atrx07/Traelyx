@@ -20,7 +20,9 @@
   repository checks pass. The isolated physical notice/private immutable action,
   unbound receiver denial, full window and scoped durable cancellation proof pass.
   All 11,857 recorder hashes and the receiver vault are unchanged; normal startup
-  retains sign-in with controls hidden. Exact-source CI remains pending.
+  retains sign-in with controls hidden. Source `8d346aa` has full green CI
+  [39039569866](https://github.com/atrx07/Traelyx/actions/runs/39039569866), including
+  both APKs, native/Flutter checks, server policies and artifacts.
   ADR-0032 documents boundaries and older-Android stale-notice limitations.
   Ingest/dispatch remain disconnected; no new dependency, persisted schema,
   permission request, sampling/wake change, hosted activation, enable change or

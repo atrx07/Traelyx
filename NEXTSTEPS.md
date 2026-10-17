@@ -15,7 +15,8 @@ app/384 Flutter tests, analysis, app lint, configured builds and repository chec
 The isolated physical notification/action-denial/full-window/cancellation proof
 passes, preserving all 11,857 recorder hashes, the receiver vault and saved sign-in.
 The driver pilot remains default-off and the dispatcher is disconnected.
-Exact-source CI remains the closing gate. Next attach serialized dispatch
+Full exact-source CI 39039569866 passes for `8d346aa`, closing this bounded unit.
+Next attach serialized dispatch
 scheduling using offer maturity and retry timing, with permit invalidation before
 owner/Stop changes and bounded separate IO. Renewed sending consent, reviewed
 hosted activation/Stop and active physical/two-account reliability remain open.
