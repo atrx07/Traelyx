@@ -953,9 +953,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     and local recipient receipt remain present. Both devices pass ping and
     report local driver monitoring off with controls hidden. No app update,
     recorder/service hook, schema, permission, dependency, activation, enable
-    change, ingest/dispatch request or trip upload. Exact-source CI is required
-    on push before this bounded unit closes. Android scheduling/cancellation UI,
-    reviewed live activation and physical reliability remain separate gates.
+    change, ingest/dispatch request or trip upload. Source `3184303` is committed/
+    pushed with HEAD verified equal to origin/main. Full exact-source CI
+    39034069372 passes all three jobs, including both APKs, native/Flutter tests,
+    server policies and artifacts, closing this bounded unit. Before Android
+    attachment, validate exact cleanup-ID retention through destructive vault-write
+    failures; a dispatch failure flag does not prove hosted revocation. Android
+    scheduling/cancellation UI, reviewed live activation and physical reliability
+    remain separate gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

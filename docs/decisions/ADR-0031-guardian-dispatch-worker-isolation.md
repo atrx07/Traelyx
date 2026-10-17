@@ -54,5 +54,10 @@ classes have no Android runtime caller in this unit.
   restarts. It cannot delay the raw recorder through this control boundary.
 - Process death retains the durable attempt reservation. Future recovery still
   needs current owner/lease/clock checks and cancellation-affordance validation.
+- Before Android attachment, validate exact server-cleanup identity retention
+  through destructive vault-write failures. A dispatch failure flag is not
+  confirmation of hosted revocation.
+- The supplied clock must be safe on the network thread; vault and account
+  operations still belong exclusively to the serialized control worker.
 - Backend acceptance never means recipient receipt, display or assistance.
 - No new dependency, permission, scheduler or production enable is introduced.

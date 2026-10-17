@@ -21,8 +21,11 @@
   local receiver receipt; both devices have internet and report driver off with
   controls hidden. No Android runtime caller, timer, recorder/service change,
   schema, dependency, device update, activation or ingest/dispatch request.
-  Exact-source CI is required on push. Runtime cancellation/scheduling and live/
-  physical validation remain open; hosted sending is not enabled by this unit.
+  Source `3184303` has full green CI
+  [39034069372](https://github.com/atrx07/Traelyx/actions/runs/39034069372),
+  including both APKs, native/Flutter tests, server policies and artifacts. Runtime
+  cancellation/scheduling and live/physical validation remain open; hosted sending
+  is not enabled by this unit.
 
 - M6.8 dormant minimized-ingest adapter (2026-10-17): validates reserved-attempt
   owner/activation/boot/time binding and the fixed HTTPS endpoint; emits only
