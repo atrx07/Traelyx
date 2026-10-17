@@ -987,8 +987,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     connected/authorized; it was not updated in this unit. No recorder sample,
     permission, schema, dependency, hosted activation, enable change, production
     request or trip upload. Physical Keystore/disk-failure injection
-    and hosted live Stop are unverified. Exact-source CI remains pending before
-    closing this bounded unit. Next: cancellation controls/notification and
+    and hosted live Stop are unverified. Source `6e4b50d` is committed/pushed with
+    HEAD verified equal to origin/main. Full exact-source CI 39036370579 passes
+    all three jobs, including both APKs, native/Flutter checks, server policies
+    and artifacts, closing this bounded unit. Next: cancellation controls/notification and
     eligibility proof, then Android runtime dispatch attachment.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish

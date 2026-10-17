@@ -1,9 +1,12 @@
 # Guardian cleanup identity lost after destructive vault failure
 
-- Status: durable source repair; local and CI evidence tracked in the active M6 plan.
+- Status: durable source repair; local, physical synthetic and full source CI pass.
 - Discovery: synthetic prerequisite check during M6.8, not a reported field incident.
-- Fix commit: the atomic `Retain Guardian cleanup IDs through vault failure` change
-  introducing this record; exact source hash/CI recorded in the active execution plan.
+- Fix commit: [`6e4b50d`](https://github.com/atrx07/Traelyx/commit/6e4b50da4355e6c7cd155dee69fd5450a034e18d).
+- Full source CI: [39036370579](https://github.com/atrx07/Traelyx/actions/runs/39036370579)
+  passes all three jobs, including both APKs, native/Flutter tests, server policies
+  and artifacts. Local validation includes 438 native app and 377 Flutter tests,
+  dependency suites, analysis, app lint, configured debug build and repository checks.
 
 ## Confirmed cause and evidence
 

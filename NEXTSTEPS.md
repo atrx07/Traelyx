@@ -16,8 +16,8 @@ before repair and passes afterward; nine new encrypted-store cases, all 438
 native app and 377 Flutter tests, dependency suites, lint and configured debug
 build pass. The scoped physical Keystore loss/reopening proof passes; all 11,857
 recorder files and the receiver vault are unchanged, and saved sign-in remains.
-Exact-source CI remains the closing gate for this repair. Then add cancellation
-controls/notification and eligibility proof, followed by serialized Android
+Full exact-source CI 39036370579 passes for `6e4b50d`, closing this bounded repair.
+Next add cancellation controls/notification and eligibility proof, followed by serialized Android
 dispatch scheduling with owner/Stop invalidation. Physical storage fault
 injection, reviewed live activation/Stop and physical reliability remain open.
 

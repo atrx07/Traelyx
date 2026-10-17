@@ -21,7 +21,9 @@
   The isolated physical Keystore proof passes lifetime retention after scoped
   capability key/file loss, with all 11,857 recorder files and the receiver vault
   unchanged. The configured pilot-off update opens signed in. The issue and
-  ADR-0030 document guarantees and limits. Exact-source CI is pending. No
+  ADR-0030 document guarantees and limits. Source `6e4b50d` has full green CI
+  [39036370579](https://github.com/atrx07/Traelyx/actions/runs/39036370579), including
+  both APKs, native/Flutter checks, server policies and artifacts. No
   schema/dependency/permission change, hosted activation, enable change,
   production request or trip upload. Physical storage fault
   injection and hosted Stop remain unverified. Cancellation/eligibility and
