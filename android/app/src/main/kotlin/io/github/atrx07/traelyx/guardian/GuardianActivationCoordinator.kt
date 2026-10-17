@@ -36,6 +36,11 @@ class GuardianActivationCoordinator(
     /** In-memory host check; no vault IO before invalidating a changed owner's queued work. */
     @Synchronized internal fun isBoundTo(expectedOwner: String?) = bound && owner == expectedOwner
 
+    /** Pure identity check so an old abort cannot invalidate a newer handoff. */
+    @Synchronized internal fun isCurrentActivation(expectedOwner: String?, activation: String?) =
+        bound && owner == expectedOwner && activation != null &&
+            (proposal?.activationId == activation || recordingActivationId == activation)
+
     @Synchronized fun bindOwner(nextOwner: String?) {
         nextOwner?.let(::guardianUuid)
         if (!bound || owner != nextOwner) {

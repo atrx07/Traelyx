@@ -139,12 +139,14 @@ dismissed before observation is not repeatedly reposted. Android 26+ timeout is
 bounded by remaining event/lease life; older Android may leave a stale generic
 notice after process death, with no restored authority or send permission.
 
-Runtime offer handling reuses the serialized worker and existing evaluation
-watchdog, only watching pending work. Raw acquisition and permissions are
-unchanged. ADR-0032 defines the proof and physical limitations. The dispatcher
-remains disconnected: future scheduling must use offer maturity as well as retry
-timing, invalidate permits before Stop/account changes, and keep the network
-worker separate. Pilot controls explicitly state sending is unavailable.
+Runtime offer handling reuses the serialized worker with one cancellable
+one-shot alert wake, independently of the recorder watchdog. Raw acquisition
+and permissions are unchanged. ADR-0032 defines the proof and physical
+limitations. The host combines offer checks, retry/deadline timing and expiry;
+it invalidates permits before relevant Stop/account/activation changes. Pilot
+controls explicitly state sending is unavailable, and the Android host enforces
+that with a fixed false gate. No build flag, retained lease or receiver
+registration grants transmission consent.
 
 ## Dormant minimized-ingest adapter
 
@@ -168,18 +170,18 @@ Mutable request bytes are zeroed on every transport outcome; no request/reply
 body or credential is logged. Retry reservations and late callback protection
 remain owned by the encrypted outbox, not by this adapter.
 
-This adapter has synthetic wire/outbox tests and **no Android runtime caller**.
-Before connecting it, the runtime must serialize reservation/current-owner checks,
-recheck live authority at handoff, use a separate bounded network worker and
-marshal completion back onto the vault worker. Cancellation controls/offer proof
-are implemented above; runtime dispatch scheduling/deadline integration and
-reviewed physical network/lifecycle validation remain gates. No production request or additional activation is
-performed by this prerequisite.
+This adapter has synthetic wire/outbox tests. Its Android factory is attached
+behind the fixed false sending gate: ordinary/debug/release operation does not
+construct its network worker or reserve a send. The serialized host uses fresh
+in-process authority, cancellation proof and separate bounded IO, with completion
+marshalled back onto the vault worker. Renewed sending consent and reviewed
+physical network/lifecycle validation remain gates. No production request or
+additional activation is performed by this integration.
 
-## Dormant dispatch coordination
+## Dispatch coordination and disabled Android host
 
 `GuardianOutboxDispatchCoordinator` serializes reservation, exact cancellation
-and result persistence through its future control-worker host. Its explicit
+and result persistence through its serialized control-worker host. Its explicit
 per-event handoff gate must represent validated cancellation-affordance readiness,
 including the cancellation window; it must not be inferred from pairing or
 lease presence. One unsettled operation is allowed. Queued work owns a one-use
@@ -198,10 +200,32 @@ Control/storage errors fail dispatch closed. Existing six-attempt limits, stable
 IDs, backoff and encrypted schema remain unchanged. See
 `../decisions/ADR-0031-guardian-dispatch-worker-isolation.md`.
 
-Twenty synthetic coordinator/worker tests cover these boundaries. Neither class
-has an Android runtime caller, so no app path starts this executor or ingests an
-event yet. Actual dispatch scheduling and attachment to the cancellation gate,
-reviewed live authority and physical network/lifecycle validation remain open.
+`GuardianDispatchSchedule` owns one cancellable scheduled wake on that same
+worker. Generation checks reject already-dequeued cancelled wakes. Enqueue,
+explicit cancellation/checks, authority changes and network completion refresh
+the schedule. No active event means no timer; cancellation timing continues after
+the recording handle ends. A fixed false Android sending gate avoids constructing
+the network runner or reserving attempts. Tests inject a separate synthetic gate.
+The existing review saying sending is unavailable cannot authorize live ingest.
+
+Unobserved notification submission receives at most three seconds of automatic
+one-second confirmation checks. The dispatcher's initial event-age wake may also
+trigger a check; later explicit controls can retry observation. An observed,
+unfinished offer is checked at most once per second until both clocks complete
+30 seconds or proof is withdrawn. Blocked/dismissed offers otherwise wait for
+event/lease expiry, not a continuing poll. Mature offers retain exact retry proof;
+completion removes the now-reserved notice. Each pending event also contributes
+its earliest wall/monotonic expiry. No alarm, wake lock, foreground-service,
+sampling, permission or process-restart activation is added. Android may delay
+in-process timers during sleep; late wakes recheck authority/clocks and cannot
+promise background delivery or real-time notification expiry.
+
+The dispatcher and runner stay process-scoped across invalidation, retaining one
+unsettled operation even if a new activation replaces the old one. A stale abort
+for another activation does not invalidate a newer job; the host checks in-memory
+owner/activation identity before changing permits. Schedule/clock failures deny
+further scheduling. Renewed sending consent, reviewed live activation/Stop and
+physical network, active-recording and two-account reliability remain open.
 
 ## Encrypted outbox prerequisite (implemented; not activated)
 

@@ -10,6 +10,20 @@
 
 ## Working
 
+- M6.8 serialized dispatch scheduling (2026-10-17): one cancellable wake combines
+  observed cancellation timing, retry/deadline and event/lease expiry, independent
+  of recorder lifetime. Relevant Stop/account changes invalidate queued permits;
+  a stale abort preserves newer authority, and an unsettled IO slot survives
+  replacement. Android sending is fixed false: no network runner or reservation
+  is created by ordinary app operation. All 478 native app and 384 Flutter tests,
+  analysis, app lint, configured debug/test builds and repository checks pass.
+  The isolated Tecno real-clock/notification scheduler proof passes using scoped
+  storage and a fake transport only; 11,857 recorder hashes and the receiver vault
+  remain unchanged. No dependency, schema, permission, sampling, wake lock,
+  hosted activation, enable change or trip upload. Exact-source CI remains the
+  bounded closure gate. Renewed sending consent, reviewed live activation/Stop,
+  active recording and physical/two-account reliability remain open.
+
 - M6.8 local cancellation controls (2026-10-17): pilot-only explicit check/cancel,
   strict credential-free bridge metadata and a generic private Android notice.
   Exact current lease/event authority and durable cancellation precede success;
@@ -24,7 +38,7 @@
   [39039569866](https://github.com/atrx07/Traelyx/actions/runs/39039569866), including
   both APKs, native/Flutter checks, server policies and artifacts.
   ADR-0032 documents boundaries and older-Android stale-notice limitations.
-  Ingest/dispatch remain disconnected; no new dependency, persisted schema,
+  Scheduling is attached in the following bounded unit above; no new dependency, persisted schema,
   permission request, sampling/wake change, hosted activation, enable change or
   trip upload. Accepted action under a live driver lease, active recording and
   physical two-account reliability remain later gates.

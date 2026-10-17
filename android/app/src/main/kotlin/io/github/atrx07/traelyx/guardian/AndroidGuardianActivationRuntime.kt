@@ -3,6 +3,7 @@ package io.github.atrx07.traelyx.guardian
 import android.content.Context
 import android.os.SystemClock
 import android.provider.Settings
+import io.github.atrx07.traelyx.R
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -15,6 +16,11 @@ object AndroidGuardianActivationRuntime {
     private var recording: GuardianRecordingSession? = null
     private var recordingWatchdog: ScheduledFuture<*>? = null
     private var cancellation: GuardianCancellationControls? = null
+    private var alertSchedule: GuardianDispatchSchedule? = null
+
+    // Existing review explicitly says sending is unavailable. No build define,
+    // restored lease or receiver registration can bypass this consent gate.
+    private const val SENDING_AVAILABLE = false
 
     fun dispatch(context: Context, method: String, arguments: Any?, complete: (Result<Any?>) -> Unit) {
         val app = context.applicationContext
@@ -24,15 +30,19 @@ object AndroidGuardianActivationRuntime {
                     recordingObservation = { recording?.observation() ?: GuardianRecordingObservation() },
                     pendingAlerts = { controls(app).views(it) },
                     cancelAlert = { controls(app).cancel(it) }).also { bridge = it }
-                val ownerChanges = method == GuardianActivationBridge.BIND_OWNER &&
-                    !coordinator(app).isBoundTo((arguments as? Map<*, *>)?.get("ownerId") as? String)
-                if (ownerChanges || method in setOf(GuardianActivationBridge.BEGIN,
-                        GuardianActivationBridge.STOP, GuardianActivationBridge.DISABLE, GuardianActivationBridge.ABORT)) {
-                    cancellation?.invalidate()
+                val args = arguments as? Map<*, *>
+                val owner = args?.get("ownerId") as? String
+                val ownerChanges = method == GuardianActivationBridge.BIND_OWNER && !coordinator(app).isBoundTo(owner)
+                val changesCurrent = coordinator(app).isBoundTo(owner) && method in setOf(
+                    GuardianActivationBridge.BEGIN, GuardianActivationBridge.STOP, GuardianActivationBridge.DISABLE)
+                val abortsCurrent = method == GuardianActivationBridge.ABORT &&
+                    coordinator(app).isCurrentActivation(owner, args?.get("activationId") as? String)
+                if (ownerChanges || changesCurrent || abortsCurrent) {
+                    invalidateAlerts()
                 }
                 try { current.dispatch(method, arguments) } finally {
                     recording?.refresh()
-                    cancellation?.refresh()
+                    refreshAlerts(app)
                     syncRecordingWatchdog()
                 }
             }
@@ -53,9 +63,9 @@ object AndroidGuardianActivationRuntime {
                         enqueue = { lease, detection, cooldowns, now ->
                             AndroidGuardianVault.outbox(app).enqueue(lease.ownerId, lease.activationId,
                                 detection, cooldowns, now)
-                            controls(app).refresh()
+                            schedule(app).refresh()
                         },
-                        revoke = { cancellation?.invalidate(); coordinator(app).disable(it) },
+                        revoke = { invalidateAlerts(); coordinator(app).disable(it); refreshAlerts(app) },
                         post = { worker.execute(it) },
                     ).also { recording = it }
                     session.start(handle)
@@ -78,7 +88,6 @@ object AndroidGuardianActivationRuntime {
         } else if (recordingWatchdog == null) {
             recordingWatchdog = worker.scheduleWithFixedDelay({
                 recording?.tick()
-                if (cancellation?.needsRefresh == true) cancellation?.refresh()
                 syncRecordingWatchdog()
             }, 1, 1, TimeUnit.SECONDS)
         }
@@ -93,9 +102,38 @@ object AndroidGuardianActivationRuntime {
         GuardianCancellationControls(AndroidGuardianVault.outbox(context), { coordinator(context).recordingSnapshot() },
             { clock(context) }, AndroidGuardianCancellationNotice(context)).also { cancellation = it }
 
+    private fun schedule(context: Context): GuardianDispatchSchedule = alertSchedule ?:
+        GuardianDispatchSchedule(controls(context), { clock(context) }, { SENDING_AVAILABLE },
+            createDispatch = { post ->
+                GuardianOutboxDispatchCoordinator(AndroidGuardianVault.outbox(context),
+                    { coordinator(context).recordingSnapshot() }, { clock(context) }, { SENDING_AVAILABLE },
+                    { controls(context).allows(it) },
+                    GuardianIngestWorker(GuardianCapabilityIngestGateway(
+                        context.getString(R.string.traelyx_guardian_capability_url),
+                        BoundedGuardianHttpsTransport(), { clock(context) })), post)
+            }, postControl = { worker.execute(it) },
+            schedule = { delay, action ->
+                val future = worker.schedule(action, delay, TimeUnit.MILLISECONDS)
+                GuardianScheduledWake { future.cancel(false) }
+            }).also { alertSchedule = it }
+
+    private fun invalidateAlerts() {
+        if (alertSchedule != null) alertSchedule?.invalidate() else cancellation?.invalidate()
+    }
+
+    private fun refreshAlerts(context: Context) {
+        if (cancellation != null) schedule(context).refresh()
+    }
+
     fun cancelEvent(context: Context, reference: GuardianEventReference, complete: () -> Unit) {
         val app = context.applicationContext
-        worker.execute { try { controls(app).cancel(reference) } finally { complete() } }
+        try {
+            worker.execute {
+                try { controls(app).cancel(reference) } finally {
+                    try { refreshAlerts(app) } finally { complete() }
+                }
+            }
+        } catch (_: Exception) { complete() }
     }
 
     private fun clock(context: Context): GuardianClock {

@@ -44,6 +44,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-provider" -> runGuardianProviderProof()
                     "guardian-activation" -> runGuardianActivationProof()
                     "guardian-cancellation" -> runGuardianCancellationProof()
+                    "guardian-schedule" -> runGuardianScheduleProof()
                     "index" ->
                         runIndexProof(
                             requireNotNull(instrumentationArguments?.getString("tripId")),
@@ -417,6 +418,82 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient bridge proof passed: scoped commit, redacted status, account-switch erasure; " +
             "Firebase inactive, no server registration or trip change."
+    }
+
+    private fun runGuardianScheduleProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val owner = UUID.randomUUID().toString()
+        val activation = UUID.randomUUID().toString()
+        val event = UUID.randomUUID().toString()
+        val ref = io.github.atrx07.traelyx.guardian.GuardianEventReference(owner, activation, event)
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
+        val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault, journal::record)
+        val notices = io.github.atrx07.traelyx.guardian.AndroidGuardianCancellationNotice(context)
+        val worker = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
+        fun clock() = io.github.atrx07.traelyx.guardian.GuardianClock(
+            System.currentTimeMillis(), SystemClock.elapsedRealtime(), "synthetic-proof-boot")
+        val controls = io.github.atrx07.traelyx.guardian.GuardianCancellationControls(outbox,
+            { outbox.recover(owner, clock()) }, ::clock, notices)
+        var enabled = false // Synthetic gate only; never changes the production runtime gate.
+        var constructed = 0
+        var submitted = 0
+        val runner = object : io.github.atrx07.traelyx.guardian.GuardianIngestRunner {
+            override fun submit(attempt: io.github.atrx07.traelyx.guardian.GuardianDispatchAttempt,
+                permit: io.github.atrx07.traelyx.guardian.GuardianDispatchPermit,
+                complete: (io.github.atrx07.traelyx.guardian.GuardianIngestResult) -> Unit): Boolean {
+                check(permit.tryBegin())
+                check(attempt.alert.attempts == 1)
+                submitted++
+                // Fake completion only: no transport, Firebase or hosted credential exists here.
+                complete(io.github.atrx07.traelyx.guardian.GuardianIngestResult.BACKEND_ACCEPTED)
+                return true
+            }
+            override fun close() { }
+        }
+        val host = io.github.atrx07.traelyx.guardian.GuardianDispatchSchedule(controls, ::clock, { enabled },
+            createDispatch = { post ->
+                constructed++
+                io.github.atrx07.traelyx.guardian.GuardianOutboxDispatchCoordinator(outbox,
+                    { outbox.recover(owner, clock()) }, ::clock, { enabled }, controls::allows, runner, post)
+            }, postControl = { worker.execute(it) }, schedule = { delay, action ->
+                val future = worker.schedule(action, delay, java.util.concurrent.TimeUnit.MILLISECONDS)
+                io.github.atrx07.traelyx.guardian.GuardianScheduledWake { future.cancel(false) }
+            })
+        try {
+            worker.submit {
+                check(notices.available()) { "Existing notification access unavailable; no permission requested." }
+                val now = clock()
+                outbox.activate(io.github.atrx07.traelyx.guardian.GuardianDriverLease(owner, activation,
+                    "a".repeat(64), now.epochMillis, now.elapsedMillis, now.epochMillis + 120_000,
+                    now.bootId, "+y"), now)
+                val detected = now.elapsedMillis * 1_000_000
+                outbox.enqueue(owner, activation, io.github.atrx07.traelyx.guardian.GuardianDetection(
+                    io.github.atrx07.traelyx.guardian.GuardianAlertKind.SEVERE_DRIVE, 0, detected),
+                    io.github.atrx07.traelyx.guardian.GuardianSafetyCooldowns(detected, null), now, event)
+                host.refresh()
+            }.get(5, java.util.concurrent.TimeUnit.SECONDS)
+            worker.schedule({
+                check(constructed == 0 && submitted == 0)
+                val alert = outbox.recover(owner, clock()).alerts.single()
+                check(alert.attempts == 0 && controls.allows(alert))
+                enabled = true
+                host.refresh()
+            }, 33, java.util.concurrent.TimeUnit.SECONDS).get(38, java.util.concurrent.TimeUnit.SECONDS)
+            worker.submit {
+                check(constructed == 1 && submitted == 1)
+                check(outbox.recover(owner, clock()).alerts.single().state ==
+                    io.github.atrx07.traelyx.guardian.GuardianSendState.BACKEND_ACCEPTED)
+                check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+            }.get(5, java.util.concurrent.TimeUnit.SECONDS)
+        } finally {
+            try { worker.submit { host.close(); notices.remove(ref); vault.erase(); journal.eraseProofState() }
+                .get(5, java.util.concurrent.TimeUnit.SECONDS) } finally { worker.shutdownNow() }
+        }
+        return "M6.8 isolated scheduler proof passed: real-clock observed window without recorder/watchdog, " +
+            "disabled gate constructs no runner, one durable synthetic reservation and marshalled fake completion; " +
+            "scoped cleanup, no hosted activation, transport, Firebase initialization or trip change."
     }
 
     private fun runGuardianCancellationProof(): String {

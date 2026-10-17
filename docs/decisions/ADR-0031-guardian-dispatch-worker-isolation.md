@@ -1,7 +1,7 @@
 # ADR-0031: Isolate Guardian ingest IO from authority and vault control
 
 - Date: 2026-10-17
-- Status: dormant implementation; live runtime integration and physical validation pending
+- Status: serialized Android scheduling attached behind a fixed false sending gate; live validation pending
 
 ## Context
 
@@ -40,11 +40,14 @@ local accounting deadline, not a promise that a remote request is cancelled.
 Control/storage failures fail dispatch closed without throwing into recording.
 
 The coordinator returns a monotonic wake time instead of creating a polling
-timer. A future host must pump after relevant control events/completions and
-schedule the returned wake, with no timer when there is no pending work.
-Actual Android runtime scheduling, cancellation UI/notification, reviewed
-activation and live network/device tests remain separate gates. These new
-classes have no Android runtime caller in this unit.
+timer. `GuardianDispatchSchedule` combines it with cancellation-offer observation,
+maturity and expiry, scheduling one cancellable wake on the serialized Android
+worker. It pumps after relevant events and completions, independently of the
+recorder watchdog, and has no timer without pending work. The Android factory
+has a fixed false sending gate and constructs no network worker while disabled.
+There is no build-flag bypass. Existing sending-unavailable review text does not
+authorize transmission; renewed consent and reviewed live activation/network
+device tests remain separate gates.
 
 ## Consequences
 
@@ -61,4 +64,6 @@ classes have no Android runtime caller in this unit.
 - The supplied clock must be safe on the network thread; vault and account
   operations still belong exclusively to the serialized control worker.
 - Backend acceptance never means recipient receipt, display or assistance.
-- No new dependency, permission, scheduler or production enable is introduced.
+- The attached one-shot in-process scheduler adds no OS alarm, wake lock,
+  sampling/foreground-service change, permission, dependency or production enable.
+  Android can defer its execution; late wakes must revalidate authority and clocks.

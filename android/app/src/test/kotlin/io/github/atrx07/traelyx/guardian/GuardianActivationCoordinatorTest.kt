@@ -41,6 +41,18 @@ class GuardianActivationCoordinatorTest {
         assertEquals(listOf(GuardianDriverRevokeTicket(a, generation)), f.journal.tickets)
         rejected { f.commit() }
     }
+    @Test fun `host invalidation identity rejects foreign and stale aborts before vault access`() {
+        val f = Fixture(); f.begin()
+        assertTrue(f.coordinator.isCurrentActivation(a, generation))
+        assertFalse(f.coordinator.isCurrentActivation(b, generation))
+        assertFalse(f.coordinator.isCurrentActivation(a, b))
+        assertFalse(f.coordinator.isCurrentActivation(a, null))
+        f.commit(); f.vault.failRead = true
+        assertTrue(f.coordinator.isCurrentActivation(a, generation)) // Pure in-memory check.
+        assertFalse(f.coordinator.isCurrentActivation(a, b))
+        f.vault.failRead = false; f.coordinator.stop(a)
+        assertFalse(f.coordinator.isCurrentActivation(a, generation))
+    }
     @Test fun `owner and mount consent are required`() {
         val f = Fixture()
         rejected { f.coordinator.begin(a, "+y", true) }

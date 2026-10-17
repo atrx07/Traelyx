@@ -1039,6 +1039,48 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     serialized dispatch scheduling using offer maturity and retry timing, with
     permit invalidation before owner/Stop and separate bounded network IO;
     renewed sending consent and reviewed live activation remain required.
+  Current bounded unit (2026-10-17): attach a serialized one-shot dispatch host
+  to cancellation readiness, retry/deadline completion and pending-event expiry.
+  Observe asynchronous notices for a bounded interval and continue the full
+  cancellation window independently of the recorder watchdog after trip end.
+  Invalidate permits before relevant authority changes; stale old aborts must
+  preserve newer work. Keep one unsettled network job across authority changes.
+  Sending remains unconditionally unavailable in the Android host: do not reuse
+  the existing sending-unavailable consent as transmission authorization, create
+  a network worker while disabled, activate a hosted lease or change enable flags.
+  Validate timing, no-work idleness, failures, retries, lifecycle/authority races
+  and default-disabled behavior with injected clocks/schedulers/ports; require
+  native suites, lint/configured builds, inactive device preservation and full
+  exact-source CI. No schema, dependency, permission or acquisition change.
+  Renewed consent and reviewed live-device network/lifecycle gates remain open.
+  - [x] Implement and locally validate the disabled Android scheduling host:
+    one cancellable generation-fenced wake combines offer observation/maturity,
+    retry/deadline and earliest dual-clock event/lease expiry after trip end.
+    Asynchronous notice confirmation has three seconds of automatic checks;
+    unfinished observed offers are checked at most once per second. Blocked or
+    dismissed proof waits for expiry rather than polling. No idle timer, OS alarm,
+    wake lock or acquisition change. Stop/account/current-activation mutations
+    invalidate permits first; pure identity checks preserve newer authority on a
+    stale abort. The process-scoped dispatcher retains one unsettled job across
+    replacement and a local deadline. Network completion returns to the control
+    worker and refreshes the schedule. The Android sending gate is fixed false,
+    with no build-flag bypass or network worker/reservation while disabled.
+    Eighteen new scheduler tests and one pure authority-identity test pass; all
+    478 native app/384 Flutter tests, dependency tests, analysis, app lint,
+    configured debug/test builds, format and repository validation pass. A local
+    check-only formatting discrepancy was line-ending-only (no Git source diff)
+    and the repeated full check passes. The isolated Tecno proof uses real Android
+    notifications, clocks, a separate serialized scheduler and scoped encrypted
+    storage: the full offer window completes with no recorder/watchdog, disabled
+    mode constructs no runner, then one injected synthetic reservation/fake
+    completion passes with exact scoped cleanup and Firebase inactive. No network
+    transport or hosted credential is used. All 11,857 recorder hashes and the
+    real receiver vault match the fresh pre-update snapshot; ordinary pilot-off
+    startup retains sign-in, with no production driver vault. No dependency,
+    schema, permission request, enable change, hosted activation or trip upload.
+  - [ ] Full exact-source CI before bounded closure. Renewed sending consent and
+    reviewed hosted activation/Stop, accepted live cancellation action, active
+    recording and physical/two-account reliability remain separate gates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

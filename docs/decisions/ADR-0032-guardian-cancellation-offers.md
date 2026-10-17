@@ -1,7 +1,7 @@
 # ADR-0032: Require an observed cancellation offer before Guardian handoff
 
 - Date: 2026-10-17
-- Status: local, isolated physical and full source CI checks pass; dispatcher remains disconnected
+- Status: offer checks pass; serialized scheduling attached with Android sending fixed off
 
 ## Decision
 
@@ -21,8 +21,9 @@ Proof is not persisted. ADR-0029 requires fresh driver review after full process
 death; a restored lease cannot resume evaluation. A new process has no eligible
 offers, including for already-reserved events. Retry retains its original exact
 offer in the same process and cannot borrow another event's metadata or lease.
-The future dispatcher must call this gate on the control worker, schedule the
-offer maturity independently of event age, and retain ADR-0031 permit/Stop checks.
+The dispatcher calls this gate on the control worker, schedules offer maturity
+independently of event age, and retains ADR-0031 permit/Stop checks. Android's
+sending gate remains fixed false pending renewed consent and live review.
 
 The notification is generic and private, with no account, event kind, capability
 or trip details. It uses a separate channel and exact tag, an immutable explicit
@@ -43,16 +44,22 @@ not a real-time guarantee. Current tests do not claim user visibility or deliver
 
 ## Integration boundaries
 
-Offer handling runs after enqueue and on the existing evaluation watchdog only
-while pending work exists; it adds no acquisition work, sampling change, wake
-lock, polling timer or network operation. Stop/owner/replacement paths invalidate
+Offer handling runs after enqueue and through one cancellable in-process wake
+on the serialized worker, independently of recorder lifetime. Asynchronous
+submission gets bounded one-second observation checks for three seconds;
+an observed unfinished offer is checked at most once per second through its
+30-second dual-clock window. Retry/deadline and expiry share that wake; idle
+work schedules none. The dispatcher can also trigger an initial event-age
+check. Timers may be deferred by Android; late wakes revalidate authority and
+clocks. This adds no acquisition work, sampling change, wake lock, OS alarm or
+network operation while the fixed Android sending gate is false. Stop/owner/replacement paths invalidate
 offers first. The default-off debug pilot adds explicit local check/cancel UI;
 checks are not automatic or delivery confirmations, and observations clear on
 background/account change. Normal/release and installed validation builds keep
 the pilot off. Review discloses the local notification; sending remains unavailable.
 
 No dependency, persisted schema, backend access or network field changes.
-Actual dispatch scheduling, renewed sending consent, hosted activation/Stop,
+Renewed sending consent, hosted activation/Stop,
 accepted action under a real live driver lease and active physical recording/
 two-account reliability remain later gates.
 

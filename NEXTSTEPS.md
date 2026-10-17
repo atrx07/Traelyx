@@ -10,15 +10,25 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+The serialized one-shot Android host is now attached behind a fixed false
+sending gate. All 478 native app and 384 Flutter tests, analysis, app lint,
+configured builds and repository validation pass. The scoped Tecno proof
+completes real-clock cancellation timing without recorder/watchdog involvement,
+then uses a fake completion only; recorder/receiver hashes remain unchanged.
+Finish exact-source CI before bounded closure. Next integrate renewed sending
+consent and its default-off gate, then request concrete review for hosted
+activation/Stop and network/lifecycle validation. No live ingest is authorized
+by the existing review saying sending is unavailable. Active recording and
+physical two-account reliability remain open.
+
 Local cancellation controls and observed-notice eligibility now pass 459 native
 app/384 Flutter tests, analysis, app lint, configured builds and repository checks.
 The isolated physical notification/action-denial/full-window/cancellation proof
 passes, preserving all 11,857 recorder hashes, the receiver vault and saved sign-in.
-The driver pilot remains default-off and the dispatcher is disconnected.
+The driver pilot remains default-off; the following disabled scheduler integration is recorded above.
 Full exact-source CI 39039569866 passes for `8d346aa`, closing this bounded unit.
-Next attach serialized dispatch
-scheduling using offer maturity and retry timing, with permit invalidation before
-owner/Stop changes and bounded separate IO. Renewed sending consent, reviewed
+Serialized dispatch scheduling now uses offer maturity and retry timing, with
+permit invalidation before owner/Stop changes and bounded separate IO. Renewed sending consent, reviewed
 hosted activation/Stop and active physical/two-account reliability remain open.
 
 Cleanup-ID retention now has a durable lifetime reservation plus guarded outbox

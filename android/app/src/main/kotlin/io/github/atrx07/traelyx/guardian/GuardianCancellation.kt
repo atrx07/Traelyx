@@ -24,23 +24,22 @@ class GuardianCancellationControls(
         val at: GuardianClock, var matured: Boolean = false)
     private val offers = mutableMapOf<String, Offer>()
     private val posted = mutableSetOf<GuardianEventReference>()
+    private val submittedAt = mutableMapOf<GuardianEventReference, GuardianClock>()
     private val withdrawn = mutableSetOf<GuardianEventReference>()
     private var failed = false
-    var needsRefresh = false
-        private set
 
     /** Invalidate before owner/Stop/replacement. Never removes recipient notices. */
     fun invalidate() {
         offers.clear()
         withdrawn.clear()
-        needsRefresh = false
+        submittedAt.clear()
         val old = posted.toList()
         posted.clear()
         old.forEach { runCatching { notices.remove(it) } }
         failed = false
     }
 
-    /** Called after enqueue and by the existing evaluation watchdog, never by acquisition. */
+    /** Called on the control worker after enqueue and by the one-shot alert scheduler. */
     fun refresh() {
         if (failed) return
         try {
@@ -48,9 +47,9 @@ class GuardianCancellationControls(
             val snapshot = current(now)
             val lease = snapshot?.lease
             val live = snapshot?.alerts.orEmpty().filter { active(it, now) }
-            needsRefresh = live.isNotEmpty()
             val references = live.filter { it.attempts == 0 }.map(::reference).toSet()
             withdrawn.retainAll(references)
+            submittedAt.keys.retainAll(references)
             posted.filter { it !in references }.toList().forEach { notices.remove(it); posted.remove(it) }
             offers.entries.removeAll { (_, offer) ->
                 offer.lease != lease || live.none { sameEvent(it, offer.alert) } ||
@@ -61,6 +60,7 @@ class GuardianCancellationControls(
             for (alert in live.filter { it.attempts == 0 }) {
                 if (offers.containsKey(alert.eventId) || reference(alert) in withdrawn || !notices.available()) continue
                 val ref = reference(alert)
+                submittedAt.putIfAbsent(ref, now)
                 posted.add(ref) // Also clean a submission that throws or is not observable yet.
                 val lifetime = minOf(GuardianPendingAlert.TTL_MILLIS - (now.elapsedMillis - alert.createdAtElapsedMillis),
                     GuardianPendingAlert.TTL_MILLIS - (now.epochMillis - alert.occurredAtEpochMillis),
@@ -77,6 +77,37 @@ class GuardianCancellationControls(
                 offers[alert.eventId] = Offer(lease, alert, after)
             }
         } catch (_: Exception) { failClosed() }
+    }
+
+    /** Independent of recorder lifetime. No UI metadata is used to authorize scheduling. */
+    internal fun nextRefreshAt(): Long? {
+        if (failed) return null
+        return try {
+            val now = clock()
+            val snapshot = current(now) ?: return null
+            val lease = snapshot.lease ?: return null
+            snapshot.alerts.filter { active(it, now) }.minOfOrNull { alert ->
+                var delay = minOf(
+                    GuardianPendingAlert.TTL_MILLIS - (now.elapsedMillis - alert.createdAtElapsedMillis),
+                    GuardianPendingAlert.TTL_MILLIS - (now.epochMillis - alert.occurredAtEpochMillis),
+                    lease.expiresEpochMillis - now.epochMillis,
+                    lease.expiresEpochMillis - lease.startedEpochMillis - (now.elapsedMillis - lease.startedElapsedMillis))
+                val offer = offers[alert.eventId]
+                if (offer != null && !offer.matured) {
+                    check(ordered(offer.at, now))
+                    delay = minOf(delay, maxOf(1L, remaining(offer, now)), 1_000L)
+                } else if (offer == null && reference(alert) !in withdrawn) {
+                    submittedAt[reference(alert)]?.let { submitted ->
+                        check(ordered(submitted, now))
+                        // Android notification submission is asynchronous. Bound automatic
+                        // confirmation checks; a later explicit refresh can retry observation.
+                        val left = 3_000L - (now.elapsedMillis - submitted.elapsedMillis)
+                        if (left > 0) delay = minOf(delay, left, 1_000L)
+                    }
+                }
+                Math.addExact(now.elapsedMillis, maxOf(1L, delay))
+            }
+        } catch (_: Exception) { failClosed(); null }
     }
 
     /** Future dispatch gate; checking this never posts a notification or reserves an attempt. */

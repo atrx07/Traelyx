@@ -44,9 +44,9 @@ internal class GuardianIngestWorker(private val gateway: GuardianIngestPort) : G
 }
 
 /**
- * Dormant control-worker state machine. Its host must serialize every call,
+ * Control-worker state machine. Its host must serialize every call,
  * invalidate before owner/activation/Stop changes, pump after enqueue/completion,
- * and schedule only the returned monotonic wake time. No Android caller exists yet.
+ * and schedule only the returned monotonic wake time. Android sending remains gated off.
  */
 internal class GuardianOutboxDispatchCoordinator(
     private val outbox: GuardianOutbox,
