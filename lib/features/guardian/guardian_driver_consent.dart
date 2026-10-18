@@ -10,6 +10,8 @@ final class GuardianDriverConsent {
     required this.safetyLimitsAcknowledged,
     required this.recipientSharingAcknowledged,
     required this.reviewedAt,
+    this.sendingAcknowledged = false,
+    this.sendingReviewVersion = 0,
   });
 
   final String ownerId;
@@ -18,12 +20,17 @@ final class GuardianDriverConsent {
   final bool safetyLimitsAcknowledged;
   final bool recipientSharingAcknowledged;
   final DateTime reviewedAt;
+  final bool sendingAcknowledged;
+  final int sendingReviewVersion;
+  bool get permitsSending => sendingAcknowledged && sendingReviewVersion == 1;
 
   bool isFreshAt(DateTime now) {
     final age = now.toUtc().difference(reviewedAt.toUtc());
     return rigidMountConfirmed &&
         safetyLimitsAcknowledged &&
         recipientSharingAcknowledged &&
+        ((!sendingAcknowledged && sendingReviewVersion == 0) ||
+            permitsSending) &&
         guardianForwardAxes.contains(forwardAxis) &&
         !age.isNegative &&
         age < const Duration(minutes: 2);

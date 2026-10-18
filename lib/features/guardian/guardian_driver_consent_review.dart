@@ -5,12 +5,14 @@ import 'package:traelyx/features/guardian/guardian_driver_consent.dart';
 /// Reviewing alone neither persists consent nor enables monitoring.
 Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
   BuildContext context,
-  String ownerId,
-) {
+  String ownerId, {
+  bool sendingAvailable = false,
+}) {
   String? forwardAxis;
   var rigidMount = false;
   var safetyLimits = false;
   var recipientSharing = false;
+  var sending = false;
   return showDialog<GuardianDriverConsent>(
     context: context,
     builder: (context) => StatefulBuilder(
@@ -26,16 +28,16 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
                 'They are not emergency assistance and delivery is not guaranteed.',
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Confirming stores a temporary driver session in your Traelyx account and a private lease on this phone, '
-                'lasting up to eight hours. This review uploads no trip data. '
-                'Alert sending is unavailable in this build.',
+                'lasting up to eight hours. '
+                '${sendingAvailable ? 'This pilot can send experimental alerts during a recorded trip after this new review. Delivery is not guaranteed.' : 'This review uploads no trip data. Alert sending is unavailable in this build.'}',
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'During a recorded trip, this phone may show a generic local alert with a Cancel alert action. '
                 'You can also check pending alerts here while parked. Cancellation is available before a send attempt starts. '
-                'This build does not send those alerts.',
+                '${sendingAvailable ? 'An alert waits at least 30 seconds after its cancellation notice becomes available on this phone. Already handed-off notices cannot be retracted.' : 'This build does not send those alerts.'}',
               ),
               const SizedBox(height: 12),
               const Text(
@@ -105,6 +107,23 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
                 onChanged: (value) =>
                     setDialogState(() => recipientSharing = value ?? false),
               ),
+              if (sendingAvailable) ...[
+                const Text(
+                  'Supabase processes your account session and permitted event data. '
+                  'Google Firebase routes generic notices using registered receiver tokens and opaque delivery IDs. '
+                  'No route, location, speed or raw telemetry is uploaded by these alerts.',
+                ),
+                CheckboxListTile(
+                  key: const ValueKey('guardian-sending-consent'),
+                  value: sending,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: const Text(
+                    'I agree to experimental alert sending for this driver session',
+                  ),
+                  onChanged: (value) =>
+                      setDialogState(() => sending = value ?? false),
+                ),
+              ],
             ],
           ),
         ),
@@ -119,7 +138,8 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
                 forwardAxis != null &&
                     rigidMount &&
                     safetyLimits &&
-                    recipientSharing
+                    recipientSharing &&
+                    (!sendingAvailable || sending)
                 ? () => Navigator.pop(
                     context,
                     GuardianDriverConsent(
@@ -129,6 +149,8 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
                       safetyLimitsAcknowledged: safetyLimits,
                       recipientSharingAcknowledged: recipientSharing,
                       reviewedAt: DateTime.now().toUtc(),
+                      sendingAcknowledged: sendingAvailable && sending,
+                      sendingReviewVersion: sendingAvailable && sending ? 1 : 0,
                     ),
                   )
                 : null,

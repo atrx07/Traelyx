@@ -18,6 +18,8 @@ GuardianDriverConsent reviewed(
   String axis, {
   DateTime? at,
   bool mounted = true,
+  bool sending = false,
+  int? sendingVersion,
 }) => GuardianDriverConsent(
   ownerId: ownerA,
   forwardAxis: axis,
@@ -25,6 +27,8 @@ GuardianDriverConsent reviewed(
   safetyLimitsAcknowledged: true,
   recipientSharingAcknowledged: true,
   reviewedAt: at ?? DateTime.now().toUtc(),
+  sendingAcknowledged: sending,
+  sendingReviewVersion: sendingVersion ?? (sending ? 1 : 0),
 );
 
 final class TestAccount implements AccountGateway {
@@ -87,7 +91,10 @@ final class OwnerPort implements GuardianOwnerPort {
   ) async {}
 }
 
-final class NativePort implements GuardianNativeActivationPort {
+final class NativePort
+    implements
+        GuardianNativeActivationPort,
+        GuardianNativeSendingActivationPort {
   NativePort(this.events);
   final List<String> events;
   int aborts = 0, disables = 0, commits = 0;
@@ -97,6 +104,13 @@ final class NativePort implements GuardianNativeActivationPort {
   Future<void> Function()? beforeCommitReply;
   Future<void> Function()? afterBegin;
   bool failAbort = false;
+  int sendingBegins = 0;
+
+  @override
+  Future<GuardianActivationDraft> beginSending(String owner, String axis) {
+    sendingBegins++;
+    return begin(owner, axis);
+  }
 
   @override
   Future<GuardianActivationDraft> begin(String owner, String axis) async {
@@ -216,6 +230,128 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
   });
+
+  test(
+    'sending review needs a current version and enabled pilot before any side effect',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events);
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      for (final entry in [
+        (reviewed('+y', sending: true), false),
+        (reviewed('+y', sending: true, sendingVersion: 2), true),
+        (reviewed('+y', sendingVersion: 1), true),
+        (
+          reviewed(
+            '+y',
+            sending: true,
+            at: DateTime.now().add(const Duration(minutes: 1)),
+          ),
+          true,
+        ),
+      ]) {
+        await expectLater(
+          GuardianDriverActivationService(
+            bound,
+            native,
+            server,
+            sendingPilotAvailable: entry.$2,
+          ).prepareAfterExplicitConsent(entry.$1),
+          throwsA(isA<GuardianActivationException>()),
+        );
+        expect(events, isEmpty);
+      }
+    },
+  );
+
+  test(
+    'fresh sending review uses fenced activation and interruption still revokes exact commit',
+    () async {
+      final events = <String>[];
+      final account = TestAccount();
+      final bound = GuardianBoundAccountGateway(account, OwnerPort());
+      final native = NativePort(events);
+      final server = Server(events);
+      final service = GuardianDriverActivationService(
+        bound,
+        native,
+        server,
+        sendingPilotAvailable: true,
+      );
+      addTearDown(() async {
+        await bound.dispose();
+        await account.changes.close();
+      });
+      await service.prepareAfterExplicitConsent(reviewed('+y', sending: true));
+      expect(native.sendingBegins, 1);
+      expect(events, ['stop', 'revision', 'begin', 'server', 'commit']);
+      final token = GuardianDriverReviewCancellation();
+      native.beforeCommitReply = () async {
+        await token.cancel();
+      };
+      await expectLater(
+        service.prepareAfterExplicitConsent(
+          reviewed('+y', sending: true),
+          cancellation: token,
+        ),
+        throwsA(isA<GuardianActivationException>()),
+      );
+      expect(native.stoppedActivation, isNull);
+      expect(native.aborts, greaterThan(0));
+      expect(server.revokes, greaterThan(0));
+    },
+  );
+
+  test('sending pilot never upgrades an old evaluation-only review', () async {
+    final events = <String>[];
+    final account = TestAccount();
+    final bound = GuardianBoundAccountGateway(account, OwnerPort());
+    final native = NativePort(events);
+    addTearDown(() async {
+      await bound.dispose();
+      await account.changes.close();
+    });
+    await GuardianDriverActivationService(
+      bound,
+      native,
+      Server(events),
+      sendingPilotAvailable: true,
+    ).prepareAfterExplicitConsent(reviewed('+y'));
+    expect(native.sendingBegins, 0);
+  });
+
+  test(
+    'sending bridge sends only its distinct versioned acknowledgement contract',
+    () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (call) async {
+            expect(call.method, 'beginSending');
+            expect(call.arguments, {
+              'ownerId': ownerA,
+              'forwardAxis': '+y',
+              'rigidMountConfirmed': true,
+              'sendingAcknowledged': true,
+              'sendingReviewVersion': 1,
+            });
+            return {
+              'ownerId': ownerA,
+              'activationId': activation,
+              'credential': capability,
+              'forwardAxis': '+y',
+            };
+          });
+      final draft = await const MethodChannelGuardianActivationPort()
+          .beginSending(ownerA, '+y');
+      expect(draft.activationId, activation);
+      expect(draft.toString(), isNot(contains(capability)));
+    },
+  );
 
   test(
     'native bridge exchanges only reviewed fields and redacted status',

@@ -6,6 +6,7 @@ class GuardianActivationBridge(
     private val recordingObservation: () -> GuardianRecordingObservation = { GuardianRecordingObservation() },
     private val pendingAlerts: (String) -> List<Map<String, Any?>> = { emptyList() },
     private val cancelAlert: (GuardianEventReference) -> Boolean = { false },
+    private val sendingPilotAvailable: Boolean = false,
 ) {
     fun dispatch(method: String, rawArguments: Any?): Any? {
         val arguments = rawArguments as? Map<*, *> ?: throw IllegalArgumentException("Invalid Guardian request")
@@ -18,11 +19,16 @@ class GuardianActivationBridge(
                 coordinator.bindOwner(arguments["ownerId"] as String?)
                 null
             }
-            BEGIN -> {
-                exact("ownerId", "forwardAxis", "rigidMountConfirmed")
+            BEGIN, BEGIN_SENDING -> {
+                val sending = method == BEGIN_SENDING
+                if (sending) {
+                    exact("ownerId", "forwardAxis", "rigidMountConfirmed", "sendingAcknowledged", "sendingReviewVersion")
+                    require(sendingPilotAvailable && arguments["sendingAcknowledged"] == true &&
+                        arguments["sendingReviewVersion"] == 1)
+                } else exact("ownerId", "forwardAxis", "rigidMountConfirmed")
                 val axis = requireNotNull(arguments["forwardAxis"] as? String)
                 val confirmed = requireNotNull(arguments["rigidMountConfirmed"] as? Boolean)
-                val proposal = coordinator.begin(owner(), axis, confirmed)
+                val proposal = coordinator.begin(owner(), axis, confirmed, sending)
                 mapOf("ownerId" to proposal.ownerId, "activationId" to proposal.activationId,
                     "credential" to proposal.credential, "forwardAxis" to proposal.forwardAxis)
             }
@@ -88,6 +94,7 @@ class GuardianActivationBridge(
         const val CHANNEL = "io.github.atrx07.traelyx/guardian_activation"
         const val BIND_OWNER = "bindOwner"
         const val BEGIN = "begin"
+        const val BEGIN_SENDING = "beginSending"
         const val COMMIT = "commit"
         const val ABORT = "abort"
         const val DISABLE = "disable"
@@ -98,7 +105,7 @@ class GuardianActivationBridge(
         const val DRIVER_STATUS = "driverStatus"
         const val PENDING_ALERTS = "pendingAlerts"
         const val CANCEL_ALERT = "cancelAlert"
-        val METHODS = setOf(BIND_OWNER, BEGIN, COMMIT, ABORT, DISABLE, STOP, PENDING_REVOKES,
+        val METHODS = setOf(BIND_OWNER, BEGIN, BEGIN_SENDING, COMMIT, ABORT, DISABLE, STOP, PENDING_REVOKES,
             CONFIRM_REVOKE, SNAPSHOT, DRIVER_STATUS, PENDING_ALERTS, CANCEL_ALERT)
     }
 }

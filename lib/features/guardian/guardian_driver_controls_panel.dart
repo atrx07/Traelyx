@@ -57,6 +57,7 @@ class _GuardianDriverControlsPanelState
       final review = await showGuardianDriverConsentReview(
         context,
         widget.owner,
+        sendingAvailable: ref.read(guardianDriverSendingPilotProvider),
       );
       if (review == null || !mounted || epoch != _reviewEpoch) return;
       ref.read(guardianDriverStatusProvider(widget.owner).notifier).clear();
@@ -79,6 +80,7 @@ class _GuardianDriverControlsPanelState
   @override
   Widget build(BuildContext context) {
     if (!ref.watch(guardianDriverPilotProvider)) return const SizedBox.shrink();
+    final sending = ref.watch(guardianDriverSendingPilotProvider);
     final provider = guardianDriverControlsControllerProvider(widget.owner);
     final state = ref.watch(provider);
     final controller = ref.read(provider.notifier);
@@ -93,9 +95,9 @@ class _GuardianDriverControlsPanelState
       children: [
         const SizedBox(height: 24),
         Text('Driver alerts', style: Theme.of(context).textTheme.titleLarge),
-        const Text(
+        Text(
           'Review only while parked. Consent allows experimental local evaluation during a recorded trip. '
-          'Alert sending is unavailable in this build.',
+          '${sending ? 'Sending requires a new review in this pilot; delivery is not guaranteed.' : 'Alert sending is unavailable in this build.'}',
         ),
         if (!controller.available)
           const Text('Driver controls require a configured signed-in account.'),
@@ -127,8 +129,9 @@ class _GuardianDriverControlsPanelState
           'Local pending alerts',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const Text(
-          'Check only while parked. This is a local observation, not a delivery confirmation. Sending is unavailable in this build.',
+        Text(
+          'Check only while parked. This is a local observation, not a delivery confirmation. '
+          '${sending ? 'Already handed-off notices cannot be retracted.' : 'Sending is unavailable in this build.'}',
         ),
         OutlinedButton(
           onPressed:

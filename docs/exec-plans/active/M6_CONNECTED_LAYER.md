@@ -1039,7 +1039,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     serialized dispatch scheduling using offer maturity and retry timing, with
     permit invalidation before owner/Stop and separate bounded network IO;
     renewed sending consent and reviewed live activation remain required.
-  Current bounded unit (2026-10-17): attach a serialized one-shot dispatch host
+  Completed bounded unit (2026-10-17): attach a serialized one-shot dispatch host
   to cancellation readiness, retry/deadline completion and pending-event expiry.
   Observe asynchronous notices for a bounded interval and continue the full
   cancellation window independently of the recorder watchdog after trip end.
@@ -1102,6 +1102,47 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Renewed sending consent and
     reviewed hosted activation/Stop, accepted live cancellation action, active
     recording and physical/two-account reliability remain separate gates.
+  Current bounded unit (2026-10-18): add a versioned, fresh, explicit sending
+  acknowledgement behind a separate default-false debug pilot. Existing reviews
+  remain evaluation-only. Bind new sending permission to the exact in-process
+  proposal/committed activation; clear it on Stop, owner loss, replacement,
+  failure or restart. Release builds must deny the sending bridge, and ordinary
+  configured builds keep both driver/sending pilots false. Disclose providers,
+  minimized sharing, the observed cancellation window, irreversible handoff and
+  delivery limits. Preserve exact cleanup/revision fencing and lifecycle review
+  cancellation. Require strict bridge/wire/version/freshness tests, old-review
+  compatibility, failure/owner/Stop races, widget/large-text tests, native/Flutter
+  checks, lint/configured build, inactive device preservation and exact-source CI.
+  No live activation, backend enable, alert send, registration, migration,
+  dependency or trip upload is authorized by this source unit. The later reviewed
+  hosted window and user's actual on-device consent remain separate gates.
+  - [x] Version-1 sending review adds a separate unchecked acknowledgement and
+    provider/cancellation/handoff disclosure. Both debug pilot flags default
+    false. The old version-0 review stays evaluation-only even when the sending
+    pilot is available. Service/controller validation rejects unavailable,
+    stale/future and inconsistent/unknown-version reviews before side effects.
+    The strict `beginSending` native method requires the new acknowledgement
+    and a debuggable package; old `begin` and all persistence/wire schemas stay
+    unchanged. Permission binds only the exact proposal and successful fresh
+    activation, with current lease validation. Stop, owner loss, restart,
+    expiry/reboot, missing vault and failed commit deny sending. Five new native
+    tests and six Flutter tests cover denial/compatibility, wire allowlisting,
+    exact lifecycle cleanup and large-text unchecked review. An expiry regression
+    caught a null/null comparison while recovery cleared IDs; capturing the
+    non-null activation before recovery repairs it without weakening assertions.
+    All 484 native app/390 Flutter tests, dependency suites, analysis, app lint,
+    configured pilot-off debug/test builds, format and repository checks pass.
+    ADR-0033 records the contract. No live activation or sending occurred.
+  - [x] Isolated Tecno proof uses scoped encrypted stores and a synthetic owner:
+    old/unavailable reviews deny sending, the new exact review grants in-memory
+    permission only after commit, a reopened coordinator denies it, and Stop
+    preserves exact cleanup while removing authority. No real hosted session,
+    evaluator, scheduler, transport or Firebase initialization. All 11,857
+    recorder hashes and the receiver vault match the fresh pre-update snapshot;
+    production driver vault remains absent. Installed build keeps both pilots off.
+    Normal startup retains saved sign-in and hides driver controls.
+  - [ ] Full exact-source CI before bounded closure, followed by separately
+    reviewed live activation/Stop and actual user consent.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -1,6 +1,7 @@
 package io.github.atrx07.traelyx.guardian
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.os.SystemClock
 import android.provider.Settings
 import io.github.atrx07.traelyx.R
@@ -17,9 +18,11 @@ object AndroidGuardianActivationRuntime {
     private var cancellation: GuardianCancellationControls? = null
     private var alertSchedule: GuardianDispatchSchedule? = null
 
-    // Existing review explicitly says sending is unavailable. No build define,
-    // restored lease or receiver registration can bypass this consent gate.
-    private const val SENDING_AVAILABLE = false
+    // Native package guard plus exact fresh sending review. Old consent and
+    // restored leases never authorize sending; the Dart pilot defaults off.
+    private fun sendingAvailable(context: Context) =
+        context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+    private fun sendingEnabled(context: Context) = sendingAvailable(context) && coordinator(context).sendingReviewed()
 
     fun dispatch(context: Context, method: String, arguments: Any?, complete: (Result<Any?>) -> Unit) {
         val app = context.applicationContext
@@ -28,12 +31,14 @@ object AndroidGuardianActivationRuntime {
                 val current = bridge ?: GuardianActivationBridge(coordinator(app),
                     recordingObservation = { recording?.observation() ?: GuardianRecordingObservation() },
                     pendingAlerts = { controls(app).views(it) },
-                    cancelAlert = { controls(app).cancel(it) }).also { bridge = it }
+                    cancelAlert = { controls(app).cancel(it) },
+                    sendingPilotAvailable = sendingAvailable(app)).also { bridge = it }
                 val args = arguments as? Map<*, *>
                 val owner = args?.get("ownerId") as? String
                 val ownerChanges = method == GuardianActivationBridge.BIND_OWNER && !coordinator(app).isBoundTo(owner)
                 val changesCurrent = coordinator(app).isBoundTo(owner) && method in setOf(
-                    GuardianActivationBridge.BEGIN, GuardianActivationBridge.STOP, GuardianActivationBridge.DISABLE)
+                    GuardianActivationBridge.BEGIN, GuardianActivationBridge.BEGIN_SENDING,
+                    GuardianActivationBridge.STOP, GuardianActivationBridge.DISABLE)
                 val abortsCurrent = method == GuardianActivationBridge.ABORT &&
                     coordinator(app).isCurrentActivation(owner, args?.get("activationId") as? String)
                 if (ownerChanges || changesCurrent || abortsCurrent) {
@@ -102,10 +107,10 @@ object AndroidGuardianActivationRuntime {
             { clock(context) }, AndroidGuardianCancellationNotice(context)).also { cancellation = it }
 
     private fun schedule(context: Context): GuardianDispatchSchedule = alertSchedule ?:
-        GuardianDispatchSchedule(controls(context), { clock(context) }, { SENDING_AVAILABLE },
+        GuardianDispatchSchedule(controls(context), { clock(context) }, { sendingEnabled(context) },
             createDispatch = { post ->
                 GuardianOutboxDispatchCoordinator(AndroidGuardianVault.outbox(context),
-                    { coordinator(context).recordingSnapshot() }, { clock(context) }, { SENDING_AVAILABLE },
+                    { coordinator(context).recordingSnapshot() }, { clock(context) }, { sendingEnabled(context) },
                     { controls(context).allows(it) },
                     GuardianIngestWorker(GuardianCapabilityIngestGateway(
                         context.getString(R.string.traelyx_guardian_capability_url),

@@ -10,15 +10,25 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-The serialized one-shot Android host is now attached behind a fixed false
+Sending review v1 now has a separate default-off debug pilot, fresh versioned
+acknowledgement and native exact-activation/package guards. Existing evaluation
+reviews cannot send. All 484 native app/390 Flutter tests, analysis, app lint,
+configured pilot-off builds and repository checks pass. The isolated physical
+review/reopening/Stop proof passes without a server session or transport, with
+all recorder/receiver hashes preserved. Finish exact-source CI, then review a
+concrete real activation/Stop window with actual user consent; backend sending
+stays disabled. Active recording, cancellation and physical/two-account delivery
+reliability remain open. No real activation, alert or trip upload occurred here.
+
+The serialized one-shot Android host was initially attached behind a fixed false
 sending gate. Its worker removes cancelled timer entries immediately; the new
 queue regression detects the old behavior. All 479 native app and 384 Flutter tests, analysis, app lint,
 configured builds and repository validation pass. The scoped Tecno proof
 completes real-clock cancellation timing without recorder/watchdog involvement,
 then uses a fake completion only; recorder/receiver hashes remain unchanged.
 Final source `a23601f` passes full CI 39140377015, closing this bounded scheduler
-integration and queue cleanup. Next integrate renewed sending
-consent and its default-off gate, then request concrete review for hosted
+integration and queue cleanup. The new sending-review integration is recorded
+above; next request concrete review for hosted
 activation/Stop and network/lifecycle validation. No live ingest is authorized
 by the existing review saying sending is unavailable. Active recording and
 physical two-account reliability remain open.

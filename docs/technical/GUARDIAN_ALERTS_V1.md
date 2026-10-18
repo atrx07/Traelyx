@@ -5,8 +5,9 @@
 M6.8 is in progress. The native evaluator and lifecycle are implemented as a
 prerequisite. Bounded recorder sidecar integration passes local/inactive-device
 checks and full source CI 38133415539 (`98f9a49`); production driver
-activation and network sending remain unavailable. Consent UI and active physical
-validation remain required. These are experimental synthetic baselines, not field-validated crash
+activation and network sending remain disabled in ordinary builds. A separate
+default-off debug sending review is implemented below; reviewed live activation
+and active physical validation remain required. These are experimental synthetic baselines, not field-validated crash
 detection, emergency protection, or calibrated confidence probabilities.
 
 ## Local evaluation
@@ -144,9 +145,10 @@ one-shot alert wake, independently of the recorder watchdog. Raw acquisition
 and permissions are unchanged. ADR-0032 defines the proof and physical
 limitations. The host combines offer checks, retry/deadline timing and expiry;
 it invalidates permits before relevant Stop/account/activation changes. Pilot
-controls explicitly state sending is unavailable, and the Android host enforces
-that with a fixed false gate. No build flag, retained lease or receiver
-registration grants transmission consent.
+controls state sending is unavailable in ordinary builds. The separate debug
+sending pilot requires a new version-1 acknowledgement and exact fresh native
+activation, with a native debuggable-package guard. A build flag, old review,
+retained lease or receiver registration alone grants no transmission consent.
 
 ## Dormant minimized-ingest adapter
 
@@ -171,10 +173,10 @@ body or credential is logged. Retry reservations and late callback protection
 remain owned by the encrypted outbox, not by this adapter.
 
 This adapter has synthetic wire/outbox tests. Its Android factory is attached
-behind the fixed false sending gate: ordinary/debug/release operation does not
+behind the default-off reviewed sending gate: ordinary app operation does not
 construct its network worker or reserve a send. The serialized host uses fresh
 in-process authority, cancellation proof and separate bounded IO, with completion
-marshalled back onto the vault worker. Renewed sending consent and reviewed
+marshalled back onto the vault worker. Actual fresh on-device consent and reviewed
 physical network/lifecycle validation remain gates. No production request or
 additional activation is performed by this integration.
 
@@ -205,8 +207,9 @@ worker. Cancelled futures are removed from the executor queue immediately;
 generation checks reject already-dequeued cancelled wakes. Enqueue,
 explicit cancellation/checks, authority changes and network completion refresh
 the schedule. No active event means no timer; cancellation timing continues after
-the recording handle ends. A fixed false Android sending gate avoids constructing
-the network runner or reserving attempts. Tests inject a separate synthetic gate.
+the recording handle ends. The default-off reviewed Android sending gate avoids
+constructing the network runner or reserving attempts without fresh permission.
+Tests inject a separate synthetic gate.
 The existing review saying sending is unavailable cannot authorize live ingest.
 
 Unobserved notification submission receives at most three seconds of automatic
@@ -225,7 +228,7 @@ The dispatcher and runner stay process-scoped across invalidation, retaining one
 unsettled operation even if a new activation replaces the old one. A stale abort
 for another activation does not invalidate a newer job; the host checks in-memory
 owner/activation identity before changing permits. Schedule/clock failures deny
-further scheduling. Renewed sending consent, reviewed live activation/Stop and
+further scheduling. Reviewed live activation/Stop and actual on-device consent plus
 physical network, active-recording and two-account reliability remain open.
 
 ## Encrypted outbox prerequisite (implemented; not activated)
@@ -426,7 +429,7 @@ The gated controller reads recorder status only for explicit review preflights,
 never at startup or on a timer. It repeats that check after review, rechecks the
 owner/freshness and invokes the v2 service. The review discloses the temporary
 account session and private local lease, bounded to eight hours. UI state says
-consent saved, not monitoring or delivery; sending remains unavailable. Stop
+consent saved, not monitoring or delivery; ordinary builds keep sending unavailable. Stop
 remains usable during activation and invokes the exact local-first stop service
 without stopping raw recording. Failure is reported as uncertain confirmation,
 not a promise that a previously handed-off message was retracted.
@@ -444,6 +447,29 @@ commit/abort; the fake models durable commit before its bridge reply. That
 Review/Stop unit introduced no sender, automatic registration, migration or new
 dependency. Local event cancellation is implemented in the separate section above.
 Live pilot activation/revoke and active recording remain separate gates.
+
+### Separate sending review v1 (default-off debug pilot)
+
+`TRAELYX_GUARDIAN_SENDING_PILOT` additionally requires the existing debug driver
+pilot and defaults false. Ordinary installed builds explicitly keep both false.
+The new review variant adds a separate unchecked sending acknowledgement,
+provider/minimized-data disclosure and at least 30 seconds after an observed
+cancellation notice before handoff. It explains false alarms, missed events,
+unreliable delivery and that handed-off requests cannot be retracted. The old
+review remains evaluation-only version 0. Unknown versions, future/stale reviews
+and mismatched acknowledgement/version fields deny activation before side effects.
+
+The native `beginSending` bridge requires exactly the existing proposal fields
+plus `sendingAcknowledged=true` and integer `sendingReviewVersion=1`. It is denied
+unless the installed Android package is debuggable. The unchanged `begin` method
+cannot acquire sending permission. Permission binds the exact proposal, then its
+successfully committed fresh in-process activation; it is not persisted. The
+scheduler requires that permission and a currently valid bound lease. Recovery
+compares against a captured non-null activation to avoid matching two cleared IDs.
+Stop/owner loss, expiry/reboot, failed commit or missing authority deny sending;
+process reopening cannot resume it. Existing exact cleanup/revision fencing and
+foreground lifecycle cancellation are preserved. No backend wire/schema change.
+See `../decisions/ADR-0033-guardian-versioned-sending-review.md`.
 
 The separate recipient review is also dormant. It requires explicit
 acknowledgement of experimental detection/delivery limits and of Firebase

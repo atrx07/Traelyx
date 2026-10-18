@@ -45,6 +45,7 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
                     "guardian-activation" -> runGuardianActivationProof()
                     "guardian-cancellation" -> runGuardianCancellationProof()
                     "guardian-schedule" -> runGuardianScheduleProof()
+                    "guardian-sending-review" -> runGuardianSendingReviewProof()
                     "index" ->
                         runIndexProof(
                             requireNotNull(instrumentationArguments?.getString("tripId")),
@@ -418,6 +419,50 @@ class RecorderLifecycleInstrumentation : Instrumentation() {
         check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
         return "M6.8 recipient bridge proof passed: scoped commit, redacted status, account-switch erasure; " +
             "Firebase inactive, no server registration or trip change."
+    }
+
+    private fun runGuardianSendingReviewProof(): String {
+        val context = targetContext.applicationContext
+        val namespace = "proof-${UUID.randomUUID()}"
+        val owner = UUID.randomUUID().toString()
+        val vault = io.github.atrx07.traelyx.guardian.AndroidGuardianVault(context, namespace)
+        val journal = io.github.atrx07.traelyx.guardian.AndroidGuardianDriverRevokeJournal(context, namespace)
+        val outbox = io.github.atrx07.traelyx.guardian.GuardianOutbox(vault, journal::record)
+        fun clock() = io.github.atrx07.traelyx.guardian.GuardianClock(
+            System.currentTimeMillis(), SystemClock.elapsedRealtime(), "synthetic-proof-boot")
+        fun coordinator() = io.github.atrx07.traelyx.guardian.GuardianActivationCoordinator(outbox, ::clock, journal)
+        try {
+            val control = coordinator()
+            control.bindOwner(owner)
+            val args = mapOf("ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true,
+                "sendingAcknowledged" to true, "sendingReviewVersion" to 1)
+            val unavailable = io.github.atrx07.traelyx.guardian.GuardianActivationBridge(control)
+            check(runCatching { unavailable.dispatch("beginSending", args) }.isFailure)
+            check(journal.pending().isEmpty())
+            val old = control.begin(owner, "+y", true)
+            control.commit(owner, old.activationId, clock().epochMillis + 60_000)
+            check(!control.sendingReviewed())
+            control.stop(owner)
+            control.confirmRevoke(owner, old.activationId) // Synthetic local confirmation; no server session exists.
+            val reviewed = io.github.atrx07.traelyx.guardian.GuardianActivationBridge(control, sendingPilotAvailable = true)
+            val proposal = reviewed.dispatch("beginSending", args) as Map<*, *>
+            val activation = proposal["activationId"] as String
+            check(!control.sendingReviewed())
+            control.commit(owner, activation, clock().epochMillis + 60_000)
+            check(control.sendingReviewed())
+            check(journal.pending().single().activationId == activation)
+            val reopened = coordinator()
+            reopened.bindOwner(owner)
+            check(!reopened.sendingReviewed() && reopened.recordingSnapshot() == null)
+            check(reopened.stop(owner) == activation)
+            check(!control.sendingReviewed())
+            reopened.confirmRevoke(owner, activation)
+            check(journal.pending().isEmpty())
+            check(com.google.firebase.FirebaseApp.getApps(context).isEmpty())
+        } finally { vault.erase(); journal.eraseProofState() }
+        return "M6.8 isolated sending review proof passed: unavailable and old reviews deny sending, " +
+            "new exact review grants only scoped in-memory authority, reopening denies, Stop clears and preserves exact cleanup; " +
+            "no real driver activation, evaluator, scheduler, transport, Firebase initialization or trip change."
     }
 
     private fun runGuardianScheduleProof(): String {

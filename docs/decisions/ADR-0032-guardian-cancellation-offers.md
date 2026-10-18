@@ -1,7 +1,7 @@
 # ADR-0032: Require an observed cancellation offer before Guardian handoff
 
 - Date: 2026-10-17
-- Status: offer checks pass; serialized scheduling attached with Android sending fixed off
+- Status: offer checks pass; serialized scheduling attached with sending default off
 
 ## Decision
 
@@ -23,7 +23,8 @@ offers, including for already-reserved events. Retry retains its original exact
 offer in the same process and cannot borrow another event's metadata or lease.
 The dispatcher calls this gate on the control worker, schedules offer maturity
 independently of event age, and retains ADR-0031 permit/Stop checks. Android's
-sending gate remains fixed false pending renewed consent and live review.
+sending gate defaults off and requires the new exact review in ADR-0033; actual
+on-device consent and reviewed live validation remain required.
 
 The notification is generic and private, with no account, event kind, capability
 or trip details. It uses a separate channel and exact tag, an immutable explicit
@@ -52,14 +53,14 @@ an observed unfinished offer is checked at most once per second through its
 work schedules none. The dispatcher can also trigger an initial event-age
 check. Timers may be deferred by Android; late wakes revalidate authority and
 clocks. This adds no acquisition work, sampling change, wake lock, OS alarm or
-network operation while the fixed Android sending gate is false. Stop/owner/replacement paths invalidate
+network operation while the Android sending gate is false. Stop/owner/replacement paths invalidate
 offers first. The default-off debug pilot adds explicit local check/cancel UI;
 checks are not automatic or delivery confirmations, and observations clear on
 background/account change. Normal/release and installed validation builds keep
-the pilot off. Review discloses the local notification; sending remains unavailable.
+both pilots off. Review discloses the local notification; ordinary builds keep sending unavailable.
 
 No dependency, persisted schema, backend access or network field changes.
-Renewed sending consent, hosted activation/Stop,
+Actual on-device sending consent, hosted activation/Stop,
 accepted action under a real live driver lease and active physical recording/
 two-account reliability remain later gates.
 

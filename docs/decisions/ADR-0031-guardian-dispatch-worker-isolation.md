@@ -1,7 +1,7 @@
 # ADR-0031: Isolate Guardian ingest IO from authority and vault control
 
 - Date: 2026-10-17
-- Status: serialized Android scheduling attached behind a fixed false sending gate; live validation pending
+- Status: serialized Android scheduling attached behind default-off fresh sending review; live validation pending
 
 ## Context
 
@@ -46,9 +46,10 @@ worker. The executor removes cancelled futures immediately instead of retaining
 them until their previous deadlines; generation checks still fence dequeued
 callbacks. It pumps after relevant events and completions, independently of the
 recorder watchdog, and has no timer without pending work. The Android factory
-has a fixed false sending gate and constructs no network worker while disabled.
-There is no build-flag bypass. Existing sending-unavailable review text does not
-authorize transmission; renewed consent and reviewed live activation/network
+has a default-off sending gate and constructs no network worker while disabled.
+ADR-0033 additionally requires a fresh exact sending review in a debuggable
+package; a build flag alone cannot authorize transmission. Existing
+sending-unavailable reviews remain evaluation-only. Actual consent and reviewed live activation/network
 device tests remain separate gates.
 
 ## Consequences

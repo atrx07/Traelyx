@@ -76,8 +76,14 @@ abstract interface class GuardianNativeActivationPort {
   Future<void> confirmRevoke(String owner, String activation);
 }
 
+abstract interface class GuardianNativeSendingActivationPort {
+  Future<GuardianActivationDraft> beginSending(String owner, String axis);
+}
+
 final class MethodChannelGuardianActivationPort
-    implements GuardianNativeActivationPort {
+    implements
+        GuardianNativeActivationPort,
+        GuardianNativeSendingActivationPort {
   const MethodChannelGuardianActivationPort();
   static const _channel = MethodChannel(
     'io.github.atrx07.traelyx/guardian_activation',
@@ -85,11 +91,26 @@ final class MethodChannelGuardianActivationPort
 
   @override
   Future<GuardianActivationDraft> begin(String owner, String axis) async {
-    final raw = await _channel.invokeMethod<Object?>('begin', {
-      'ownerId': owner,
-      'forwardAxis': axis,
-      'rigidMountConfirmed': true,
-    });
+    return _begin(owner, axis, false);
+  }
+
+  @override
+  Future<GuardianActivationDraft> beginSending(String owner, String axis) =>
+      _begin(owner, axis, true);
+
+  Future<GuardianActivationDraft> _begin(
+    String owner,
+    String axis,
+    bool sending,
+  ) async {
+    final raw = await _channel
+        .invokeMethod<Object?>(sending ? 'beginSending' : 'begin', {
+          'ownerId': owner,
+          'forwardAxis': axis,
+          'rigidMountConfirmed': true,
+          if (sending) 'sendingAcknowledged': true,
+          if (sending) 'sendingReviewVersion': 1,
+        });
     if (raw is! Map ||
         raw.length != 4 ||
         raw['ownerId'] != owner ||
@@ -391,11 +412,13 @@ final class GuardianDriverActivationService {
     this.native,
     this.server, {
     this.now = DateTime.now,
+    this.sendingPilotAvailable = false,
   });
   final GuardianBoundAccountGateway account;
   final GuardianNativeActivationPort native;
   final GuardianDriverSessionGateway server;
   final DateTime Function() now;
+  final bool sendingPilotAvailable;
 
   Future<void> stop(String owner) =>
       GuardianDriverStopService(account, native, server).stop(owner);
@@ -409,7 +432,10 @@ final class GuardianDriverActivationService {
     if (cancellation?.isCancelled == true ||
         !_uuid.hasMatch(owner) ||
         !consent.isFreshAt(now().toUtc()) ||
-        account.currentIdentity?.userId != owner) {
+        account.currentIdentity?.userId != owner ||
+        (consent.permitsSending &&
+            (!sendingPilotAvailable ||
+                native is! GuardianNativeSendingActivationPort))) {
       throw const GuardianActivationException('Guardian account unavailable.');
     }
     cancellation?._claim();
@@ -462,7 +488,10 @@ final class GuardianDriverActivationService {
         final revision = await server.revision(owner);
         checkReview();
         final preparedAt = now().toUtc();
-        final proposal = await native.begin(owner, forwardAxis);
+        final proposal = consent.permitsSending
+            ? await (native as GuardianNativeSendingActivationPort)
+                  .beginSending(owner, forwardAxis)
+            : await native.begin(owner, forwardAxis);
         draft = proposal;
         cancellation?._bindCleanup(cleanupExact);
         if (proposal.ownerId != owner ||

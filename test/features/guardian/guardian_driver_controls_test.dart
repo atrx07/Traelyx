@@ -45,8 +45,28 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
     expect(container.read(guardianDriverPilotProvider), isFalse);
+    expect(container.read(guardianDriverSendingPilotProvider), isFalse);
     expect(container.read(guardianDriverControlsProvider), isNull);
   });
+
+  test(
+    'controller rejects sending consent while its pilot is unavailable',
+    () async {
+      final account = TestAccount();
+      final controls = Controls();
+      final c = GuardianDriverControlsController(
+        ownerA,
+        account,
+        controls,
+        () async => true,
+      );
+      addTearDown(c.dispose);
+      addTearDown(account.changes.close);
+      await c.activate(reviewed('+y', sending: true));
+      expect(controls.starts, 0);
+      expect(c.state.notice, contains('unavailable'));
+    },
+  );
 
   test(
     'idle and freshness preflights fail without activation or raw errors',

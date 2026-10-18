@@ -10,6 +10,7 @@ class GuardianActivationProposal internal constructor(
     val credential: String,
     val forwardAxis: String,
     internal val created: GuardianClock,
+    internal val sendingReviewed: Boolean = false,
 ) {
     override fun toString() = "GuardianActivationProposal(redacted)"
 }
@@ -32,6 +33,16 @@ class GuardianActivationCoordinator(
     private var bound = false
     private var proposal: GuardianActivationProposal? = null
     private var recordingActivationId: String? = null
+    private var sendingActivationId: String? = null
+
+    /** In-memory only; restored leases and old evaluation-only reviews cannot send. */
+    @Synchronized internal fun sendingReviewed(): Boolean {
+        val expected = sendingActivationId ?: return false
+        if (!bound || owner == null || expected != recordingActivationId) return false
+        // Recovery can clear both IDs. Compare against the captured non-null
+        // identity, never let two cleared IDs become a successful match.
+        return recordingSnapshot()?.lease?.activationId == expected
+    }
 
     /** In-memory host check; no vault IO before invalidating a changed owner's queued work. */
     @Synchronized internal fun isBoundTo(expectedOwner: String?) = bound && owner == expectedOwner
@@ -46,6 +57,7 @@ class GuardianActivationCoordinator(
         if (!bound || owner != nextOwner) {
             proposal = null
             recordingActivationId = null
+            sendingActivationId = null
         }
         // Clear in-memory authority before any fallible persistence operation.
         owner = null
@@ -59,7 +71,8 @@ class GuardianActivationCoordinator(
         bound = true
     }
 
-    @Synchronized fun begin(expectedOwner: String, forwardAxis: String, rigidMountConfirmed: Boolean): GuardianActivationProposal {
+    @Synchronized fun begin(expectedOwner: String, forwardAxis: String, rigidMountConfirmed: Boolean,
+        sendingReviewed: Boolean = false): GuardianActivationProposal {
         require(bound && owner == expectedOwner && rigidMountConfirmed)
         require(forwardAxis in setOf("+x", "-x", "+y", "-y", "+z", "-z"))
         check(proposal == null) { "Activation review already pending" }
@@ -73,7 +86,8 @@ class GuardianActivationCoordinator(
         val credential = newCredential().also { require(it.matches(Regex("[a-f0-9]{64}"))) }
         // A lost bridge reply or process death must leave exact server cleanup possible.
         revokeJournal.record(GuardianDriverRevokeTicket(expectedOwner, activation))
-        return GuardianActivationProposal(expectedOwner, activation, credential, forwardAxis, now).also { proposal = it }
+        return GuardianActivationProposal(expectedOwner, activation, credential, forwardAxis, now, sendingReviewed)
+            .also { proposal = it }
     }
 
     @Synchronized fun commit(expectedOwner: String, activationId: String, serverExpiresEpochMillis: Long): GuardianDriverLease {
@@ -100,6 +114,7 @@ class GuardianActivationCoordinator(
         // Keep the independent ID-only reservation until an exact server revoke succeeds.
         // A later destructive vault failure must not erase the only cleanup identity.
         recordingActivationId = lease.activationId
+        sendingActivationId = lease.activationId.takeIf { pending.sendingReviewed }
         return lease
     }
 
@@ -147,6 +162,7 @@ class GuardianActivationCoordinator(
 
     private fun eraseAuthority(restoreOwner: String) {
         recordingActivationId = null
+        sendingActivationId = null
         owner = null
         bound = false
         outbox.revoke()
@@ -169,7 +185,9 @@ class GuardianActivationCoordinator(
         val current = owner
         if (!bound || current == null || recordingActivationId == null) return null
         val snapshot = outbox.recover(current, clock(), revokeJournal::record)
-        return snapshot.takeIf { it.lease?.activationId == recordingActivationId }
+        return snapshot.takeIf { it.lease?.activationId == recordingActivationId }.also {
+            if (it == null) { recordingActivationId = null; sendingActivationId = null }
+        }
     }
 
     companion object { const val REVIEW_TTL_MILLIS = 120_000L }

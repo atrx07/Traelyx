@@ -16,6 +16,13 @@ final guardianDriverPilotProvider = Provider<bool>(
       kDebugMode && const bool.fromEnvironment('TRAELYX_GUARDIAN_DRIVER_PILOT'),
 );
 
+final guardianDriverSendingPilotProvider = Provider<bool>(
+  (ref) =>
+      kDebugMode &&
+      ref.watch(guardianDriverPilotProvider) &&
+      const bool.fromEnvironment('TRAELYX_GUARDIAN_SENDING_PILOT'),
+);
+
 abstract interface class GuardianDriverControls {
   Future<DateTime> activate(
     GuardianDriverConsent review,
@@ -46,6 +53,7 @@ final guardianDriverControlsProvider = Provider<GuardianDriverControls?>((ref) {
       account,
       const MethodChannelGuardianActivationPort(),
       SupabaseGuardianDriverSessionGateway(client),
+      sendingPilotAvailable: ref.watch(guardianDriverSendingPilotProvider),
     ),
   );
 });
@@ -78,8 +86,9 @@ class GuardianDriverControlsController
     this.owner,
     this.account,
     this.controls,
-    this.isIdle,
-  ) : super(const GuardianDriverControlState()) {
+    this.isIdle, {
+    this.sendingPilotAvailable = false,
+  }) : super(const GuardianDriverControlState()) {
     _identity = account.identityChanges.listen((identity) {
       if (identity?.userId != owner) interrupt();
     }, onError: (Object _) => interrupt());
@@ -88,6 +97,7 @@ class GuardianDriverControlsController
   final AccountGateway account;
   final GuardianDriverControls? controls;
   final Future<bool> Function() isIdle;
+  final bool sendingPilotAvailable;
   late final StreamSubscription<Object?> _identity;
   GuardianDriverReviewCancellation? _activation;
   bool _stopping = false;
@@ -153,6 +163,12 @@ class GuardianDriverControlsController
         !review.isFreshAt(DateTime.now().toUtc())) {
       return;
     }
+    if (review.permitsSending && !sendingPilotAvailable) {
+      state = const GuardianDriverControlState(
+        notice: 'Sending review is unavailable. Review driver alerts again.',
+      );
+      return;
+    }
     final cancellation = GuardianDriverReviewCancellation();
     _activation = cancellation;
     final epoch = _epoch;
@@ -178,8 +194,9 @@ class GuardianDriverControlsController
       cancellation.acceptCompletion();
       state = GuardianDriverControlState(
         expiresAt: expiry,
-        notice:
-            'Driver consent saved. Check driver state; alert sending is unavailable in this build.',
+        notice: review.permitsSending
+            ? 'Driver consent saved. Check driver state. Alert delivery is not guaranteed.'
+            : 'Driver consent saved. Check driver state; alert sending is unavailable in this build.',
       );
     } catch (error) {
       if (mounted && epoch == _epoch && _sameOwner) {
@@ -258,5 +275,6 @@ final guardianDriverControlsControllerProvider = StateNotifierProvider
         ref.watch(accountGatewayProvider),
         ref.watch(guardianDriverControlsProvider),
         ref.watch(guardianDriverIdleCheckProvider),
+        sendingPilotAvailable: ref.watch(guardianDriverSendingPilotProvider),
       ),
     );

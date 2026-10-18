@@ -10,6 +10,20 @@
 
 ## Working
 
+- M6.8 sending review v1 (2026-10-18): separate default-off debug pilot and
+  unchecked acknowledgement; old evaluation-only consent cannot enable sending.
+  Strict native version/owner fields and a debuggable-package guard bind new
+  permission to the exact fresh activation, without persisting a sending flag.
+  Stop, restart, owner/lease loss and failed commit deny it. ADR-0033 documents
+  provider/minimized-data disclosure, cancellation and irreversible handoff.
+  All 484 native app/390 Flutter tests, dependency suites, analysis, app lint,
+  configured pilot-off builds and repository checks pass. The isolated physical
+  Keystore/reopening/Stop proof passes with no server session or transport;
+  11,857 recorder hashes and the real receiver vault are unchanged. No schema,
+  dependency, permission, backend enable, live activation, alert or trip upload.
+  Full exact-source CI remains the closure gate. Next: reviewed live activation/
+  Stop and actual on-device consent, then active recording and reliability gates.
+
 - M6.8 serialized dispatch scheduling (2026-10-18): one cancellable wake combines
   observed cancellation timing, retry/deadline and event/lease expiry, independent
   of recorder lifetime. Relevant Stop/account changes invalidate queued permits;

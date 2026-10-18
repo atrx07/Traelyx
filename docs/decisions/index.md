@@ -26,3 +26,5 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0027-guardian-notice-claims.md`
 - `ADR-0028-guardian-processing-windows.md`
 - `ADR-0031-guardian-dispatch-worker-isolation.md`
+- `ADR-0032-guardian-cancellation-offers.md`
+- `ADR-0033-guardian-versioned-sending-review.md`
