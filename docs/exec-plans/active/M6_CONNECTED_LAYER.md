@@ -1094,7 +1094,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     all 11,857 recorder hashes and the receiver vault match the new resume
     baseline, with no production driver vault. Existing Flutter source is
     unchanged from the base's 384 passing tests and full CI.
-  - [ ] Full exact-source queue-cleanup CI before final scheduling-unit closure.
+  - [x] Source `a23601f` passes full exact-source CI 39140377015: all three jobs,
+    479 native app/384 Flutter tests, server-policy suites, debug/release APKs,
+    repository/size checks and artifacts. This closes the bounded disabled
+    scheduler integration and queue cleanup. No sending gate, production enable,
+    account authority or wire contract changed during the final queue fix.
     Renewed sending consent and
     reviewed hosted activation/Stop, accepted live cancellation action, active
     recording and physical/two-account reliability remain separate gates.

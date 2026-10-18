@@ -16,9 +16,8 @@ queue regression detects the old behavior. All 479 native app and 384 Flutter te
 configured builds and repository validation pass. The scoped Tecno proof
 completes real-clock cancellation timing without recorder/watchdog involvement,
 then uses a fake completion only; recorder/receiver hashes remain unchanged.
-Base source `a343fae` passes full CI 39041962086. Finish exact-source CI for the
-final queue cleanup before bounded closure. Both devices are restored, idle,
-online and retain sign-in. Next integrate renewed sending
+Final source `a23601f` passes full CI 39140377015, closing this bounded scheduler
+integration and queue cleanup. Next integrate renewed sending
 consent and its default-off gate, then request concrete review for hosted
 activation/Stop and network/lifecycle validation. No live ingest is authorized
 by the existing review saying sending is unavailable. Active recording and

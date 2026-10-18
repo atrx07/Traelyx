@@ -22,9 +22,10 @@
   The isolated Tecno real-clock/notification scheduler proof passes using scoped
   storage and a fake transport only; 11,857 recorder hashes and the receiver vault
   remain unchanged. No dependency, schema, permission, sampling, wake lock,
-  hosted activation, enable change or trip upload. Scheduler base `a343fae` has
-  full green CI 39041962086; exact-source CI for final queue cleanup remains the
-  bounded closure gate. Both restored devices retain sign-in and are idle/online.
+  hosted activation, enable change or trip upload. Final source `a23601f` has
+  full green CI [39140377015](https://github.com/atrx07/Traelyx/actions/runs/39140377015),
+  including all three jobs, debug/release APKs, native/Flutter checks, server
+  policies and artifacts, closing this bounded scheduler unit.
   Renewed sending consent, reviewed live activation/Stop,
   active recording and physical/two-account reliability remain open.
 
