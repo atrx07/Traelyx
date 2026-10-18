@@ -1146,10 +1146,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     repository/size checks and artifacts. This closes the bounded default-off
     sending-review unit. Separately reviewed live activation/Stop and actual
     on-device consent remain required; no real driver session was created.
-  Prepared next live gate (not started; review required): source `9835ad4` has a
+  Prepared live gate (approved and attempted 2026-10-18; mounted prerequisite
+  remains unverified): source `9835ad4` has a
   compiled controlled debug APK with both pilots enabled, stored only in ignored
-  local state; the ordinary pilot-off APK is preserved separately. No controlled
-  pilot is installed. Read-only hosted readiness on 2026-10-18 confirms both
+  local state; the ordinary pilot-off APK is preserved separately. Read-only
+  hosted readiness on 2026-10-18 confirms both
   enable digests equal `false`, zero driver sessions/events/deliveries and two
   unexpired receiver registrations. The proposed test permits one real Tecno
   activation/Stop cycle while idle, using its existing signed-in account and
@@ -1162,6 +1163,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
   proceeding; do not assume revocation. Restore the ordinary APK without clearing
   app data and verify preserved sign-in/recorder/receiver state. Explicit M6.8
   production review and the user's actual new consent precede this live gate.
+  - [x] After explicit production approval, update-installed the exact pilot
+    without clearing data. All four acknowledgements alone left Confirm disabled
+    until the user selected the required forward direction. The user confirmed;
+    aggregate hosted counts changed from 0/0/0/2/2 to 1/0/0/2/2 (sessions,
+    events, deliveries, devices, unexpired devices).
+  - [x] The user then clarified that the phone was resting on a room table.
+    The rigid vehicle-mount prerequisite was therefore not met. Immediately
+    used the approved Stop path rather than recording or evaluating. The app
+    reports Stop completed and explicit local check says monitoring off;
+    hosted counts return to 0/0/0/2/2 and the driver lease vault is absent.
+    The retained encrypted revoke journal is 37 bytes, matching the versioned
+    empty journal encoding (8 plaintext bytes plus 29 cipher framing bytes).
+    This is session creation/revocation evidence only; do not close mounted
+    consent, calibration, cancellation, driving or delivery validation from it.
+  - [x] Restored ordinary source `9835ad4` APK with both pilots off. Normal
+    startup retains saved sign-in and hides driver controls. All 11,857 recorder
+    hashes and the receiver vault match the pre-test baseline. No recording,
+    backend enable change, event, dispatch/FCM, registration or trip upload.
+    Source CI 39147698943 remains the validation for unchanged implementation;
+    this record adds only live observations. A correctly mounted review and
+    separately reviewed driving/reliability tests remain pending.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

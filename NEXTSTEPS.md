@@ -16,12 +16,15 @@ reviews cannot send. All 484 native app/390 Flutter tests, analysis, app lint,
 configured pilot-off builds and repository checks pass. The isolated physical
 review/reopening/Stop proof passes without a server session or transport, with
 all recorder/receiver hashes preserved. Source `9835ad4` passes full CI 39147698943,
-closing this bounded review gate. Next review a
-concrete real activation/Stop window with actual user consent; backend sending
-stays disabled. Active recording, cancellation and physical/two-account delivery
-reliability remain open. Both backend flags are false; hosted sessions/events/
-deliveries are zero and both receivers are unexpired. The controlled pilot APK
-is prepared but not installed. No real activation, alert or trip upload occurred here.
+closing this bounded review gate. The approved idle live check observed one
+session then exact Stop/revocation (0 → 1 → 0), with zero events/deliveries and
+two unexpired receivers. The user clarified the phone was on a desk; do not
+count this as mounted consent or driving validation. Ordinary pilot-off build,
+saved sign-in and all recorder/receiver hashes are restored/preserved. Next
+resolve the correctly mounted review prerequisite before any real driving
+validation; synthetic desk checks cannot validate calibration or road reliability.
+Active recording, cancellation and physical/two-account delivery reliability
+remain open. Both backend flags remain false. No recording, alert or trip upload.
 
 The serialized one-shot Android host was initially attached behind a fixed false
 sending gate. Its worker removes cancelled timer entries immediately; the new

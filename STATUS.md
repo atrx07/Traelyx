@@ -24,10 +24,15 @@
   Source `9835ad4` passes full CI
   [39147698943](https://github.com/atrx07/Traelyx/actions/runs/39147698943), including
   debug/release APKs, all three jobs and artifacts, closing this bounded review
-  gate. Read-only hosted readiness confirms both enable flags false, zero driver
-  sessions/events/deliveries and two unexpired receivers. A controlled pilot APK
-  is prepared but not installed. Next: reviewed live activation/Stop and actual
-  on-device consent, then active recording and reliability gates.
+  gate. An approved idle activation/Stop check created then revoked one real
+  session (aggregate 0 → 1 → 0); events/deliveries stayed zero and both receivers
+  stayed unexpired. The user then clarified the phone was resting on a desk, so
+  this verifies session cleanup only, not the mounted-consent or driving gate.
+  Stop reports success and local monitoring off; the driver vault is absent.
+  The ordinary pilot-off build is restored, sign-in retained, and all 11,857
+  recorder hashes plus the receiver vault unchanged. Both backend flags remain
+  false. Properly mounted review, live cancellation, active recording and
+  reliability validation remain pending; no drive or alert send occurred.
 
 - M6.8 serialized dispatch scheduling (2026-10-18): one cancellable wake combines
   observed cancellation timing, retry/deadline and event/lease expiry, independent
