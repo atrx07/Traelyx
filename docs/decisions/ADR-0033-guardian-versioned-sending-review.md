@@ -1,7 +1,7 @@
 # ADR-0033: Separate fresh Guardian sending review from local evaluation consent
 
 - Date: 2026-10-18
-- Status: implemented behind default-off debug pilots; live validation pending
+- Status: local, isolated physical and full source CI checks pass; live validation pending
 
 ## Decision
 
@@ -48,3 +48,8 @@ ADR-0031 and ADR-0032. Backend acceptance still does not prove delivery or help.
 - Reviewed hosted activation/Stop, actual on-device consent, accepted cancellation
   under a live lease, active recording and physical/two-account reliability remain
   required before M6.8 completion. Source authorization does not enable production.
+
+Source `9835ad4` passes full CI
+[39147698943](https://github.com/atrx07/Traelyx/actions/runs/39147698943), including
+484 native app/390 Flutter tests, debug/release APKs, server policies and artifacts.
+The scoped physical proof preserves real recorder/receiver data and sign-in.

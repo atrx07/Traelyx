@@ -15,10 +15,13 @@ acknowledgement and native exact-activation/package guards. Existing evaluation
 reviews cannot send. All 484 native app/390 Flutter tests, analysis, app lint,
 configured pilot-off builds and repository checks pass. The isolated physical
 review/reopening/Stop proof passes without a server session or transport, with
-all recorder/receiver hashes preserved. Finish exact-source CI, then review a
+all recorder/receiver hashes preserved. Source `9835ad4` passes full CI 39147698943,
+closing this bounded review gate. Next review a
 concrete real activation/Stop window with actual user consent; backend sending
 stays disabled. Active recording, cancellation and physical/two-account delivery
-reliability remain open. No real activation, alert or trip upload occurred here.
+reliability remain open. Both backend flags are false; hosted sessions/events/
+deliveries are zero and both receivers are unexpired. The controlled pilot APK
+is prepared but not installed. No real activation, alert or trip upload occurred here.
 
 The serialized one-shot Android host was initially attached behind a fixed false
 sending gate. Its worker removes cancelled timer entries immediately; the new

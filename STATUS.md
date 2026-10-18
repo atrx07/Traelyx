@@ -21,8 +21,13 @@
   Keystore/reopening/Stop proof passes with no server session or transport;
   11,857 recorder hashes and the real receiver vault are unchanged. No schema,
   dependency, permission, backend enable, live activation, alert or trip upload.
-  Full exact-source CI remains the closure gate. Next: reviewed live activation/
-  Stop and actual on-device consent, then active recording and reliability gates.
+  Source `9835ad4` passes full CI
+  [39147698943](https://github.com/atrx07/Traelyx/actions/runs/39147698943), including
+  debug/release APKs, all three jobs and artifacts, closing this bounded review
+  gate. Read-only hosted readiness confirms both enable flags false, zero driver
+  sessions/events/deliveries and two unexpired receivers. A controlled pilot APK
+  is prepared but not installed. Next: reviewed live activation/Stop and actual
+  on-device consent, then active recording and reliability gates.
 
 - M6.8 serialized dispatch scheduling (2026-10-18): one cancellable wake combines
   observed cancellation timing, retry/deadline and event/lease expiry, independent

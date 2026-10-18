@@ -1102,7 +1102,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Renewed sending consent and
     reviewed hosted activation/Stop, accepted live cancellation action, active
     recording and physical/two-account reliability remain separate gates.
-  Current bounded unit (2026-10-18): add a versioned, fresh, explicit sending
+  Completed bounded unit (2026-10-18): add a versioned, fresh, explicit sending
   acknowledgement behind a separate default-false debug pilot. Existing reviews
   remain evaluation-only. Bind new sending permission to the exact in-process
   proposal/committed activation; clear it on Stop, owner loss, replacement,
@@ -1141,8 +1141,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     recorder hashes and the receiver vault match the fresh pre-update snapshot;
     production driver vault remains absent. Installed build keeps both pilots off.
     Normal startup retains saved sign-in and hides driver controls.
-  - [ ] Full exact-source CI before bounded closure, followed by separately
-    reviewed live activation/Stop and actual user consent.
+  - [x] Source `9835ad4` passes full exact-source CI 39147698943: all three jobs,
+    debug/release APKs, 484 native app/390 Flutter tests, server policies,
+    repository/size checks and artifacts. This closes the bounded default-off
+    sending-review unit. Separately reviewed live activation/Stop and actual
+    on-device consent remain required; no real driver session was created.
+  Prepared next live gate (not started; review required): source `9835ad4` has a
+  compiled controlled debug APK with both pilots enabled, stored only in ignored
+  local state; the ordinary pilot-off APK is preserved separately. No controlled
+  pilot is installed. Read-only hosted readiness on 2026-10-18 confirms both
+  enable digests equal `false`, zero driver sessions/events/deliveries and two
+  unexpired receiver registrations. The proposed test permits one real Tecno
+  activation/Stop cycle while idle, using its existing signed-in account and
+  fresh on-device review. A private driver session/capability lasts at most eight
+  hours until exact Stop; revision-fence metadata remains after revocation.
+  Verify aggregate sessions 0 → 1 → 0, local fresh authority then no lease/ticket,
+  and unchanged zero events/deliveries and receiver registrations. Do not start a
+  recording or change either backend flag. No ingest, FCM, notification or trip
+  upload. On uncertainty, retry exact Stop from the retained journal before
+  proceeding; do not assume revocation. Restore the ordinary APK without clearing
+  app data and verify preserved sign-in/recorder/receiver state. Explicit M6.8
+  production review and the user's actual new consent precede this live gate.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
