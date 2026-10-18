@@ -201,7 +201,8 @@ IDs, backoff and encrypted schema remain unchanged. See
 `../decisions/ADR-0031-guardian-dispatch-worker-isolation.md`.
 
 `GuardianDispatchSchedule` owns one cancellable scheduled wake on that same
-worker. Generation checks reject already-dequeued cancelled wakes. Enqueue,
+worker. Cancelled futures are removed from the executor queue immediately;
+generation checks reject already-dequeued cancelled wakes. Enqueue,
 explicit cancellation/checks, authority changes and network completion refresh
 the schedule. No active event means no timer; cancellation timing continues after
 the recording handle ends. A fixed false Android sending gate avoids constructing

@@ -11,11 +11,14 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 ## P0 — Define and implement M6.8 Guardian alerts
 
 The serialized one-shot Android host is now attached behind a fixed false
-sending gate. All 478 native app and 384 Flutter tests, analysis, app lint,
+sending gate. Its worker removes cancelled timer entries immediately; the new
+queue regression detects the old behavior. All 479 native app and 384 Flutter tests, analysis, app lint,
 configured builds and repository validation pass. The scoped Tecno proof
 completes real-clock cancellation timing without recorder/watchdog involvement,
 then uses a fake completion only; recorder/receiver hashes remain unchanged.
-Finish exact-source CI before bounded closure. Next integrate renewed sending
+Base source `a343fae` passes full CI 39041962086. Finish exact-source CI for the
+final queue cleanup before bounded closure. Both devices are restored, idle,
+online and retain sign-in. Next integrate renewed sending
 consent and its default-off gate, then request concrete review for hosted
 activation/Stop and network/lifecycle validation. No live ingest is authorized
 by the existing review saying sending is unavailable. Active recording and

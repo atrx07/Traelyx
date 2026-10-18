@@ -4,13 +4,12 @@ import android.content.Context
 import android.os.SystemClock
 import android.provider.Settings
 import io.github.atrx07.traelyx.R
-import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 /** A single worker serializes account binding and all encrypted-vault operations across Activity recreation. */
 object AndroidGuardianActivationRuntime {
-    private val worker = Executors.newSingleThreadScheduledExecutor()
+    private val worker = guardianControlExecutor()
     private var bridge: GuardianActivationBridge? = null
     private var coordinator: GuardianActivationCoordinator? = null
     private var recording: GuardianRecordingSession? = null

@@ -42,7 +42,9 @@ Control/storage failures fail dispatch closed without throwing into recording.
 The coordinator returns a monotonic wake time instead of creating a polling
 timer. `GuardianDispatchSchedule` combines it with cancellation-offer observation,
 maturity and expiry, scheduling one cancellable wake on the serialized Android
-worker. It pumps after relevant events and completions, independently of the
+worker. The executor removes cancelled futures immediately instead of retaining
+them until their previous deadlines; generation checks still fence dequeued
+callbacks. It pumps after relevant events and completions, independently of the
 recorder watchdog, and has no timer without pending work. The Android factory
 has a fixed false sending gate and constructs no network worker while disabled.
 There is no build-flag bypass. Existing sending-unavailable review text does not

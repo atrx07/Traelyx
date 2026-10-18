@@ -1078,7 +1078,24 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     real receiver vault match the fresh pre-update snapshot; ordinary pilot-off
     startup retains sign-in, with no production driver vault. No dependency,
     schema, permission request, enable change, hosted activation or trip upload.
-  - [ ] Full exact-source CI before bounded closure. Renewed sending consent and
+  - [x] Source `a343fae` passes full exact-source CI 39041962086, including all
+    three jobs, both APKs, native/Flutter checks, server policies and artifacts.
+    Resume audit (2026-10-18): Tecno and cold-booted Pixel are authorized, online,
+    idle and retain saved sign-in. No data reset or account replacement. A pending
+    executor cleanup remained uncommitted at interruption: use remove-on-cancel
+    so repeated expiry-wake replacement cannot retain cancelled tasks until old
+    deadlines. The new actual-worker queue regression fails with the former
+    policy and detects retained entries; restore the fix before final checks.
+  - [x] Final queue cleanup passes the actual-worker regression: 500 cancelled
+    ten-minute wakes leave no queued entries. All 479 native app tests and
+    dependency suites pass, with app lint and configured pilot-off debug/test
+    builds. Format/repository validation pass. The final isolated Tecno scheduler
+    proof passes again with a fake transport and no hosted activation/ingest;
+    all 11,857 recorder hashes and the receiver vault match the new resume
+    baseline, with no production driver vault. Existing Flutter source is
+    unchanged from the base's 384 passing tests and full CI.
+  - [ ] Full exact-source queue-cleanup CI before final scheduling-unit closure.
+    Renewed sending consent and
     reviewed hosted activation/Stop, accepted live cancellation action, active
     recording and physical/two-account reliability remain separate gates.
   Next bounded unit: expose credential-free, account-checked local driver status
