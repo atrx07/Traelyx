@@ -6,6 +6,67 @@ import 'package:traelyx/features/guardian/guardian_driver_consent_review.dart';
 const owner = '11111111-1111-4111-8111-111111111111';
 
 void main() {
+  testWidgets(
+    'all acknowledgements without direction explain disabled confirm',
+    (tester) async {
+      GuardianDriverConsent? result;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () async =>
+                    result = await showGuardianDriverConsentReview(
+                      context,
+                      owner,
+                      sendingAvailable: true,
+                    ),
+                child: const Text('Review setup'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Review setup'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('phone resting on a table'), findsOneWidget);
+      for (final key in [
+        'guardian-rigid-mount',
+        'guardian-safety-limits',
+        'guardian-recipient-sharing',
+        'guardian-sending-consent',
+      ]) {
+        await tester.ensureVisible(find.byKey(ValueKey(key)));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(ValueKey(key)));
+        await tester.pumpAndSettle();
+      }
+      final confirm = find.byKey(const ValueKey('guardian-confirm-review'));
+      expect(tester.widget<FilledButton>(confirm).onPressed, isNull);
+      final guidance = find.text('Choose the phone forward direction first.');
+      expect(guidance, findsOneWidget);
+      expect(guidance.hitTestable(), findsOneWidget);
+      expect(find.text('Cancel').hitTestable(), findsOneWidget);
+      expect(result, isNull);
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('guardian-forward-axis')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('guardian-forward-axis')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Top edge').last);
+      await tester.pumpAndSettle();
+      expect(tester.widget<FilledButton>(confirm).onPressed, isNotNull);
+      expect(
+        find.byKey(const ValueKey('guardian-review-required-choice')),
+        findsNothing,
+      );
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(result, isNull);
+    },
+  );
+
   testWidgets('review stays cancellable and needs every explicit choice', (
     tester,
   ) async {
@@ -30,6 +91,10 @@ void main() {
       find.byKey(const ValueKey('guardian-confirm-review')),
     );
     expect(confirm().onPressed, isNull);
+    expect(
+      find.text('Choose the phone forward direction first.'),
+      findsOneWidget,
+    );
     expect(find.textContaining('not emergency assistance'), findsOneWidget);
     expect(find.textContaining('monitoring stops'), findsOneWidget);
     expect(find.textContaining('Saved consent alone'), findsOneWidget);
@@ -51,6 +116,11 @@ void main() {
     await tester.tap(find.text('Top edge').last);
     await tester.pumpAndSettle();
     expect(confirm().onPressed, isNull);
+
+    expect(
+      find.text('Confirm a rigid vehicle mount, or cancel if not ready.'),
+      findsOneWidget,
+    );
 
     for (final key in [
       'guardian-rigid-mount',
@@ -124,6 +194,13 @@ void main() {
       }
       expect(confirm().onPressed, isNull);
       final sending = find.byKey(const ValueKey('guardian-sending-consent'));
+      expect(
+        find
+            .text('Review and agree to experimental sending for this session.')
+            .hitTestable(),
+        findsOneWidget,
+      );
+      expect(find.text('Cancel').hitTestable(), findsOneWidget);
       expect(tester.widget<CheckboxListTile>(sending).value, isFalse);
       await tester.ensureVisible(sending);
       await tester.pumpAndSettle();

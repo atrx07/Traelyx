@@ -13,6 +13,21 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
   var safetyLimits = false;
   var recipientSharing = false;
   var sending = false;
+  String? missingChoice() {
+    if (forwardAxis == null) return 'Choose the phone forward direction first.';
+    if (!rigidMount) {
+      return 'Confirm a rigid vehicle mount, or cancel if not ready.';
+    }
+    if (!safetyLimits) return 'Review and acknowledge the safety limits.';
+    if (!recipientSharing) {
+      return 'Review and agree to the limited Guardian notices.';
+    }
+    if (sendingAvailable && !sending) {
+      return 'Review and agree to experimental sending for this session.';
+    }
+    return null;
+  }
+
   return showDialog<GuardianDriverConsent>(
     context: context,
     builder: (context) => StatefulBuilder(
@@ -47,7 +62,8 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
               ),
               const SizedBox(height: 12),
               const Text(
-                'Mount the phone rigidly. Choose which part of the mounted phone points toward the front of the vehicle. '
+                'Review while parked with the phone rigidly mounted in the vehicle. A phone resting on a table does not meet this requirement. '
+                'Choose which part of the mounted phone points toward the front of the vehicle. '
                 'If the mount moves, stop and review the direction again.',
               ),
               const SizedBox(height: 8),
@@ -128,18 +144,25 @@ Future<GuardianDriverConsent?> showGuardianDriverConsentReview(
           ),
         ),
         actions: [
+          if (missingChoice() case final String message)
+            SizedBox(
+              width: double.infinity,
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  message,
+                  key: const ValueKey('guardian-review-required-choice'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
           FilledButton(
             key: const ValueKey('guardian-confirm-review'),
-            onPressed:
-                forwardAxis != null &&
-                    rigidMount &&
-                    safetyLimits &&
-                    recipientSharing &&
-                    (!sendingAvailable || sending)
+            onPressed: missingChoice() == null
                 ? () => Navigator.pop(
                     context,
                     GuardianDriverConsent(

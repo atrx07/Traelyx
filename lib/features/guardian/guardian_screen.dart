@@ -7,6 +7,7 @@ import 'package:traelyx/core/platform/recorder_bridge.dart';
 import 'package:traelyx/core/platform/recorder_providers.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_driver_controls.dart';
 import 'package:traelyx/features/guardian/guardian_driver_controls_panel.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status_panel.dart';
 import 'package:traelyx/features/guardian/guardian_inbox.dart';
@@ -318,6 +319,7 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
   Widget build(BuildContext context) {
     final state = ref.watch(guardianControllerProvider(widget.owner));
     final recipientPilot = ref.watch(guardianRecipientPilotProvider);
+    final sendingPilot = ref.watch(guardianDriverSendingPilotProvider);
     final snapshot = state.snapshot;
     final invite = state.issued ?? snapshot?.invite;
     final preview = state.preview;
@@ -329,9 +331,9 @@ class _GuardianContentState extends ConsumerState<_GuardianContent>
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'Pair with a trusted person and review permission preferences. '
-          'Alert sending, live safety state and emergency delivery are not available in this test build. '
+          '${sendingPilot ? 'Experimental sending requires a separate driver review and receiver registration; delivery is not guaranteed. Live safety-state sharing and emergency delivery are unavailable.' : 'Alert sending, live safety state and emergency delivery are not available in this test build.'} '
           'Pairing must not be relied on for emergency assistance.',
         ),
         const SizedBox(height: 12),

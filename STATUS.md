@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 review clarity (2026-10-19): disabled Confirm explains the next required
+  choice beside its actions; a phone on a table explicitly fails the vehicle-mount
+  prerequisite. Pilot status/pairing text distinguishes sending review from
+  backend availability and delivery. All consent gates remain required and
+  default-off. Five new regressions plus all 395 Flutter tests, analysis,
+  configured pilot-off debug build and repository checks pass. Exact-source CI
+  pending. No native/server contract, permission or phone/backend state change;
+  mounted vehicle validation remains deferred.
+
 - M6.8 desk-safe integration coverage (2026-10-19): five synthetic cross-component
   tests cover versioned review through recording callbacks, cancellation and
   scheduled fake handoff. Old consent never constructs transport; new consent

@@ -221,12 +221,19 @@ Ordinary and release builds keep activation/Stop controls hidden. A separately
 configured debug driver pilot can expose Review driver alerts and Stop driver
 alerts below this check. Review requires an idle-recorder preflight before the
 dialog and again before activation, a fresh account-bound review, mount/axis
-choices and all acknowledgements. Cancelling, backgrounding, navigation or account
+choices and all acknowledgements. Beside the dialog actions, explain the next
+missing choice while Confirm is disabled, including direction when all boxes
+are checked. Keep Cancel accessible with large text. Explain that a phone on a
+table does not satisfy the parked rigid vehicle-mount prerequisite. No choice
+is preselected or waived. Cancelling, backgrounding, navigation or account
 change cannot produce late success. Describe the account session and private
 lease (up to eight hours), and distinguish saved consent from observed monitoring.
 Stop stays available during activation, stops only Guardian and reports incomplete
 confirmation honestly. Explain that already handed-off notices cannot be retracted.
-The pilot explicitly says sending is unavailable. It now offers Check pending
+The evaluation-only pilot explicitly says sending is unavailable. A separate
+default-off sending pilot uses a fresh versioned acknowledgement; status/pairing
+copy must describe that prerequisite without claiming backend availability,
+active monitoring or delivery. Both pilots offer Check pending
 alerts and exact local Cancel alert actions, with experimental labels and honest
 local/attempted/backend-accepted states. A generic private Android notice also
 offers cancellation; review discloses it. Neither a stale check nor a notification

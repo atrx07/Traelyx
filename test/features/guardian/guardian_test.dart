@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/guardian/guardian_controller.dart';
+import 'package:traelyx/features/guardian/guardian_driver_controls.dart';
 import 'package:traelyx/features/guardian/guardian_models.dart';
 import 'package:traelyx/features/guardian/guardian_screen.dart';
 import '../summary_sync/summary_sync_test.dart' show TestAccount, userA, userB;
@@ -405,6 +406,52 @@ void main() {
     expect(fake.reads, 1);
     c.dispose();
   });
+  for (final pilot in [false, true]) {
+    testWidgets(
+      'pairing sending pilot $pilot explains limits without network reads',
+      (tester) async {
+        final fake = GuardianFake();
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              accountGatewayProvider.overrideWithValue(TestAccount()),
+              guardianGatewayProvider.overrideWithValue(fake),
+              guardianDriverSendingPilotProvider.overrideWithValue(pilot),
+            ],
+            child: const MaterialApp(home: Scaffold(body: GuardianScreen())),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(fake.reads, 0);
+        if (pilot) {
+          expect(
+            find.textContaining(
+              'separate driver review and receiver registration',
+            ),
+            findsOneWidget,
+          );
+          expect(
+            find.textContaining('delivery is not guaranteed'),
+            findsOneWidget,
+          );
+          expect(
+            find.textContaining('Alert sending, live safety state'),
+            findsNothing,
+          );
+        } else {
+          expect(
+            find.textContaining('Alert sending, live safety state'),
+            findsOneWidget,
+          );
+        }
+        expect(
+          find.textContaining('must not be relied on for emergency assistance'),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
   testWidgets('signed-out large text is accountless and performs no reads', (
     tester,
   ) async {

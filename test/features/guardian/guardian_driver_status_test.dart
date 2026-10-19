@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
 import 'package:traelyx/features/account/domain/account_gateway.dart';
 import 'package:traelyx/features/account/domain/account_identity.dart';
+import 'package:traelyx/features/guardian/guardian_driver_controls.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status.dart';
 import 'package:traelyx/features/guardian/guardian_driver_status_panel.dart';
 
@@ -46,6 +47,50 @@ final class Port implements GuardianDriverStatusPort {
 }
 
 void main() {
+  for (final pilot in [false, true]) {
+    testWidgets(
+      'sending pilot $pilot status copy never implies backend readiness',
+      (tester) async {
+        final account = Account();
+        final port = Port();
+        addTearDown(account.changes.close);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              accountGatewayProvider.overrideWithValue(account),
+              guardianDriverStatusPortProvider.overrideWithValue(port),
+              guardianDriverPilotProvider.overrideWithValue(true),
+              guardianDriverSendingPilotProvider.overrideWithValue(pilot),
+            ],
+            child: const MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: GuardianDriverStatusPanel(owner: owner),
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(port.calls, 0);
+        if (pilot) {
+          expect(find.textContaining('fresh driver review'), findsOneWidget);
+          expect(
+            find.textContaining(
+              'does not confirm backend availability or delivery',
+            ),
+            findsOneWidget,
+          );
+          expect(find.textContaining('sending is unavailable'), findsNothing);
+        } else {
+          expect(
+            find.textContaining('Alert sending is unavailable'),
+            findsOneWidget,
+          );
+        }
+        expect(find.text('Driver state has not been checked.'), findsOneWidget);
+      },
+    );
+  }
   TestWidgetsFlutterBinding.ensureInitialized();
   test('wire states enforce exact shape and bounded consistent consent', () {
     final now = DateTime.utc(2026, 10, 11);

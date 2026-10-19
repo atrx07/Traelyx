@@ -1218,6 +1218,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     repository/size checks and artifacts. This closes only synthetic integration
     coverage; the deferred mounted/vehicle and remaining M6.8 reliability gates
     remain open. No phone or production changes occurred during this unit.
+  Next bounded UI clarity unit (2026-10-19): address the observed disabled-Confirm
+  confusion without relaxing consent. Show the next required choice beside the
+  dialog actions, keep Cancel usable at large text, and explicitly distinguish
+  a parked rigid vehicle mount from a phone on a desk. Keep status/pairing copy
+  consistent with the default-off sending pilot, without inferring backend
+  availability or successful delivery. No acknowledgement defaults, authority,
+  wire/schema, permission, provider or backend change. Require regression of all
+  acknowledgements selected with direction still missing, large-text navigation,
+  pilot/default copy and no automatic status/network calls, Flutter suites,
+  analysis, configured build, repository checks and exact-source CI. The deferred
+  vehicle gate remains open; no live activation or phone review is needed here.
+  - [x] Disabled Confirm now shows the next required choice with a live-region
+    explanation beside the actions, including the observed all-boxes/no-direction
+    case. Explicit copy says a table is not a rigid vehicle mount. Default and
+    sending-pilot status/pairing wording stay distinct; neither a local check nor
+    pairing claims backend readiness or delivery. No choice is waived or filled.
+    Five new widget regressions and existing large-text/consent tests pass; all
+    395 Flutter tests, analysis, configured pilot-off debug build and repository
+    checks pass. No native contract, network behavior, migration, permission or
+    dependency changes; no device update, live review or production operation.
+  - [ ] Record exact-source CI and persist the bounded UI unit.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

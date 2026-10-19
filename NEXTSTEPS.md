@@ -10,6 +10,12 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Review clarity now explains the missing Confirm prerequisite and the actual
+vehicle-mount requirement, with consistent pilot status/pairing limits. All 395
+Flutter tests, analysis, configured pilot-off build and repository checks pass;
+await exact-source CI for this bounded UI correction. No live review or backend
+change. Retain the deferred mounted/vehicle checklist for the maintainer.
+
 Five new synthetic integration tests join reviewed activation, recording
 callbacks, outbox, cancellation and scheduled fake handoff. All 489 app native
 tests plus dependency suites and repository checks pass. Source `cd00629` passes

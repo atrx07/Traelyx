@@ -46,7 +46,7 @@ class _GuardianDriverStatusPanelState
         Text(
           ref.watch(guardianDriverPilotProvider)
               ? 'This checks only this phone. It does not enable monitoring or send an alert. '
-                    'Alert sending is unavailable in this build.'
+                    '${ref.watch(guardianDriverSendingPilotProvider) ? 'Experimental sending requires a fresh driver review. This check does not confirm backend availability or delivery.' : 'Alert sending is unavailable in this build.'}'
               : 'This checks only this phone. It does not enable monitoring or send an alert. '
                     'Driver activation and sending are unavailable in this test build.',
         ),
