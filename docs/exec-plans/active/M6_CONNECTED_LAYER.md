@@ -1218,7 +1218,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     repository/size checks and artifacts. This closes only synthetic integration
     coverage; the deferred mounted/vehicle and remaining M6.8 reliability gates
     remain open. No phone or production changes occurred during this unit.
-  Next bounded UI clarity unit (2026-10-19): address the observed disabled-Confirm
+  Completed bounded UI clarity unit (2026-10-19): address the observed disabled-Confirm
   confusion without relaxing consent. Show the next required choice beside the
   dialog actions, keep Cancel usable at large text, and explicitly distinguish
   a parked rigid vehicle mount from a phone on a desk. Keep status/pairing copy
@@ -1238,7 +1238,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     395 Flutter tests, analysis, configured pilot-off debug build and repository
     checks pass. No native contract, network behavior, migration, permission or
     dependency changes; no device update, live review or production operation.
-  - [ ] Record exact-source CI and persist the bounded UI unit.
+  - [x] Source `37906dc` passes full exact-source CI 39296488417: all three jobs,
+    395 Flutter tests, native suites, debug/release APKs, cloud SQL/RLS and Edge
+    suites, repository/size checks and artifacts. This closes the bounded UI
+    correction only. The build was not installed on either device; real-device
+    rendering is unverified for this correction. Mounted vehicle and remaining
+    M6.8 active-device/delivery gates remain open. No production change.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

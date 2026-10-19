@@ -12,9 +12,10 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 Review clarity now explains the missing Confirm prerequisite and the actual
 vehicle-mount requirement, with consistent pilot status/pairing limits. All 395
-Flutter tests, analysis, configured pilot-off build and repository checks pass;
-await exact-source CI for this bounded UI correction. No live review or backend
-change. Retain the deferred mounted/vehicle checklist for the maintainer.
+Flutter tests, analysis, configured pilot-off build and repository checks pass.
+Source `37906dc` passes full CI 39296488417, closing this bounded UI correction.
+No live review or backend change. Retain the deferred mounted/vehicle checklist
+for the maintainer; remaining active-device and delivery gates stay open.
 
 Five new synthetic integration tests join reviewed activation, recording
 callbacks, outbox, cancellation and scheduled fake handoff. All 489 app native

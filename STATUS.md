@@ -15,9 +15,11 @@
   prerequisite. Pilot status/pairing text distinguishes sending review from
   backend availability and delivery. All consent gates remain required and
   default-off. Five new regressions plus all 395 Flutter tests, analysis,
-  configured pilot-off debug build and repository checks pass. Exact-source CI
-  pending. No native/server contract, permission or phone/backend state change;
-  mounted vehicle validation remains deferred.
+  configured pilot-off debug build and repository checks pass. Source `37906dc`
+  passes full [CI 39296488417](https://github.com/atrx07/Traelyx/actions/runs/39296488417),
+  including all three jobs, native/Flutter tests, debug/release APKs and artifacts.
+  This closes the bounded UI correction. No native/server contract, permission
+  or phone/backend state change; mounted vehicle validation remains deferred.
 
 - M6.8 desk-safe integration coverage (2026-10-19): five synthetic cross-component
   tests cover versioned review through recording callbacks, cancellation and
