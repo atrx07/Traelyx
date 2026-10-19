@@ -1192,7 +1192,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Resume only when ready; do not acknowledge a vehicle mount on a table.
     Active driving/calibration/performance checks follow their own reviewed
     scope; do not perform dangerous maneuvers or physical impact tests.
-  Next bounded desk-safe unit: connect the existing versioned activation bridge,
+  Completed bounded desk-safe unit: connect the existing versioned activation bridge,
   recording-session callback, cancellation controls and scheduler in a synthetic
   native integration harness. Inject only generated detections, in-memory
   persistence, virtual clocks/notices and a fake ingest runner. Verify old
@@ -1213,7 +1213,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     All 489 native app tests and dependency suites pass with zero app failures,
     errors or skips; repository validation and whitespace checks pass. Only test
     and progress-document files changed. No phone or production operation.
-  - [ ] Record exact-source CI and persist the bounded unit.
+  - [x] Source `cd00629` passes full exact-source CI 39293105212: all three jobs,
+    Flutter/native tests, debug/release APKs, cloud SQL/RLS and Edge suites,
+    repository/size checks and artifacts. This closes only synthetic integration
+    coverage; the deferred mounted/vehicle and remaining M6.8 reliability gates
+    remain open. No phone or production changes occurred during this unit.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

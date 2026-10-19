@@ -12,8 +12,9 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 Five new synthetic integration tests join reviewed activation, recording
 callbacks, outbox, cancellation and scheduled fake handoff. All 489 app native
-tests plus dependency suites and repository checks pass; await exact-source CI
-before closing this bounded coverage unit. No phone or production changes.
+tests plus dependency suites and repository checks pass. Source `cd00629` passes
+full CI 39293105212, closing this bounded coverage unit. No phone or production
+changes. Deferred mounted/vehicle checks remain open for the maintainer.
 
 Sending review v1 now has a separate default-off debug pilot, fresh versioned
 acknowledgement and native exact-activation/package guards. Existing evaluation
@@ -25,10 +26,10 @@ closing this bounded review gate. The approved idle live check observed one
 session then exact Stop/revocation (0 → 1 → 0), with zero events/deliveries and
 two unexpired receivers. The user clarified the phone was on a desk; do not
 count this as mounted consent or driving validation. Ordinary pilot-off build,
-saved sign-in and all recorder/receiver hashes are restored/preserved. Next
-continue synthetic cross-component activation/recording-callback/cancellation/
-scheduler checks with fake transport. The maintainer deferred the correctly
-mounted vehicle review and driving tests on 2026-10-19; retain them for later.
+saved sign-in and all recorder/receiver hashes are restored/preserved. Synthetic
+cross-component checks with fake transport are now verified above. The maintainer
+deferred the correctly mounted vehicle review and driving tests on 2026-10-19;
+retain them for later.
 Synthetic desk checks cannot validate calibration or road reliability.
 Active recording, cancellation and physical/two-account delivery reliability
 remain open. Both backend flags remain false. No recording, alert or trip upload.

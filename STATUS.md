@@ -15,8 +15,11 @@
   scheduled fake handoff. Old consent never constructs transport; new consent
   waits the observed window, and cancellation/Stop/restart deny stale work.
   All 489 app native tests and dependency suites pass; repository checks pass.
-  Exact-source CI is pending. No product behavior, schema, dependency, phone or
-  backend state changed. Mounted vehicle validation remains deferred by request.
+  Source `cd00629` passes full exact-source
+  [CI 39293105212](https://github.com/atrx07/Traelyx/actions/runs/39293105212), including
+  all three jobs, Flutter/native suites, debug/release APKs and artifacts. This
+  closes the bounded coverage unit. No product behavior, schema, dependency,
+  phone or backend state changed. Mounted vehicle validation remains deferred.
 
 - M6.8 sending review v1 (2026-10-18): separate default-off debug pilot and
   unchecked acknowledgement; old evaluation-only consent cannot enable sending.
