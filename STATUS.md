@@ -10,6 +10,14 @@
 
 ## Working
 
+- M6.8 desk-safe integration coverage (2026-10-19): five synthetic cross-component
+  tests cover versioned review through recording callbacks, cancellation and
+  scheduled fake handoff. Old consent never constructs transport; new consent
+  waits the observed window, and cancellation/Stop/restart deny stale work.
+  All 489 app native tests and dependency suites pass; repository checks pass.
+  Exact-source CI is pending. No product behavior, schema, dependency, phone or
+  backend state changed. Mounted vehicle validation remains deferred by request.
+
 - M6.8 sending review v1 (2026-10-18): separate default-off debug pilot and
   unchecked acknowledgement; old evaluation-only consent cannot enable sending.
   Strict native version/owner fields and a debuggable-package guard bind new
@@ -33,6 +41,8 @@
   recorder hashes plus the receiver vault unchanged. Both backend flags remain
   false. Properly mounted review, live cancellation, active recording and
   reliability validation remain pending; no drive or alert send occurred.
+  The maintainer deferred mounted/vehicle checks on 2026-10-19; continue desk-safe
+  synthetic integration coverage while retaining those acceptance gates.
 
 - M6.8 serialized dispatch scheduling (2026-10-18): one cancellable wake combines
   observed cancellation timing, retry/deadline and event/lease expiry, independent

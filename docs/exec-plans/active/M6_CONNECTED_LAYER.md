@@ -1184,6 +1184,36 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Source CI 39147698943 remains the validation for unchanged implementation;
     this record adds only live observations. A correctly mounted review and
     separately reviewed driving/reliability tests remain pending.
+  User deferral (2026-10-19): defer the correctly mounted vehicle review and
+  driving/performance checks until the maintainer is ready. Keep them open as
+  acceptance gates; desk simulation cannot replace sensor or road validation.
+  - [ ] Deferred maintainer task: while parked, rigidly mount the phone in the
+    vehicle, choose its actual forward direction and complete a fresh review.
+    Resume only when ready; do not acknowledge a vehicle mount on a table.
+    Active driving/calibration/performance checks follow their own reviewed
+    scope; do not perform dangerous maneuvers or physical impact tests.
+  Next bounded desk-safe unit: connect the existing versioned activation bridge,
+  recording-session callback, cancellation controls and scheduler in a synthetic
+  native integration harness. Inject only generated detections, in-memory
+  persistence, virtual clocks/notices and a fake ingest runner. Verify old
+  consent never constructs transport, fresh sending consent waits the full
+  observed cancellation window, cancellation persists without reservation,
+  Stop blocks queued handoff/late evidence, and restart cannot reuse sending
+  permission or resume evaluation. No production code, phone/account state,
+  backend enable, network request, raw recording, dependency or schema change.
+  Require the targeted integration tests, all native suites, repository checks
+  and exact-source CI. This does not close any deferred physical gate.
+  - [x] Five integration tests join the production versioned bridge, fresh
+    activation coordinator, recording-session callback, outbox, foreground
+    cancellation and scheduler. Old reviews enqueue without transport or
+    reservation; new review waits the full observed 30 seconds even after the
+    recording handle ends. Cancellation persists with zero attempts. Stop
+    rejects queued handoff, late detection and late acceptance. A reopened
+    coordinator retains cleanup evidence but cannot evaluate, notify or send.
+    All 489 native app tests and dependency suites pass with zero app failures,
+    errors or skips; repository validation and whitespace checks pass. Only test
+    and progress-document files changed. No phone or production operation.
+  - [ ] Record exact-source CI and persist the bounded unit.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
