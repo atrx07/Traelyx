@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 two-account preparation (2026-10-21): saved Pixel_10 restarted and both
+  devices update-installed with ordinary tested source `37906dc`. Sign-in/pairing,
+  all 11,857 Tecno recorder hashes, zero Pixel recorder files and both receiver
+  vaults are preserved; recorders idle and driver vaults absent. Both backend
+  flags are false; aggregate readiness is 0/0/0/2/2/1/1. Guarded fixture 1001–1003,
+  exact cleanup and disposable inbox/claim/preservation regressions are prepared
+  for CI, not deployed. See `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
+  SQL CI and concrete production review remain required; no live alert was sent.
+
 - M6.8 review clarity (2026-10-19): disabled Confirm explains the next required
   choice beside its actions; a phone on a table explicitly fails the vehicle-mount
   prerequisite. Pilot status/pairing text distinguishes sending review from

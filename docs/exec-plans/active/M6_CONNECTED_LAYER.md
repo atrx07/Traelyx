@@ -1244,6 +1244,34 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     correction only. The build was not installed on either device; real-device
     rendering is unverified for this correction. Mounted vehicle and remaining
     M6.8 active-device/delivery gates remain open. No production change.
+  Next bounded preparation (2026-10-21): verify the existing Tecno/Pixel pair
+  and prepare one synthetic backend delivery/inbox window without native driver
+  activation or a drive. Keep the mounted/vehicle gate deferred. Reuse the sole
+  existing active directional relationship and its current possible-crash-only
+  permission; create no profile, account, connection or device. Prepare guarded
+  admin SQL for only one eight-minute test session, generated event and delivery
+  (fixture 1001–1003), using no usable retained driver credential. Select the
+  single guardian device without exposing its routing/receipt token. Refuse
+  nonempty queues, multiple pairs/devices, permission changes and ID collisions.
+  Exact-lineage cleanup must preserve profiles, pairing, registrations, revision
+  metadata and any newer replacement session. Verify these guards, one-claim
+  dispatch, two authenticated inbox roles and recipient-only viewing in disposable
+  PostgreSQL CI before requesting production review. Existing bounded worker and
+  processing-window contracts remain unchanged. No hosted staging, enablement,
+  worker credential or send is authorized by preparation.
+  - [x] Pixel_10 restarted with saved data; both devices authorized, signed in,
+    network validated and recorders inactive. Update-installed ordinary source
+    `37906dc` without clearing data. All 11,857 Tecno recorder hashes, zero Pixel
+    recorder files and both receiver vaults match fresh private baselines; both
+    driver vaults are absent. Explicit read-only pairing reloads show Paired on
+    both. Dashboard enable digests remain false; aggregate sessions/events/
+    deliveries/devices/unexpired/pairs/ready-receiver-pairs are 0/0/0/2/2/1/1.
+  - [x] Prepared fixture/cleanup, disposable SQL guard/inbox regressions and
+    `GUARDIAN_TWO_ACCOUNT_CHECK.md`, with no production execution. Local Docker
+    was not running; no service was started/repaired. Use existing disposable
+    PostgreSQL 17 CI for executable SQL validation before production review.
+  - [ ] Pass exact-source CI, persist preparation, then request concrete production
+    review. No backend or phone activation is included in this preparation.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -10,6 +10,12 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Next: finish exact-source SQL CI for the prepared two-account fixture and review
+the bounded single-message/inbox scope in `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
+The saved Tecno/Pixel pairing is reloaded, latest ordinary builds are installed
+with trip/receiver hashes preserved, and both enable flags are false. No hosted
+fixture, worker credential or send yet. Vehicle tests stay deferred.
+
 Review clarity now explains the missing Confirm prerequisite and the actual
 vehicle-mount requirement, with consistent pilot status/pairing limits. All 395
 Flutter tests, analysis, configured pilot-off build and repository checks pass.
