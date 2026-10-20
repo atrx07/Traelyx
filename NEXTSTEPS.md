@@ -10,13 +10,17 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Next: request production review for the validated two-account fixture and bounded
-single-message/inbox scope in `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
-Source `8ad6be0` passes full CI 39482359166, including the new fixture's guard,
-inbox-role, one-claim and preservation checks, all existing suites and both APKs.
-The saved Tecno/Pixel pairing is reloaded, latest ordinary builds are installed
-with trip/receiver hashes preserved, and both enable flags are false. No hosted
-fixture, worker credential or send yet. Vehicle tests stay deferred.
+The reviewed two-account single-alert/inbox test passed and is closed/cleaned
+(2026-10-21); see `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`. One Pixel receipt,
+notice/tap, incoming/outgoing roles and recipient-only Open/viewed status passed.
+Both flags are false, test worker retired/deleted and hosted baseline restored.
+All trip files are preserved; Pixel's receiver vault changed for its expected
+durable notice claim while its registration remains valid. Fixture source
+`8ad6be0` passes full CI 39482359166. No new runtime/schema change.
+Next: retain the remaining mounted review, active recording/calibration,
+cancellation/ingestion and physical reliability checklist for the maintainer.
+Vehicle tests remain explicitly deferred; do not start them or M7 from this
+synthetic integration result. M6.8 stays incomplete.
 
 Review clarity now explains the missing Confirm prerequisite and the actual
 vehicle-mount requirement, with consistent pilot status/pairing limits. All 395
@@ -46,8 +50,9 @@ cross-component checks with fake transport are now verified above. The maintaine
 deferred the correctly mounted vehicle review and driving tests on 2026-10-19;
 retain them for later.
 Synthetic desk checks cannot validate calibration or road reliability.
-Active recording, cancellation and physical/two-account delivery reliability
-remain open. Both backend flags remain false. No recording, alert or trip upload.
+Active recording, cancellation and physical delivery reliability remain open;
+the synthetic two-account inbox gate is now verified above. Both backend flags
+remain false. No recording or trip upload occurred.
 
 The serialized one-shot Android host was initially attached behind a fixed false
 sending gate. Its worker removes cancelled timer entries immediately; the new

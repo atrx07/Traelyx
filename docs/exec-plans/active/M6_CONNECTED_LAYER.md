@@ -1283,6 +1283,31 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     permission check returns true. No retained test worker file exists.
     Persist preparation, then request concrete production review. No hosted
     fixture, worker rotation, enablement, mobile activation or push occurred.
+  - [x] Reviewed live two-account check and exact cleanup passed (2026-10-21).
+    Saved Pixel restart/ADB reauthorization retained the guardian account and
+    registration. Stage 1001–1003 returned ready/pending/two-devices true; fresh
+    queue/window headroom exceeded 300 seconds. One invocation processed=1,
+    provider_accepted=1, all other counters zero; Pixel received one generic
+    notice and hosted attempts=1/device_received. Both flags closed at 01:19:05
+    IST, about 30 seconds after provider acceptance, inside the six-minute
+    server lease. Actual notice tap retained Guardian's scroll; after bringing
+    the inbox into view it was unloaded. Explicit reads showed the Pixel's
+    incoming/Open action and Tecno's outgoing-only row. Pixel Open displayed
+    details; Tecno reload and hosted status became viewed, still attempts=1.
+    Worker retirement digest, old-value 401, local deletion, disabled probes and
+    approved lineage cleanup passed. Final counts 0/0/0/2/2/1/1; both inboxes
+    empty after explicit reload. All 11,857 Tecno recorder hashes and its receiver
+    vault match; Pixel has zero trip files, and both driver vaults are absent.
+    The generic comparison flagged Pixel receiver ciphertext inequality:
+    successful claimNotice intentionally persists noticeDeliveryIds in that
+    encrypted file. Retain the original comparison, verify owner-bound local
+    registration, and correct the check procedure rather than restoring old
+    ciphertext or claiming byte equality. Existing vault preservation/restart
+    tests cover this contract. No new runtime/schema/dependency, native mobile
+    activation, registration, permission, recording or trip upload. This closes
+    only the synthetic two-account delivery/inbox gate; mounted/native-active,
+    performance and physical reliability validation remain deferred/open.
+    See `GUARDIAN_TWO_ACCOUNT_CHECK.md`; no M6.8 completion or M7 activation.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

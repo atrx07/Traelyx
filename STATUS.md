@@ -10,18 +10,21 @@
 
 ## Working
 
-- M6.8 two-account preparation (2026-10-21): saved Pixel_10 restarted and both
-  devices update-installed with ordinary tested source `37906dc`. Sign-in/pairing,
-  all 11,857 Tecno recorder hashes, zero Pixel recorder files and both receiver
-  vaults are preserved; recorders idle and driver vaults absent. Both backend
-  flags are false; aggregate readiness is 0/0/0/2/2/1/1. Guarded fixture 1001–1003,
-  exact cleanup and disposable inbox/claim/preservation regressions pass full
-  source `8ad6be0` [CI 39482359166](https://github.com/atrx07/Traelyx/actions/runs/39482359166),
-  including all three jobs, SQL suites/upgrade, Flutter/native tests and both
-  APKs/artifacts. Both notification permissions/provider markers and the current
-  permission contract pass read-only checks. Preparation is complete, not
-  deployed. Concrete production review remains required; no live alert was sent.
-  See `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
+- M6.8 two-account delivery/inbox check passed (2026-10-21): one reviewed
+  synthetic event and one data-only FCM to the existing Pixel guardian; normal
+  receipt, generic notice/tap, both authenticated inbox roles, recipient-only
+  Open action and Tecno's viewed status pass, attempts=1. Both functions closed
+  within 90 seconds; worker retired (old credential 401/local copy deleted),
+  exact cleanup passed and final counts are 0/0/0/2/2/1/1. All 11,857 Tecno trip
+  hashes and its receiver vault are unchanged; Pixel has zero trip files and
+  retains registration. Its expected durable notice claim rewrote its encrypted
+  receiver vault; both driver vaults remain absent. Ordinary source `37906dc`
+  stays installed. Fixture source `8ad6be0` passes full
+  [CI 39482359166](https://github.com/atrx07/Traelyx/actions/runs/39482359166).
+  No runtime/schema change, native activation, driving or trip upload. Mounted/
+  active-device and physical reliability gates remain open/deferred; emulator
+  evidence does not replace a second physical phone. See
+  `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
 
 - M6.8 review clarity (2026-10-19): disabled Confirm explains the next required
   choice beside its actions; a phone on a table explicitly fails the vehicle-mount

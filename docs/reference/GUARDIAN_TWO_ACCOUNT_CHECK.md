@@ -2,7 +2,7 @@
 
 ## Scope and limits
 
-Prepared 2026-10-21; no production fixture or send has run. The existing Tecno
+Live check passed and exact cleanup completed 2026-10-21. The existing Tecno
 driver and Pixel_10 emulator guardian are already paired and registered. This
 check uses their existing relationship and shared name snapshots. The Pixel is
 valid for account/inbox integration, not second-physical-phone reliability.
@@ -84,8 +84,13 @@ action-time confirmation requirements.
 6. Retire the worker to a fresh server-only value, verify its old credential
    returns 401, and delete the restricted local test copy. Keep functions false.
    Obtain action-time cleanup approval and run only the lineage-checked cleanup.
-   Verify 0/0/0/2/2/1/1 again, account/pairing preservation, unchanged recorder/
-   receiver hashes and no retained driver vault. A real concurrent change needs
+   Verify 0/0/0/2/2/1/1 again, account/pairing preservation, unchanged recorder
+   hashes, unchanged nonreceiving Tecno vault and no retained driver vault.
+   The Pixel receiver vault must be allowed to change: successful `claimNotice`
+   persists the delivery ID in that encrypted record before showing a notice.
+   Check its retained owner-bound registration; do not restore the pre-send
+   ciphertext or extract receipt credentials to force a byte-equality check.
+   A real concurrent change needs
    reassessment rather than deleting unrelated rows to force these counts.
 
 ## Preparation evidence
@@ -105,5 +110,48 @@ Source `8ad6be0` passes full
 jobs, fourteen SQL suites plus revision upgrade, Flutter/native tests,
 debug/release APKs and artifacts. Initial CI caught a missing synthetic profile
 in the negative-case setup; the required profile and teardown were added without
-weakening assertions. Preparation is verified; production approval is still
-required. No live staging, worker rotation, enablement or send has occurred.
+weakening assertions. Preparation introduced no runtime or schema change.
+
+## Live result — 2026-10-21
+
+The maintainer approved the complete one-message scope and the exact enable and
+cleanup actions. After an accidental emulator shutdown, Pixel_10 restarted with
+saved data and renewed ADB authorization; both devices were online and idle.
+Ordinary source `37906dc`, accounts, role direction and existing registrations
+were retained. The reviewed worker digest and disabled probe passed before
+staging. No new account, pairing, receiver registration or native activation ran.
+
+- Fixture 1001–1003 returned all three readiness booleans true. A fresh audit
+  showed exactly one session/event/delivery, pending, attempts zero and unclaimed.
+  Both event and window had more than 300 seconds left before the sole invocation.
+- The six-minute server lease was 01:18:16.509–01:24:16.509 IST. Dispatch returned
+  at 01:18:37.967 IST with processed=1, provider_accepted=1 and every other counter
+  zero. Pixel showed one generic notice; hosted status was device_received,
+  attempts=1. Both flags were restored false at 01:19:05 IST, about 30 seconds
+  after provider acceptance. Disabled dispatch and capability probes passed.
+- Tapping the actual notice removed it and left Guardian at its retained scroll
+  position. The first viewport-only unloaded check was inconclusive; scrolling
+  to the inbox showed Reload alerts with no loaded event or Open action. Explicit
+  reloads then showed Pixel's incoming event/Open alert and Tecno's outgoing
+  delivery without Open alert. Pixel's explicit Open displayed the experimental
+  details; Tecno reload and hosted status became viewed, still attempts=1.
+  This records an app action, not a claim that a person saw or responded to danger.
+- Worker retirement matched its hosted digest, the old credential returned 401,
+  and its restricted local file and clipboard copy were removed. The lineage-
+  checked cleanup returned all absence booleans true and device_rows=2. Final
+  counts are 0/0/0/2/2/1/1; explicit inbox reloads show no remaining test event.
+- All 11,857 Tecno recorder hashes and its receiver vault remain unchanged;
+  Pixel still has zero recorder files and both driver vaults are absent. The
+  original generic preservation comparator flagged Pixel receiver ciphertext
+  inequality. Inspection of `EncryptedGuardianRecipientVault.claimNotice` and
+  its existing preservation/restart tests confirms the expected encrypted rewrite
+  of `noticeDeliveryIds`. Pixel's owner-bound Check this phone still succeeds.
+  No plaintext vault contents were extracted, and the old comparison evidence
+  was retained rather than relabelled as byte-equality success.
+
+This closes the synthetic two-account delivery/inbox check only. No driving,
+recording, native driver activation, permission change, app update, migration,
+scheduler, real-contact alert or personal trip upload occurred in the window.
+Mounted review, active recording/calibration/performance, native live ingestion
+and physical-device reliability gates remain open/deferred. Pixel emulator
+results do not establish second-physical-phone reliability. M6.8 is incomplete.
