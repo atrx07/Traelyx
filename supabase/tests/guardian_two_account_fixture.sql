@@ -16,7 +16,8 @@ begin;
 insert into auth.users(id) values('33333333-3333-4333-8333-333333333333');
 insert into public.profiles(user_id,username,display_name,visibility) values
  ('11111111-1111-4111-8111-111111111111','two_driver','Synthetic Driver','private'),
- ('22222222-2222-4222-8222-222222222222','two_peer','Synthetic Receiver','private');
+ ('22222222-2222-4222-8222-222222222222','two_peer','Synthetic Receiver','private'),
+ ('33333333-3333-4333-8333-333333333333','two_other','Synthetic Other','private');
 insert into public.guardian_driver_controls values('11111111-1111-4111-8111-111111111111',9);
 insert into public.guardian_connections(id,low_user,high_user,driver_id,guardian_id,
  driver_username,driver_display_name,guardian_username,guardian_display_name,status,permissions,expires_at)
@@ -141,7 +142,8 @@ begin;
 delete from public.guardian_push_devices where id in ('66666666-6666-4666-8666-666666666666','88888888-8888-4888-8888-888888888888');
 delete from public.guardian_connections where id='44444444-4444-4444-8444-444444444444';
 delete from public.guardian_driver_controls where user_id='11111111-1111-4111-8111-111111111111';
-delete from public.profiles where user_id in ('11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222');
+delete from public.profiles where user_id in ('11111111-1111-4111-8111-111111111111',
+ '22222222-2222-4222-8222-222222222222','33333333-3333-4333-8333-333333333333');
 delete from auth.users where id='33333333-3333-4333-8333-333333333333';
 commit;
 select true as two_account_fixture_guards_inbox_cleanup_passed;

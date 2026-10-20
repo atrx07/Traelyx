@@ -1270,6 +1270,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     `GUARDIAN_TWO_ACCOUNT_CHECK.md`, with no production execution. Local Docker
     was not running; no service was started/repaired. Use existing disposable
     PostgreSQL 17 CI for executable SQL validation before production review.
+    Initial CI 39481928913 caught a missing profile for the synthetic third
+    account in the multiple-pair negative test. Add that required test profile
+    and teardown; keep all rejection/preservation assertions. No production
+    fixture or access setting was changed.
   - [ ] Pass exact-source CI, persist preparation, then request concrete production
     review. No backend or phone activation is included in this preparation.
   Next bounded unit: expose credential-free, account-checked local driver status
