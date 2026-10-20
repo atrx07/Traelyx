@@ -96,5 +96,14 @@ without clearing data. Fresh preservation checks match all 11,857 Tecno recorder
 files, zero Pixel recorder files and both receiver vaults; both driver vaults
 are absent. Explicit pairing reloads show Paired on both. Hosted aggregate
 readiness is 0/0/0/2/2/1/1 and both enable digests equal SHA-256 of `false`.
-The SQL bundle still requires exact-source disposable CI before production
-review. No live staging, worker rotation, enablement or send has occurred.
+The current role direction is confirmed as Tecno driver / Pixel guardian; both
+notification permissions and existing provider markers are present. The separate
+read-only permission-contract check returns true.
+
+Source `8ad6be0` passes full
+[CI 39482359166](https://github.com/atrx07/Traelyx/actions/runs/39482359166): all three
+jobs, fourteen SQL suites plus revision upgrade, Flutter/native tests,
+debug/release APKs and artifacts. Initial CI caught a missing synthetic profile
+in the negative-case setup; the required profile and teardown were added without
+weakening assertions. Preparation is verified; production approval is still
+required. No live staging, worker rotation, enablement or send has occurred.

@@ -1244,7 +1244,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     correction only. The build was not installed on either device; real-device
     rendering is unverified for this correction. Mounted vehicle and remaining
     M6.8 active-device/delivery gates remain open. No production change.
-  Next bounded preparation (2026-10-21): verify the existing Tecno/Pixel pair
+  Completed bounded preparation (2026-10-21): verify the existing Tecno/Pixel pair
   and prepare one synthetic backend delivery/inbox window without native driver
   activation or a drive. Keep the mounted/vehicle gate deferred. Reuse the sole
   existing active directional relationship and its current possible-crash-only
@@ -1274,8 +1274,15 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     account in the multiple-pair negative test. Add that required test profile
     and teardown; keep all rejection/preservation assertions. No production
     fixture or access setting was changed.
-  - [ ] Pass exact-source CI, persist preparation, then request concrete production
-    review. No backend or phone activation is included in this preparation.
+  - [x] Source `8ad6be0` passes full exact-source CI 39482359166: all three jobs,
+    fourteen SQL suites plus revision upgrade, Flutter/native suites, debug/
+    release APKs, repository/size checks and artifacts. The new suite proves
+    refusal guards, one claim/guardian target, both authenticated inbox roles,
+    recipient-only viewing and exact cleanup/preservation. Notification permission
+    and provider markers are present on both devices; the read-only current-pair
+    permission check returns true. No retained test worker file exists.
+    Persist preparation, then request concrete production review. No hosted
+    fixture, worker rotation, enablement, mobile activation or push occurred.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

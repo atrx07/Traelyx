@@ -10,8 +10,10 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Next: finish exact-source SQL CI for the prepared two-account fixture and review
-the bounded single-message/inbox scope in `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
+Next: request production review for the validated two-account fixture and bounded
+single-message/inbox scope in `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
+Source `8ad6be0` passes full CI 39482359166, including the new fixture's guard,
+inbox-role, one-claim and preservation checks, all existing suites and both APKs.
 The saved Tecno/Pixel pairing is reloaded, latest ordinary builds are installed
 with trip/receiver hashes preserved, and both enable flags are false. No hosted
 fixture, worker credential or send yet. Vehicle tests stay deferred.

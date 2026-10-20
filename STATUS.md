@@ -15,9 +15,13 @@
   all 11,857 Tecno recorder hashes, zero Pixel recorder files and both receiver
   vaults are preserved; recorders idle and driver vaults absent. Both backend
   flags are false; aggregate readiness is 0/0/0/2/2/1/1. Guarded fixture 1001–1003,
-  exact cleanup and disposable inbox/claim/preservation regressions are prepared
-  for CI, not deployed. See `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
-  SQL CI and concrete production review remain required; no live alert was sent.
+  exact cleanup and disposable inbox/claim/preservation regressions pass full
+  source `8ad6be0` [CI 39482359166](https://github.com/atrx07/Traelyx/actions/runs/39482359166),
+  including all three jobs, SQL suites/upgrade, Flutter/native tests and both
+  APKs/artifacts. Both notification permissions/provider markers and the current
+  permission contract pass read-only checks. Preparation is complete, not
+  deployed. Concrete production review remains required; no live alert was sent.
+  See `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`.
 
 - M6.8 review clarity (2026-10-19): disabled Confirm explains the next required
   choice beside its actions; a phone on a table explicitly fails the vehicle-mount
