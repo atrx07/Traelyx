@@ -23,14 +23,18 @@ removed the receiver; sign-in preserved pairing without automatic registration;
 fresh user consent restored it. Ordinary pilot-off build, both signed-in accounts,
 trip preservation and baseline 0/0/0/2/2/1/1 are verified. Both functions stayed
 disabled; no alert ran. Forty-five targeted regressions and the pilot build pass.
-Next desk-safe check is prepared, not run: a guarded alternate debug probe for
-controlled raw SDK Auth loss and later normal same-owner journal reconciliation;
-see `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Ten new tests, all 405
+The controlled Auth-loss/same-account reconciliation gate also passed on Pixel:
+native cleanup retained its journal, normal sign-in revoked the old server row
+without automatic registration, and fresh personal consent restored the receiver.
+Ordinary pilot-off app and both signed-in accounts are restored. See
+`docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Ten new tests, all 405
 Flutter tests, analysis and configured build pass. Source `2f200f1` passes full
-CI 39584283376. Next: concrete live Pixel review; no install/account mutation
-is authorized yet. Read-only hosted baseline/disabled flags remain unchanged.
-Natural expiry, failed-network recovery and physical registered-device
-reliability remain separate from this emulator fault injection.
+CI 39584283376. This single-check live scope is closed. Hosted
+counts remain 0/0/0/2/2/1/1, both flags false and Tecno's trip/receiver hashes
+unchanged. Next desk-safe gap: separately prepare/review failed-network cleanup.
+Account replacement, natural expiry and physical registered-device reliability
+remain unverified live by this emulator fault injection; do not rerun it
+from its completed approval.
 Retain the remaining mounted review, active recording/calibration,
 cancellation/ingestion and physical reliability checklist for the maintainer.
 Vehicle tests remain explicitly deferred; do not start them or M7 from this

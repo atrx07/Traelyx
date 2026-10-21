@@ -1370,6 +1370,25 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     local registration remain visible. Preparation is closed; the concrete live
     Pixel Auth-loss/reconciliation/re-consent scope is still unapproved/unrun.
     Preserve the ordinary build and checkpoint; no vehicle test or M7 activation.
+  - [x] Specific Pixel live scope approved; after the usage-limit interruption,
+    refresh baselines and verify existing guardian role/registration plus both
+    disabled flags. One reviewed raw SDK sign-out reports confirmed local owner
+    cleanup: receipt/provider absent, encrypted journal present/changed, server
+    counts still 0/0/0/2/2/1/1. Restore ordinary `37906dc` before sign-in. Tecno
+    11,857 recorder files and receiver/provider hashes unchanged.
+  - [x] Same-account email-link recovery completed personally by the maintainer.
+    Normal startup revoked the retained row: counts 0/0/0/1/1/1/0 and explicit
+    Check this phone reports unregistered, without automatic registration. Fresh
+    maintainer consent restored counts 0/0/0/2/2/1/1. Ordinary `37906dc` APK is
+    restored with identical replacement receipt/provider bytes; both accounts
+    signed in and ordinary local Pixel check confirms registration. Tecno's
+    11,857 files/provider/receipt remain unchanged, Pixel has zero recorder files,
+    both driver vaults absent and final flags false. No send/recording/schema/key
+    change. Close this reviewed scope and persist the result. Network-failure
+    and physical/vehicle gates remain open; natural expiry and account replacement
+    are not proved by this controlled fault injection.
+    Source `2f200f1` full CI and all 405 local Flutter tests remain the validated
+    code baseline; this live closure changes documentation only. M6.8 incomplete.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

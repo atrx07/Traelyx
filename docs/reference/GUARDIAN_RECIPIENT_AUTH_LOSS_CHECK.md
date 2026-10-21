@@ -4,7 +4,9 @@
 
 Read for the next desk-safe recipient lifecycle check, after the completed
 [explicit sign-out/recovery check](GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md).
-Preparation is authorized; **the live check is not yet approved or run**.
+The separately approved live check passed on 2026-10-21: controlled local Auth
+loss, normal same-account reconciliation, fresh personal receiver consent and
+restoration of the ordinary pilot-off build. This single-check scope is closed.
 M6.8 remains incomplete. Mounted/vehicle tests remain deferred.
 
 The alternate debug entrypoint deliberately calls the raw SDK's local sign-out
@@ -47,14 +49,14 @@ The preserved ordinary and recipient-only APK hashes remain in the preceding
 lifecycle report. Source `2f200f1` passes all three jobs in
 [CI 39584283376](https://github.com/atrx07/Traelyx/actions/runs/39584283376),
 including native tests, SQL/Edge checks and debug/release-validation builds.
-The preparation gate is closed; specific live approval is still required.
+The preparation gate is closed; the specific live approval was subsequently granted.
 No schema, dependency, permission or ordinary app entrypoint changes are needed.
 Neither device was updated and no live sign-out, server revocation or
 registration ran during preparation.
 
-## Concrete production review required
+## Reviewed production scope
 
-Request permission to update-install only this probe on Pixel without clearing
+The approved scope was to update-install only this probe on Pixel without clearing
 data, perform one raw SDK local sign-out, inspect credential-free local state
 and hosted aggregate counts, then restore the ordinary pilot-off app. Supabase
 Auth may invalidate this account's current session; the probe does not invoke
@@ -99,3 +101,45 @@ pairing, profile or Google backend-key change. Preserve the Tecno and its trips.
    inspect safely under the reviewed recovery scope. Do not repeat sign-out,
    clear app data, uninstall, change enable flags or discard journal evidence.
    Report a partial result; emulator evidence cannot establish physical reliability.
+
+## Reviewed live result — passed (2026-10-21)
+
+After a usage-limit interruption, both ADB devices were rechecked authorized,
+online and idle. New private baselines retain all 11,857 Tecno recorder files
+and zero Pixel recorder files; both driver vaults are absent. Read-only hosted
+counts remain 0/0/0/2/2/1/1 and both enable digests represent false. Pixel's
+ordinary app confirms Signed in, the existing paired guardian role and its local
+receiver registration before installation.
+
+The reviewed probe APK was installed with `install -r`. It reported Ready and
+the receipt/provider bytes remained identical. Its one action reported
+“Sign-in cleared; local owner cleanup confirmed.” Pixel receipt/provider files
+are absent, recorder evidence is unchanged, and the encrypted revoke journal
+remains present with changed ciphertext. Hosted counts remain 0/0/0/2/2/1/1:
+the old server row was not prematurely revoked. File presence/ciphertext change
+alone does not establish ticket contents or successful future reconciliation.
+
+Ordinary pilot-off source `37906dc` was restored before sign-in. Pixel's Account
+screen showed the sign-in form, local receipt/provider remained absent and the
+journal was retained. The maintainer then completed the same-account email link.
+Normal startup reduced hosted counts to **0/0/0/1/1/1/0**, retaining the pair.
+The explicit Check this phone completed successfully and reported no local
+registration, with receipt/provider still absent. Those combined observations
+support normal same-owner reconciliation without automatic registration; journal
+plaintext and private identifiers were not read or exported.
+
+The maintainer personally confirmed fresh recipient review in the recipient-only
+pilot. New receipt/provider state appeared and hosted counts returned to
+**0/0/0/2/2/1/1**. The ordinary source `37906dc` APK was restored; the replacement
+receipt/provider bytes match the pre-restoration fingerprints exactly. Both
+accounts remain signed in, and the ordinary app's explicit Check this phone
+confirms Pixel registration. Tecno's 11,857 recorder files and receipt/provider
+hashes match the new pre-test baseline. Pixel has zero recorder files and both
+driver vaults remain absent. Final dashboard digests still represent false for
+both processing flags; no worker file exists and no alert, driver session,
+recording, trip upload, schema, permission or backend-key change ran.
+
+This closes the controlled local Auth-loss/same-account reconciliation gate only.
+Natural refresh/expiry failure, failed-network recovery, third-account switching
+and physical/OEM reliability remain unverified live. Vehicle gates remain
+deferred; do not infer M6.8 completion or authorize a rerun from this result.

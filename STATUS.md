@@ -10,17 +10,22 @@
 
 ## Working
 
-- M6.8 unexpected Auth-loss probe prepared (2026-10-21), not run: a separate
-  default-off debug entrypoint exercises raw SDK local sign-out and the existing
-  Auth observer/native revoke journal without a Guardian server revoker. Ten new
-  regressions, all 405 Flutter tests, analysis, repository validation and its
-  configured APK build pass. Ordinary entrypoint/devices/backend are unchanged;
-  source `2f200f1` passes all three jobs in
+- M6.8 controlled Auth-loss/reconciliation check passed (2026-10-21): one
+  reviewed Pixel raw SDK sign-out confirmed local cleanup, retained the encrypted
+  revoke journal and left its old server receiver row intact. Ordinary startup
+  after sign-in to the same account revoked that row without automatic
+  registration; fresh personal consent restored it. The ordinary pilot-off build
+  is restored and both accounts are signed in, with identical replacement
+  receipt/provider bytes.
+  Tecno's 11,857 recorder files and receiver/provider hashes are unchanged;
+  Pixel has zero recorder files, both driver vaults absent and hosted baseline
+  0/0/0/2/2/1/1. Both functions stayed false; no alert or trip upload. Ten new
+  regressions, all 405 Flutter tests, analysis and configured probe build pass;
+  source `2f200f1` passes full
   [CI 39584283376](https://github.com/atrx07/Traelyx/actions/runs/39584283376).
-  Specific live Pixel review still precedes installation/action. Read-only
-  hosted baseline remains 0/0/0/2/2/1/1 and both flag digests remain false.
-  Controlled local sign-out cannot prove natural expiry, network failure or
-  physical reliability. See `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`.
+  No ordinary runtime/schema/backend-key change. Natural expiry, live network
+  failures, third-account switching and physical reliability remain open; see
+  `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`.
 
 - M6.8 receiver lifecycle check passed (2026-10-21): reviewed Pixel sign-out
   removed its server row and local receipt/provider state. Same-account sign-in
