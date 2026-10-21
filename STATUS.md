@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 unexpected Auth-loss probe prepared (2026-10-21), not run: a separate
+  default-off debug entrypoint exercises raw SDK local sign-out and the existing
+  Auth observer/native revoke journal without a Guardian server revoker. Ten new
+  regressions, all 405 Flutter tests, analysis, repository validation and its
+  configured APK build pass. Ordinary entrypoint/devices/backend are unchanged;
+  exact-source CI and a specific live Pixel review precede installation/action.
+  Controlled local sign-out cannot prove natural expiry, network failure or
+  physical reliability. See `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`.
+
 - M6.8 receiver lifecycle check passed (2026-10-21): reviewed Pixel sign-out
   removed its server row and local receipt/provider state. Same-account sign-in
   preserved pairing without automatic registration; fresh user consent restored

@@ -1342,6 +1342,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Existing 45 targeted regressions/build pass. Unexpected Auth-loss, live
     failures and physical reliability remain separate gates. Persist this bounded
     closure; do not mark M6.8 complete or start deferred vehicle checks/M7.
+  Next bounded desk-safe preparation (2026-10-21): add a separate debug-only,
+  default-off alternate entrypoint for a controlled local SDK sign-out that
+  bypasses the app's explicit server-first Sign out path. Require the intended
+  project, stable signed-in owner, registered recipient, empty revoke journal
+  and inactive driver before its single action. Use the production Auth observer
+  and native owner-loss cleanup without a server device revoker; report only
+  fixed stages, retain the observer after uncertainty and never retry the action.
+  Test denial, account races, journal capture and later normal same-owner
+  reconciliation. Validate/build and persist exact-source CI before requesting
+  a separate live Pixel review. Preparation authorizes no install, Auth loss,
+  server revocation or fresh registration. Natural expiry, network failure and
+  physical reliability are not proved by controlled local sign-out. Keep both
+  backend flags false and vehicle gates deferred.
+  - [x] Separate default-off debug entrypoint and ten effect/denial/late-callback
+    regressions prepared; no ordinary app import or new dependency. Review
+    corrected cold-start binding before guarded native reads. Existing tickets
+    fail closed without a server revoker. All 405 Flutter tests, analysis,
+    repository validation and configured probe build pass. APK hash/procedure in
+    `GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Both ADB devices remain authorized;
+    no installation, live Auth/device mutation or cloud setting change. Push
+    this preparation and require exact-source CI before requesting live scope.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

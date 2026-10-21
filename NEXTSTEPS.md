@@ -23,10 +23,13 @@ removed the receiver; sign-in preserved pairing without automatic registration;
 fresh user consent restored it. Ordinary pilot-off build, both signed-in accounts,
 trip preservation and baseline 0/0/0/2/2/1/1 are verified. Both functions stayed
 disabled; no alert ran. Forty-five targeted regressions and the pilot build pass.
-Next uncovered desk-safe area: live unexpected Auth-loss/journal reconciliation
-and failure recovery need a separately prepared, concretely reviewed scope;
-this successful online path does not prove them. Physical registered-device
-sign-out reliability remains separate from the emulator result.
+Next desk-safe check is prepared, not run: a guarded alternate debug probe for
+controlled raw SDK Auth loss and later normal same-owner journal reconciliation;
+see `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Ten new tests, all 405
+Flutter tests, analysis and configured build pass. Await exact-source CI before
+the concrete live Pixel review; no install/account mutation is authorized yet.
+Natural expiry, failed-network recovery and physical registered-device
+reliability remain separate from this emulator fault injection.
 Retain the remaining mounted review, active recording/calibration,
 cancellation/ingestion and physical reliability checklist for the maintainer.
 Vehicle tests remain explicitly deferred; do not start them or M7 from this
