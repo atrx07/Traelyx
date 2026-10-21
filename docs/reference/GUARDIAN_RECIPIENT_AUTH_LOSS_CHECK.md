@@ -44,10 +44,13 @@ analysis, repository validation and configured alternate debug build. The ignore
 APK `.dart_tool/m6_8_recipient_auth_loss_probe.apk` has SHA-256
 `4814959d13ec5e5d180e5b9152f25385a9952caef36446496947e3b3a83cbb15`.
 The preserved ordinary and recipient-only APK hashes remain in the preceding
-lifecycle report. Exact-source CI is pending before production review; record
-its result in the active plan before live use. No schema, dependency, permission
-or ordinary app entrypoint changes are needed. Neither device was updated and
-no live sign-out, server revocation or registration ran during preparation.
+lifecycle report. Source `2f200f1` passes all three jobs in
+[CI 39584283376](https://github.com/atrx07/Traelyx/actions/runs/39584283376),
+including native tests, SQL/Edge checks and debug/release-validation builds.
+The preparation gate is closed; specific live approval is still required.
+No schema, dependency, permission or ordinary app entrypoint changes are needed.
+Neither device was updated and no live sign-out, server revocation or
+registration ran during preparation.
 
 ## Concrete production review required
 

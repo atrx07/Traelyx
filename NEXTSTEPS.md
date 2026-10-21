@@ -26,8 +26,9 @@ disabled; no alert ran. Forty-five targeted regressions and the pilot build pass
 Next desk-safe check is prepared, not run: a guarded alternate debug probe for
 controlled raw SDK Auth loss and later normal same-owner journal reconciliation;
 see `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Ten new tests, all 405
-Flutter tests, analysis and configured build pass. Await exact-source CI before
-the concrete live Pixel review; no install/account mutation is authorized yet.
+Flutter tests, analysis and configured build pass. Source `2f200f1` passes full
+CI 39584283376. Next: concrete live Pixel review; no install/account mutation
+is authorized yet. Read-only hosted baseline/disabled flags remain unchanged.
 Natural expiry, failed-network recovery and physical registered-device
 reliability remain separate from this emulator fault injection.
 Retain the remaining mounted review, active recording/calibration,

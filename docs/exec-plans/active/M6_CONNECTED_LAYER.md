@@ -1363,6 +1363,13 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     `GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`. Both ADB devices remain authorized;
     no installation, live Auth/device mutation or cloud setting change. Push
     this preparation and require exact-source CI before requesting live scope.
+  - [x] Source `2f200f1` passes full CI 39584283376, all three jobs including
+    native tests, SQL/Edge contracts and debug/release builds. Fresh read-only
+    hosted baseline is 0/0/0/2/2/1/1 with both flag digests false. Both devices
+    authorized/online without an active recorder; Tecno Signed in and Pixel's
+    local registration remain visible. Preparation is closed; the concrete live
+    Pixel Auth-loss/reconciliation/re-consent scope is still unapproved/unrun.
+    Preserve the ordinary build and checkpoint; no vehicle test or M7 activation.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

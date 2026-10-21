@@ -15,7 +15,10 @@
   Auth observer/native revoke journal without a Guardian server revoker. Ten new
   regressions, all 405 Flutter tests, analysis, repository validation and its
   configured APK build pass. Ordinary entrypoint/devices/backend are unchanged;
-  exact-source CI and a specific live Pixel review precede installation/action.
+  source `2f200f1` passes all three jobs in
+  [CI 39584283376](https://github.com/atrx07/Traelyx/actions/runs/39584283376).
+  Specific live Pixel review still precedes installation/action. Read-only
+  hosted baseline remains 0/0/0/2/2/1/1 and both flag digests remain false.
   Controlled local sign-out cannot prove natural expiry, network failure or
   physical reliability. See `docs/reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md`.
 
