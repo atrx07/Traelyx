@@ -50,9 +50,11 @@ partial disable, spontaneous reconnect, timeout/unexpected sign-out, receipt los
 restoration failure, original-off switches and command-budget expiry. All 45
 existing account-binding/device-registration regressions pass. Pixel read-only
 inspect passes with Wi-Fi/mobile on; both ADB devices are authorized/online/idle.
-Repository validation and syntax checks pass. Exact-source CI must pass before
-requesting the concrete production review. No network switch or Auth mutation
-has occurred during preparation.
+Repository validation and syntax checks pass. Source `2dc7198` passes all three
+jobs in [CI 39613840508](https://github.com/atrx07/Traelyx/actions/runs/39613840508),
+including the new operator tests, Flutter/native suites, SQL/Edge contracts and
+debug/release-validation builds. Preparation is closed; specific live approval
+is pending. No network switch or Auth mutation occurred during preparation.
 
 ## Proposed production scope after CI
 

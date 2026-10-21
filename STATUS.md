@@ -16,7 +16,10 @@
   switches on normal failure/completion. Thirteen simulated operator tests and
   45 existing cleanup regressions pass; real read-only inspect passes. No app,
   network, Auth or hosted state was changed beyond navigation/observation.
-  Exact-source CI and specific live production review remain pending. See
+  Source `2dc7198` passes all three jobs in
+  [CI 39613840508](https://github.com/atrx07/Traelyx/actions/runs/39613840508).
+  Specific live production review remains pending. Both hosted flags are false,
+  baseline 0/0/0/2/2/1/1 and no live-run checkpoint/worker file exists. See
   `docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`.
 
 - M6.8 controlled Auth-loss/reconciliation check passed (2026-10-21): one

@@ -34,9 +34,10 @@ counts remain 0/0/0/2/2/1/1, both flags false and Tecno's trip/receiver hashes
 unchanged. The next desk-safe failed-network cleanup check is prepared, not run:
 `docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`. Its Pixel-only operator
 has 13 passing simulated denial/restoration checks, 45 passing existing cleanup
-regressions and a passing live read-only inspect. Await exact-source CI, then
-request specific production review before any network toggle, Sign out or
-registration. Both functions remain false; the previous live scope is closed.
+regressions and a passing live read-only inspect. Source `2dc7198` passes full
+CI 39613840508. Next request specific production review before any network
+toggle, Sign out or registration. Both functions remain false; the previous
+live scope is closed.
 Account replacement, natural expiry and physical registered-device reliability
 remain unverified live by this emulator fault injection; do not rerun it
 from its completed approval.

@@ -1410,6 +1410,13 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Add its tests to CI; syntax/repository validation pass. No network/Auth change
     or install. Procedure/review scope in `GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`;
     persist preparation and require exact-source CI before requesting live review.
+  - [x] Source `2dc7198` passes full CI 39613840508, all three jobs including
+    new operator tests, Flutter/native suites, SQL/Edge checks and debug/release
+    builds. Read-only dashboard baseline remains 0/0/0/2/2/1/1, both enable
+    digests false; no worker or live operator checkpoint exists. Exact committed
+    inspect mode passes on Pixel without mutation. Persist this bounded
+    preparation; request specific live scope before run/online retry/consent.
+    No app install, network toggle, Auth/receiver mutation or alert occurred.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
