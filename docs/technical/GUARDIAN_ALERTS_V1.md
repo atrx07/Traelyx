@@ -572,8 +572,11 @@ check also passed: the native journal retained the orphaned receiver identity,
 normal same-owner sign-in reconciled it without automatic registration, and
 fresh personal consent restored the receiver. See the
 [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md).
-Neither check establishes natural expiry, physical-device sign-out or
-failed-network behavior.
+The separately reviewed Pixel offline Sign out also passed: cancellation retained
+Auth/receiver bytes and the server row; network restoration, one online retry,
+same-account recovery and fresh consent restored the ordinary build. See the
+[offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md). These emulator
+checks do not establish natural expiry or physical-device cleanup reliability.
 
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
@@ -677,7 +680,7 @@ startup registration path.
 | Background/cold receiver, locked/offline delivery | Physical Tecno checks in [push](../reference/GUARDIAN_PUSH_CHECK.md) and [receiver](../reference/GUARDIAN_RECEIVER_CHECK.md) reports | No general delivery or OEM reliability guarantee |
 | Duplicate, queued expiry and disconnect | Actual FCM rejection/durable-claim checks in [rejection report](../reference/GUARDIAN_REJECTION_CHECK.md) | These cases do not validate active driver detection |
 | Two-account receipt/details | One synthetic backend event to Pixel; explicit Open and Tecno viewed status; exact cleanup in [two-account report](../reference/GUARDIAN_TWO_ACCOUNT_CHECK.md) | Pixel is an emulator; no native detector/ingestion proof |
-| Registered receiver sign-out/recovery | Reviewed Pixel explicit sign-out/re-consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), plus controlled raw SDK Auth loss, normal same-owner journal reconciliation and fresh consent in the [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md) | Natural expiry, live failure/third-account recovery and physical-device reliability remain separate |
+| Registered receiver sign-out/recovery | Pixel explicit sign-out/re-consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), controlled Auth loss and same-owner journal reconciliation in the [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md), and retained offline failure followed by one online retry/re-consent in the [offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md) | Natural expiry, third-account recovery and physical-device reliability remain separate |
 | Reviewed driver/outbox/scheduler integration | Governed fixtures, synthetic cross-component tests and isolated native proofs; idle hosted activation/Stop | Correct mount review, active cancellation/ingestion, process/network recovery and recording/performance remain open |
 | Vehicle and physical reliability | No field accuracy claim | Maintainer deferred mounted review and driving/performance on 2026-10-19; retain separate physical-device and calibration gates |
 

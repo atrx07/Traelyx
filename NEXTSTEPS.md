@@ -31,16 +31,19 @@ Ordinary pilot-off app and both signed-in accounts are restored. See
 Flutter tests, analysis and configured build pass. Source `2f200f1` passes full
 CI 39584283376. This single-check live scope is closed. Hosted
 counts remain 0/0/0/2/2/1/1, both flags false and Tecno's trip/receiver hashes
-unchanged. The next desk-safe failed-network cleanup check is prepared, not run:
-`docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`. Its Pixel-only operator
-has 13 passing simulated denial/restoration checks, 45 passing existing cleanup
-regressions and a passing live read-only inspect. Source `2dc7198` passes full
-CI 39613840508. Next request specific production review before any network
-toggle, Sign out or registration. Both functions remain false; the previous
-live scope is closed.
+unchanged. The separately approved failed-network cleanup check also passed:
+`docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`. One offline Sign out
+cancelled with Auth/registration retained and original network restored; one
+online retry revoked the receiver. Same-account sign-in did not auto-register;
+fresh personal consent restored it and the ordinary pilot-off build. Final
+baseline is 0/0/0/2/2/1/1, both flags false, Pixel signed in and no worker file.
+Tecno's 11,857 recorder files and receiver bytes are unchanged; its final UI
+remained locked, so final Account rendering was not reverified. Thirteen operator
+tests and 45 cleanup regressions pass; source `2dc7198` passes full CI 39613840508.
+This scope is closed; do not repeat its network/Auth mutations from that approval.
 Account replacement, natural expiry and physical registered-device reliability
-remain unverified live by this emulator fault injection; do not rerun it
-from its completed approval.
+remain unverified live by these emulator checks. Review a separate bounded scope
+before any new live account mutation; do not reopen the completed fault injection.
 Retain the remaining mounted review, active recording/calibration,
 cancellation/ingestion and physical reliability checklist for the maintainer.
 Vehicle tests remain explicitly deferred; do not start them or M7 from this

@@ -2,10 +2,12 @@
 
 ## Scope and current gate
 
-Preparation only (2026-10-21); **no live offline action or retry is approved or
-run**. The completed [controlled Auth-loss check](GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md)
-has a closed approval. This check uses the ordinary app's explicit Sign out and
-must not reuse the raw SDK fault-injection entrypoint.
+The separately approved live check passed on 2026-10-21: one ordinary offline
+Sign out attempt, restored network, one online retry, same-account recovery and
+fresh personal receiver consent. The ordinary pilot-off build is restored.
+This live scope is closed; do not replay it from its completed approval. The
+completed [controlled Auth-loss check](GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md)
+also has a closed approval; its raw SDK entrypoint was not used here.
 
 Expected contract: when server cleanup cannot be confirmed, explicit Sign out
 reports cancellation and keeps Auth plus local recipient/provider state for an
@@ -53,12 +55,12 @@ inspect passes with Wi-Fi/mobile on; both ADB devices are authorized/online/idle
 Repository validation and syntax checks pass. Source `2dc7198` passes all three
 jobs in [CI 39613840508](https://github.com/atrx07/Traelyx/actions/runs/39613840508),
 including the new operator tests, Flutter/native suites, SQL/Edge contracts and
-debug/release-validation builds. Preparation is closed; specific live approval
-is pending. No network switch or Auth mutation occurred during preparation.
+debug/release-validation builds. No network switch or Auth mutation occurred
+during preparation; specific live approval was subsequently granted.
 
-## Proposed production scope after CI
+## Reviewed production scope
 
-Ask approval for one offline Sign out attempt on the registered Pixel, automatic
+Approval covered one offline Sign out attempt on the registered Pixel, automatic
 restoration of its saved network switches, one explicit online Sign out retry
 after verified failure/recovery, and same-account email-link sign-in completed by
 the maintainer. Fresh receiver consent creates a replacement Firebase routing
@@ -71,7 +73,7 @@ untouched apart from read-only preservation checks. Do not replay the operator
 after any failed/uncertain result; inspect safely under the approved recovery
 scope. No new third account or physical driving is part of this proposal.
 
-## Bounded live sequence after separate approval
+## Bounded live sequence
 
 1. Fresh manifests and local registered checks for both devices; no recorder or
    driver vault. Both dashboard flags false, no local worker, known Pixel guardian
@@ -95,3 +97,39 @@ scope. No new third account or physical driving is part of this proposal.
    worker. Document limits: emulator failure/retry evidence is not natural-expiry,
    third-account, mounted-driving or physical/OEM reliability evidence. M6.8
    remains incomplete until its other required gates pass.
+
+## Observed live result (2026-10-21)
+
+- Fresh baselines and hosted counts passed. The one-shot operator returned
+  `passed=true`, `signout_attempted=true`, `network_restored=true`. Account showed
+  the exact cleanup-cancelled message, remained Signed in and enabled its retry.
+  Receipt/provider bytes and recorder files were unchanged. Hosted counts after
+  recovery remained **0/0/0/2/2/1/1**. This verifies the whole sign-out contract;
+  it does not identify which cleanup RPC failed while offline.
+- Original Wi-Fi/mobile switches were both on. Both were restored, with a
+  validated default network; final ordinary-build read-only inspect passed.
+  The operator was run once and was not replayed.
+- One explicit online retry signed Pixel out. Its local receipt/provider were
+  absent and hosted counts became **0/0/0/1/1/1/0**. Pairing remained intact.
+- The maintainer signed into the same account by email link inside Pixel.
+  Counts stayed **0/0/0/1/1/1/0**, with no local recipient/provider state;
+  explicit Check this phone reported unregistered. Sign-in did not register it.
+- The recipient-only pilot was update-installed without clearing data. Fresh
+  personal consent created a replacement registration; local registered status
+  and hosted counts **0/0/0/2/2/1/1** passed. Ordinary `37906dc` was restored,
+  preserving the replacement receipt/provider bytes exactly. Final ordinary
+  local registration check and signed-in/network inspect passed.
+- Tecno's **11,857 recorder files** and receiver/provider bytes are unchanged;
+  Pixel has zero recorder files and both driver vaults remain absent. Tecno's
+  final Account UI could not be rechecked because it remained locked after the
+  authorized wake/swipe. Automatic approval review rejected a separate
+  `wm dismiss-keyguard` command as beyond that authorization; it was not run.
+  No Tecno account operation occurred.
+- Both hosted flag digests still match `false`, the retired worker digest is
+  unchanged and no local temporary worker file exists. No session, event,
+  delivery, push, recording, trip upload, schema or backend credential change.
+
+This closes the emulator offline failure/retry check only. It does not establish
+natural Auth expiry, third-account replacement, physical/OEM cleanup reliability,
+or mounted driving/calibration/performance. Vehicle gates remain deferred by the
+maintainer; M6.8 is incomplete. No application fix was needed for this check.

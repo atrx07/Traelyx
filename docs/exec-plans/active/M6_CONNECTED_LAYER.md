@@ -1417,6 +1417,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     inspect mode passes on Pixel without mutation. Persist this bounded
     preparation; request specific live scope before run/online retry/consent.
     No app install, network toggle, Auth/receiver mutation or alert occurred.
+  - [x] Separately approved live offline check passed (2026-10-21). One ordinary
+    Pixel offline Sign out cancelled with Auth/receipt/provider and hosted row
+    retained, then restored original Wi-Fi/mobile switches and validated network.
+    One online retry signed out and changed counts to 0/0/0/1/1/1/0. Maintainer
+    same-account sign-in did not auto-register; explicit local check confirmed
+    absence. Fresh personal receiver consent restored 0/0/0/2/2/1/1. Ordinary
+    `37906dc` is restored with identical replacement receipt/provider bytes and
+    signed-in/network/registered checks passing. Tecno's 11,857 files and receiver
+    bytes are unchanged; its final UI remained locked and was not reverified.
+    Both driver vaults absent, flags false and no worker file, alert or trip
+    upload. Exact-source CI 39613840508 remains green; closure is documentation
+    only. Close this scope; natural expiry, third-account and physical/vehicle
+    gates remain open. Details in `GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

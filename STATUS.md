@@ -10,16 +10,20 @@
 
 ## Working
 
-- M6.8 offline sign-out operator prepared (2026-10-21), not run: fixed Pixel
-  emulator target, read-only inspect, at most one ordinary offline Sign out tap,
-  retained Auth/receiver checks and automatic restoration of original network
-  switches on normal failure/completion. Thirteen simulated operator tests and
-  45 existing cleanup regressions pass; real read-only inspect passes. No app,
-  network, Auth or hosted state was changed beyond navigation/observation.
+- M6.8 offline sign-out/recovery check passed (2026-10-21): one ordinary Pixel
+  offline Sign out cancelled while retaining Auth/receiver bytes and server row;
+  original network switches and validated connectivity were restored. One online
+  retry revoked the receiver and signed out. Same-account sign-in did not
+  register automatically; fresh personal consent restored the receiver.
+  Ordinary pilot-off build is restored with identical replacement bytes and
+  signed-in/network/local registration checks passed. Tecno's 11,857 recorder
+  files and receiver/provider bytes are unchanged; its final UI remained locked
+  and was not reverified. Thirteen operator tests and 45 cleanup regressions pass.
   Source `2dc7198` passes all three jobs in
   [CI 39613840508](https://github.com/atrx07/Traelyx/actions/runs/39613840508).
-  Specific live production review remains pending. Both hosted flags are false,
-  baseline 0/0/0/2/2/1/1 and no live-run checkpoint/worker file exists. See
+  Both hosted flags stayed false, final baseline is 0/0/0/2/2/1/1 and no worker
+  file exists. No alert, trip upload or runtime/schema fix. Live scope closed;
+  natural expiry, third-account and physical/vehicle gates remain open. See
   `docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`.
 
 - M6.8 controlled Auth-loss/reconciliation check passed (2026-10-21): one
