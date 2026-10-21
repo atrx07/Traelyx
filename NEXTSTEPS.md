@@ -17,13 +17,16 @@ Both flags are false, test worker retired/deleted and hosted baseline restored.
 All trip files are preserved; Pixel's receiver vault changed for its expected
 durable notice claim while its registration remains valid. Fixture source
 `8ad6be0` passes full CI 39482359166. No new runtime/schema change.
-Next desk-safe gate: request review for the prepared registered Pixel receiver
-sign-out/same-account recovery procedure in
-`docs/reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md`. Forty-five targeted
-account/revocation tests and the recipient-only debug build pass; it is not
-installed, and neither account/registration changed. The maintainer must complete
-the same-account email link and fresh recipient consent during a reviewed run.
-Unexpected Auth loss and physical sign-out reliability remain separate gates.
+The registered Pixel receiver sign-out/same-account recovery gate also passed;
+see `docs/reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md`. Explicit sign-out
+removed the receiver; sign-in preserved pairing without automatic registration;
+fresh user consent restored it. Ordinary pilot-off build, both signed-in accounts,
+trip preservation and baseline 0/0/0/2/2/1/1 are verified. Both functions stayed
+disabled; no alert ran. Forty-five targeted regressions and the pilot build pass.
+Next uncovered desk-safe area: live unexpected Auth-loss/journal reconciliation
+and failure recovery need a separately prepared, concretely reviewed scope;
+this successful online path does not prove them. Physical registered-device
+sign-out reliability remains separate from the emulator result.
 Retain the remaining mounted review, active recording/calibration,
 cancellation/ingestion and physical reliability checklist for the maintainer.
 Vehicle tests remain explicitly deferred; do not start them or M7 from this

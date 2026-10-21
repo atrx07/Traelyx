@@ -495,8 +495,8 @@ Auth owner before and after each guarded registration or revocation call, and
 never logs its routing token or credential. Explicit sign-out invokes its
 revocation method when local recipient status exists. The foreground
 registration caller is disabled in normal/release builds. Consented pilot
-registration/withdrawal passed; registered-device sign-out/recovery and live
-unexpected account-loss reconciliation remain required.
+registration/withdrawal and Pixel explicit sign-out/same-account recovery passed;
+live unexpected account-loss reconciliation and failure recovery remain required.
 
 Recipient receipt authority now has an isolated native storage boundary: a
 bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
@@ -564,10 +564,11 @@ local deletion fails, a retry resumes local cleanup without repeating the
 server call. Missing server transport or malformed native status fails closed.
 Concurrent sign-out is serialized, and an account replacement during the
 server request cannot sign out the replacement account.
-Production recipient devices now exist. Explicit server-first withdrawal and
-push have passed; explicit sign-out while registered has not yet been verified
-live. The next proposed check uses Pixel same-account recovery, which cannot
-replace physical-device sign-out evidence.
+Production recipient devices now exist. Explicit server-first withdrawal, push
+and Pixel registered sign-out/same-account recovery have passed. The latter
+removed the old receiver, preserved pairing without automatic registration after
+sign-in, then required fresh consent. It cannot replace physical-device sign-out,
+unexpected Auth-loss or failed-network evidence.
 
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
@@ -671,7 +672,7 @@ startup registration path.
 | Background/cold receiver, locked/offline delivery | Physical Tecno checks in [push](../reference/GUARDIAN_PUSH_CHECK.md) and [receiver](../reference/GUARDIAN_RECEIVER_CHECK.md) reports | No general delivery or OEM reliability guarantee |
 | Duplicate, queued expiry and disconnect | Actual FCM rejection/durable-claim checks in [rejection report](../reference/GUARDIAN_REJECTION_CHECK.md) | These cases do not validate active driver detection |
 | Two-account receipt/details | One synthetic backend event to Pixel; explicit Open and Tecno viewed status; exact cleanup in [two-account report](../reference/GUARDIAN_TWO_ACCOUNT_CHECK.md) | Pixel is an emulator; no native detector/ingestion proof |
-| Registered receiver sign-out/recovery | Synthetic ordering, revoke failure, retry and owner-race tests | Live explicit sign-out/same-account recovery is [prepared](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), not run; unexpected Auth-loss reconciliation remains separate |
+| Registered receiver sign-out/recovery | Ordering/failure/owner-race regressions plus reviewed Pixel explicit sign-out, same-account recovery and fresh consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md) | Unexpected Auth-loss/journal reconciliation, live failure recovery and physical-device reliability remain separate |
 | Reviewed driver/outbox/scheduler integration | Governed fixtures, synthetic cross-component tests and isolated native proofs; idle hosted activation/Stop | Correct mount review, active cancellation/ingestion, process/network recovery and recording/performance remain open |
 | Vehicle and physical reliability | No field accuracy claim | Maintainer deferred mounted review and driving/performance on 2026-10-19; retain separate physical-device and calibration gates |
 

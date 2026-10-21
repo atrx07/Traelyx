@@ -1330,7 +1330,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     proofs, keeping active-native and physical limits explicit. No runtime code,
     test, hosted setting, receiver row or installed build changed. Persist this
     preparation before requesting the live scope.
-  - [ ] Separately reviewed live explicit sign-out/recovery proof and closure.
+  - [x] Separately reviewed Pixel explicit sign-out/recovery proof passed
+    (2026-10-21). One Sign out removed its hosted row and receipt/provider files,
+    counts 0/0/0/2/2/1/1 to 0/0/0/1/1/1/0. Same-account email-link sign-in retained
+    guardian pairing without automatic registration. Fresh maintainer consent
+    restored the receiver and original counts. Ordinary source `37906dc` APK
+    restored with identical new receipt/provider bytes; both accounts signed in.
+    All 11,857 Tecno recorder hashes and receipt/provider files match; Pixel has
+    zero recorder files and both driver vaults remain absent. Both flags stayed
+    false; no worker, push, driver session/event, recording, schema or key change.
+    Existing 45 targeted regressions/build pass. Unexpected Auth-loss, live
+    failures and physical reliability remain separate gates. Persist this bounded
+    closure; do not mark M6.8 complete or start deferred vehicle checks/M7.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

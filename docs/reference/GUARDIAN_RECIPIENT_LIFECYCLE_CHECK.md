@@ -2,11 +2,11 @@
 
 ## Scope and current gate
 
-Prepared 2026-10-21; no live sign-out or registration change is authorized by
-preparation. The completed two-account alert check is recorded in
-[GUARDIAN_TWO_ACCOUNT_CHECK.md](GUARDIAN_TWO_ACCOUNT_CHECK.md). This next check
-uses the Pixel emulator's existing guardian account and registered receiver;
-the Tecno driver stays signed in. It needs no vehicle mount, recording or alert.
+Reviewed live check passed and ordinary build restored 2026-10-21. Preparation
+alone did not authorize production changes. The completed two-account alert
+check is recorded in [GUARDIAN_TWO_ACCOUNT_CHECK.md](GUARDIAN_TWO_ACCOUNT_CHECK.md).
+This check used the Pixel emulator's existing guardian account and registered
+receiver; the Tecno driver stayed signed in. No vehicle mount, recording or alert ran.
 Emulator evidence cannot establish physical-device reliability.
 
 The existing explicit sign-out path must confirm the signed-in owner's exact
@@ -38,7 +38,7 @@ The preserved ordinary source `37906dc` APK retains SHA-256
 `dea3a9249eb760a60e24e83f791e4388103bb3e09a20243a7d281821c740323d`.
 No runtime code or tests were changed. Both devices reauthorized/online/idle,
 Pixel's local receipt is retained, and the hosted baseline is still
-0/0/0/2/2/1/1 with both flags false. Live execution remains unverified.
+0/0/0/2/2/1/1 with both flags false. The reviewed live result is below.
 
 ## Proposed production review
 
@@ -92,3 +92,47 @@ the maintainer personally completes email-link sign-in and receiver consent.
 No short production enable window is needed; pause safely for the maintainer's
 sign-in/consent while both endpoints stay disabled. This procedure does not
 complete M6.8 or authorize the deferred mounted, driving or physical checks.
+
+## Live result — 2026-10-21
+
+The maintainer approved the complete Pixel sign-out/recovery scope, completed
+the same-account email-link sign-in inside Pixel, and personally confirmed both
+fresh recipient acknowledgements. No email address, link, token or private row
+identity was collected in this report.
+
+- Both devices started authorized, online and idle with both driver vaults
+  absent. Fresh private manifests captured 11,857 Tecno recorder files and zero
+  Pixel recorder files. Initial hosted baseline was 0/0/0/2/2/1/1.
+- The reviewed recipient-only pilot update preserved Pixel's recorder, encrypted
+  receipt and provider marker bytes. Account still showed Signed in. The app's
+  explicit Sign out was invoked once; it completed with the signed-out/local-
+  trips-preserved message. Pixel receipt/provider files were absent, while
+  hosted baseline became 0/0/0/1/1/1/0. The existing pairing remained active.
+  Tecno's trip, receipt and provider hashes remained identical.
+- After the maintainer signed back into the same account, Pixel showed Signed
+  in and its existing guardian role/paired state. Before fresh consent, both
+  receipt/provider files remained absent, Check this phone said unregistered,
+  and hosted counts stayed 0/0/0/1/1/1/0: sign-in did not automatically register.
+  An unrelated unsubmitted invite review encountered during UI inspection was
+  cancelled; no invite was created and no pairing/permission change was made.
+- Fresh user consent produced a valid account-bound local registration and
+  restored hosted baseline 0/0/0/2/2/1/1. The new encrypted receipt intentionally
+  differs from the revoked one. No receipt plaintext was inspected or restored.
+- The preserved ordinary pilot-off source `37906dc` APK was update-installed.
+  Its new receipt/provider bytes match the post-registration/pre-update snapshot;
+  the ordinary build retains Signed in and a successful Check this phone result,
+  with no driver controls. Both accounts remain signed in. All recorder hashes
+  match the fresh baselines; Tecno receipt/provider hashes remain unchanged and
+  both driver vaults are absent.
+- Final hosted counts remain 0/0/0/2/2/1/1, both enable digests still equal false,
+  and no local worker credential exists. No driver session, event, delivery,
+  push, scheduler, new permission, profile edit, migration or trip upload ran.
+  Both endpoints stayed disabled throughout; no backend secret/key changed.
+
+The 45 targeted regression tests and configured build passed during preparation;
+this live run required no runtime code or test change. This closes only the
+successful online explicit sign-out/same-account recovery gate on Pixel.
+Unexpected Auth loss/journal reconciliation, third-account replacement,
+failed-network recovery and physical registered-device reliability remain
+unverified live. Mounted/active-native/recording/performance checks remain
+deferred/open. M6.8 is incomplete.

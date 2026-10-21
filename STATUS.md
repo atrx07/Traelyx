@@ -10,14 +10,16 @@
 
 ## Working
 
-- M6.8 receiver lifecycle preparation (2026-10-21): after a saved Pixel restart
-  and renewed debugging authorization, both devices are online/idle, registrations
-  retained and hosted baseline still 0/0/0/2/2/1/1 with both flags false. All 45
-  targeted account-binding/device-revocation tests and the recipient-only debug
-  build pass. The pilot remains uninstalled; no runtime code, account, device row
-  or backend setting changed. Reconciled stale acceptance notes with verified
-  delivery results. Live registered sign-out/same-account recovery needs concrete
-  review and user sign-in/consent; see
+- M6.8 receiver lifecycle check passed (2026-10-21): reviewed Pixel sign-out
+  removed its server row and local receipt/provider state. Same-account sign-in
+  preserved pairing without automatic registration; fresh user consent restored
+  the receiver. Ordinary pilot-off build is restored with the new receipt/provider
+  bytes unchanged; both accounts are signed in. All 11,857 Tecno recorder files,
+  its receipt/provider state and zero Pixel recorder files are preserved; both
+  driver vaults absent. Final hosted baseline is 0/0/0/2/2/1/1; both functions
+  stayed disabled and no alert or trip upload ran. Preparation's 45 targeted tests
+  and configured build pass. No runtime/schema/key change. Unexpected Auth loss,
+  failure recovery and physical reliability remain unverified live; see
   `docs/reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md`.
 
 - M6.8 two-account delivery/inbox check passed (2026-10-21): one reviewed
