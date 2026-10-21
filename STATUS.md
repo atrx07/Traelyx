@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 offline sign-out operator prepared (2026-10-21), not run: fixed Pixel
+  emulator target, read-only inspect, at most one ordinary offline Sign out tap,
+  retained Auth/receiver checks and automatic restoration of original network
+  switches on normal failure/completion. Thirteen simulated operator tests and
+  45 existing cleanup regressions pass; real read-only inspect passes. No app,
+  network, Auth or hosted state was changed beyond navigation/observation.
+  Exact-source CI and specific live production review remain pending. See
+  `docs/reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`.
+
 - M6.8 controlled Auth-loss/reconciliation check passed (2026-10-21): one
   reviewed Pixel raw SDK sign-out confirmed local cleanup, retained the encrypted
   revoke journal and left its old server receiver row intact. Ordinary startup

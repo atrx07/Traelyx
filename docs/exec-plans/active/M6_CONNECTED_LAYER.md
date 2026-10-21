@@ -1389,6 +1389,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     are not proved by this controlled fault injection.
     Source `2f200f1` full CI and all 405 local Flutter tests remain the validated
     code baseline; this live closure changes documentation only. M6.8 incomplete.
+  Next bounded desk-safe preparation (2026-10-21): validate ordinary registered
+  receiver Sign out when Pixel has no default network. Prepare a Pixel-only
+  operator with read-only inspect mode, strict account/receipt/recorder guards,
+  one offline Sign out action, bounded waits and automatic restoration of the
+  original Wi-Fi/mobile switches in finally. Retain Auth and receiver/provider
+  fingerprints after the failure; do not automate the later online retry or
+  recipient consent. Test denial, timeout, unexpected sign-out and restoration
+  failures; run existing account/registration regressions and exact-source CI.
+  Persist a reviewable procedure before requesting production scope. No network
+  toggle, Auth mutation, registration, install or backend setting change is
+  authorized by this preparation. Both Guardian flags stay false; vehicle gates
+  remain deferred. The prior controlled Auth-loss approval is closed.
+  - [x] Pixel-only Node operator prepared with read-only inspect and a separate
+    reviewed run mode. Thirteen simulated checks cover failure/unknown UI and
+    network observations, reconnects, one-shot input, timeout, partial disable,
+    restoration failure and preservation of originally-off switches. Existing
+    45 account/registration tests pass. Real inspect confirms Pixel ready with
+    Wi-Fi/mobile enabled, stable Auth/receiver state and no recorder/driver vault.
+    Add its tests to CI; syntax/repository validation pass. No network/Auth change
+    or install. Procedure/review scope in `GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`;
+    persist preparation and require exact-source CI before requesting live review.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

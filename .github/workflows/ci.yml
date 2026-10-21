@@ -31,6 +31,9 @@ jobs:
           npx --yes --package=deno@2.9.6 deno bundle --platform deno --no-remote --no-npm --no-config --no-lock -o .dart_tool/guardian-dispatch-window.bundle.js supabase/functions/guardian-dispatch/index.ts
           node --test tests/tool/test_guardian_processing_bundle.mjs
 
+      - name: Test bounded recipient offline operator
+        run: node --test tests/tool/test_guardian_recipient_offline.mjs
+
   cloud-schema:
     runs-on: ubuntu-latest
     timeout-minutes: 15
