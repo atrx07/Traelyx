@@ -10,6 +10,16 @@
 
 ## Working
 
+- M6.8 receiver lifecycle preparation (2026-10-21): after a saved Pixel restart
+  and renewed debugging authorization, both devices are online/idle, registrations
+  retained and hosted baseline still 0/0/0/2/2/1/1 with both flags false. All 45
+  targeted account-binding/device-revocation tests and the recipient-only debug
+  build pass. The pilot remains uninstalled; no runtime code, account, device row
+  or backend setting changed. Reconciled stale acceptance notes with verified
+  delivery results. Live registered sign-out/same-account recovery needs concrete
+  review and user sign-in/consent; see
+  `docs/reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md`.
+
 - M6.8 two-account delivery/inbox check passed (2026-10-21): one reviewed
   synthetic event and one data-only FCM to the existing Pixel guardian; normal
   receipt, generic notice/tap, both authenticated inbox roles, recipient-only

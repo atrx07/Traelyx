@@ -1308,6 +1308,29 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     only the synthetic two-account delivery/inbox gate; mounted/native-active,
     performance and physical reliability validation remain deferred/open.
     See `GUARDIAN_TWO_ACCOUNT_CHECK.md`; no M6.8 completion or M7 activation.
+  Next bounded desk-safe validation (2026-10-21): prepare the existing registered
+  Pixel receiver's explicit sign-out and same-account recovery check. Review the
+  server-first sign-out/revoke contract and existing account-race tests; prepare
+  a recipient-only debug build with driver/sending pilots false. Recheck device
+  and hosted state, and reconcile stale acceptance notes. This preparation does
+  not authorize real sign-out, row revocation, registration or another alert.
+  The proposed live check needs concrete production review, the maintainer's
+  same-account email-link sign-in and fresh recipient consent. Keep both backend
+  flags false throughout; preserve the existing pair, profiles and trips.
+  Unexpected Auth-loss reconciliation and physical reliability remain separate
+  gates; do not infer them from explicit same-account recovery on an emulator.
+  See `GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md`.
+  - [x] Resumed with the Tecno online/idle and Pixel restarted from saved data;
+    renewed Pixel ADB authorization and local registration checks pass. Both
+    dashboard flags remain false. Forty-five targeted account-binding/device-
+    revocation regressions pass without source or test changes.
+  - [x] Recipient-only pilot APK builds with driver/sending pilots false; preserve
+    the ordinary pilot-off APK and record both hashes in the procedure. Reconcile
+    stale technical acceptance notes with the existing receiver and two-account
+    proofs, keeping active-native and physical limits explicit. No runtime code,
+    test, hosted setting, receiver row or installed build changed. Persist this
+    preparation before requesting the live scope.
+  - [ ] Separately reviewed live explicit sign-out/recovery proof and closure.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

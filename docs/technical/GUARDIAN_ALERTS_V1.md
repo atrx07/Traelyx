@@ -6,8 +6,12 @@ M6.8 is in progress. The native evaluator and lifecycle are implemented as a
 prerequisite. Bounded recorder sidecar integration passes local/inactive-device
 checks and full source CI 38133415539 (`98f9a49`); production driver
 activation and network sending remain disabled in ordinary builds. A separate
-default-off debug sending review is implemented below; reviewed live activation
-and active physical validation remain required. These are experimental synthetic baselines, not field-validated crash
+default-off debug sending review is implemented below. An idle desk activation/
+Stop and bounded receiver delivery checks have passed; a correctly mounted
+review, active native ingestion and physical recording/performance validation
+remain required. The current acceptance matrix is at the end of this document;
+the execution plan preserves dated implementation evidence. These are
+experimental synthetic baselines, not field-validated crash
 detection, emergency protection, or calibrated confidence probabilities.
 
 ## Local evaluation
@@ -264,14 +268,16 @@ state, failure injection, cancellation and stale callbacks. All 264 native tests
 pass. A separate synthetic Android 14 Keystore proof verifies actual encryption,
 reopen, attempt persistence, tamper rejection, invalidation of retained ciphertext
 after key destruction and scoped cleanup. All 7,546 existing raw files / 59,570 KiB
-remain intact. This is not yet integrated with app consent, recorder or dispatch;
-actual process-kill/offline/locked delivery validation remains required.
+remained intact during that isolated proof. Consent, recorder and dispatch
+integration have since passed synthetic checks; physical receiver process-kill,
+offline and locked delivery checks also passed. Active driver/outbox lifecycle
+and recording validation remain open, as distinguished in the acceptance matrix.
 
 Primary platform references:
 - https://developer.android.com/privacy-and-security/keystore
 - https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec
 
-## Required remaining integration gates
+## Activation and recipient authority
 
 ### Two-stage activation prerequisite
 
@@ -294,19 +300,20 @@ calls on one process worker, including across Activity recreation. It accepts
 exact request fields, returns the credential only from `begin`, and keeps
 status/commit replies redacted. Its clock uses wall time, elapsed time including
 sleep, and Android's boot count; missing boot count fails closed. The bridge is
-bound to Flutter Auth identity changes but `begin` remains dormant until an
-explicit consent flow exists. Startup binding runs asynchronously so local
+bound to Flutter Auth identity changes; activation is available only through
+the explicitly configured debug review pilot. Startup binding runs asynchronously so local
 trip startup does not wait for the vault. Sign-out first waits for local
 Guardian cleanup; if cleanup fails, sign-out is cancelled and account binding
 stays fail closed for that process. Server confirmation must be validated by
-the future caller before `commit`; the bridge does not verify a server response
-itself. RecorderService, push and consent UI integration remain required before
-activation is available. Its startup owner binding passed a data-preserving
-physical update and cold launch; `begin` and `commit` passed only in an isolated
-physical test namespace. The account decorator delegates optional Supabase client
+the activation service before `commit`; the bridge does not verify a server response
+itself. The recorder sidecar and gated consent UI are attached; active-device
+validation remains required. Its startup owner binding passed a data-preserving
+physical update and cold launch. Initial `begin`/`commit` proof used an isolated
+physical namespace; the later idle hosted activation/Stop did not establish
+vehicle-mount correctness. The account decorator delegates optional Supabase client
 access so existing cloud features remain reachable after wrapping Auth.
 
-The dormant Flutter `GuardianDriverActivationService` now coordinates the
+The gated Flutter `GuardianDriverActivationService` coordinates the
 foreground two-stage call. It requires the current Auth owner and native owner
 binding, accepts only a reviewed forward axis, validates the exact native
 proposal and signed-in server response, and commits locally only after a
@@ -320,8 +327,10 @@ generic disable, so stale callbacks cannot erase a newer proposal or lease.
 If a request finishes after account
 change or revocation cannot reach the server, the server session may remain
 until its eight-hour expiry, but the native capability is unavailable. The
-service has no UI caller yet; mount confirmation, recorder use, recipient push
-and full end-to-end validation remain required. Synthetic flow/bridge/SDK tests
+service has a default-off review/Stop UI caller. Correct vehicle-mount confirmation,
+active recorder use and the complete native-to-server flow remain unverified;
+the separately tested administrative receiver fixtures do not cover them.
+Synthetic flow/bridge/SDK tests
 cover ordering, wire shapes, bigint precision, expiry, Stop/sign-out, concurrent
 reviews, account races and retryable failed cleanup. A separate physical Android
 instrumentation proof exercises the native bridge and encrypted vault with a
@@ -364,7 +373,8 @@ ticket for explicit retry. This does not guarantee cleanup after loss/corruption
 of both independent stores, app-data removal, or an older lease already unreadable
 before adoption. Local failure/off status is never proof of hosted revocation.
 Synthetic authenticated-encryption tests cover these storage boundaries; physical
-Keystore/disk-failure injection and reviewed hosted Stop remain separate gates.
+Keystore/disk-failure injection remains unverified. Idle hosted activation/Stop
+passed, without establishing mounted or active-recording behavior.
 
 Owner loss/change and expiry, reboot or clock rollback recovery now capture
 retained lease IDs in the same journal before erasure. A different owner cannot
@@ -381,9 +391,9 @@ The physical synthetic proof verifies Keystore storage, journal reopening,
 owner-loss capture and exact confirmation in a random disposable namespace;
 it preserves the normal recipient vault and recorder data. It also reopens a
 proposal reservation before commit and after a simulated coordinator restart,
-then confirms cleanup and rejects the original delayed commit. Production UI,
-hosted timeout/replacement recovery, driver revoke and active physical recording
-remain integration gates.
+then confirms cleanup and rejects the original delayed commit. The default-off
+UI and idle hosted revoke have since passed bounded checks. Hosted timeout/
+replacement recovery and active physical recording remain integration gates.
 
 ### Driver revision contract (deployed 2026-10-14)
 
@@ -411,8 +421,8 @@ Stop/cleanup and transmits it as strictly validated decimal text, preserving the
 full signed bigint range. Revoke sends null credential/revision and an exact
 activation ID. The adapter checks the Auth owner before and after every request;
 startup/status add no revision read. Proposal journaling and v2 client attachment
-are implemented; live hosted activation/revoke and active-device validation
-remain required. See ADR-0030.
+are implemented. Idle hosted activation/revoke passed; active-device validation
+remains required. See ADR-0030 and the current acceptance matrix.
 
 The Flutter review component collects a phone-forward axis and separate
 rigid-mount, false-alarm/missed-event and limited-recipient-sharing
@@ -446,7 +456,8 @@ checks remain authoritative. The native MethodChannel and owner worker serialize
 commit/abort; the fake models durable commit before its bridge reply. That
 Review/Stop unit introduced no sender, automatic registration, migration or new
 dependency. Local event cancellation is implemented in the separate section above.
-Live pilot activation/revoke and active recording remain separate gates.
+Idle pilot activation/revoke passed; mounted consent and active recording remain
+separate gates.
 
 ### Separate sending review v1 (default-off debug pilot)
 
@@ -471,7 +482,7 @@ process reopening cannot resume it. Existing exact cleanup/revision fencing and
 foreground lifecycle cancellation are preserved. No backend wire/schema change.
 See `../decisions/ADR-0033-guardian-versioned-sending-review.md`.
 
-The separate recipient review is also dormant. It requires explicit
+The separate recipient review is available only in its debug pilot. It requires explicit
 acknowledgement of experimental detection/delivery limits and of Firebase
 installation/device metadata transfer plus private routing-token registration.
 It returns a foreground-only, account-labelled result valid for less than two
@@ -483,8 +494,9 @@ account/device/generation identities and bounded credentials, checks the current
 Auth owner before and after each guarded registration or revocation call, and
 never logs its routing token or credential. Explicit sign-out invokes its
 revocation method when local recipient status exists. The foreground
-registration caller is paused in normal builds pending hosted validation;
-unexpected account-loss reconciliation remains required.
+registration caller is disabled in normal/release builds. Consented pilot
+registration/withdrawal passed; registered-device sign-out/recovery and live
+unexpected account-loss reconciliation remain required.
 
 Recipient receipt authority now has an isolated native storage boundary: a
 bounded AES-GCM record in `no_backup/guardian/recipient-primary.vault`,
@@ -505,8 +517,8 @@ display. Process death or notification failure after claim can suppress that
 notice; this does not guarantee delivery. ADR-0027 defines the format, bounds,
 downgrade behavior and tradeoffs. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
-Live server-confirmed registration, unexpected account-loss reconciliation,
-receipt and notification remain gates.
+Live server-confirmed registration, receipt and notification passed bounded
+checks. Unexpected account-loss reconciliation remains unverified live.
 
 The native recipient coordinator now binds the Auth owner and validates local
 commit timing. A foreground caller must confirm guarded server
@@ -537,7 +549,8 @@ seconds for deletion and refuses the new owner if deletion fails or times out.
 A same-owner restart with a valid local receipt preserves the provider token;
 an unmarked receipt is discarded. With no marker, owner binding and sign-out
 remain Firebase-inert. Unexpected account-loss recovery and opt-out orchestration
-still need to be implemented before live registration is exposed. A guarded
+are implemented with guarded server-first cleanup and the revoke journal below;
+live unexpected-loss recovery remains unverified. A guarded
 Android 14 proof ran the production owner runtime with an empty marker/vault:
 it completed a null-owner bind without initializing Firebase or requesting a
 token, then the normal app reopened with private storage sizes unchanged.
@@ -551,9 +564,10 @@ local deletion fails, a retry resumes local cleanup without repeating the
 server call. Missing server transport or malformed native status fails closed.
 Concurrent sign-out is serialized, and an account replacement during the
 server request cannot sign out the replacement account.
-This path is dormant on existing installations because no production recipient
-device has been registered. A data-preserving first-phone update opened the app;
-no physical sign-out with a registered device, hosted revoke or push was tested.
+Production recipient devices now exist. Explicit server-first withdrawal and
+push have passed; explicit sign-out while registered has not yet been verified
+live. The next proposed check uses Pixel same-account recovery, which cannot
+replace physical-device sign-out evidence.
 
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
@@ -571,8 +585,8 @@ the bound owner's device/generation IDs. Flutter checks the signed-in owner
 before and after the guarded revoke RPC and clears an exact journal ticket
 only after confirmation. Offline or owner-change failures leave the ticket for
 later same-owner sign-in. Explicit sign-out erases a server-confirmed local
-receipt without journaling a redundant revoke. No production recipient device
-or journal ticket exists yet, so hosted retry remains unverified; server expiry
+receipt without journaling a redundant revoke. Production devices exist, but no
+live unexpected-loss journal/reconciliation proof has run; server expiry
 is still the fallback if that owner never signs in again.
 
 Before a future token request or guarded server registration, the client must
@@ -582,8 +596,8 @@ stopped between receipt commit and ticket confirmation. In that case it revokes
 the server row, erases that matching receipt and runs marker-aware provider
 cleanup. Failed server or receipt cleanup preserves the ticket; failed provider
 deletion preserves its separate marker for another retry.
-This reservation bridge is dormant until a reviewed registration transaction
-uses it; no token or production device row has been created.
+This reservation bridge is used by the separately reviewed pilot registration
+transaction; ordinary startup does not create a token or production device row.
 The native receipt commit rejects a missing or mismatched reservation and
 rejects overwriting an existing receipt. Replacing a device requires cleanup
 of the old receipt and a distinct new reservation before server registration.
@@ -608,25 +622,28 @@ registration and withdrawal checks. Opening Guardian and cancelling review
 still create no token, recipient row or revoke ticket. There is no automatic
 startup registration path.
 
-### Integration still required
+### Current integration acceptance — 2026-10-21
 
-- Attach the tested minimized sender to the existing consent, cancellation-offer
-  and account-change teardown paths, with serialized scheduling and queued-permit
-  invalidation; no duplicated Supabase refresh-token ownership.
-- Current server permission and connection-generation checks at ingest,
-  dispatch, receipt and detail reads, with quotas and bounded retention.
+- The minimized sender is attached behind the default-off sending pilot to
+  consent, cancellation-offer and account teardown, with serialized scheduling
+  and queued-permit invalidation. Synthetic cross-component tests pass; fresh
+  mounted consent, active native ingestion/cancellation and recording remain open.
+- Current permission/generation checks, quotas, deduplication and retention are
+  implemented and covered by adversarial SQL/upgrade suites. They are not an
+  authorization to leave production processing enabled.
 - The capability Edge function provides exact bounded ingestion/receipt requests
   to those guarded SQL transitions. It is deployed with processing disabled;
   an unauthenticated synthetic POST returned `503 capability_disabled`.
-  Enabled hosted authorization and native integration still need validation.
+  Reviewed denial/positive-receipt windows and independent server expiry passed.
+  Actual driver telemetry ingestion remains a separate unverified gate.
 - The opt-in first-phone provider registration/withdrawal path has passed a
-  consented pilot check. Validate receiver handling, generic lock-screen copy,
-  authenticated details and distinct send/receipt/view semantics before
-  enabling alert processing or two-phone delivery.
-  The dormant Android envelope parser now accepts only data-only FCM messages
+  consented pilot check. Receiver handling, generic lock-screen copy, authenticated
+  details and distinct send/receipt/view semantics have since passed bounded
+  checks linked below. Both endpoints remain disabled between reviewed windows.
+  The Android envelope parser accepts only data-only FCM messages
   with exactly `schema_version=1`, a canonical delivery UUID and a canonical
   device-generation UUID. It rejects notification payloads, extra fields and
-  malformed IDs. A dormant native preflight then requires a provider cleanup
+  malformed IDs. A native preflight then requires a provider cleanup
   marker and an unexpired encrypted local receipt with matching generation;
   missing or corrupt state yields no transient receipt request. A server check
   is still required before notification. The Android FCM service now runs that
@@ -634,9 +651,9 @@ startup registration path.
   endpoint, accepts only an exact positive reply, rechecks local authority,
   and posts generic private notification text. A missing local receipt,
   permission denial, network error or disabled capability endpoint shows no
-  notice. The phone build has been update-installed with no local registration;
-  actual FCM callback, positive server receipt and notification display remain
-  unverified. The dispatch sender's data-only contract is essential: Android
+  notice. The registered Tecno and Pixel have passed actual callback, positive
+  receipt and generic notification checks. The dispatch sender's data-only
+  contract is essential: Android
   Firebase can display notification-type messages in the background without
   calling the app's receiver, so the callback's payload rejection alone cannot
   contain a compromised sender. Neither Guardian Edge function is enabled.
@@ -645,10 +662,19 @@ startup registration path.
   warm-link handling route it to Guardian without passing an alert identity or
   acknowledging a view. Links with extra path, query, fragment, user information
   or port are ignored. Signed-out users see the existing sign-in gate; signed-in
-  users must explicitly reload and open an authorized inbox row. Cold and warm
-  link ingress passed on the first phone; an actual FCM notice tap remains
-  unverified. Notifications use the full opaque delivery ID as their tag.
-- False-positive fixtures, lifecycle/retry/revocation tests, and background,
-  screen-lock, offline/recovery and performance checks on a physical phone.
-- Synthetic end-to-end delivery without dangerous driving or real-contact
-  alerts. Synthetic success does not validate field sensitivity/specificity.
+  users must explicitly reload and open an authorized inbox row. Actual notice
+  taps and cold/warm ingress passed; notifications use the full opaque delivery
+  ID as their tag. No detail read or view acknowledgement is implicit in a tap.
+
+| Acceptance area | Verified evidence | Remaining limit/gate |
+|---|---|---|
+| Background/cold receiver, locked/offline delivery | Physical Tecno checks in [push](../reference/GUARDIAN_PUSH_CHECK.md) and [receiver](../reference/GUARDIAN_RECEIVER_CHECK.md) reports | No general delivery or OEM reliability guarantee |
+| Duplicate, queued expiry and disconnect | Actual FCM rejection/durable-claim checks in [rejection report](../reference/GUARDIAN_REJECTION_CHECK.md) | These cases do not validate active driver detection |
+| Two-account receipt/details | One synthetic backend event to Pixel; explicit Open and Tecno viewed status; exact cleanup in [two-account report](../reference/GUARDIAN_TWO_ACCOUNT_CHECK.md) | Pixel is an emulator; no native detector/ingestion proof |
+| Registered receiver sign-out/recovery | Synthetic ordering, revoke failure, retry and owner-race tests | Live explicit sign-out/same-account recovery is [prepared](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), not run; unexpected Auth-loss reconciliation remains separate |
+| Reviewed driver/outbox/scheduler integration | Governed fixtures, synthetic cross-component tests and isolated native proofs; idle hosted activation/Stop | Correct mount review, active cancellation/ingestion, process/network recovery and recording/performance remain open |
+| Vehicle and physical reliability | No field accuracy claim | Maintainer deferred mounted review and driving/performance on 2026-10-19; retain separate physical-device and calibration gates |
+
+M6.8 remains incomplete. Source CI and synthetic/backend fixture success do not
+establish field sensitivity/specificity or authorize dangerous maneuvers, impact
+tests, ordinary alert enablement or the next milestone.
