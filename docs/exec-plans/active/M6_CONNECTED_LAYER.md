@@ -1440,6 +1440,18 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     absent, both flags false, no active recorder, alert or upload. No code fix
     or natural-Auth-expiry claim; see `GUARDIAN_RESUME_20261108.md`. Persist this
     bounded recovery before preparing a separate account-replacement scope.
+  - [ ] Next bounded account-replacement preparation (2026-11-08): isolated
+    debug/project-gated Pixel entrypoint, one personally entered SDK email-link
+    request and production native owner binding. No raw Sign out, Guardian RPC,
+    registration or driver/sender. Guard stable owner/receipt/driver and empty
+    pending cleanup before requesting; verify different owner, no local receiver
+    and disabled driver after callback, failing uncertain on races/timeouts.
+    Native journal retains the original receiver for later ordinary same-owner
+    reconciliation. Sixteen new regressions, all 421 Flutter tests and analysis
+    plus configured debug build pass. Finish full source CI and persist before requesting
+    the separate live two-existing-account switch/recovery/re-consent scope in
+    `GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`. No probe install or live switch;
+    both ordinary builds restored, both flags false, vehicle checks deferred.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

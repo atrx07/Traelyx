@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 different-account replacement probe prepared (2026-11-08), not installed
+  or run live. Debug/project-gated alternate entrypoint requests one personally
+  entered email link, observes native owner cleanup and keeps the prior owner's
+  revoke ticket for ordinary same-owner reconciliation. No Guardian RPC,
+  registration, sign-out or sender in the probe. Sixteen new regressions, all
+  421 Flutter tests, analysis and configured debug build pass; full source CI pending.
+  Specific live review is required. Both restored devices stay on ordinary
+  builds. See `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
+
 - M6.8 interruption recovery passed (2026-11-08): Pixel restarted with saved
   data and unchanged sign-in/receiver bytes. Tecno was signed out; Auth-loss
   cause is unknown, all 11,857 recorder hashes unchanged. One hosted receiver
