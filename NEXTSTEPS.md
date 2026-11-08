@@ -10,6 +10,15 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+The 2026-11-08 interruption recovery is closed: both devices are authorized and
+online, ordinary builds restored, both accounts signed in and hosted baseline
+0/0/0/2/2/1/1. Tecno's expired receiver was reconciled after personal same-account
+sign-in and restored by fresh personal consent; Auth-loss cause remains unknown.
+All 11,857 recorder hashes and Pixel's registration are preserved. Both flags
+remain false. See `docs/reference/GUARDIAN_RESUME_20261108.md`. Next prepare and
+validate a bounded different-account replacement check before live review;
+prior test approvals are closed. Vehicle gates remain deferred.
+
 The reviewed two-account single-alert/inbox test passed and is closed/cleaned
 (2026-10-21); see `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`. One Pixel receipt,
 notice/tap, incoming/outgoing roles and recipient-only Open/viewed status passed.

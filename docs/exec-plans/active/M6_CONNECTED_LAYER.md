@@ -1430,6 +1430,16 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     upload. Exact-source CI 39613840508 remains green; closure is documentation
     only. Close this scope; natural expiry, third-account and physical/vehicle
     gates remain open. Details in `GUARDIAN_RECIPIENT_OFFLINE_CHECK.md`.
+  - [x] Interruption recovery (2026-11-08): restart saved Pixel and authorize/
+    verify both devices. Tecno Auth was absent for an unestablished reason,
+    with 11,857 recorder hashes unchanged; hosted counts 0/0/0/2/1/1/1 showed
+    one expired receiver. Personal same-account sign-in reconciled it to
+    0/0/0/1/1/1/1. Fresh personal consent restored 0/0/0/2/2/1/1. Ordinary
+    pilot-off Tecno update preserved replacement receipt/provider bytes;
+    Pixel's Auth/registration/zero recorder files unchanged. Both driver vaults
+    absent, both flags false, no active recorder, alert or upload. No code fix
+    or natural-Auth-expiry claim; see `GUARDIAN_RESUME_20261108.md`. Persist this
+    bounded recovery before preparing a separate account-replacement scope.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

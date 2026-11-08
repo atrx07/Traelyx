@@ -518,7 +518,8 @@ notice; this does not guarantee delivery. ADR-0027 defines the format, bounds,
 downgrade behavior and tradeoffs. A synthetic physical
 Keystore proof uses a random namespace and erases its key/file afterward.
 Live server-confirmed registration, receipt and notification passed bounded
-checks. Unexpected account-loss reconciliation remains unverified live.
+checks. Controlled same-account Auth-loss reconciliation and interruption
+recovery have also passed; see the acceptance table below for their limits.
 
 The native recipient coordinator now binds the Auth owner and validates local
 commit timing. A foreground caller must confirm guarded server
@@ -539,8 +540,9 @@ An explicit cleanup can initialize Firebase after a process restart even though
 automatic initialization stays disabled. Construction and marker-free owner
 binding do not initialize Firebase. A scoped Android 14 proof verified marker persistence,
 interrupted-write detection and erasure without requesting a token; the normal
-app opened afterward with private storage sizes unchanged. No production caller
-can request a token yet.
+app opened afterward with private storage sizes unchanged. The reviewed
+recipient-only debug pilot now permits an explicit personal review/token request;
+the ordinary build keeps that registration entrypoint paused.
 
 The native owner bridge now invokes that explicit provider deletion when its
 marker exists and the next owner is absent, different, expired or has no matching
@@ -550,7 +552,9 @@ A same-owner restart with a valid local receipt preserves the provider token;
 an unmarked receipt is discarded. With no marker, owner binding and sign-out
 remain Firebase-inert. Unexpected account-loss recovery and opt-out orchestration
 are implemented with guarded server-first cleanup and the revoke journal below;
-live unexpected-loss recovery remains unverified. A guarded
+controlled same-account recovery and the later interruption recovery passed.
+Natural Auth-expiry causation and different-account replacement remain unverified.
+A guarded
 Android 14 proof ran the production owner runtime with an empty marker/vault:
 it completed a null-owner bind without initializing Firebase or requesting a
 token, then the normal app reopened with private storage sizes unchanged.
@@ -594,9 +598,11 @@ the bound owner's device/generation IDs. Flutter checks the signed-in owner
 before and after the guarded revoke RPC and clears an exact journal ticket
 only after confirmation. Offline or owner-change failures leave the ticket for
 later same-owner sign-in. Explicit sign-out erases a server-confirmed local
-receipt without journaling a redundant revoke. Production devices exist, but no
-live unexpected-loss journal/reconciliation proof has run; server expiry
-is still the fallback if that owner never signs in again.
+receipt without journaling a redundant revoke. Controlled live same-owner
+journal/reconciliation passed; server expiry is still the fallback if that owner
+never signs in again. The later [interruption recovery](../reference/GUARDIAN_RESUME_20261108.md)
+also reconciled an expired Tecno receiver after personal same-account sign-in;
+it did not establish the cause of Auth loss.
 
 Before a future token request or guarded server registration, the client must
 reserve the exact owner/device/generation revoke ticket in this journal. A

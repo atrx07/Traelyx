@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 interruption recovery passed (2026-11-08): Pixel restarted with saved
+  data and unchanged sign-in/receiver bytes. Tecno was signed out; Auth-loss
+  cause is unknown, all 11,857 recorder hashes unchanged. One hosted receiver
+  was expired. Personal same-account sign-in reconciled that row, fresh receiver
+  consent restored it, and ordinary pilot-off build preserves the replacement
+  bytes. Both devices are authorized/online, both accounts signed in, no driver
+  vaults/recorders and final counts 0/0/0/2/2/1/1. Both flags stayed false; no
+  alert or upload. No code fix. See `docs/reference/GUARDIAN_RESUME_20261108.md`.
+
 - M6.8 offline sign-out/recovery check passed (2026-10-21): one ordinary Pixel
   offline Sign out cancelled while retaining Auth/receiver bytes and server row;
   original network switches and validated connectivity were restored. One online
