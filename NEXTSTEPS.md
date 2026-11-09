@@ -10,6 +10,14 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+The next desk-safe SDK refresh/expiry unit reproduced and repaired an identity
+stream diagnostic leak plus misleading refresh feedback. Eleven new SDK/UI checks,
+all 432 Flutter tests, analysis and configured ordinary build pass. Finish
+exact-source CI and data-preserving inactive ordinary-app checks before closure.
+See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
+expiry, terminal revocation or driver/vehicle test is authorized by this local
+preparation; both Guardian functions remain disabled.
+
 The 2026-11-08 interruption recovery is closed: both devices are authorized and
 online, ordinary builds restored, both accounts signed in and hosted baseline
 0/0/0/2/2/1/1. Tecno's expired receiver was reconciled after personal same-account

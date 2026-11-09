@@ -10,6 +10,15 @@
 
 ## Working
 
+- M6.8 SDK refresh boundary repair in validation (2026-11-09): a generated-session
+  HTTP 503 regression reproduced SDK diagnostics entering the identity stream
+  while Auth remained signed in. Adapter now re-samples current identity;
+  terminal Auth loss still triggers cleanup. Account distinguishes ended sign-in
+  from retryable failure and ignores replacement-owner refresh feedback. Eleven
+  new checks, all 432 Flutter tests, analysis and configured ordinary build pass;
+  full CI and inactive device verification pending. No live expiry/revocation, backend,
+  driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
+
 - M6.8 third-account replacement/recovery passed (2026-11-09): real SDK callback
   cleared Pixel's local recipient/provider, retained its journal and server row;
   ordinary third-account pairing/inbox was empty and unregistered. Local Sign out

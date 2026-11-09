@@ -5,6 +5,9 @@ abstract interface class AccountGateway {
 
   AccountIdentity? get currentIdentity;
 
+  /// Identity snapshots, including null for genuine Auth loss. Provider refresh
+  /// diagnostics must not replace identity with an error or imply sign-out;
+  /// explicit operation failures remain available through their Futures.
   Stream<AccountIdentity?> get identityChanges;
 
   Future<void> sendSignInLink(String email);

@@ -1472,6 +1472,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     signed out/unregistered. No runtime/schema/key change; source CI 42495776651
     valid. Close/persist this scope; natural Auth expiry, active driver and
     deferred physical/vehicle gates remain open.
+  - [ ] Next desk-safe unit (2026-11-09): validate the real SDK refresh/expiry
+    boundary with generated sessions and loopback-only responses. Reproduce
+    retryable refresh errors entering the identity stream, distinguish retained
+    Auth from terminal session loss, and verify original/new-owner cleanup under
+    delayed responses. Correct adapter/UI handling only after regression evidence;
+    preserve the default SDK refresh configuration. Run affected/full Flutter,
+    analysis, configured build, repository and exact-source CI gates. No live
+    session invalidation, clock/network change, driver activation, backend enable
+    or vehicle test is authorized by this local preparation.
+    The HTTP 503 identity-stream regression failed before repair and passes
+    afterward. Preserve explicit Future errors, resample actual SDK identity on
+    stream diagnostics, and classify ended/retained/replacement-owner refresh
+    feedback separately. Eleven SDK/UI checks, all 432 Flutter tests and analysis
+    plus configured ordinary build pass. Finish full CI, then inactive data-preserving
+    update checks with no deliberate Auth failure before closing. Issue record:
+    `2026-11-09_auth-refresh-identity-stream.md`; natural hosted expiry remains open.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

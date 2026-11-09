@@ -589,6 +589,15 @@ both original device rows, and original-owner reconciliation plus fresh personal
 consent restored the ordinary setup. This does not validate active driver
 replacement or general physical/OEM behavior.
 
+The Auth provider now treats SDK refresh diagnostics as identity snapshots of
+current Auth, while operation Futures retain failures. A temporary failure does
+not feed an error/null owner into Guardian binding. Terminal SDK session loss
+still emits null and invokes existing cleanup/journaling; a late refresh cannot
+overwrite a replacement owner. Real-SDK/generated-session loopback regressions
+cover these paths with a modeled native boundary; see the
+[refresh issue record](../issues/2026-11-09_auth-refresh-identity-stream.md).
+This does not close hosted natural-expiry or active physical cleanup gates.
+
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
 stores no routing token or credential. It does not drop pending IDs based only

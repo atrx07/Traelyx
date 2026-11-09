@@ -19,6 +19,7 @@ Local host/build/tool failures belong in
 
 | Date | Issue / symptoms | Status |
 |---|---|---|
+| 2026-11-09 | [Auth refresh identity-stream errors](2026-11-09_auth-refresh-identity-stream.md): retryable SDK diagnostics escaped into ownership listeners; terminal refresh loss got connection advice | Source repair implemented; 11 new regressions/all 432 Flutter tests pass; full CI/device validation pending |
 | 2026-10-17 | [Guardian cleanup identity loss](2026-10-17_guardian-cleanup-identity-loss.md): destructive outbox failure could erase the only exact server-cleanup ID | Repaired in `6e4b50d`; local, physical synthetic and full CI checks pass; physical fault injection unverified |
 | 2026-10-10 | [Guardian processing window overrun](2026-10-10_guardian-processing-window-overrun.md): usage-limit interruption left test flags enabled beyond the reviewed deadline | Production closed, zero attempts verified, fixture removed; automatic expiry source tested, deployment pending |
 | 2026-10-06 | [Android Guardian receipt regex fails at initialization](2026-10-06_android-guardian-receipt-regex.md): synthetic phone receipt probe stops before HTTPS | Repaired in `94eadff`; source CI, physical parser and hosted receipt/retry pass |

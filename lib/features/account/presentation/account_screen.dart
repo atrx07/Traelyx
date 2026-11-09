@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/account/application/account_providers.dart';
+import 'package:traelyx/features/account/application/refresh_account_session.dart';
 import 'package:traelyx/features/account/domain/account_email.dart';
 import 'package:traelyx/features/account/domain/account_link_failure.dart';
 import 'package:traelyx/features/guardian/guardian_account_binding.dart';
@@ -109,18 +110,31 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
       _message = null;
     });
     try {
-      await ref.read(accountGatewayProvider).refreshSession();
+      final outcome = await refreshAccountSession(
+        ref.read(accountGatewayProvider),
+      );
       if (!mounted) return;
       setState(() {
-        _isError = false;
-        _message = 'Sign-in refreshed on this device.';
+        _isError =
+            outcome != AccountRefreshOutcome.refreshed &&
+            outcome != AccountRefreshOutcome.accountChanged;
+        _message = switch (outcome) {
+          AccountRefreshOutcome.refreshed =>
+            'Sign-in refreshed on this device.',
+          AccountRefreshOutcome.failed =>
+            'Could not refresh sign-in. Try again.',
+          AccountRefreshOutcome.ended =>
+            'Your sign-in has ended. Sign in again. Local trips remain on this device.',
+          AccountRefreshOutcome.accountChanged => null,
+          AccountRefreshOutcome.unavailable =>
+            'Sign-in is unavailable on this build.',
+        };
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _isError = true;
-        _message =
-            'Could not refresh sign-in. Check your connection and try again.';
+        _message = 'Could not refresh sign-in. Try again.';
       });
     } finally {
       if (mounted) setState(() => _busy = false);

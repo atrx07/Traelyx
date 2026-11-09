@@ -122,10 +122,20 @@ JSON and PKCE verifiers use encrypted platform storage. Without build-time
 provider configuration or working secure storage, Account remains unavailable
 while local driving features continue. User-initiated link sending is the
 first cloud identity action. Signing in does not migrate or upload local
-trip data. Account offers explicit session refresh with visible success or
-connection failure; a failed refresh does not silently sign out. See
+trip data. Account offers explicit refresh with owner-checked feedback. A
+retryable SDK failure retains local Auth and gives neutral retry advice; terminal
+SDK rejection can end the session and asks for sign-in again. Local trips remain.
+The provider identity stream re-samples current Auth on diagnostic errors without
+forwarding raw provider bodies to ownership listeners; genuine signed-out events
+still clear ownership. Explicit operation Futures still fail. Late refresh
+results cannot claim success/failure for a replacement account. See
 `docs/reference/AUTH_SETUP.md` and ADR-0019 for setup and
 dependency reasoning.
+
+The SDK-backed refresh boundary regression and repair are recorded in
+[`auth-refresh-identity-stream`](../issues/2026-11-09_auth-refresh-identity-stream.md).
+Generated-session/loopback evidence is not hosted natural-expiry or physical
+provider-reliability proof.
 
 Link-send failures distinguish transport failures, provider rate limits,
 temporary service failures, rejected requests, and unknown local errors.

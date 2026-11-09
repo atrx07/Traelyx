@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traelyx/features/account/data/classify_account_link_failure.dart';
 import 'package:traelyx/features/account/data/supabase_client_source.dart';
@@ -24,7 +26,15 @@ final class SupabaseAccountGateway
 
   @override
   Stream<AccountIdentity?> get identityChanges => client.auth.onAuthStateChange
-      .map((state) => _identity(state.session?.user))
+      .transform(
+        StreamTransformer<AuthState, AccountIdentity?>.fromHandlers(
+          handleData: (state, sink) => sink.add(_identity(state.session?.user)),
+          // SDK refresh diagnostics are not identity changes. Re-sample Auth
+          // without forwarding raw errors to ownership listeners. The operation
+          // Future still fails; a genuine signedOut event still clears ownership.
+          handleError: (error, stack, sink) => sink.add(currentIdentity),
+        ),
+      )
       .distinct();
 
   @override
