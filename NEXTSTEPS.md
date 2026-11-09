@@ -10,15 +10,23 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Next is specific production review for the prepared Pixel
+The Pixel live scope is approved, but admission closed before any test action.
+Ordinary startup and exact receiver/provider/recorder preservation were restored.
+Do not revoke or refresh until the guard reason is understood. Fixed-category
+diagnostics pass three new regressions, all 472 Flutter tests, analysis and the
+configured build; finish full exact-source CI before continuation.
+Retain the single approved action budget; no deliberate revocation ran. See
+`docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
+
+Prior preparation for the Pixel
 server-rejected-refresh check. Sixteen new operator/SDK checks, all 469 Flutter
 tests and analysis pass. The separately gated probe revokes only its own server
 session without clearing local Auth, then invokes one ordinary refresh; no
 service-role credential, global logout or policy edit. Nothing is installed or
 revoked by preparation. Configured probe/recovery builds and all three jobs in
 exact-source CI 42666565560 (`5597d7e`) pass, including native/debug/release gates.
-Source preparation is closed. Request live approval covering original-account
-recovery and fresh receiver consent before installing or revoking anything.
+The maintainer subsequently approved original-account recovery and fresh receiver
+consent with the single test; the admission checkpoint above takes precedence.
 Keep both Guardian functions disabled and all mounted/vehicle work deferred. See
 `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 

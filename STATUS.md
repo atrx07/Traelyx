@@ -10,6 +10,17 @@
 
 ## Working
 
+- M6.8 live terminal-refresh admission closed safely (2026-11-09): approved
+  Pixel probe never exposed its action, including one admission-only restart.
+  No deliberate revocation/test refresh ran. Ordinary app restored, original
+  sign-in and exact Pixel receiver/provider/zero recorder files preserved.
+  Fresh hosted baseline 0/0/0/2/2/1/1 and false flags; Tecno has 11,865 current
+  files including its preserved accidental trip. Root admission cause remains
+  unknown. Fixed-category diagnostics retain all guards; three new regressions,
+  all 472 Flutter tests, analysis and diagnostic build pass. Full source CI
+  remains before continuation of the approved one-action scope. See
+  `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
+
 - M6.8 terminal server-rejection preparation validated (2026-11-09): separate
   debug/project/pilot guards, own-session-only server logout transport, then one
   ordinary refresh. Sixteen new tests, all 469 Flutter tests and configured

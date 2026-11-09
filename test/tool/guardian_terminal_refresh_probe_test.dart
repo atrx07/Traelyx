@@ -68,12 +68,14 @@ class Fixture {
     bool pilotsOff = true,
     String project = 'https://ksydjfcyzdtpbigskahm.supabase.co',
     Duration timeout = const Duration(seconds: 30),
+    void Function(TerminalAdmissionReason)? onBlocked,
   }) => GuardianTerminalRefreshProbe.prepare(
     debugBuild: debug,
     enabled: enabled,
     pilotsOff: pilotsOff,
     projectUrl: project,
     timeout: timeout,
+    onBlocked: onBlocked,
     initialize: () async {
       initializes++;
       return runtime;
@@ -82,6 +84,69 @@ class Fixture {
 }
 
 void main() {
+  test(
+    'admission failures expose only fixed categories without changing guards',
+    () async {
+      for (final (mutation, expected)
+          in <(void Function(Fixture), TerminalAdmissionReason)>[
+            ((f) => f.source.clear(), TerminalAdmissionReason.session),
+            ((f) => f.clean = false, TerminalAdmissionReason.idle),
+            ((f) => f.currentReceipt = null, TerminalAdmissionReason.receipt),
+            ((f) => f.source.expiresAt = 0, TerminalAdmissionReason.headroom),
+            (
+              (f) => f.onRead = () {
+                f.source.sessionMarker = Object();
+              },
+              TerminalAdmissionReason.changed,
+            ),
+            (
+              (f) => f.onRead = () {
+                throw StateError('private diagnostic');
+              },
+              TerminalAdmissionReason.authority,
+            ),
+          ]) {
+        final f = Fixture();
+        mutation(f);
+        final reasons = <TerminalAdmissionReason>[];
+        expect(await f.prepare(onBlocked: reasons.add), isNull);
+        expect(reasons, [expected]);
+        expect(f.source.revokes, 0);
+      }
+      final f = Fixture(), reasons = <TerminalAdmissionReason>[];
+      expect(await f.prepare(enabled: false, onBlocked: reasons.add), isNull);
+      expect(reasons, [TerminalAdmissionReason.configuration]);
+      expect(f.initializes, 0);
+    },
+  );
+  test(
+    'native read category survives catch without exporting exception details',
+    () async {
+      final f = Fixture(), reasons = <TerminalAdmissionReason>[];
+      f.onRead = () => throw const TerminalAdmissionException(
+        TerminalAdmissionReason.driverJournal,
+      );
+      expect(await f.prepare(onBlocked: reasons.add), isNull);
+      expect(reasons, [TerminalAdmissionReason.driverJournal]);
+      expect(f.source.revokes, 0);
+    },
+  );
+  testWidgets('closed reason is fixed text and never exposes an action', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: TerminalRefreshProbeScreen(
+          probe: null,
+          closedReason: TerminalAdmissionReason.driverStatus,
+        ),
+      ),
+    );
+    expect(find.text('Local driver status unavailable'), findsOneWidget);
+    expect(find.text('Probe closed; no action available'), findsOneWidget);
+    expect(find.byType(FilledButton), findsNothing);
+    expect(find.textContaining('private diagnostic'), findsNothing);
+  });
   test(
     'closed debug/define/project/pilot/timeout guards never initialize',
     () async {

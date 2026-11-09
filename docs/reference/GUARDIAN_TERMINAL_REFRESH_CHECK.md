@@ -2,7 +2,8 @@
 
 ## Scope and status
 
-M6.8 source preparation only; no live revocation or probe installation has run.
+M6.8 live scope approved on 2026-11-09; admission closed before any revocation
+or test refresh. Pixel is restored to the ordinary app with unchanged files.
 This follows the passed [normal rollover observation](GUARDIAN_PASSIVE_REFRESH_CHECK.md).
 The alternate debug entrypoint is `tool/guardian_terminal_refresh_probe.dart`;
 ordinary app code never imports it. Sixteen new operator/SDK checks,
@@ -13,8 +14,12 @@ configured gated debug build pass. The ignored prepared APK is
 Source `5597d7e` passes full
 [CI 42666565560](https://github.com/atrx07/Traelyx/actions/runs/42666565560):
 all three jobs, native suites, debug/release builds, cloud grants/RLS and Edge
-checks are green. Preparation is complete; specific live review remains before
-device installation or revocation. M6.8 remains incomplete.
+checks are green. That source's live admission did not become ready. Fixed
+admission diagnostics now pass three additional regressions (all 472 Flutter
+tests), clean analysis and the configured diagnostic build. Exact-source CI
+must pass before continuation. M6.8 remains incomplete. The ignored diagnostic
+APK is `.dart_tool/m6_8_terminal_refresh_diagnostic.apk`, SHA-256
+`8ff5c300905e87a6e1dc6c006d33fa4ceafa93360d71ae8cd68222c65de41fbf`.
 
 The existing recipient-consent recovery build is prepared locally at
 `.dart_tool/m6_8_terminal_refresh_recipient.apk`, SHA-256
@@ -71,7 +76,7 @@ bound-owner tickets or authenticated server rows: independent private file check
 and the subsequent reviewed ordinary-app recovery must establish those results.
 The UI success label alone does not prove secure storage/provider reliability.
 
-## Reviewed live sequence (not yet authorized)
+## Reviewed live sequence (approved; no action started)
 
 1. After source CI, obtain specific production review covering one Pixel
    own-session revocation, one refresh, original-owner email-link recovery and
@@ -96,6 +101,29 @@ The UI success label alone does not prove secure storage/provider reliability.
    empty cleanup journals, no driver/recorder, restored aggregate baseline,
    disabled flags and no temporary worker file. Record the actual outcome and
    persist closure. A failed phase stays unverified.
+
+## Admission checkpoint — 2026-11-09
+
+The maintainer approved the complete one-action/recovery scope. Fresh hosted
+counts were `0/0/0/2/2/1/1`, both enable digests matched false, both original
+accounts were signed in and both networks validated, with no recorder/driver.
+New private baselines included Pixel's zero recorder files and all 11,865 current
+Tecno files, including the preserved accidental recording. Both devices' receiver
+files were present. The original 11,857-file historical proof remains retained.
+
+The probe update preserved Pixel's exact receipt/provider files, but displayed
+`Probe closed; no action available`. After ordinary startup/sign-in preservation
+was verified, one admission-only restart remained closed. Its action button was
+never available or invoked. Pixel was restored to the ordinary build with exact
+receiver/provider/recorder preservation; no deliberate server-session revocation
+or test refresh occurred. The admission cause is not yet established.
+
+The probe now maps only configuration, initialization, session/headroom and
+individual native-read failures to fixed labels. It exports no exception text,
+identity, credential or receipt data and relaxes no admission guard. Three new
+guard/category/UI regressions join the prior 16 tests. Keep the approved action
+budget unspent until the reason is understood and validated source is ready;
+never bypass a closed guard to manufacture a result.
 
 ## Limits
 

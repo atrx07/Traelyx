@@ -15,6 +15,43 @@ import 'package:traelyx/features/guardian/guardian_driver_status.dart';
 
 enum TerminalRefreshResult { rejected, refreshed, uncertain }
 
+enum TerminalAdmissionReason {
+  configuration('Probe configuration is closed'),
+  initialization('Account initialization unavailable'),
+  session('Existing signed-in session unavailable'),
+  authority('Local authority preflight unavailable'),
+  changed('Session changed during preflight'),
+  idle('Idle driver and empty cleanup journals required'),
+  receipt('Existing receiver registration required'),
+  headroom('Waiting for normal session refresh headroom'),
+  binding('Local owner binding unavailable'),
+  driverStatus('Local driver status unavailable'),
+  recipientStatus('Local receiver status unavailable'),
+  recipientJournal('Local receiver cleanup status unavailable'),
+  driverJournal('Local driver cleanup status unavailable');
+
+  const TerminalAdmissionReason(this.label);
+  final String label;
+}
+
+class TerminalAdmissionException implements Exception {
+  const TerminalAdmissionException(this.reason);
+  final TerminalAdmissionReason reason;
+}
+
+Future<T> _admissionRead<T>(
+  TerminalAdmissionReason reason,
+  Future<T> Function() operation,
+) async {
+  try {
+    return await operation();
+  } catch (_) {
+    throw TerminalAdmissionException(
+      reason,
+    ); // No raw provider/platform detail.
+  }
+}
+
 abstract interface class TerminalSessionSource {
   String? get owner;
   Object? get sessionMarker;
@@ -132,6 +169,7 @@ class GuardianTerminalRefreshProbe extends ChangeNotifier {
     required Future<TerminalRefreshRuntime?> Function() initialize,
     DateTime Function()? now,
     Duration timeout = const Duration(seconds: 30),
+    void Function(TerminalAdmissionReason)? onBlocked,
   }) async {
     if (!debugBuild ||
         !enabled ||
@@ -139,24 +177,41 @@ class GuardianTerminalRefreshProbe extends ChangeNotifier {
         projectUrl != 'https://ksydjfcyzdtpbigskahm.supabase.co' ||
         timeout <= Duration.zero ||
         timeout > const Duration(seconds: 30)) {
+      onBlocked?.call(TerminalAdmissionReason.configuration);
       return null;
     }
+    var failure = TerminalAdmissionReason.initialization;
+    GuardianTerminalRefreshProbe? blocked(TerminalAdmissionReason reason) {
+      onBlocked?.call(reason);
+      return null;
+    }
+
     try {
       final runtime = await initialize().timeout(timeout);
-      if (runtime == null) return null;
+      if (runtime == null) {
+        return blocked(TerminalAdmissionReason.initialization);
+      }
       final source = runtime.source;
       final owner = source.owner;
       final session = source.sessionMarker;
-      if (owner == null || session == null) return null;
+      if (owner == null || session == null) {
+        return blocked(TerminalAdmissionReason.session);
+      }
       final clock = now ?? DateTime.now;
+      failure = TerminalAdmissionReason.authority;
       final authority = await runtime.readAuthority(owner).timeout(timeout);
-      if (source.owner != owner ||
-          !identical(source.sessionMarker, session) ||
-          !authority.idleAndClean ||
-          authority.receipt == null ||
-          (source.expiresAt ?? 0) - clock().millisecondsSinceEpoch ~/ 1000 <
-              120) {
-        return null;
+      if (source.owner != owner || !identical(source.sessionMarker, session)) {
+        return blocked(TerminalAdmissionReason.changed);
+      }
+      if (!authority.idleAndClean) {
+        return blocked(TerminalAdmissionReason.idle);
+      }
+      if (authority.receipt == null) {
+        return blocked(TerminalAdmissionReason.receipt);
+      }
+      if ((source.expiresAt ?? 0) - clock().millisecondsSinceEpoch ~/ 1000 <
+          120) {
+        return blocked(TerminalAdmissionReason.headroom);
       }
       return GuardianTerminalRefreshProbe._(
         runtime,
@@ -166,8 +221,10 @@ class GuardianTerminalRefreshProbe extends ChangeNotifier {
         clock,
         timeout,
       );
-    } catch (_) {
-      return null;
+    } catch (error) {
+      return blocked(
+        error is TerminalAdmissionException ? error.reason : failure,
+      );
     }
   }
 
@@ -273,17 +330,30 @@ Future<TerminalRefreshRuntime?> _initializeRuntime() async {
     owner,
   ) async {
     if (raw.currentIdentity?.userId != owner ||
-        !await bound.ensureCurrentOwnerBound()) {
-      throw const FormatException();
+        !await _admissionRead(
+          TerminalAdmissionReason.binding,
+          bound.ensureCurrentOwnerBound,
+        )) {
+      throw const TerminalAdmissionException(TerminalAdmissionReason.binding);
     }
     // Status recovery can journal expired driver authority; read journals
     // afterward so a newly retained cleanup ticket cannot escape admission.
-    final status = await const MethodChannelGuardianDriverStatusPort().read(
-      owner,
+    final status = await _admissionRead(
+      TerminalAdmissionReason.driverStatus,
+      () => const MethodChannelGuardianDriverStatusPort().read(owner),
     );
-    final receipt = await native.recipientStatus(owner);
-    final pending = await native.pendingRevokes(owner);
-    final driverPending = await driver.pendingRevokes(owner);
+    final receipt = await _admissionRead(
+      TerminalAdmissionReason.recipientStatus,
+      () => native.recipientStatus(owner),
+    );
+    final pending = await _admissionRead(
+      TerminalAdmissionReason.recipientJournal,
+      () => native.pendingRevokes(owner),
+    );
+    final driverPending = await _admissionRead(
+      TerminalAdmissionReason.driverJournal,
+      () => driver.pendingRevokes(owner),
+    );
     if (raw.currentIdentity?.userId != owner) throw const FormatException();
     return TerminalRecipientAuthority(
       receipt,
@@ -298,6 +368,7 @@ Future<TerminalRefreshRuntime?> _initializeRuntime() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  TerminalAdmissionReason? closedReason;
   final probe = await GuardianTerminalRefreshProbe.prepare(
     debugBuild: kDebugMode,
     enabled: const bool.fromEnvironment(
@@ -309,13 +380,26 @@ Future<void> main() async {
         !const bool.fromEnvironment('TRAELYX_GUARDIAN_SENDING_PILOT'),
     projectUrl: const String.fromEnvironment('TRAELYX_SUPABASE_URL'),
     initialize: _initializeRuntime,
+    onBlocked: (reason) => closedReason = reason,
   );
-  runApp(MaterialApp(home: TerminalRefreshProbeScreen(probe: probe)));
+  runApp(
+    MaterialApp(
+      home: TerminalRefreshProbeScreen(
+        probe: probe,
+        closedReason: closedReason,
+      ),
+    ),
+  );
 }
 
 class TerminalRefreshProbeScreen extends StatefulWidget {
-  const TerminalRefreshProbeScreen({super.key, required this.probe});
+  const TerminalRefreshProbeScreen({
+    super.key,
+    required this.probe,
+    this.closedReason,
+  });
   final GuardianTerminalRefreshProbe? probe;
+  final TerminalAdmissionReason? closedReason;
   @override
   State<TerminalRefreshProbeScreen> createState() =>
       _TerminalRefreshScreenState();
@@ -347,7 +431,14 @@ class _TerminalRefreshScreenState extends State<TerminalRefreshProbeScreen>
     body: SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: widget.probe == null
-          ? const Text('Probe closed; no action available')
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Probe closed; no action available'),
+                if (widget.closedReason != null)
+                  Text(widget.closedReason!.label),
+              ],
+            )
           : ListenableBuilder(
               listenable: widget.probe!,
               builder: (context, _) => Column(

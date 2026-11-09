@@ -1566,6 +1566,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     recover through ordinary original-owner sign-in plus fresh personal receiver
     consent. Recheck all state and keep both functions false. See the terminal
     refresh reference; no active-driver or mounted/vehicle claim follows.
+    Maintainer approved this scope on 2026-11-09. Fresh baseline and disabled
+    flags passed, both devices signed in/online/idle; 11,865 current Tecno files
+    include its preserved accidental trip. Pixel's update preserved exact
+    receipt/provider/zero recorder files, but admission stayed closed through
+    one admission-only restart after verified ordinary startup. No action button
+    was available or invoked, no deliberate revocation/test refresh occurred.
+    Ordinary Pixel app/sign-in/files restored. Cause remains unknown. Add fixed
+    admission categories, including individual native reads, without exposing
+    private state or relaxing guards: three new tests, all 472 Flutter tests and
+    analysis/configured build pass. Complete full source CI before continuing
+    the same unspent one-action scope. Never bypass a failed precondition.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
