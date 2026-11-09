@@ -596,7 +596,13 @@ still emits null and invokes existing cleanup/journaling; a late refresh cannot
 overwrite a replacement owner. Real-SDK/generated-session loopback regressions
 cover these paths with a modeled native boundary; see the
 [refresh issue record](../issues/2026-11-09_auth-refresh-identity-stream.md).
-This does not close hosted natural-expiry or active physical cleanup gates.
+The [passive hosted check](../reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md) passed
+normal Pixel access-token rollover and the original expiry boundary after
+43 minutes, with ordinary-build restoration and exact receiver/provider
+preservation. The existing pairing reload also passed. The current hosted
+policy has no terminal timebox/inactivity timeout; normal JWT rollover does not
+end the full session. Terminal server rejection/revocation, active driver and
+physical cleanup remain separate gates.
 
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
@@ -703,6 +709,7 @@ startup registration path.
 | Duplicate, queued expiry and disconnect | Actual FCM rejection/durable-claim checks in [rejection report](../reference/GUARDIAN_REJECTION_CHECK.md) | These cases do not validate active driver detection |
 | Two-account receipt/details | One synthetic backend event to Pixel; explicit Open and Tecno viewed status; exact cleanup in [two-account report](../reference/GUARDIAN_TWO_ACCOUNT_CHECK.md) | Pixel is an emulator; no native detector/ingestion proof |
 | Registered receiver sign-out/recovery | Pixel explicit sign-out/re-consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), controlled Auth loss in the [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md), offline failure/retry in the [offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md), and third-account SDK replacement/isolation/original-owner recovery in the [account-switch report](../reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md) | Natural Auth expiry, active driver replacement and physical-device reliability remain separate |
+| Normal hosted access-token rollover | One passive Pixel SDK rollover plus original expiry boundary, ordinary pairing reload and file preservation in the [passive report](../reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md) | Does not establish terminal server rejection/revocation, active driver or physical/OEM behavior |
 | Reviewed driver/outbox/scheduler integration | Governed fixtures, synthetic cross-component tests and isolated native proofs; idle hosted activation/Stop | Correct mount review, active cancellation/ingestion, process/network recovery and recording/performance remain open |
 | Vehicle and physical reliability | No field accuracy claim | Maintainer deferred mounted review and driving/performance on 2026-10-19; retain separate physical-device and calibration gates |
 

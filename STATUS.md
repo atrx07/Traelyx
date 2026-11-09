@@ -10,16 +10,20 @@
 
 ## Working
 
-- M6.8 passive hosted-rollover observer prepared and CI-validated (2026-11-09): a separate
-  debug/project-gated entrypoint keeps normal SDK refresh and production owner
-  cleanup, requires an existing idle receiver, and shows only fixed results.
-  It cannot force refresh/sign-out or alter SDK/network/clock settings; session
-  changes/backgrounding/cancellation deny a pass. Twenty-one new checks, all 453
-  Flutter tests, analysis, repository, configured probe build and full source
-  CI 42606731458 (`1e936e8`) pass. Fresh preflight remains before device use;
-  no live observation or device update has run.
-  Successful access-token rollover cannot close terminal session-expiry,
-  active-driver or vehicle gates. Both backend flags stay false. See
+- M6.8 passive hosted access-token rollover passed (2026-11-09): Pixel observed
+  the normal SDK refresh and original expiry boundary after 43 minutes. Ordinary
+  pilot-off app restored; both original accounts remain signed in. Pixel's
+  read-only pairing reload/local registration and exact receiver/provider/zero
+  recorder file checks pass, including after a stalled-emulator cold boot with
+  saved data. Tecno's receiver/provider and all 11,857 original recorder hashes
+  are unchanged; eight added chunks are the maintainer's accidental short trip,
+  preserved and excluded from QA selection in the private ignored
+  `.dart_tool/qa-ignored-trips.local.json`. Do not rebaseline away that distinction.
+  Final hosted counts 0/0/0/2/2/1/1 and both flags false; no worker file,
+  driver vault, recorder, send, registration or upload. Twenty-one new checks,
+  all 453 Flutter tests, analysis, configured probe build and full source
+  CI 42606731458 (`1e936e8`) pass. Terminal rejection/revocation, active-driver
+  and deferred vehicle gates remain open. See
   `docs/reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md`.
 
 - M6.8 SDK refresh boundary repair validated (2026-11-09): a generated-session

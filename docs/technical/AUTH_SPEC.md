@@ -137,6 +137,19 @@ The SDK-backed refresh boundary regression and repair are recorded in
 Generated-session/loopback evidence is not hosted natural-expiry or physical
 provider-reliability proof.
 
+The hosted Sessions page was checked read-only on 2026-11-09: access-token
+lifetime is 3,600 seconds; maximum session lifetime and inactivity timeout are
+both zero (no timeout), single-session enforcement is off, and refresh-token
+reuse detection remains enabled with a 10-second allowance. No setting changed.
+An expiring access token should therefore roll over while retaining identity;
+it is not evidence that the complete sign-in session ended. Supabase documents
+indefinite sessions by default and paid-plan controls for time-boxing; see its
+[session reference](https://supabase.com/docs/guides/auth/sessions). Those paid
+controls are not a mandatory MVP dependency or a prerequisite for free-tier tests.
+Keep normal rollover, terminal server rejection/revocation, and Guardian lease
+expiry as distinct validation cases. Earlier unexplained Auth loss is not
+attributed to the one-hour access-token lifetime without evidence.
+
 Link-send failures distinguish transport failures, provider rate limits,
 temporary service failures, rejected requests, and unknown local errors.
 Only transport failures suggest checking the connection. Raw provider error

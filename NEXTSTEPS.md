@@ -10,14 +10,22 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Next is the passive hosted access-token rollover check on Pixel: local
-preparation passes 21 new checks, all 453 Flutter tests, analysis, configured
-build, repository validation and exact-source CI 42606731458 (`1e936e8`).
-Recheck current state and preserve fresh file baselines before device use. The observer
-uses normal SDK auto-refresh, fixed labels and an 80-minute cap; no forced
-Auth/network/clock/registration action. Background/session changes deny a pass.
-No live run has started. This does not close terminal natural session-expiry,
-active-driver or deferred vehicle gates. See
+The passive Pixel access-token rollover check passed after 43 minutes and is
+closed (2026-11-09). The ordinary build, both original sign-ins and existing
+receiver files are preserved; Pixel's authenticated pairing reload passes.
+Tecno's 11,857 original files are unchanged. Its eight added chunks are a
+maintainer-confirmed accidental short recording, preserved and privately
+excluded from future QA selection; consult `.dart_tool/qa-ignored-trips.local.json`
+without publishing its identifiers. Final hosted baseline is 0/0/0/2/2/1/1,
+both flags false and no worker file. Twenty-one new checks, all 453 Flutter
+tests, analysis, configured build and exact-source CI 42606731458 (`1e936e8`)
+pass. No Auth-policy/network/clock change, sign-out, activation or send was used.
+Remaining work is terminal server rejection/revocation, active-driver lifecycle
+and physical/OEM validation; mounted/vehicle gates remain maintainer-deferred.
+The current project has no terminal session timebox/inactivity timeout, so
+waiting another hour cannot close a terminal-loss gate. Review a bounded scope
+before any deliberate live Auth mutation; do not repeat completed fault checks.
+See
 `docs/reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md`.
 
 The desk-safe SDK refresh/expiry unit is closed: identity-stream diagnostics and

@@ -1515,13 +1515,28 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Interactive same-owner sign-in events and backgrounding close observation;
     receipt/journal/driver changes and delayed native results cannot record a
     false pass. Exact-source CI 42606731458 (`1e936e8`) passes all jobs, native
-    suites and debug/release builds; no device/live action has run. See
+    suites and debug/release builds. See
     `GUARDIAN_PASSIVE_REFRESH_CHECK.md` for operator boundaries and APK hash.
-  - [ ] Run one bounded passive Pixel rollover observation after fresh device,
+  - [x] Run one bounded passive Pixel rollover observation after fresh device,
     hosted-disabled and preservation preflight; restore the ordinary build on
     completion/failure/deadline and verify the original account/receiver/bytes.
     This uses only routine unchanged SDK refresh, never deliberate Auth loss or
     new grants/enables. Keep terminal session-expiry/driver/vehicle gates open.
+    Passed on 2026-11-09 after 43 minutes: genuine SDK refresh plus original
+    expiry boundary, unchanged receiver/provider files and zero Pixel recorder
+    files. Ordinary pilot-off build restored; both original accounts signed in,
+    Pixel paired guardian reload and local registration confirmed. A stalled
+    emulator after interruption was cold-booted with saved data; Android services,
+    authorized debugging, network and preservation checks passed again. All
+    11,857 original Tecno files remain unchanged, none missing; eight new chunks
+    are a maintainer-confirmed accidental short recording, preserved and excluded
+    from QA selection through private `.dart_tool/qa-ignored-trips.local.json`.
+    Original baselines remain intact. Final hosted 0/0/0/2/2/1/1, both flags false,
+    worker absent, both driver vaults absent and no recorder. No forced refresh,
+    sign-out, registration, activation, send, trip upload or policy change.
+    Current hosted JWT lifetime is 3,600 seconds with no terminal timebox or
+    inactivity timeout; normal rollover cannot stand in for terminal rejection.
+    Close this bounded scope; M6.8 remains incomplete and vehicle work deferred.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
