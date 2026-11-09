@@ -10,6 +10,17 @@
 
 ## Working
 
+- M6.8 terminal server-rejection probe prepared locally (2026-11-09): separate
+  debug/project/pilot guards, own-session-only server logout transport, then one
+  ordinary refresh. Sixteen new tests and all 469 Flutter tests pass; analysis
+  and the configured debug build pass; analysis is clean. Loopback SDK checks
+  verify exact local scope, retained Auth before
+  refresh, structured terminal denial and modeled owner/journal cleanup. No
+  new dependency, runtime change, service-role key or Auth-policy edit. Source
+  CI and specific live review remain before device installation or revocation.
+  Both Guardian flags stay false; mounted/vehicle gates remain deferred. See
+  `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
+
 - M6.8 passive hosted access-token rollover passed (2026-11-09): Pixel observed
   the normal SDK refresh and original expiry boundary after 43 minutes. Ordinary
   pilot-off app restored; both original accounts remain signed in. Pixel's

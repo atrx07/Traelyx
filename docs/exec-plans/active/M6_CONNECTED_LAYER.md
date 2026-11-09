@@ -1537,6 +1537,26 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Current hosted JWT lifetime is 3,600 seconds with no terminal timebox or
     inactivity timeout; normal rollover cannot stand in for terminal rejection.
     Close this bounded scope; M6.8 remains incomplete and vehicle work deferred.
+  - [ ] Prepare a separately gated Pixel server-rejected-refresh check. Use the
+    pinned SDK's own-session `/logout?scope=local` request without its local
+    sign-out wrapper, then exactly one ordinary refresh. Never use a service-role
+    credential, global/others scope, Auth policy edit or synthetic response in
+    the live path. Require unchanged session identity, expiry headroom, existing
+    idle receiver, empty recipient/driver journals and all pilots off. Production
+    binding must handle genuine SDK terminal loss; fixed UI must distinguish
+    blocked/uncertain outcomes and never retry. Validate endpoint/scope and SDK
+    behavior with generated-session loopback tests, adversarial one-shot guards,
+    cleanup ordering, configured build and full source CI before live review.
+    Do not install or run against production during preparation. A reviewed live
+    scope must include original-owner email-link recovery, no automatic receiver
+    registration, fresh personal consent and ordinary-build restoration. This
+    tests terminal server rejection, not spontaneous expiry or active drivers.
+    Local guards/SDK fixtures pass 16 new checks, all 469 Flutter tests and clean
+    analysis. The configured gated debug build, repository and format checks
+    pass; exact-source CI remains pending. Loopback tests preserve the actual request/response contract,
+    including the API-version header needed to parse structured error codes;
+    widget HTTP overrides are isolated from real loopback tests. No live action.
+    See `GUARDIAN_TERMINAL_REFRESH_CHECK.md` for reviewed operator boundaries.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
