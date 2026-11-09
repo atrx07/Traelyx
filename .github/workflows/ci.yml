@@ -122,12 +122,13 @@ jobs:
       - name: Precache checksum-verified Linux SQLite
         run: |
           # sqlite3 3.5.1's default release URL can cache an HTTP 504 body.
-          # Refresh that URL, retaining the package's published SHA-256 and cache key.
+          # Use its immutable official asset API, retaining the published SHA-256/cache key.
           expected=b17729184e5a2818055ecbddd5ed6642521bfe6e56aafa472330e483c0e2e0d2
           cache=.dart_tool/hooks_runner/shared/sqlite3/build/download-${expected:0:8}
           asset="$RUNNER_TEMP/traelyx-libsqlite3.so"
           curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 90 \
-            "https://github.com/simolus3/sqlite3.dart/releases/download/sqlite3-3.5.1/libsqlite3.x64.linux.so?traelyx-ci=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --header 'Accept: application/octet-stream' \
+            https://api.github.com/repos/simolus3/sqlite3.dart/releases/assets/501022946 \
             --output "$asset"
           printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
           mkdir -p "$cache"

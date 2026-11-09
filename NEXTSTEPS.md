@@ -15,7 +15,8 @@ stream diagnostic leak plus misleading refresh feedback. Eleven new SDK/UI check
 all 432 Flutter tests, analysis and configured ordinary build pass. Finish
 exact-source CI and data-preserving inactive ordinary-app checks before closure.
 Source `dc82ed1` CI hit the same cached SQLite HTTP 504 checksum failure twice;
-validate the CI-only official-asset precache remedy without weakening its hash.
+validate the CI-only immutable official-asset API precache remedy without
+weakening its hash. The first fresh-query route also hit HTTP 504 in CI.
 See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
 expiry, terminal revocation or driver/vehicle test is authorized by this local
 preparation; both Guardian functions remain disabled.

@@ -18,7 +18,8 @@
   new checks, all 432 Flutter tests, analysis and configured ordinary build pass;
   full CI and inactive device verification pending. Source `dc82ed1` CI stopped
   twice on an upstream cached SQLite HTTP 504 body, before app tests. A CI-only
-  verified precache remedy is in validation; integrity gates remain unchanged.
+  verified precache remedy is in validation; its first fresh-query route also
+  hit HTTP 504, so the official immutable asset API is used. Integrity gates remain unchanged.
   No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 

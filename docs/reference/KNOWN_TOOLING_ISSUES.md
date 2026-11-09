@@ -13,13 +13,16 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   92 bytes, whose SHA-256 exactly matched the rejected response. The same official
   asset with a fresh query returned the package's expected SHA-256. Source repair
   CI 42566948992 attempts 1/2 stopped here before application tests.
-- **Safe fix:** The CI precache step requests that official asset with a run/attempt
-  query, uses bounded curl retries with HTTP failure detection, verifies the exact
+- **Safe fix:** The CI precache step requests that immutable official release asset
+  through GitHub's asset API with `Accept: application/octet-stream`, uses bounded
+  curl retries with HTTP failure detection, verifies the exact
   package-published hash, then populates the native hook's hash-keyed cache. The
   hook independently verifies cached bytes. Recheck the version/hash/cache layout
   deliberately when upgrading sqlite3; a different hook hash ignores this cache.
-- **Verification:** Fresh official download hash verified locally on 2026-11-09;
-  full CI of the workflow remedy is pending. Do not claim the failed run passed.
+- **Verification:** The fresh-query route returned correct bytes once locally but
+  failed with HTTP 504 in CI 42567704116. The immutable asset API returns the
+  expected digest locally (2026-11-09); full CI of that refined remedy is pending.
+  Do not claim a failed run passed.
 - **Do not:** Disable checksum/TLS checks, accept the HTTP error's digest, alter
   package cache source, replace SQLite with a different system build, or loosen
   schema/test gates.

@@ -1492,6 +1492,8 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     because the official SQLite release URL cached a 92-byte HTTP 504 body. A
     fresh official URL yields the expected digest. Validate the CI-only bounded,
     checksum-verified precache remedy and full CI before ordinary device updates.
+    The fresh-query remedy also hit HTTP 504 in CI 42567704116. The official
+    immutable asset API yields the expected digest locally; validate that route.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
