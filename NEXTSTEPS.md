@@ -14,6 +14,8 @@ The next desk-safe SDK refresh/expiry unit reproduced and repaired an identity
 stream diagnostic leak plus misleading refresh feedback. Eleven new SDK/UI checks,
 all 432 Flutter tests, analysis and configured ordinary build pass. Finish
 exact-source CI and data-preserving inactive ordinary-app checks before closure.
+Source `dc82ed1` CI hit the same cached SQLite HTTP 504 checksum failure twice;
+validate the CI-only official-asset precache remedy without weakening its hash.
 See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
 expiry, terminal revocation or driver/vehicle test is authorized by this local
 preparation; both Guardian functions remain disabled.

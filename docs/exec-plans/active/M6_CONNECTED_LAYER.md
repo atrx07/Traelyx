@@ -1488,6 +1488,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     plus configured ordinary build pass. Finish full CI, then inactive data-preserving
     update checks with no deliberate Auth failure before closing. Issue record:
     `2026-11-09_auth-refresh-identity-stream.md`; natural hosted expiry remains open.
+    Source `dc82ed1` is pushed; CI 42566948992 attempts 1/2 failed before app tests
+    because the official SQLite release URL cached a 92-byte HTTP 504 body. A
+    fresh official URL yields the expected digest. Validate the CI-only bounded,
+    checksum-verified precache remedy and full CI before ordinary device updates.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

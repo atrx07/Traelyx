@@ -4,7 +4,10 @@
   tests, analysis and configured ordinary build pass. Exact-source CI and
   data-preserving inactive device checks pending.
 - Discovery: local SDK refresh/expiry validation during M6.8, not a reported
-  physical crash. Fix commit/CI will be linked after source validation.
+  physical crash. Source fix: `dc82ed1007da53d49d8c9d2a8e7a81f289755a98`.
+  CI 42566948992 attempts 1/2 stopped before app tests on a cached upstream
+  SQLite HTTP 504 body; the unchanged expected checksum rejected it. See the
+  matching known-tooling runbook. Full source CI remains required.
 
 ## Confirmed cause and evidence
 

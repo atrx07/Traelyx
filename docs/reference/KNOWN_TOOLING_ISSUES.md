@@ -4,6 +4,26 @@ This is a lightweight, failure-triggered runbook for recurring local tooling pro
 
 Use the matching safe fix before inventing another workaround. If it fails, investigate the current evidence and revise the entry only after validating the replacement. Keep product defects, transient external failures, and one-off operator mistakes out of this file.
 
+## SQLite release URL caches an HTTP error body in CI
+
+- **Scope:** Linux native hooks for pinned `sqlite3` 3.5.1 in GitHub Actions.
+- **Symptom:** Drift schema verification reports downloaded hash `bef140a1…`
+  instead of published `b1772918…`; a fresh-runner retry fails identically.
+- **Confirmed evidence:** The default official release URL returned HTTP 504,
+  92 bytes, whose SHA-256 exactly matched the rejected response. The same official
+  asset with a fresh query returned the package's expected SHA-256. Source repair
+  CI 42566948992 attempts 1/2 stopped here before application tests.
+- **Safe fix:** The CI precache step requests that official asset with a run/attempt
+  query, uses bounded curl retries with HTTP failure detection, verifies the exact
+  package-published hash, then populates the native hook's hash-keyed cache. The
+  hook independently verifies cached bytes. Recheck the version/hash/cache layout
+  deliberately when upgrading sqlite3; a different hook hash ignores this cache.
+- **Verification:** Fresh official download hash verified locally on 2026-11-09;
+  full CI of the workflow remedy is pending. Do not claim the failed run passed.
+- **Do not:** Disable checksum/TLS checks, accept the HTTP error's digest, alter
+  package cache source, replace SQLite with a different system build, or loosen
+  schema/test gates.
+
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 
 - **Scope:** PowerShell 7 operator contexts containing ISO UTC timestamps.

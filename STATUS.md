@@ -16,7 +16,10 @@
   terminal Auth loss still triggers cleanup. Account distinguishes ended sign-in
   from retryable failure and ignores replacement-owner refresh feedback. Eleven
   new checks, all 432 Flutter tests, analysis and configured ordinary build pass;
-  full CI and inactive device verification pending. No live expiry/revocation, backend,
+  full CI and inactive device verification pending. Source `dc82ed1` CI stopped
+  twice on an upstream cached SQLite HTTP 504 body, before app tests. A CI-only
+  verified precache remedy is in validation; integrity gates remain unchanged.
+  No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 
 - M6.8 third-account replacement/recovery passed (2026-11-09): real SDK callback
