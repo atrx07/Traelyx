@@ -1440,7 +1440,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     absent, both flags false, no active recorder, alert or upload. No code fix
     or natural-Auth-expiry claim; see `GUARDIAN_RESUME_20261108.md`. Persist this
     bounded recovery before preparing a separate account-replacement scope.
-  - [ ] Next bounded account-replacement preparation (2026-11-08): isolated
+  - [x] Bounded account-replacement preparation (2026-11-08–09): isolated
     debug/project-gated Pixel entrypoint, one personally entered SDK email-link
     request and production native owner binding. No raw Sign out, Guardian RPC,
     registration or driver/sender. Guard stable owner/receipt/driver and empty
@@ -1448,10 +1448,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     and disabled driver after callback, failing uncertain on races/timeouts.
     Native journal retains the original receiver for later ordinary same-owner
     reconciliation. Sixteen new regressions, all 421 Flutter tests and analysis
-    plus configured debug build pass. Finish full source CI and persist before requesting
-    the separate live two-existing-account switch/recovery/re-consent scope in
+    plus configured debug build pass. Source `4fb65f6` passes full CI 42495776651,
+    including all three jobs, native suites and debug/release builds. Close
+    preparation and persist before requesting the separate live unpaired-third-
+    account switch/recovery/re-consent scope in
     `GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`. No probe install or live switch;
     both ordinary builds restored, both flags false, vehicle checks deferred.
+    The maintainer confirmed availability of a third email; propose its normal
+    Auth signup/sign-in on Pixel, empty pairing/inbox and no new receiver, then
+    original-owner recovery. Do not use Tecno's account for the replacement.
+    After the interruption, both devices are authorized/online/idle with unchanged
+    recorder/receiver fingerprints and absent driver vaults; probe hash matches.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

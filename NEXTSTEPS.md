@@ -17,11 +17,12 @@ sign-in and restored by fresh personal consent; Auth-loss cause remains unknown.
 All 11,857 recorder hashes and Pixel's registration are preserved. Both flags
 remain false. See `docs/reference/GUARDIAN_RESUME_20261108.md`. The different-account
 replacement probe is now prepared, with 16 new regressions, all 421 Flutter tests
-and clean analysis/configured debug build. Finish exact-source CI, then request
-its specific live scope in `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
+and clean analysis/configured debug build. Source `4fb65f6` passes full CI
+42495776651; preparation is closed (2026-11-09). Next request its specific live
+scope in `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
 No live switch/install has run; prior approvals are closed. Vehicle gates remain
-deferred. The proposed use of the two existing accounts would not prove an
-unpaired third-account case or natural Auth expiry.
+deferred. The maintainer has a third email for the proposed unpaired-account
+isolation check; live Auth creation/switch/recovery still needs its review.
 
 The reviewed two-account single-alert/inbox test passed and is closed/cleaned
 (2026-10-21); see `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`. One Pixel receipt,

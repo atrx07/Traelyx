@@ -2,16 +2,17 @@
 
 ## Scope and current gate
 
-Preparation only, 2026-11-08. The isolated probe is not installed and no live
+Preparation validated, 2026-11-09. The isolated probe is not installed and no live
 account replacement is approved or run. The preceding interruption recovery is
 closed in [the recovery report](GUARDIAN_RESUME_20261108.md). Both ordinary builds
 and existing registrations are restored. Mounted/vehicle tests remain deferred.
 
-The next proposed check uses Pixel's existing guardian account, then the existing
-Tecno account on Pixel, then returns to Pixel's original account. It needs no
-third account or new profile/pairing. This would establish different-owner
-replacement for those two accounts; it would not establish unpaired third-account
-behavior, natural Auth expiry or physical/OEM reliability.
+The maintainer confirmed a third email is available. The proposed check uses
+Pixel's existing guardian account, then that unpaired third account on Pixel,
+then returns to Pixel's original account. The email-link flow may create a normal
+Supabase Auth account. No profile/vehicle/pairing edits or third-account receiver
+registration are proposed. This targets different-owner/unpaired-account isolation;
+it would not establish natural Auth expiry or physical/OEM reliability.
 
 ## Isolated probe contract
 
@@ -53,8 +54,14 @@ fake models journal/owner isolation; it is not Android provider or live RLS proo
 All **421 Flutter tests**, analysis and the configured alternate debug build pass.
 The ignored `.dart_tool/m6_8_account_switch_probe.apk` has SHA-256
 `c29be7f66ab4669177bb2df0f0d90a707f01155f80600f1554510bd91c1ab375`.
-Repository/format validation passes. Exact-source full CI must pass before
-requesting the live scope; neither device has been updated with this probe.
+Repository/format validation passes. Source `4fb65f6` passes all three jobs in
+[CI 42495776651](https://github.com/atrx07/Traelyx/actions/runs/42495776651),
+including Flutter/native suites, SQL/Edge checks, generated/schema verification
+and debug/release-validation builds. Preparation is closed; specific live review
+is pending. Neither device has been updated with this probe. After the later
+interruption, both devices remained authorized/online/idle, Tecno's 11,857
+recorder hashes and both receipt/provider fingerprints were unchanged, driver
+vaults absent and the configured probe APK matched its saved hash.
 
 ## Proposed live scope — requires separate review
 
@@ -64,7 +71,7 @@ requesting the live scope; neither device has been updated with this probe.
    ready pairs **0/0/0/2/2/1/1**, both flags false and no local worker file.
 2. Data-preserving update of Pixel only to the configured probe. Verify ready
    stage and unchanged receipt/provider. The maintainer requests one link for
-   the existing Tecno account and opens it inside Pixel. Before handing off the
+   the third account and opens it inside Pixel. Before handing off the
    request, persist that it may have started; never replay it from a restart or
    ambiguous checkpoint. No Tecno Auth action.
 3. Require completed replacement stage, absent local receipt/provider, retained
@@ -73,9 +80,11 @@ requesting the live scope; neither device has been updated with this probe.
    presence alone does not prove journal contents; later exact reconciliation
    and deterministic contract tests provide separate evidence.
 4. Restore ordinary Pixel without clearing data. Confirm the replacement account
-   is signed in and unregistered locally. One explicit local Sign out must leave
-   Tecno's separate device row intact and counts unchanged. The maintainer signs
-   into Pixel's original account by a new email link inside Pixel.
+   is signed in and unregistered locally. Explicit pairing/inbox reload must show
+   no connections/alerts for the unpaired account, without old cached names or
+   details. One explicit local Sign out must leave Tecno's separate device row
+   intact and counts unchanged. The maintainer signs into Pixel's original
+   account by a new email link inside Pixel.
 5. Ordinary same-owner reconciliation must remove only Pixel's old receiver:
    **0/0/0/1/1/1/0**, no automatic registration and pairing preserved. Fresh
    personal receiver review through the recipient-only pilot restores baseline;
@@ -87,7 +96,8 @@ requesting the live scope; neither device has been updated with this probe.
    ordinary signed-in owner checks, never manual row deletion or fixture forcing.
 
 The scoped review must cover the real owner change, two personal email-link
-flows, replacement account's explicit local Sign out and fresh original-owner
+flows (including possible third-account Auth creation), replacement account's
+explicit local Sign out and fresh original-owner
 receiver consent. No enable window, synthetic fixture, network toggle, scheduler,
 new Google key or token is needed. Do not execute from the completed sign-out,
 Auth-loss, offline or interruption-recovery approvals.

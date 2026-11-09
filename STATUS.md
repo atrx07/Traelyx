@@ -15,8 +15,11 @@
   entered email link, observes native owner cleanup and keeps the prior owner's
   revoke ticket for ordinary same-owner reconciliation. No Guardian RPC,
   registration, sign-out or sender in the probe. Sixteen new regressions, all
-  421 Flutter tests, analysis and configured debug build pass; full source CI pending.
-  Specific live review is required. Both restored devices stay on ordinary
+  421 Flutter tests, analysis and configured debug build pass. Source `4fb65f6`
+  passes full [CI 42495776651](https://github.com/atrx07/Traelyx/actions/runs/42495776651).
+  Preparation closed on 2026-11-09; specific live review is required for the
+  maintainer's available third email/unpaired account. Both devices remain
+  authorized/online/idle with unchanged recorder/receiver bytes and ordinary
   builds. See `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
 
 - M6.8 interruption recovery passed (2026-11-08): Pixel restarted with saved
