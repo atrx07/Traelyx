@@ -10,17 +10,18 @@
 
 ## Working
 
-- M6.8 different-account replacement probe prepared (2026-11-08), not installed
-  or run live. Debug/project-gated alternate entrypoint requests one personally
-  entered email link, observes native owner cleanup and keeps the prior owner's
-  revoke ticket for ordinary same-owner reconciliation. No Guardian RPC,
-  registration, sign-out or sender in the probe. Sixteen new regressions, all
-  421 Flutter tests, analysis and configured debug build pass. Source `4fb65f6`
+- M6.8 third-account replacement/recovery passed (2026-11-09): real SDK callback
+  cleared Pixel's local recipient/provider, retained its journal and server row;
+  ordinary third-account pairing/inbox was empty and unregistered. Local Sign out
+  preserved both original device rows. Original-owner sign-in reconciled the old
+  receiver without auto-registration; fresh personal consent restored it. Ordinary
+  build and both original signed-in accounts restored, replacement bytes preserved,
+  final baseline 0/0/0/2/2/1/1. Tecno's 11,857 recorder/receiver hashes unchanged;
+  both driver vaults absent and flags false. No alert/upload/runtime fix. Sixteen
+  new regressions, all 421 Flutter tests, analysis and configured build pass. Source `4fb65f6`
   passes full [CI 42495776651](https://github.com/atrx07/Traelyx/actions/runs/42495776651).
-  Preparation closed on 2026-11-09; specific live review is required for the
-  maintainer's available third email/unpaired account. Both devices remain
-  authorized/online/idle with unchanged recorder/receiver bytes and ordinary
-  builds. See `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
+  Live scope closed; natural Auth expiry and physical/vehicle gates remain open.
+  See `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
 
 - M6.8 interruption recovery passed (2026-11-08): Pixel restarted with saved
   data and unchanged sign-in/receiver bytes. Tecno was signed out; Auth-loss

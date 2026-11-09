@@ -2,17 +2,19 @@
 
 ## Scope and current gate
 
-Preparation validated, 2026-11-09. The isolated probe is not installed and no live
-account replacement is approved or run. The preceding interruption recovery is
-closed in [the recovery report](GUARDIAN_RESUME_20261108.md). Both ordinary builds
-and existing registrations are restored. Mounted/vehicle tests remain deferred.
+The separately approved live check passed on 2026-11-09: third-account SDK
+replacement, local recipient cleanup, unpaired ordinary-app isolation, local
+Sign out, original-owner reconciliation and fresh personal receiver consent.
+Both original accounts and ordinary builds are restored. This scope is closed;
+do not replay it from its completed approval. Mounted/vehicle tests remain deferred.
+The preceding recovery is closed in [the recovery report](GUARDIAN_RESUME_20261108.md).
 
-The maintainer confirmed a third email is available. The proposed check uses
+The maintainer confirmed a third email is available. The reviewed check used
 Pixel's existing guardian account, then that unpaired third account on Pixel,
-then returns to Pixel's original account. The email-link flow may create a normal
+then returned to Pixel's original account. The email-link flow can create a normal
 Supabase Auth account. No profile/vehicle/pairing edits or third-account receiver
-registration are proposed. This targets different-owner/unpaired-account isolation;
-it would not establish natural Auth expiry or physical/OEM reliability.
+registration were performed. This targets different-owner/unpaired-account isolation;
+it does not establish natural Auth expiry or physical/OEM reliability.
 
 ## Isolated probe contract
 
@@ -57,13 +59,13 @@ The ignored `.dart_tool/m6_8_account_switch_probe.apk` has SHA-256
 Repository/format validation passes. Source `4fb65f6` passes all three jobs in
 [CI 42495776651](https://github.com/atrx07/Traelyx/actions/runs/42495776651),
 including Flutter/native suites, SQL/Edge checks, generated/schema verification
-and debug/release-validation builds. Preparation is closed; specific live review
-is pending. Neither device has been updated with this probe. After the later
+and debug/release-validation builds. Specific live review was subsequently
+granted; no probe install or live switch ran during preparation. After the later
 interruption, both devices remained authorized/online/idle, Tecno's 11,857
 recorder hashes and both receipt/provider fingerprints were unchanged, driver
 vaults absent and the configured probe APK matched its saved hash.
 
-## Proposed live scope — requires separate review
+## Reviewed live sequence
 
 1. Freshly verify both ordinary builds, signed-in accounts, registrations,
    validated connectivity and no recorder/driver vault. Capture new private
@@ -95,9 +97,51 @@ vaults absent and the configured probe APK matched its saved hash.
    remains incomplete. Any ambiguous outcome ends the attempt; recover through
    ordinary signed-in owner checks, never manual row deletion or fixture forcing.
 
-The scoped review must cover the real owner change, two personal email-link
+The scoped review covered the real owner change, two personal email-link
 flows (including possible third-account Auth creation), replacement account's
 explicit local Sign out and fresh original-owner
 receiver consent. No enable window, synthetic fixture, network toggle, scheduler,
-new Google key or token is needed. Do not execute from the completed sign-out,
+new Google backend key or administrative token is needed. Do not execute from the completed sign-out,
 Auth-loss, offline or interruption-recovery approvals.
+
+## Observed live result (2026-11-09)
+
+- Fresh baseline **0/0/0/2/2/1/1**, both flag digests `false`, no recorder or
+  driver vault. The probe update preserved the old receiver/provider bytes and
+  reported ready. The maintainer opened the third account's link inside Pixel.
+- The probe reported **Account changed; local recipient cleanup confirmed**.
+  Receipt/provider were absent, recorder files unchanged and encrypted journal
+  present/changed. Counts stayed **0/0/0/2/2/1/1**. A journal fingerprint alone
+  does not prove its contents; subsequent original-owner reconciliation is
+  separate evidence of the retained cleanup work.
+- Restored ordinary `37906dc`: third account Signed in, explicit pairing reload
+  showed **No Guardian connections**, profile setup affordance, and alert reload
+  showed **No currently accessible alerts**. No old connection/alert rows appeared;
+  Check this phone reported unregistered. No profile/pairing edits or receiver
+  registration were performed for this account. One ordinary local Sign out preserved both original device
+  rows and the journal: **0/0/0/2/2/1/1**. Its Auth account remains, locally signed
+  out; it was not deleted.
+- Personal original-account sign-in triggered ordinary reconciliation:
+  **0/0/0/1/1/1/0**. Explicit local check stayed unregistered and pairing reload
+  preserved the guardian role. Fresh personal receiver consent restored
+  **0/0/0/2/2/1/1**. Ordinary `37906dc` was restored with the replacement
+  receipt/provider bytes identical across the update; local registered check
+  and Signed in Account passed.
+- Tecno's **11,857 recorder files**, receipt and provider matched the fresh
+  baseline; its original Account also showed Signed in. Pixel has zero recorder
+  files. Both networks validated, no RecorderService or driver vault. Both
+  hosted flags stayed `false`, retired worker digest unchanged and no local
+  worker. No event, delivery, push, recording or trip upload. No runtime fix,
+  dependency, schema, permission or backend key change.
+
+The first ordinary Drive hierarchy dump timed out after update; a screenshot
+showed a responsive screen. Navigating its observed You target restored reads.
+A moved target after asynchronous reload was refused before input and resolved
+by fresh state/scrolling. No Auth action was retried for these observation failures.
+
+This closes the reviewed third-account replacement/recovery gate. Ordinary UI
+isolation observations apply to the restored ordinary process; the native fake
+remains modeled evidence. Natural Auth expiry, active driver replacement and
+physical/OEM/vehicle reliability remain separate. Mounted, calibration,
+ingestion/cancellation and performance gates remain deferred/open; M6.8 is
+incomplete. Source `4fb65f6` CI remains the code baseline; closure is documentation only.

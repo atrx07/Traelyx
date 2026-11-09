@@ -16,13 +16,17 @@ online, ordinary builds restored, both accounts signed in and hosted baseline
 sign-in and restored by fresh personal consent; Auth-loss cause remains unknown.
 All 11,857 recorder hashes and Pixel's registration are preserved. Both flags
 remain false. See `docs/reference/GUARDIAN_RESUME_20261108.md`. The different-account
-replacement probe is now prepared, with 16 new regressions, all 421 Flutter tests
-and clean analysis/configured debug build. Source `4fb65f6` passes full CI
-42495776651; preparation is closed (2026-11-09). Next request its specific live
-scope in `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`.
-No live switch/install has run; prior approvals are closed. Vehicle gates remain
-deferred. The maintainer has a third email for the proposed unpaired-account
-isolation check; live Auth creation/switch/recovery still needs its review.
+replacement/recovery check also passed and is closed (2026-11-09). Pixel's SDK
+owner change cleared local authority and retained the server row. Ordinary third
+account had no connections/alerts or registration; local Sign out preserved both
+original device rows. Original-owner sign-in reconciled the old receiver without
+auto-registering; fresh personal consent and ordinary-build restoration passed.
+Both original accounts signed in, Tecno's trip/receiver hashes unchanged, final
+baseline 0/0/0/2/2/1/1 and flags false. Sixteen new regressions, all 421 Flutter
+tests, analysis/configured build and full source `4fb65f6` CI 42495776651 pass.
+See `docs/reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md`. No live scope
+remains active; natural Auth expiry, active driver and physical/OEM gates remain
+unverified. Vehicle gates remain deferred.
 
 The reviewed two-account single-alert/inbox test passed and is closed/cleaned
 (2026-10-21); see `docs/reference/GUARDIAN_TWO_ACCOUNT_CHECK.md`. One Pixel receipt,
@@ -55,8 +59,8 @@ Tecno's 11,857 recorder files and receiver bytes are unchanged; its final UI
 remained locked, so final Account rendering was not reverified. Thirteen operator
 tests and 45 cleanup regressions pass; source `2dc7198` passes full CI 39613840508.
 This scope is closed; do not repeat its network/Auth mutations from that approval.
-Account replacement, natural expiry and physical registered-device reliability
-remain unverified live by these emulator checks. Review a separate bounded scope
+Natural Auth expiry and physical registered-device reliability remain unverified
+by these emulator checks. Review a separate bounded scope
 before any new live account mutation; do not reopen the completed fault injection.
 Retain the remaining mounted review, active recording/calibration,
 cancellation/ingestion and physical reliability checklist for the maintainer.

@@ -553,7 +553,8 @@ an unmarked receipt is discarded. With no marker, owner binding and sign-out
 remain Firebase-inert. Unexpected account-loss recovery and opt-out orchestration
 are implemented with guarded server-first cleanup and the revoke journal below;
 controlled same-account recovery and the later interruption recovery passed.
-Natural Auth-expiry causation and different-account replacement remain unverified.
+Unpaired third-account SDK replacement and original-owner recovery also passed;
+natural Auth-expiry causation and physical cleanup reliability remain unverified.
 A guarded
 Android 14 proof ran the production owner runtime with an empty marker/vault:
 it completed a null-owner bind without initializing Firebase or requesting a
@@ -581,6 +582,12 @@ Auth/receiver bytes and the server row; network restoration, one online retry,
 same-account recovery and fresh consent restored the ordinary build. See the
 [offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md). These emulator
 checks do not establish natural expiry or physical-device cleanup reliability.
+The reviewed [third-account check](../reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md)
+also passed: SDK owner replacement cleared local authority, the ordinary third
+account saw no pairing/alerts or automatic registration, local Sign out preserved
+both original device rows, and original-owner reconciliation plus fresh personal
+consent restored the ordinary setup. This does not validate active driver
+replacement or general physical/OEM behavior.
 
 A separate native revoke journal can persist up to eight exact
 owner/device/generation ID triples in a no-backup Keystore-encrypted file. It
@@ -686,7 +693,7 @@ startup registration path.
 | Background/cold receiver, locked/offline delivery | Physical Tecno checks in [push](../reference/GUARDIAN_PUSH_CHECK.md) and [receiver](../reference/GUARDIAN_RECEIVER_CHECK.md) reports | No general delivery or OEM reliability guarantee |
 | Duplicate, queued expiry and disconnect | Actual FCM rejection/durable-claim checks in [rejection report](../reference/GUARDIAN_REJECTION_CHECK.md) | These cases do not validate active driver detection |
 | Two-account receipt/details | One synthetic backend event to Pixel; explicit Open and Tecno viewed status; exact cleanup in [two-account report](../reference/GUARDIAN_TWO_ACCOUNT_CHECK.md) | Pixel is an emulator; no native detector/ingestion proof |
-| Registered receiver sign-out/recovery | Pixel explicit sign-out/re-consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), controlled Auth loss and same-owner journal reconciliation in the [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md), and retained offline failure followed by one online retry/re-consent in the [offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md) | Natural expiry, third-account recovery and physical-device reliability remain separate |
+| Registered receiver sign-out/recovery | Pixel explicit sign-out/re-consent in the [lifecycle report](../reference/GUARDIAN_RECIPIENT_LIFECYCLE_CHECK.md), controlled Auth loss in the [Auth-loss report](../reference/GUARDIAN_RECIPIENT_AUTH_LOSS_CHECK.md), offline failure/retry in the [offline report](../reference/GUARDIAN_RECIPIENT_OFFLINE_CHECK.md), and third-account SDK replacement/isolation/original-owner recovery in the [account-switch report](../reference/GUARDIAN_RECIPIENT_ACCOUNT_SWITCH_CHECK.md) | Natural Auth expiry, active driver replacement and physical-device reliability remain separate |
 | Reviewed driver/outbox/scheduler integration | Governed fixtures, synthetic cross-component tests and isolated native proofs; idle hosted activation/Stop | Correct mount review, active cancellation/ingestion, process/network recovery and recording/performance remain open |
 | Vehicle and physical reliability | No field accuracy claim | Maintainer deferred mounted review and driving/performance on 2026-10-19; retain separate physical-device and calibration gates |
 

@@ -1459,6 +1459,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     original-owner recovery. Do not use Tecno's account for the replacement.
     After the interruption, both devices are authorized/online/idle with unchanged
     recorder/receiver fingerprints and absent driver vaults; probe hash matches.
+  - [x] Separately approved third-account live check passed (2026-11-09).
+    Pixel SDK callback confirmed local cleanup, journal changed, receipt/provider
+    absent and hosted counts still 0/0/0/2/2/1/1. Ordinary third account Signed in,
+    explicit pairing/inbox empty and local unregistered; one local Sign out
+    preserved original rows. Original-owner personal sign-in reconciled to
+    0/0/0/1/1/1/0, preserved guardian pairing and did not auto-register. Fresh
+    personal consent restored baseline. Ordinary build preserves replacement
+    bytes; both original accounts Signed in, Tecno's 11,857 recorder/receiver
+    hashes unchanged, Pixel zero recorder files, no driver vault/recording,
+    flags false, no worker/alert/upload. Third Auth account retained but locally
+    signed out/unregistered. No runtime/schema/key change; source CI 42495776651
+    valid. Close/persist this scope; natural Auth expiry, active driver and
+    deferred physical/vehicle gates remain open.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
