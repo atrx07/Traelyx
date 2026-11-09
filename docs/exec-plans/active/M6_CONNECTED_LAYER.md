@@ -1495,7 +1495,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     maintainer wake/unlock before its successful ordinary launch. Scope closed;
     hosted natural expiry, active-driver and deferred vehicle gates remain open.
     See `docs/issues/2026-11-09_auth-refresh-identity-stream.md` for limits.
-  - [ ] Next desk-safe unit (2026-11-09): prepare a debug/project-gated passive
+  - [x] Desk-safe preparation (2026-11-09): prepare a debug/project-gated passive
     hosted access-token rollover observer for Pixel. Preserve normal SDK
     auto-refresh/storage and production Guardian ownership/reconciliation.
     Capture only in-memory owner/expiry metadata and a fixed-result UI; never
@@ -1514,8 +1514,14 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     repository checks and the configured debug observer build (10.3 seconds).
     Interactive same-owner sign-in events and backgrounding close observation;
     receipt/journal/driver changes and delayed native results cannot record a
-    false pass. Exact-source CI is pending; no device/live action has run. See
+    false pass. Exact-source CI 42606731458 (`1e936e8`) passes all jobs, native
+    suites and debug/release builds; no device/live action has run. See
     `GUARDIAN_PASSIVE_REFRESH_CHECK.md` for operator boundaries and APK hash.
+  - [ ] Run one bounded passive Pixel rollover observation after fresh device,
+    hosted-disabled and preservation preflight; restore the ordinary build on
+    completion/failure/deadline and verify the original account/receiver/bytes.
+    This uses only routine unchanged SDK refresh, never deliberate Auth loss or
+    new grants/enables. Keep terminal session-expiry/driver/vehicle gates open.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

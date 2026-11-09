@@ -12,8 +12,8 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 Next is the passive hosted access-token rollover check on Pixel: local
 preparation passes 21 new checks, all 453 Flutter tests, analysis, configured
-build and repository validation. Finish exact-source CI before device use,
-then recheck current state and preserve fresh file baselines. The observer
+build, repository validation and exact-source CI 42606731458 (`1e936e8`).
+Recheck current state and preserve fresh file baselines before device use. The observer
 uses normal SDK auto-refresh, fixed labels and an 80-minute cap; no forced
 Auth/network/clock/registration action. Background/session changes deny a pass.
 No live run has started. This does not close terminal natural session-expiry,

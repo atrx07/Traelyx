@@ -2,11 +2,13 @@
 
 ## Scope and status
 
-Local preparation passes for M6.8. The alternate debug entrypoint is
+Source preparation and full CI pass for M6.8. The alternate debug entrypoint is
 `tool/guardian_passive_refresh_probe.dart`; ordinary app code does not import it.
 Twenty-one generated-state/UI checks, all 453 Flutter tests, analysis, repository
-validation and the configured alternate debug build pass. Exact-source CI
-remains required before installing it on Pixel. The ignored prepared APK is
+validation and the configured alternate debug build pass. Source `1e936e8`
+passes full [CI 42606731458](https://github.com/atrx07/Traelyx/actions/runs/42606731458),
+including native suites and debug/release builds. Fresh device/hosted-state
+checks remain required before installing it on Pixel. The ignored prepared APK is
 `.dart_tool/m6_8_passive_refresh_probe.apk`, SHA-256
 `fa6a2f7194f050e18f491f9ee309004b59d928a6521beedbf087457ef5c44334`.
 

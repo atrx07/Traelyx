@@ -10,13 +10,14 @@
 
 ## Working
 
-- M6.8 passive hosted-rollover observer prepared locally (2026-11-09): a separate
+- M6.8 passive hosted-rollover observer prepared and CI-validated (2026-11-09): a separate
   debug/project-gated entrypoint keeps normal SDK refresh and production owner
   cleanup, requires an existing idle receiver, and shows only fixed results.
   It cannot force refresh/sign-out or alter SDK/network/clock settings; session
   changes/backgrounding/cancellation deny a pass. Twenty-one new checks, all 453
-  Flutter tests, analysis, repository and configured probe build pass; source CI
-  pending before device use. No live observation or device update has run.
+  Flutter tests, analysis, repository, configured probe build and full source
+  CI 42606731458 (`1e936e8`) pass. Fresh preflight remains before device use;
+  no live observation or device update has run.
   Successful access-token rollover cannot close terminal session-expiry,
   active-driver or vehicle gates. Both backend flags stay false. See
   `docs/reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md`.
