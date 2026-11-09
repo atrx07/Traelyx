@@ -1495,6 +1495,27 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     maintainer wake/unlock before its successful ordinary launch. Scope closed;
     hosted natural expiry, active-driver and deferred vehicle gates remain open.
     See `docs/issues/2026-11-09_auth-refresh-identity-stream.md` for limits.
+  - [ ] Next desk-safe unit (2026-11-09): prepare a debug/project-gated passive
+    hosted access-token rollover observer for Pixel. Preserve normal SDK
+    auto-refresh/storage and production Guardian ownership/reconciliation.
+    Capture only in-memory owner/expiry metadata and a fixed-result UI; never
+    print credentials, emails, identities or receipt fields. Require an existing
+    signed-in receiver, disabled driver and empty cleanup journals. A pass needs
+    an observed same-owner tokenRefreshed event with a later expiry, passage of
+    the original expiry boundary and unchanged receiver/provider authority.
+    Bound observation to 80 minutes with explicit cancellation; no SDK refresh,
+    sign-out, session injection, network/clock/config change or registration
+    action. Test guards, false positives, owner races, diagnostics, timeout and
+    cleanup-state changes; run full app/build/source CI before device use.
+    Routine SDK refresh is unchanged. Terminal natural Auth-session loss,
+    active-driver and vehicle validation are separate gates; this successful
+    access-token rollover cannot close those. Keep both backend flags false.
+    Local preparation passes 21 new checks, all 453 Flutter tests, analysis,
+    repository checks and the configured debug observer build (10.3 seconds).
+    Interactive same-owner sign-in events and backgrounding close observation;
+    receipt/journal/driver changes and delayed native results cannot record a
+    false pass. Exact-source CI is pending; no device/live action has run. See
+    `GUARDIAN_PASSIVE_REFRESH_CHECK.md` for operator boundaries and APK hash.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -10,6 +10,17 @@
 
 ## Working
 
+- M6.8 passive hosted-rollover observer prepared locally (2026-11-09): a separate
+  debug/project-gated entrypoint keeps normal SDK refresh and production owner
+  cleanup, requires an existing idle receiver, and shows only fixed results.
+  It cannot force refresh/sign-out or alter SDK/network/clock settings; session
+  changes/backgrounding/cancellation deny a pass. Twenty-one new checks, all 453
+  Flutter tests, analysis, repository and configured probe build pass; source CI
+  pending before device use. No live observation or device update has run.
+  Successful access-token rollover cannot close terminal session-expiry,
+  active-driver or vehicle gates. Both backend flags stay false. See
+  `docs/reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md`.
+
 - M6.8 SDK refresh boundary repair validated (2026-11-09): a generated-session
   HTTP 503 regression reproduced SDK diagnostics entering the identity stream
   while Auth remained signed in. Adapter now re-samples current identity;

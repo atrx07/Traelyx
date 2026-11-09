@@ -10,6 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Next is the passive hosted access-token rollover check on Pixel: local
+preparation passes 21 new checks, all 453 Flutter tests, analysis, configured
+build and repository validation. Finish exact-source CI before device use,
+then recheck current state and preserve fresh file baselines. The observer
+uses normal SDK auto-refresh, fixed labels and an 80-minute cap; no forced
+Auth/network/clock/registration action. Background/session changes deny a pass.
+No live run has started. This does not close terminal natural session-expiry,
+active-driver or deferred vehicle gates. See
+`docs/reference/GUARDIAN_PASSIVE_REFRESH_CHECK.md`.
+
 The desk-safe SDK refresh/expiry unit is closed: identity-stream diagnostics and
 refresh feedback are repaired. Eleven new checks, all 432 Flutter tests, analysis,
 configured build and full source CI 42601051068 pass. Ordinary updates/startup
