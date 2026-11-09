@@ -12,9 +12,11 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 The Pixel live scope is approved, but admission closed before any test action.
 Ordinary startup and exact receiver/provider/recorder preservation were restored.
-Do not revoke or refresh until the guard reason is understood. Fixed-category
+Do not revoke or refresh until current admission is understood and passes. Fixed-category
 diagnostics pass three new regressions, all 472 Flutter tests, analysis and the
-configured build; finish full exact-source CI before continuation.
+configured build. Diagnostic source `78af5ba` passes full exact-source
+CI 42671262274, including native/debug/release gates. Recheck states and inspect
+its fixed admission label before any action; never bypass a closed guard.
 Retain the single approved action budget; no deliberate revocation ran. See
 `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 

@@ -1577,6 +1577,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     private state or relaxing guards: three new tests, all 472 Flutter tests and
     analysis/configured build pass. Complete full source CI before continuing
     the same unspent one-action scope. Never bypass a failed precondition.
+    Diagnostic source `78af5ba` passes full CI 42671262274: all three jobs,
+    native suites, debug/release builds, cloud and Edge gates. Persist this
+    source-validation result, then inspect current admission under the existing
+    approval. No revocation/test refresh has run; the original cause is unknown.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

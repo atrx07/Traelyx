@@ -16,9 +16,12 @@ Source `5597d7e` passes full
 all three jobs, native suites, debug/release builds, cloud grants/RLS and Edge
 checks are green. That source's live admission did not become ready. Fixed
 admission diagnostics now pass three additional regressions (all 472 Flutter
-tests), clean analysis and the configured diagnostic build. Exact-source CI
-must pass before continuation. M6.8 remains incomplete. The ignored diagnostic
-APK is `.dart_tool/m6_8_terminal_refresh_diagnostic.apk`, SHA-256
+tests), clean analysis and the configured diagnostic build. Diagnostic source
+`78af5ba` also passes all three jobs in full
+[CI 42671262274](https://github.com/atrx07/Traelyx/actions/runs/42671262274),
+including native suites and debug/release builds. Inspect current admission
+before any action; the original cause remains unknown. M6.8 remains incomplete.
+The ignored diagnostic APK is `.dart_tool/m6_8_terminal_refresh_diagnostic.apk`, SHA-256
 `8ff5c300905e87a6e1dc6c006d33fa4ceafa93360d71ae8cd68222c65de41fbf`.
 
 The existing recipient-consent recovery build is prepared locally at
@@ -122,7 +125,7 @@ The probe now maps only configuration, initialization, session/headroom and
 individual native-read failures to fixed labels. It exports no exception text,
 identity, credential or receipt data and relaxes no admission guard. Three new
 guard/category/UI regressions join the prior 16 tests. Keep the approved action
-budget unspent until the reason is understood and validated source is ready;
+budget unspent until current admission is understood and passes;
 never bypass a closed guard to manufacture a result.
 
 ## Limits

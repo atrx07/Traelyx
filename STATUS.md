@@ -17,8 +17,9 @@
   Fresh hosted baseline 0/0/0/2/2/1/1 and false flags; Tecno has 11,865 current
   files including its preserved accidental trip. Root admission cause remains
   unknown. Fixed-category diagnostics retain all guards; three new regressions,
-  all 472 Flutter tests, analysis and diagnostic build pass. Full source CI
-  remains before continuation of the approved one-action scope. See
+  all 472 Flutter tests, analysis and diagnostic build pass. Diagnostic source
+  `78af5ba` passes full CI 42671262274, all three jobs/native/debug/release gates.
+  Inspect current admission before continuing the approved one-action scope. See
   `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 
 - M6.8 terminal server-rejection preparation validated (2026-11-09): separate
