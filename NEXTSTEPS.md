@@ -19,6 +19,8 @@ validate the CI-only immutable official-asset API precache remedy without
 weakening its hash. The first fresh-query route also hit HTTP 504 in CI.
 The API route passes Linux/schema/all app tests; include Android's three ABI
 assets after the Android build hit the same cached HTTP error body.
+All four assets now verify; a repeated Gradle distribution HTTP 504 blocks the
+Android build. Validate its identical-version/checksum official API precache.
 See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
 expiry, terminal revocation or driver/vehicle test is authorized by this local
 preparation; both Guardian functions remain disabled.

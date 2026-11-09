@@ -21,7 +21,9 @@
   verified precache remedy is in validation; its first fresh-query route also
   hit HTTP 504, so the official immutable asset API is used. That route cleared
   Linux/schema/all app tests; Android hit the same HTTP error body, so its three
-  ABI hashes are now included. Full CI remains required; integrity gates unchanged.
+  ABI hashes are now included and pass. A separate repeated Gradle distribution
+  HTTP 504 now blocks Android compilation; validate its same-version, published-
+  checksum API precache route. Full CI remains required; integrity gates unchanged.
   No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 

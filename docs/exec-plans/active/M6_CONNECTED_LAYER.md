@@ -1497,6 +1497,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     CI 42567971147 passed Linux/schema and all app tests, then Android's ARM
     library hit the identical HTTP 504 digest. Include the three Android ABI
     assets through the same immutable API with each package-published checksum.
+    CI 42568702628 attempts 1/2 verify all four SQLite assets and pass app gates,
+    then fail downloading Gradle 9.1.0 with HTTP 504 before compilation. Validate
+    the identical official Gradle asset API/published-checksum precache route;
+    do not change wrapper version or bypass any build/test gate.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

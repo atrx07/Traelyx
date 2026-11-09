@@ -168,6 +168,22 @@ jobs:
       - name: Validate repository contracts and secrets
         run: dart run tool/validate_repository.dart
 
+      - name: Precache checksum-verified Gradle distribution
+        run: |
+          # Same distribution as the wrapper; its release URL can cache HTTP 504.
+          grep -Fxq 'distributionUrl=https\://services.gradle.org/distributions/gradle-9.1.0-all.zip' android/gradle/wrapper/gradle-wrapper.properties
+          expected=b84e04fa845fecba48551f425957641074fcc00a88a84d2aae5808743b35fc85
+          asset="$RUNNER_TEMP/traelyx-gradle-9.1.0-all.zip"
+          curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 180 \
+            --header 'Accept: application/octet-stream' \
+            https://api.github.com/repos/gradle/gradle-distributions/releases/assets/294652018 \
+            --output "$asset"
+          printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
+          # Gradle wrapper's existing URL-derived cache key; update with its version/URL.
+          cache="${GRADLE_USER_HOME:-$HOME/.gradle}/wrapper/dists/gradle-9.1.0-all/7wzd0jkjit61aq2p43wpjgij9"
+          mkdir -p "$cache"
+          mv "$asset" "$cache/gradle-9.1.0-all.zip"
+
       - name: Build debug APK
         run: flutter build apk --debug
 

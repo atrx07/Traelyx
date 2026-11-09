@@ -24,11 +24,26 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   expected digest locally (2026-11-09). CI 42567971147 passed that Linux cache,
   schema gates and all 432 Flutter tests; Android then rejected the same HTTP
   504 digest for its ARM library. The precache covers Linux x64 plus Android
-  ARM/ARM64/x64 with each published hash. Full CI of that extension is pending.
+  ARM/ARM64/x64 with each published hash. CI 42568702628 verifies all four assets
+  and app tests; its Android build instead hit the Gradle issue below.
   Do not claim a failed run passed.
 - **Do not:** Disable checksum/TLS checks, accept the HTTP error's digest, alter
   package cache source, replace SQLite with a different system build, or loosen
   schema/test gates.
+
+## Gradle release URL caches HTTP 504 in CI
+
+- **Scope:** Gradle wrapper 9.1.0 `all` distribution on fresh GitHub runners.
+- **Symptom/evidence:** CI 42568702628 attempts 1/2 pass app checks, then fail
+  on the official Gradle GitHub release download with HTTP 504 before compilation.
+- **Safe fix:** CI fetches the identical immutable official release asset through
+  GitHub's API, verifies published SHA-256 `b84e04fa…`, then populates the wrapper's
+  existing URL-derived ZIP cache. The wrapper still extracts/runs the same version.
+  A guard requires the expected wrapper URL. Update asset/hash/cache key together
+  deliberately on wrapper upgrades; never bypass hash or TLS verification.
+- **Verification:** Official API download hash and URL-derived cache key verified
+  locally on 2026-11-09; full CI of this remedy is pending. The ordinary repair
+  build already passes using the existing cached distribution.
 
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 
