@@ -58,12 +58,19 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   only these two compiler versions through a runner-only file Maven mirror.
   `tool/ci/verified_compiler_mirror.init.gradle` restricts exclusive resolution
   to those exact coordinates. Original POMs preserve transitives, which use
-  normal repositories. No host or application repository setting changes.
+  normal repositories. Attach to settings repositories when the existing policy
+  prefers/requires them, and to project repositories only for `PREFER_PROJECT`.
+  Never relax `repositoriesMode`. No host/application configuration is edited.
 - **Verification:** Official digests match both locally used compiler JARs;
   2.2.20 API download and both public POM digests verified locally. A file-cache
   attempt passed 2.2.20 but CI 42570148709 still issued a failing remote HEAD
   for 2.3.20. The refined isolated Gradle proof selects the mirror JAR and
-  preserves daemon/stdlib transitives. Full CI of the mirror is pending.
+  preserves daemon/stdlib transitives. CI 42571047447 exposed a project-repository
+  injection conflicting with Flutter's included build's `FAIL_ON_PROJECT_REPOS`.
+  The corrected policy-aware script passes isolated project/settings/forbidden-
+  project modes and both compiler versions' settings/transitive proofs. Actual
+  Flutter composite debug build also passes (171 tasks, 28 seconds); full CI of
+  the correction remains required.
   Do not substitute unverified metadata/compiler bytes, broaden its filter,
   drop transitive dependencies or skip tests.
 

@@ -5,20 +5,30 @@ if (mirrorPath == null || !new File(mirrorPath).isDirectory()) {
     throw new GradleException('Verified CI compiler mirror is unavailable')
 }
 
-allprojects {
-    repositories {
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'traelyxVerifiedCompilerMirror'
-                    url = new File(mirrorPath).toURI()
-                    metadataSources { mavenPom() }
-                }
-            }
-            filter {
-                includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.2.20')
-                includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.3.20')
+def addMirror = { repositories ->
+    repositories.exclusiveContent {
+        forRepository {
+            repositories.maven {
+                name = 'traelyxVerifiedCompilerMirror'
+                url = new File(mirrorPath).toURI()
+                metadataSources { mavenPom() }
             }
         }
+        filter {
+            includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.2.20')
+            includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.3.20')
+        }
+    }
+}
+
+settingsEvaluated { settings ->
+    def resolution = settings.dependencyResolutionManagement
+    if (resolution.repositoriesMode.get() ==
+            org.gradle.api.initialization.resolve.RepositoriesMode.PREFER_PROJECT) {
+        gradle.beforeProject { project -> addMirror(project.repositories) }
+    } else {
+        // Flutter's included build rejects project repositories. Respect its
+        // existing settings policy without changing repositoriesMode.
+        addMirror(resolution.repositories)
     }
 }

@@ -1510,6 +1510,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     with independently pinned original POM/JAR hashes, passes isolated Gradle
     mirror selection and original daemon/stdlib transitive resolution. Validate
     full CI; all other dependencies retain normal repositories.
+    CI 42571047447 exposed a mirror-script policy conflict: Flutter's included
+    build uses `FAIL_ON_PROJECT_REPOS`. Correct policy-aware injection preserves
+    that mode and passes isolated project/settings/forbidden-project checks plus
+    both compiler versions' settings/transitive proofs. The actual composite
+    build passes (171 tasks, 28 seconds); finish full CI before any
+    ordinary device update.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

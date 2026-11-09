@@ -16,18 +16,12 @@
   terminal Auth loss still triggers cleanup. Account distinguishes ended sign-in
   from retryable failure and ignores replacement-owner refresh feedback. Eleven
   new checks, all 432 Flutter tests, analysis and configured ordinary build pass;
-  full CI and inactive device verification pending. Source `dc82ed1` CI stopped
-  twice on an upstream cached SQLite HTTP 504 body, before app tests. A CI-only
-  verified precache remedy is in validation; its first fresh-query route also
-  hit HTTP 504, so the official immutable asset API is used. That route cleared
-  Linux/schema/all app tests; Android hit the same HTTP error body, so its three
-  ABI hashes are now included and pass. A separate repeated Gradle distribution
-  HTTP 504 now blocks Android compilation; validate its same-version, published-
-  checksum API precache route passed. CI now hits an existing Kotlin compiler
-  artifact HTTP 504; cached files still triggered a failing remote HEAD. A CI-only
-  mirror of the same two compiler JARs/POMs now passes isolated Gradle selection
-  and transitive-dependency proof; its full CI is pending.
-  Full CI remains required; integrity gates unchanged.
+  full CI and inactive device verification pending. Repeated official dependency
+  HTTP 504 responses required checksum-verified CI-only SQLite/Gradle downloads
+  and an exact-version compiler JAR/POM mirror. CI 42571047447 found the mirror
+  injected a project repository into Flutter's settings-only included build;
+  corrected policy-aware injection passes isolated repository-mode/transitive
+  proofs and the actual composite debug build. Full CI remains required; no gate is weakened.
   No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 

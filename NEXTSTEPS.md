@@ -14,17 +14,11 @@ The next desk-safe SDK refresh/expiry unit reproduced and repaired an identity
 stream diagnostic leak plus misleading refresh feedback. Eleven new SDK/UI checks,
 all 432 Flutter tests, analysis and configured ordinary build pass. Finish
 exact-source CI and data-preserving inactive ordinary-app checks before closure.
-Source `dc82ed1` CI hit the same cached SQLite HTTP 504 checksum failure twice;
-validate the CI-only immutable official-asset API precache remedy without
-weakening its hash. The first fresh-query route also hit HTTP 504 in CI.
-The API route passes Linux/schema/all app tests; include Android's three ABI
-assets after the Android build hit the same cached HTTP error body.
-All four assets now verify; a repeated Gradle distribution HTTP 504 blocks the
-Android build. Validate its identical-version/checksum official API precache.
-That Gradle route passes; the next compiler artifact download returns HTTP 504.
-Validate the existing Kotlin compilers' same-byte/published-hash CI-only mirror;
-file-cache warming still triggered a failing remote HEAD. Isolated Gradle mirror
-selection and preserved-POM transitives pass.
+Official dependency HTTP 504s required verified CI-only SQLite/Gradle downloads
+and an exact-version compiler JAR/POM mirror. Its CI 42571047447 conflict with
+Flutter's settings-only policy is corrected without changing that policy.
+Isolated project/settings/forbidden-project and transitive proofs plus the
+actual composite build pass; finish full CI before device updates.
 See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
 expiry, terminal revocation or driver/vehicle test is authorized by this local
 preparation; both Guardian functions remain disabled.
