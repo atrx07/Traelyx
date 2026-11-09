@@ -15,8 +15,9 @@
   comparing Session wrapper addresses. Marker now binds unchanged owner/access/
   refresh grants in memory; explicit Auth events and real grant changes still
   invalidate it. Missing refresh token closes admission. Twenty-one targeted
-  checks, all 474 Flutter tests, analysis and the configured build pass; full
-  repaired-source CI remains before device use. Pixel
+  checks, all 474 Flutter tests, analysis and the configured build pass. Source
+  `065fc8e` passes full CI 42674469155 on 2026-11-10, including all three jobs,
+  native suites and debug/release builds. Current admission needs rechecking. Pixel
   is restored to the ordinary app with exact receiver/provider/recorder files.
   Approved revocation/refresh budget remains unspent; both flags stay false.
   See `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.

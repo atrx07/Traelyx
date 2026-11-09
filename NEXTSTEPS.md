@@ -15,8 +15,8 @@ The fixed diagnostic identified session change; a local SDK regression confirms
 that ordinary recovery recreates an equivalent Session wrapper. Probe identity
 now binds unchanged grants rather than Dart addresses, still invalidating real
 grant changes or explicit Auth events. Twenty-one targeted checks, all 474 Flutter
-tests, analysis and the configured repair build pass. Finish full repaired-source
-CI before device use, then recheck current admission
+tests, analysis and the configured repair build pass. Source `065fc8e` passes
+full CI 42674469155 on 2026-11-10, including native/debug/release gates. Recheck current admission
 under the existing unspent one-action/recovery approval. Pixel remains ordinary,
 with exact files preserved. No deliberate revocation or test refresh has run.
 

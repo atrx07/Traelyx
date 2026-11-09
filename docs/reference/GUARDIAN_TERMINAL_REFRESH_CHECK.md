@@ -10,7 +10,11 @@ wrapper with unchanged grants. The probe now binds an opaque in-memory marker
 to owner/access/refresh credentials and invalidates it on explicit Auth events;
 it does not equate Dart object addresses with server-session identity. Targeted
 checks, all 474 Flutter tests, analysis and the configured repair build pass.
-Full repaired-source CI remains before device use. The ignored repair APK is
+Repair source `065fc8e` passes full
+[CI 42674469155](https://github.com/atrx07/Traelyx/actions/runs/42674469155)
+on 2026-11-10: all three jobs, native suites and debug/release builds are green.
+Current admission still needs a fresh device check under the existing approval.
+The ignored repair APK is
 `.dart_tool/m6_8_terminal_refresh_grant_fix.apk`, SHA-256
 `d0a921039ee6c70b757233b13e61deaeb089c6c113258777dbb8b081638ca3c4`.
 This follows the passed [normal rollover observation](GUARDIAN_PASSIVE_REFRESH_CHECK.md).
@@ -153,6 +157,10 @@ terminal-response tests now also cover wrapper recovery. This confirms a probe
 false-positive cause; no private live grant bytes were exported or compared in
 operator output. It does not prove the exact timing of the earlier live change.
 No ordinary app, SDK storage/refresh policy or backend behavior is changed.
+The repair's full source CI passed before further device use. The preceding
+documentation-only run 42673032133 failed before any jobs started; GitHub's
+authenticated run page reports an internal server error. It is not counted as
+passed validation; the new exact-source run above completed all gates.
 
 ## Limits
 

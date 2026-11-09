@@ -1592,6 +1592,12 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     configured repair build pass. Finish full repaired-source CI before device
     use, then continue the existing unspent single-action scope. This is
     a probe repair, not a change to ordinary Auth or backend access contracts.
+    Repair source `065fc8e` passes full CI 42674469155 on 2026-11-10: all three
+    jobs, native suites, debug/release builds, cloud and Edge gates. GitHub's
+    prior docs-only run 42673032133 failed before jobs with an internal server
+    error, not a test failure; it is not counted as passed. Persist this repair
+    validation before the fresh device admission check. Existing live approval
+    and one-action budget remain; no revocation/test refresh has run.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,
