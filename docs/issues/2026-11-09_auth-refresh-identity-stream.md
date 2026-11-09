@@ -1,13 +1,17 @@
 # Auth refresh diagnostics escaped the identity boundary
 
-- Status: source repair implemented; local SDK/UI regressions, all 432 Flutter
-  tests, analysis and configured ordinary build pass. Exact-source CI and
-  data-preserving inactive device checks pending.
+- Status: repaired and validated. Eleven new SDK/UI regressions, all 432 Flutter
+  tests, analysis, configured ordinary build, full source CI and inactive
+  data-preserving checks on Tecno plus Pixel emulator pass.
 - Discovery: local SDK refresh/expiry validation during M6.8, not a reported
   physical crash. Source fix: `dc82ed1007da53d49d8c9d2a8e7a81f289755a98`.
   CI 42566948992 attempts 1/2 stopped before app tests on a cached upstream
   SQLite HTTP 504 body; the unchanged expected checksum rejected it. See the
-  matching known-tooling runbook. Full source CI remains required.
+  matching known-tooling runbook for the verified same-byte download remedies.
+  Full [CI 42601051068](https://github.com/atrx07/Traelyx/actions/runs/42601051068)
+  passes for `781d6126f4bb2214e66578d85dbfc554a284c996`, including the unchanged
+  runtime repair, schema/generated-source/security checks, native tests and
+  debug/release builds. No failed run is counted as validation.
 
 ## Confirmed cause and evidence
 
@@ -56,6 +60,17 @@ unavailable/signed-out no-op behavior. All 432 Flutter tests, analysis and the
 configured ordinary debug build pass. All Guardian pilots were explicitly false.
 Its ignored artifact is `.dart_tool/m6_8_refresh_fix.apk`, SHA-256
 `9535d31d793441482acd60f41e4b9b8a8cb040ec2eb25bd5ff677b435656be08`.
+
+After full CI passed, the ordinary pilot-off APK update-installed on both
+devices without data clearing. Both apps open, retain the original signed-in
+accounts and show their existing local receiver registration. Tecno's 11,857
+recorder files match the fresh pre-update hashes; Pixel has zero recorder files.
+Both receiver/provider fingerprints are byte-identical before/after startup,
+both driver vaults remain absent and no recorder is active. Tecno needed the
+maintainer to wake it after Android refused the sleeping-device launch; its
+ordinary startup then passed. The hosted read-only audit remains 0 sessions,
+0 events, 0 deliveries, 2 unexpired devices and 1 ready pairing; both functions
+remain disabled. No live failure was deliberately injected on either device.
 
 The native owner/journal in these tests is an in-memory contract model. JWT
 timestamps belong only to generated sessions; no system/device clock changed.

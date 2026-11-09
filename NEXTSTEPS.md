@@ -10,18 +10,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-The next desk-safe SDK refresh/expiry unit reproduced and repaired an identity
-stream diagnostic leak plus misleading refresh feedback. Eleven new SDK/UI checks,
-all 432 Flutter tests, analysis and configured ordinary build pass. Finish
-exact-source CI and data-preserving inactive ordinary-app checks before closure.
-Official dependency HTTP 504s required verified CI-only SQLite/Gradle downloads
-and an exact-version compiler JAR/POM mirror. Its CI 42571047447 conflict with
-Flutter's settings-only policy is corrected without changing that policy.
-Isolated project/settings/forbidden-project and transitive proofs plus the
-actual composite build pass; finish full CI before device updates.
-See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. No live natural
-expiry, terminal revocation or driver/vehicle test is authorized by this local
-preparation; both Guardian functions remain disabled.
+The desk-safe SDK refresh/expiry unit is closed: identity-stream diagnostics and
+refresh feedback are repaired. Eleven new checks, all 432 Flutter tests, analysis,
+configured build and full source CI 42601051068 pass. Ordinary updates/startup
+preserve both signed-in receivers and Tecno's 11,857 recorder hashes. Hosted
+baseline is 0/0/0/2/2/1/1; both functions remain disabled. Verified CI download
+remedies preserve exact dependency bytes/metadata and existing repository policy.
+See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`. Natural hosted expiry
+and active-driver cleanup remain separate gates requiring scoped review before
+live Auth changes; mounted/vehicle validation stays deferred by the maintainer.
+No live failure, alert, registration, recording or trip upload ran in this unit.
 
 The 2026-11-08 interruption recovery is closed: both devices are authorized and
 online, ordinary builds restored, both accounts signed in and hosted baseline

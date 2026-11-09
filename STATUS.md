@@ -10,20 +10,20 @@
 
 ## Working
 
-- M6.8 SDK refresh boundary repair in validation (2026-11-09): a generated-session
+- M6.8 SDK refresh boundary repair validated (2026-11-09): a generated-session
   HTTP 503 regression reproduced SDK diagnostics entering the identity stream
   while Auth remained signed in. Adapter now re-samples current identity;
   terminal Auth loss still triggers cleanup. Account distinguishes ended sign-in
   from retryable failure and ignores replacement-owner refresh feedback. Eleven
-  new checks, all 432 Flutter tests, analysis and configured ordinary build pass;
-  full CI and inactive device verification pending. Repeated official dependency
-  HTTP 504 responses required checksum-verified CI-only SQLite/Gradle downloads
-  and an exact-version compiler JAR/POM mirror. CI 42571047447 found the mirror
-  injected a project repository into Flutter's settings-only included build;
-  corrected policy-aware injection passes isolated repository-mode/transitive
-  proofs and the actual composite debug build. Full CI remains required; no gate is weakened.
-  No live expiry/revocation, backend,
-  driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
+  new checks, all 432 Flutter tests, analysis, configured build and full source
+  [CI 42601051068](https://github.com/atrx07/Traelyx/actions/runs/42601051068) pass.
+  Ordinary updates/startup preserve both sign-ins and receiver/provider bytes,
+  Tecno's 11,857 recorder hashes and Pixel's zero files. No driver vault/recorder;
+  hosted baseline 0/0/0/2/2/1/1 and flags false. Verified same-byte CI download
+  remedies preserve dependency versions, checksums and repository policy.
+  No live expiry/revocation, activation, alert or upload. Natural hosted expiry
+  and deferred physical/vehicle gates remain. See
+  `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 
 - M6.8 third-account replacement/recovery passed (2026-11-09): real SDK callback
   cleared Pixel's local recipient/provider, retained its journal and server row;

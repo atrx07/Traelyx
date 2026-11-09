@@ -1472,50 +1472,29 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     signed out/unregistered. No runtime/schema/key change; source CI 42495776651
     valid. Close/persist this scope; natural Auth expiry, active driver and
     deferred physical/vehicle gates remain open.
-  - [ ] Next desk-safe unit (2026-11-09): validate the real SDK refresh/expiry
-    boundary with generated sessions and loopback-only responses. Reproduce
-    retryable refresh errors entering the identity stream, distinguish retained
-    Auth from terminal session loss, and verify original/new-owner cleanup under
-    delayed responses. Correct adapter/UI handling only after regression evidence;
-    preserve the default SDK refresh configuration. Run affected/full Flutter,
-    analysis, configured build, repository and exact-source CI gates. No live
-    session invalidation, clock/network change, driver activation, backend enable
-    or vehicle test is authorized by this local preparation.
-    The HTTP 503 identity-stream regression failed before repair and passes
-    afterward. Preserve explicit Future errors, resample actual SDK identity on
-    stream diagnostics, and classify ended/retained/replacement-owner refresh
-    feedback separately. Eleven SDK/UI checks, all 432 Flutter tests and analysis
-    plus configured ordinary build pass. Finish full CI, then inactive data-preserving
-    update checks with no deliberate Auth failure before closing. Issue record:
-    `2026-11-09_auth-refresh-identity-stream.md`; natural hosted expiry remains open.
-    Source `dc82ed1` is pushed; CI 42566948992 attempts 1/2 failed before app tests
-    because the official SQLite release URL cached a 92-byte HTTP 504 body. A
-    fresh official URL yields the expected digest. Validate the CI-only bounded,
-    checksum-verified precache remedy and full CI before ordinary device updates.
-    The fresh-query remedy also hit HTTP 504 in CI 42567704116. The official
-    immutable asset API yields the expected digest locally; validate that route.
-    CI 42567971147 passed Linux/schema and all app tests, then Android's ARM
-    library hit the identical HTTP 504 digest. Include the three Android ABI
-    assets through the same immutable API with each package-published checksum.
-    CI 42568702628 attempts 1/2 verify all four SQLite assets and pass app gates,
-    then fail downloading Gradle 9.1.0 with HTTP 504 before compilation. Validate
-    the identical official Gradle asset API/published-checksum precache route;
-    do not change wrapper version or bypass any build/test gate.
-    CI 42569557135 passes that verified Gradle route, then the pinned Flutter
-    Kotlin compiler download hits HTTP 504 (including the normal build retry).
-    Validate identical official compiler assets in Gradle's content-addressed
-    cache, after published SHA-256 checks; preserve versions/repositories/tests.
-    CI 42570148709 still issues a failing remote HEAD for the cached 2.3.20
-    JAR. A runner-only mirror restricted to the exact two compiler versions,
-    with independently pinned original POM/JAR hashes, passes isolated Gradle
-    mirror selection and original daemon/stdlib transitive resolution. Validate
-    full CI; all other dependencies retain normal repositories.
-    CI 42571047447 exposed a mirror-script policy conflict: Flutter's included
-    build uses `FAIL_ON_PROJECT_REPOS`. Correct policy-aware injection preserves
-    that mode and passes isolated project/settings/forbidden-project checks plus
-    both compiler versions' settings/transitive proofs. The actual composite
-    build passes (171 tasks, 28 seconds); finish full CI before any
-    ordinary device update.
+  - [x] Desk-safe SDK refresh/expiry boundary repair validated (2026-11-09).
+    A generated-session/loopback HTTP 503 regression failed before source
+    `dc82ed1`: SDK diagnostics escaped the identity stream while Auth remained
+    signed in. The adapter now samples actual identity on diagnostics while
+    preserving explicit Future errors and genuine terminal-loss cleanup.
+    Account feedback distinguishes ended/retained/replacement-owner outcomes.
+    Eleven real-SDK/application/widget checks cover expired access-token refresh,
+    retry retention, terminal journal/recovery and delayed 200/400/503 owner
+    races. Native storage is modeled; no live failure or clock change was used.
+    All 432 Flutter tests, analysis, configured pilot-off APK and full source
+    CI 42601051068 (`781d612`) pass, including native tests and debug/release
+    builds. Official dependency HTTP 504s required checksum-verified same-byte
+    CI downloads and an exact-version JAR/POM mirror respecting existing
+    repository modes; isolated mode/transitive and actual composite/native
+    checks pass. See the matching known-tooling entries for failed-run evidence.
+    After CI passed, ordinary data-preserving updates/startup on Tecno and Pixel
+    preserve both signed-in accounts and exact receiver/provider bytes, all
+    11,857 Tecno recorder hashes and Pixel's zero files. Both driver vaults stay
+    absent; no recorder, alert, upload, registration, enable or credential change.
+    Hosted read-only baseline is 0/0/0/2/2/1/1; both flags false. Tecno needed
+    maintainer wake/unlock before its successful ordinary launch. Scope closed;
+    hosted natural expiry, active-driver and deferred vehicle gates remain open.
+    See `docs/issues/2026-11-09_auth-refresh-identity-stream.md` for limits.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

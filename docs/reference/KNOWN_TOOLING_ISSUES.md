@@ -26,7 +26,8 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   504 digest for its ARM library. The precache covers Linux x64 plus Android
   ARM/ARM64/x64 with each published hash. CI 42568702628 verifies all four assets
   and app tests; its Android build instead hit the Gradle issue below.
-  Do not claim a failed run passed.
+  The complete route passes full CI 42601051068 (`781d612`). Do not count a
+  failed run as validation.
 - **Do not:** Disable checksum/TLS checks, accept the HTTP error's digest, alter
   package cache source, replace SQLite with a different system build, or loosen
   schema/test gates.
@@ -44,7 +45,8 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 - **Verification:** Official API download hash and URL-derived cache key verified
   locally on 2026-11-09; CI 42569557135 passes this step and starts compilation.
   Its next failure is the compiler download below. The ordinary repair build
-  already passes using the existing cached distribution.
+  already passes using the existing cached distribution. Full CI 42601051068
+  (`781d612`) passes debug/native/release gates with this route.
 
 ## Kotlin compiler artifact download returns HTTP 504 in CI
 
@@ -69,8 +71,8 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   injection conflicting with Flutter's included build's `FAIL_ON_PROJECT_REPOS`.
   The corrected policy-aware script passes isolated project/settings/forbidden-
   project modes and both compiler versions' settings/transitive proofs. Actual
-  Flutter composite debug build also passes (171 tasks, 28 seconds); full CI of
-  the correction remains required.
+  Flutter composite debug build also passes (171 tasks, 28 seconds), as do the
+  full local native suite and full CI 42601051068 (`781d612`), including both APKs.
   Do not substitute unverified metadata/compiler bytes, broaden its filter,
   drop transitive dependencies or skip tests.
 
