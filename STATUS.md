@@ -23,7 +23,9 @@
   Linux/schema/all app tests; Android hit the same HTTP error body, so its three
   ABI hashes are now included and pass. A separate repeated Gradle distribution
   HTTP 504 now blocks Android compilation; validate its same-version, published-
-  checksum API precache route. Full CI remains required; integrity gates unchanged.
+  checksum API precache route passed. CI now hits an existing Kotlin compiler
+  artifact HTTP 504; validate its identical published-hash API cache fallback.
+  Full CI remains required; integrity gates unchanged.
   No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.
 

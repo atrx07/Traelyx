@@ -1501,6 +1501,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     then fail downloading Gradle 9.1.0 with HTTP 504 before compilation. Validate
     the identical official Gradle asset API/published-checksum precache route;
     do not change wrapper version or bypass any build/test gate.
+    CI 42569557135 passes that verified Gradle route, then the pinned Flutter
+    Kotlin compiler download hits HTTP 504 (including the normal build retry).
+    Validate identical official compiler assets in Gradle's content-addressed
+    cache, after published SHA-256 checks; preserve versions/repositories/tests.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

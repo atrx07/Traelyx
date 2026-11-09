@@ -42,8 +42,24 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   A guard requires the expected wrapper URL. Update asset/hash/cache key together
   deliberately on wrapper upgrades; never bypass hash or TLS verification.
 - **Verification:** Official API download hash and URL-derived cache key verified
-  locally on 2026-11-09; full CI of this remedy is pending. The ordinary repair
-  build already passes using the existing cached distribution.
+  locally on 2026-11-09; CI 42569557135 passes this step and starts compilation.
+  Its next failure is the compiler download below. The ordinary repair build
+  already passes using the existing cached distribution.
+
+## Kotlin compiler artifact download returns HTTP 504 in CI
+
+- **Scope:** Existing compiler-embeddable JARs 2.2.20 (Flutter Gradle plugin) and
+  2.3.20 (app), not a Kotlin version upgrade.
+- **Evidence:** CI 42569557135 passes app/schema/download gates, then Maven's
+  compiler download resolves to an official JetBrains release URL returning 504;
+  Flutter's normal build retry fails identically.
+- **Safe fix:** Fetch the exact official immutable assets through GitHub's API;
+  verify their published SHA-256 before placing them in Gradle's existing
+  content-addressed artifact cache. Derive its SHA-1 directory only after the
+  stronger SHA-256 verification. Keep normal repository metadata resolution.
+- **Verification:** Official digests match both locally used compiler JARs;
+  2.2.20 API download verified locally. Full CI of the cache remedy is pending.
+  Do not substitute an unverified compiler, change repository trust or skip tests.
 
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 

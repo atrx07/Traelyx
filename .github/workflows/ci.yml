@@ -184,6 +184,27 @@ jobs:
           mkdir -p "$cache"
           mv "$asset" "$cache/gradle-9.1.0-all.zip"
 
+      - name: Precache checksum-verified Kotlin compilers
+        run: |
+          # Flutter's Gradle plugin and the app use these existing compiler versions.
+          # Preserve their exact bytes when the Maven/GitHub download path returns 504.
+          while read -r version asset_id expected; do
+            filename="kotlin-compiler-embeddable-${version}.jar"
+            asset="$RUNNER_TEMP/$filename"
+            curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 120 \
+              --header 'Accept: application/octet-stream' \
+              "https://api.github.com/repos/JetBrains/kotlin/releases/assets/${asset_id}" \
+              --output "$asset"
+            printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
+            key=$(sha1sum "$asset" | cut -d ' ' -f 1)
+            cache="${GRADLE_USER_HOME:-$HOME/.gradle}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/${version}/${key}"
+            mkdir -p "$cache"
+            mv "$asset" "$cache/$filename"
+          done <<'ASSETS'
+          2.2.20 587886256 1c6c3f810bfe6a41abcbc34b3a2ef639f1e3f4aeed3a953a4b0974eea4f41889
+          2.3.20 598623291 976f989d0b5f5d80e8e8a8ad4b73da0bfc27fdd965b9fa38362b2be79ecc1337
+          ASSETS
+
       - name: Build debug APK
         run: flutter build apk --debug
 
