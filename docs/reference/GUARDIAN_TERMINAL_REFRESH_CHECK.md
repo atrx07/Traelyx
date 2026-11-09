@@ -5,13 +5,23 @@
 M6.8 source preparation only; no live revocation or probe installation has run.
 This follows the passed [normal rollover observation](GUARDIAN_PASSIVE_REFRESH_CHECK.md).
 The alternate debug entrypoint is `tool/guardian_terminal_refresh_probe.dart`;
-ordinary app code never imports it. Complete configured build and full source
-CI before requesting the separate live scope. Sixteen new operator/SDK checks,
+ordinary app code never imports it. Sixteen new operator/SDK checks,
 all 469 Flutter tests, clean static analysis, repository validation and the
 configured gated debug build pass. The ignored prepared APK is
 `.dart_tool/m6_8_terminal_refresh_probe.apk`, SHA-256
 `f654e810e9e2fc889febc5cd7da81dad6dab0bd8bea772a24dcd50d4cbbb4235`.
-Full source CI remains pending. M6.8 remains incomplete.
+Source `5597d7e` passes full
+[CI 42666565560](https://github.com/atrx07/Traelyx/actions/runs/42666565560):
+all three jobs, native suites, debug/release builds, cloud grants/RLS and Edge
+checks are green. Preparation is complete; specific live review remains before
+device installation or revocation. M6.8 remains incomplete.
+
+The existing recipient-consent recovery build is prepared locally at
+`.dart_tool/m6_8_terminal_refresh_recipient.apk`, SHA-256
+`8314db3c9bfb162942103ec12aa6cfc4ea93e56394bad6e2581498a3efcc2eef`.
+It is not installed. The saved ordinary pilot-off restoration APK remains
+`.dart_tool/m6_8_refresh_fix.apk`, SHA-256
+`9535d31d793441482acd60f41e4b9b8a8cb040ec2eb25bd5ff677b435656be08`.
 
 This checks **deliberate own-session server revocation followed by a rejected
 refresh**, not spontaneous expiry. The current hosted policy has no terminal

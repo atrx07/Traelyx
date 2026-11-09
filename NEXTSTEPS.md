@@ -10,13 +10,15 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-Next is exact-source CI and specific production review for the prepared Pixel
+Next is specific production review for the prepared Pixel
 server-rejected-refresh check. Sixteen new operator/SDK checks, all 469 Flutter
 tests and analysis pass. The separately gated probe revokes only its own server
 session without clearing local Auth, then invokes one ordinary refresh; no
 service-role credential, global logout or policy edit. Nothing is installed or
-revoked by preparation. The configured gated build passes; complete source CI before asking
-for live approval, including original-account recovery and fresh receiver consent.
+revoked by preparation. Configured probe/recovery builds and all three jobs in
+exact-source CI 42666565560 (`5597d7e`) pass, including native/debug/release gates.
+Source preparation is closed. Request live approval covering original-account
+recovery and fresh receiver consent before installing or revoking anything.
 Keep both Guardian functions disabled and all mounted/vehicle work deferred. See
 `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 

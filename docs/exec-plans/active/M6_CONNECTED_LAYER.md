@@ -1537,7 +1537,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Current hosted JWT lifetime is 3,600 seconds with no terminal timebox or
     inactivity timeout; normal rollover cannot stand in for terminal rejection.
     Close this bounded scope; M6.8 remains incomplete and vehicle work deferred.
-  - [ ] Prepare a separately gated Pixel server-rejected-refresh check. Use the
+  - [x] Prepare a separately gated Pixel server-rejected-refresh check. Use the
     pinned SDK's own-session `/logout?scope=local` request without its local
     sign-out wrapper, then exactly one ordinary refresh. Never use a service-role
     credential, global/others scope, Auth policy edit or synthetic response in
@@ -1553,10 +1553,19 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     tests terminal server rejection, not spontaneous expiry or active drivers.
     Local guards/SDK fixtures pass 16 new checks, all 469 Flutter tests and clean
     analysis. The configured gated debug build, repository and format checks
-    pass; exact-source CI remains pending. Loopback tests preserve the actual request/response contract,
+    pass. Loopback tests preserve the actual request/response contract,
     including the API-version header needed to parse structured error codes;
     widget HTTP overrides are isolated from real loopback tests. No live action.
     See `GUARDIAN_TERMINAL_REFRESH_CHECK.md` for reviewed operator boundaries.
+    Source `5597d7e` passes full exact-source CI 42666565560: all three jobs,
+    native suites, debug/release builds, cloud grants/RLS and Edge checks. The
+    recipient-only recovery build is prepared; ordinary restoration APK retained.
+    Close source preparation only. No probe installation or live revocation ran.
+  - [ ] Obtain specific review, then run at most one Pixel own-session server
+    revocation and one refresh, prove native cleanup/journal preservation and
+    recover through ordinary original-owner sign-in plus fresh personal receiver
+    consent. Recheck all state and keep both functions false. See the terminal
+    refresh reference; no active-driver or mounted/vehicle claim follows.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

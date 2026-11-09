@@ -10,14 +10,16 @@
 
 ## Working
 
-- M6.8 terminal server-rejection probe prepared locally (2026-11-09): separate
+- M6.8 terminal server-rejection preparation validated (2026-11-09): separate
   debug/project/pilot guards, own-session-only server logout transport, then one
-  ordinary refresh. Sixteen new tests and all 469 Flutter tests pass; analysis
-  and the configured debug build pass; analysis is clean. Loopback SDK checks
-  verify exact local scope, retained Auth before
+  ordinary refresh. Sixteen new tests, all 469 Flutter tests and configured
+  builds pass; analysis is clean. Source `5597d7e` passes all three jobs in full
+  CI 42666565560, including native suites and debug/release builds. Loopback
+  SDK checks verify exact local scope, retained Auth before
   refresh, structured terminal denial and modeled owner/journal cleanup. No
   new dependency, runtime change, service-role key or Auth-policy edit. Source
-  CI and specific live review remain before device installation or revocation.
+  preparation is closed; specific live review remains before installation or
+  revocation. No hosted action has run.
   Both Guardian flags stay false; mounted/vehicle gates remain deferred. See
   `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 
