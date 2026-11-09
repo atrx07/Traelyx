@@ -6,7 +6,7 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 
 ## SQLite release URL caches an HTTP error body in CI
 
-- **Scope:** Linux native hooks for pinned `sqlite3` 3.5.1 in GitHub Actions.
+- **Scope:** Linux and Android native hooks for pinned `sqlite3` 3.5.1 in CI.
 - **Symptom:** Drift schema verification reports downloaded hash `bef140a1…`
   instead of published `b1772918…`; a fresh-runner retry fails identically.
 - **Confirmed evidence:** The default official release URL returned HTTP 504,
@@ -21,7 +21,10 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   deliberately when upgrading sqlite3; a different hook hash ignores this cache.
 - **Verification:** The fresh-query route returned correct bytes once locally but
   failed with HTTP 504 in CI 42567704116. The immutable asset API returns the
-  expected digest locally (2026-11-09); full CI of that refined remedy is pending.
+  expected digest locally (2026-11-09). CI 42567971147 passed that Linux cache,
+  schema gates and all 432 Flutter tests; Android then rejected the same HTTP
+  504 digest for its ARM library. The precache covers Linux x64 plus Android
+  ARM/ARM64/x64 with each published hash. Full CI of that extension is pending.
   Do not claim a failed run passed.
 - **Do not:** Disable checksum/TLS checks, accept the HTTP error's digest, alter
   package cache source, replace SQLite with a different system build, or loosen

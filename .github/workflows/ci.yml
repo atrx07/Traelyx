@@ -119,20 +119,26 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
-      - name: Precache checksum-verified Linux SQLite
+      - name: Precache checksum-verified SQLite for Linux and Android
         run: |
           # sqlite3 3.5.1's default release URL can cache an HTTP 504 body.
           # Use its immutable official asset API, retaining the published SHA-256/cache key.
-          expected=b17729184e5a2818055ecbddd5ed6642521bfe6e56aafa472330e483c0e2e0d2
-          cache=.dart_tool/hooks_runner/shared/sqlite3/build/download-${expected:0:8}
-          asset="$RUNNER_TEMP/traelyx-libsqlite3.so"
-          curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 90 \
-            --header 'Accept: application/octet-stream' \
-            https://api.github.com/repos/simolus3/sqlite3.dart/releases/assets/501022946 \
-            --output "$asset"
-          printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
-          mkdir -p "$cache"
-          mv "$asset" "$cache/libsqlite3.so"
+          while read -r asset_id expected; do
+            cache=.dart_tool/hooks_runner/shared/sqlite3/build/download-${expected:0:8}
+            asset="$RUNNER_TEMP/traelyx-libsqlite3-${asset_id}.so"
+            curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 90 \
+              --header 'Accept: application/octet-stream' \
+              "https://api.github.com/repos/simolus3/sqlite3.dart/releases/assets/${asset_id}" \
+              --output "$asset"
+            printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
+            mkdir -p "$cache"
+            mv "$asset" "$cache/libsqlite3.so"
+          done <<'ASSETS'
+          501022946 b17729184e5a2818055ecbddd5ed6642521bfe6e56aafa472330e483c0e2e0d2
+          501022904 a42fa9d0f5c006d30b000d4904bc497705191c5d7330b178618546004295bb49
+          501022915 0c2d3bfc8c87abceb21ed72a4bb49964121c5fe1a8ef3848d83ba907d01b6161
+          501022939 949965f0eba976f707ae364cdcb42c342b5f0626081f8d7f0378fb7b52848772
+          ASSETS
 
       - name: Verify generated sources
         run: |
