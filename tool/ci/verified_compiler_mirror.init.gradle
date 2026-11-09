@@ -1,0 +1,24 @@
+// CI-only mirror of two checksum-verified, unmodified upstream JARs and POMs.
+// All other artifacts, including compiler transitives, use normal repositories.
+def mirrorPath = System.getenv('TRAELYX_CI_COMPILER_MIRROR')
+if (mirrorPath == null || !new File(mirrorPath).isDirectory()) {
+    throw new GradleException('Verified CI compiler mirror is unavailable')
+}
+
+allprojects {
+    repositories {
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'traelyxVerifiedCompilerMirror'
+                    url = new File(mirrorPath).toURI()
+                    metadataSources { mavenPom() }
+                }
+            }
+            filter {
+                includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.2.20')
+                includeVersion('org.jetbrains.kotlin', 'kotlin-compiler-embeddable', '2.3.20')
+            }
+        }
+    }
+}

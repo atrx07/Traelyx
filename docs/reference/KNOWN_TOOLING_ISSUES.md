@@ -53,13 +53,19 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 - **Evidence:** CI 42569557135 passes app/schema/download gates, then Maven's
   compiler download resolves to an official JetBrains release URL returning 504;
   Flutter's normal build retry fails identically.
-- **Safe fix:** Fetch the exact official immutable assets through GitHub's API;
-  verify their published SHA-256 before placing them in Gradle's existing
-  content-addressed artifact cache. Derive its SHA-1 directory only after the
-  stronger SHA-256 verification. Keep normal repository metadata resolution.
+- **Safe fix:** Fetch the exact official immutable JARs through GitHub's API and
+  original POMs through Maven Central, verify each pinned SHA-256, then expose
+  only these two compiler versions through a runner-only file Maven mirror.
+  `tool/ci/verified_compiler_mirror.init.gradle` restricts exclusive resolution
+  to those exact coordinates. Original POMs preserve transitives, which use
+  normal repositories. No host or application repository setting changes.
 - **Verification:** Official digests match both locally used compiler JARs;
-  2.2.20 API download verified locally. Full CI of the cache remedy is pending.
-  Do not substitute an unverified compiler, change repository trust or skip tests.
+  2.2.20 API download and both public POM digests verified locally. A file-cache
+  attempt passed 2.2.20 but CI 42570148709 still issued a failing remote HEAD
+  for 2.3.20. The refined isolated Gradle proof selects the mirror JAR and
+  preserves daemon/stdlib transitives. Full CI of the mirror is pending.
+  Do not substitute unverified metadata/compiler bytes, broaden its filter,
+  drop transitive dependencies or skip tests.
 
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 

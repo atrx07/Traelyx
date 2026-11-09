@@ -24,7 +24,9 @@
   ABI hashes are now included and pass. A separate repeated Gradle distribution
   HTTP 504 now blocks Android compilation; validate its same-version, published-
   checksum API precache route passed. CI now hits an existing Kotlin compiler
-  artifact HTTP 504; validate its identical published-hash API cache fallback.
+  artifact HTTP 504; cached files still triggered a failing remote HEAD. A CI-only
+  mirror of the same two compiler JARs/POMs now passes isolated Gradle selection
+  and transitive-dependency proof; its full CI is pending.
   Full CI remains required; integrity gates unchanged.
   No live expiry/revocation, backend,
   driver or vehicle action. See `docs/issues/2026-11-09_auth-refresh-identity-stream.md`.

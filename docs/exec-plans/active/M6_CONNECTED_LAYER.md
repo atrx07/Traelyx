@@ -1505,6 +1505,11 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     Kotlin compiler download hits HTTP 504 (including the normal build retry).
     Validate identical official compiler assets in Gradle's content-addressed
     cache, after published SHA-256 checks; preserve versions/repositories/tests.
+    CI 42570148709 still issues a failing remote HEAD for the cached 2.3.20
+    JAR. A runner-only mirror restricted to the exact two compiler versions,
+    with independently pinned original POM/JAR hashes, passes isolated Gradle
+    mirror selection and original daemon/stdlib transitive resolution. Validate
+    full CI; all other dependencies retain normal repositories.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

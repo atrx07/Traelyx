@@ -184,11 +184,12 @@ jobs:
           mkdir -p "$cache"
           mv "$asset" "$cache/gradle-9.1.0-all.zip"
 
-      - name: Precache checksum-verified Kotlin compilers
+      - name: Prepare checksum-verified Kotlin compiler mirror
         run: |
           # Flutter's Gradle plugin and the app use these existing compiler versions.
           # Preserve their exact bytes when the Maven/GitHub download path returns 504.
-          while read -r version asset_id expected; do
+          mirror="$RUNNER_TEMP/traelyx-compiler-maven"
+          while read -r version asset_id expected pom_hash; do
             filename="kotlin-compiler-embeddable-${version}.jar"
             asset="$RUNNER_TEMP/$filename"
             curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 120 \
@@ -196,14 +197,22 @@ jobs:
               "https://api.github.com/repos/JetBrains/kotlin/releases/assets/${asset_id}" \
               --output "$asset"
             printf '%s  %s\n' "$expected" "$asset" | sha256sum --check --status
-            key=$(sha1sum "$asset" | cut -d ' ' -f 1)
-            cache="${GRADLE_USER_HOME:-$HOME/.gradle}/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/${version}/${key}"
+            cache="$mirror/org/jetbrains/kotlin/kotlin-compiler-embeddable/$version"
             mkdir -p "$cache"
             mv "$asset" "$cache/$filename"
+            pom="$cache/kotlin-compiler-embeddable-${version}.pom"
+            curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 60 \
+              "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/${version}/kotlin-compiler-embeddable-${version}.pom" \
+              --output "$pom"
+            printf '%s  %s\n' "$pom_hash" "$pom" | sha256sum --check --status
           done <<'ASSETS'
-          2.2.20 587886256 1c6c3f810bfe6a41abcbc34b3a2ef639f1e3f4aeed3a953a4b0974eea4f41889
-          2.3.20 598623291 976f989d0b5f5d80e8e8a8ad4b73da0bfc27fdd965b9fa38362b2be79ecc1337
+          2.2.20 587886256 1c6c3f810bfe6a41abcbc34b3a2ef639f1e3f4aeed3a953a4b0974eea4f41889 05ff025f7fb0932fb11fa1e1ccaef528f76027d956680f8835d438542762e20a
+          2.3.20 598623291 976f989d0b5f5d80e8e8a8ad4b73da0bfc27fdd965b9fa38362b2be79ecc1337 0c35aeee372f07514ebed37b9407b8e1181d1427755139e5cee7719ca05fe7e8
           ASSETS
+          init_dir="${GRADLE_USER_HOME:-$HOME/.gradle}/init.d"
+          mkdir -p "$init_dir"
+          cp tool/ci/verified_compiler_mirror.init.gradle "$init_dir/traelyx-verified-compilers.gradle"
+          printf 'TRAELYX_CI_COMPILER_MIRROR=%s\n' "$mirror" >> "$GITHUB_ENV"
 
       - name: Build debug APK
         run: flutter build apk --debug
