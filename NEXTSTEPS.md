@@ -11,6 +11,16 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 ## P0 — Define and implement M6.8 Guardian alerts
 
 The Pixel live scope is approved, but admission closed before any test action.
+The fixed diagnostic identified session change; a local SDK regression confirms
+that ordinary recovery recreates an equivalent Session wrapper. Probe identity
+now binds unchanged grants rather than Dart addresses, still invalidating real
+grant changes or explicit Auth events. Twenty-one targeted checks, all 474 Flutter
+tests, analysis and the configured repair build pass. Finish full repaired-source
+CI before device use, then recheck current admission
+under the existing unspent one-action/recovery approval. Pixel remains ordinary,
+with exact files preserved. No deliberate revocation or test refresh has run.
+
+Earlier diagnostic validation:
 Ordinary startup and exact receiver/provider/recorder preservation were restored.
 Do not revoke or refresh until current admission is understood and passes. Fixed-category
 diagnostics pass three new regressions, all 472 Flutter tests, analysis and the

@@ -1581,6 +1581,17 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     native suites, debug/release builds, cloud and Edge gates. Persist this
     source-validation result, then inspect current admission under the existing
     approval. No revocation/test refresh has run; the original cause is unknown.
+    Diagnostic on-device label was Session changed during preflight. Ordinary
+    Pixel build/files restored. Pinned SDK startup recovery replaces equivalent
+    Session wrappers; a new loopback regression reproduces the old marker's false
+    rejection before repair. Bind the opaque marker to owner/access/refresh grant
+    bytes only in memory, invalidating explicit Auth events and real grant
+    changes; missing refresh token closes admission. No grant/credential leaves
+    memory or reaches UI. Two new SDK tests plus recovery assertions in existing
+    cases yield 21 targeted checks; all 474 Flutter tests, analysis and the
+    configured repair build pass. Finish full repaired-source CI before device
+    use, then continue the existing unspent single-action scope. This is
+    a probe repair, not a change to ordinary Auth or backend access contracts.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

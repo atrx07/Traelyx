@@ -62,26 +62,62 @@ abstract interface class TerminalSessionSource {
 
 /// Session references/credentials stay in memory, never in labels or diagnostics.
 final class SdkTerminalSessionSource implements TerminalSessionSource {
-  SdkTerminalSessionSource(this._client, this._account);
+  SdkTerminalSessionSource(this._client, this._account) {
+    _changes = _client.auth.onAuthStateChange.listen(
+      (state) {
+        if (state.event != AuthChangeEvent.initialSession) {
+          // Explicit lifecycle events invalidate even if credentials are reused.
+          _lastSession = null;
+          _marker = null;
+        }
+      },
+      onError: (Object _) {
+        // A diagnostic is not a grant change. Getter checks still sample Auth.
+      },
+    );
+  }
   final SupabaseClient _client;
   final AccountGateway _account;
+  late final StreamSubscription<AuthState> _changes;
+  Session? _lastSession;
+  Object? _marker;
   @override
   String? get owner => _account.currentIdentity?.userId;
   @override
-  Object? get sessionMarker => _client.auth.currentSession;
+  Object? get sessionMarker {
+    final current = _client.auth.currentSession;
+    if (current == null || current.refreshToken?.isNotEmpty != true) {
+      _lastSession = null;
+      _marker = null;
+      return null;
+    }
+    final previous = _lastSession;
+    // recoverSession can replace the wrapper without changing the grant.
+    // Compare only in memory; never stringify or persist these credentials.
+    if (previous == null ||
+        previous.user.id != current.user.id ||
+        previous.accessToken != current.accessToken ||
+        previous.refreshToken != current.refreshToken) {
+      _marker = Object();
+    }
+    _lastSession = current;
+    return _marker;
+  }
+
   @override
   int? get expiresAt => _client.auth.currentSession?.expiresAt;
 
   @override
   Future<void> revokeCurrentServerSession(Object expectedSession) async {
-    if (expectedSession is! Session ||
-        !identical(sessionMarker, expectedSession)) {
+    if (!identical(sessionMarker, expectedSession)) {
       throw const FormatException();
     }
+    final current = _client.auth.currentSession;
+    if (current == null) throw const FormatException();
     // Same /logout endpoint used by the SDK's ordinary signOut. Calling only
     // this transport method leaves local Auth intact for the rejection check.
     await _client.auth.admin.signOut(
-      expectedSession.accessToken,
+      current.accessToken,
       scope: SignOutScope.local,
     );
   }
@@ -111,6 +147,8 @@ final class SdkTerminalSessionSource implements TerminalSessionSource {
       return TerminalRefreshResult.uncertain;
     }
   }
+
+  Future<void> dispose() => _changes.cancel();
 }
 
 class TerminalRecipientAuthority {

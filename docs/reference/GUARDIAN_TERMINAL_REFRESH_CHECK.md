@@ -4,6 +4,15 @@
 
 M6.8 live scope approved on 2026-11-09; admission closed before any revocation
 or test refresh. Pixel is restored to the ordinary app with unchanged files.
+The diagnostic identified a session-change guard. A generated-session SDK
+regression reproduced a probe bug: ordinary recovery replaces the Session
+wrapper with unchanged grants. The probe now binds an opaque in-memory marker
+to owner/access/refresh credentials and invalidates it on explicit Auth events;
+it does not equate Dart object addresses with server-session identity. Targeted
+checks, all 474 Flutter tests, analysis and the configured repair build pass.
+Full repaired-source CI remains before device use. The ignored repair APK is
+`.dart_tool/m6_8_terminal_refresh_grant_fix.apk`, SHA-256
+`d0a921039ee6c70b757233b13e61deaeb089c6c113258777dbb8b081638ca3c4`.
 This follows the passed [normal rollover observation](GUARDIAN_PASSIVE_REFRESH_CHECK.md).
 The alternate debug entrypoint is `tool/guardian_terminal_refresh_probe.dart`;
 ordinary app code never imports it. Sixteen new operator/SDK checks,
@@ -55,9 +64,12 @@ does not claim immediate JWT invalidation or change project policy.
 - Require an existing signed-in idle Pixel receiver, disabled driver and empty
   recipient/driver journals. Check journals after status recovery so a newly
   retained cleanup ticket cannot escape admission. Require at least two minutes
-  of access-token headroom and the same in-memory Session object across native
-  reads, before revocation and before refresh. Same-owner token replacement also
-  closes the probe. Do not export or persist session references or credentials.
+  of access-token headroom, a refresh token and the same opaque grant marker
+  across native reads, before revocation and before refresh. Owner/access/refresh
+  credential changes or explicit Auth lifecycle events invalidate that marker,
+  including same-owner refresh and sign-out/recovery with reused credentials.
+  Only a wrapper copy with unchanged grants and no intervening lifecycle event
+  is equivalent. Comparisons stay in memory; never export or persist credentials.
 - One synchronous stage transition spends the action before any await. At most
   one server revocation and one refresh invocation occur. Timeout, lifecycle
   cancellation, delayed native results, changed authority, errors or uncertainty
@@ -127,6 +139,20 @@ identity, credential or receipt data and relaxes no admission guard. Three new
 guard/category/UI regressions join the prior 16 tests. Keep the approved action
 budget unspent until current admission is understood and passes;
 never bypass a closed guard to manufacture a result.
+
+The diagnostic then reported `Session changed during preflight`. The pinned
+supabase_flutter 2.17.2 starts `recoverSession()` after initialization without
+awaiting it; GoTrue 2.27.2 recreates and saves an unexpired Session wrapper even
+when owner and credentials are unchanged. A real-SDK/generated-session regression
+failed on the old reference-identity marker after exactly that public recovery
+call. The repair accepts only unchanged grant bytes across wrapper replacement;
+changed owner/access/refresh tokens and genuine public SDK refresh/sign-out
+events still invalidate the opaque marker. Missing refresh tokens close admission.
+Two additional SDK tests join the existing 19 checks, and the three existing
+terminal-response tests now also cover wrapper recovery. This confirms a probe
+false-positive cause; no private live grant bytes were exported or compared in
+operator output. It does not prove the exact timing of the earlier live change.
+No ordinary app, SDK storage/refresh policy or backend behavior is changed.
 
 ## Limits
 

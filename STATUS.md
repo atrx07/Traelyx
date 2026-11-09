@@ -10,6 +10,17 @@
 
 ## Working
 
+- M6.8 probe admission repair (2026-11-09): diagnostic label identified session
+  change. Real-SDK/generated-session recovery reproduced a false rejection from
+  comparing Session wrapper addresses. Marker now binds unchanged owner/access/
+  refresh grants in memory; explicit Auth events and real grant changes still
+  invalidate it. Missing refresh token closes admission. Twenty-one targeted
+  checks, all 474 Flutter tests, analysis and the configured build pass; full
+  repaired-source CI remains before device use. Pixel
+  is restored to the ordinary app with exact receiver/provider/recorder files.
+  Approved revocation/refresh budget remains unspent; both flags stay false.
+  See `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
+
 - M6.8 live terminal-refresh admission closed safely (2026-11-09): approved
   Pixel probe never exposed its action, including one admission-only restart.
   No deliberate revocation/test refresh ran. Ordinary app restored, original
