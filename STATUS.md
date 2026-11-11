@@ -10,41 +10,22 @@
 
 ## Working
 
-- M6.8 probe admission repair (2026-11-09): diagnostic label identified session
-  change. Real-SDK/generated-session recovery reproduced a false rejection from
-  comparing Session wrapper addresses. Marker now binds unchanged owner/access/
-  refresh grants in memory; explicit Auth events and real grant changes still
-  invalidate it. Missing refresh token closes admission. Twenty-one targeted
-  checks, all 474 Flutter tests, analysis and the configured build pass. Source
-  `065fc8e` passes full CI 42674469155 on 2026-11-10, including all three jobs,
-  native suites and debug/release builds. Current admission needs rechecking. Pixel
-  is restored to the ordinary app with exact receiver/provider/recorder files.
-  Approved revocation/refresh budget remains unspent; both flags stay false.
-  See `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
-
-- M6.8 live terminal-refresh admission closed safely (2026-11-09): approved
-  Pixel probe never exposed its action, including one admission-only restart.
-  No deliberate revocation/test refresh ran. Ordinary app restored, original
-  sign-in and exact Pixel receiver/provider/zero recorder files preserved.
-  Fresh hosted baseline 0/0/0/2/2/1/1 and false flags; Tecno has 11,865 current
-  files including its preserved accidental trip. Root admission cause remains
-  unknown. Fixed-category diagnostics retain all guards; three new regressions,
-  all 472 Flutter tests, analysis and diagnostic build pass. Diagnostic source
-  `78af5ba` passes full CI 42671262274, all three jobs/native/debug/release gates.
-  Inspect current admission before continuing the approved one-action scope. See
-  `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
-
-- M6.8 terminal server-rejection preparation validated (2026-11-09): separate
-  debug/project/pilot guards, own-session-only server logout transport, then one
-  ordinary refresh. Sixteen new tests, all 469 Flutter tests and configured
-  builds pass; analysis is clean. Source `5597d7e` passes all three jobs in full
-  CI 42666565560, including native suites and debug/release builds. Loopback
-  SDK checks verify exact local scope, retained Auth before
-  refresh, structured terminal denial and modeled owner/journal cleanup. No
-  new dependency, runtime change, service-role key or Auth-policy edit. Source
-  preparation is closed; specific live review remains before installation or
-  revocation. No hosted action has run.
-  Both Guardian flags stay false; mounted/vehicle gates remain deferred. See
+- M6.8 terminal server-rejection/recovery passed and closed (2026-11-11): one
+  Pixel own-session server revocation and one ordinary SDK refresh triggered
+  native cleanup with retained encrypted revoke work. Original-owner sign-in
+  reconciled only Pixel without automatic registration; fresh personal consent
+  restored its receiver. Ordinary pilot-off build, both original signed-in
+  accounts, local registration and authenticated guardian pairing reload pass.
+  Exact replacement receiver/provider bytes survive restoration; all 11,865
+  Tecno recorder files and its receiver/provider hashes are unchanged. Its eight
+  accidental chunks remain preserved/excluded through private
+  `.dart_tool/qa-ignored-trips.local.json`; historical 11,857-file proof retained.
+  Final hosted 0/0/0/2/2/1/1, receiver roles 2/1/1, flags false; no worker file,
+  driver vault or recorder. Probe-only wrapper-identity repair `065fc8e` passes
+  21 targeted checks, all 474 Flutter tests, analysis/configured build and full
+  CI 42674469155 (native/debug/release/cloud/Edge). Ordinary Auth behavior,
+  policy, schema and dependencies are unchanged; no alert or trip upload ran.
+  Active-driver and deferred physical/vehicle gates remain; M6.8 stays incomplete. See
   `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
 
 - M6.8 passive hosted access-token rollover passed (2026-11-09): Pixel observed

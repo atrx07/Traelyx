@@ -150,6 +150,15 @@ Keep normal rollover, terminal server rejection/revocation, and Guardian lease
 expiry as distinct validation cases. Earlier unexplained Auth loss is not
 attributed to the one-hour access-token lifetime without evidence.
 
+The reviewed Pixel [server-rejected refresh and recovery check](../reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md)
+passed on 2026-11-11. One own-session server revocation and one ordinary SDK
+refresh triggered native owner cleanup and retained the exact revoke work;
+ordinary original-owner sign-in reconciled the old receiver without automatic
+registration. Fresh personal receiver consent and ordinary-build restoration
+passed. No Auth policy or ordinary SDK/storage behavior changed. This does not
+establish spontaneous expiry causation, active-driver teardown or physical/OEM
+reliability.
+
 Link-send failures distinguish transport failures, provider rate limits,
 temporary service failures, rejected requests, and unknown local errors.
 Only transport failures suggest checking the connection. Raw provider error

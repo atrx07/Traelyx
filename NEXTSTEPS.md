@@ -10,37 +10,21 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
-The Pixel live scope is approved, but admission closed before any test action.
-The fixed diagnostic identified session change; a local SDK regression confirms
-that ordinary recovery recreates an equivalent Session wrapper. Probe identity
-now binds unchanged grants rather than Dart addresses, still invalidating real
-grant changes or explicit Auth events. Twenty-one targeted checks, all 474 Flutter
-tests, analysis and the configured repair build pass. Source `065fc8e` passes
-full CI 42674469155 on 2026-11-10, including native/debug/release gates. Recheck current admission
-under the existing unspent one-action/recovery approval. Pixel remains ordinary,
-with exact files preserved. No deliberate revocation or test refresh has run.
+The reviewed Pixel terminal server-rejection/original-account recovery check
+passed and is closed (2026-11-11). Its single action is spent: do not replay.
+Ordinary builds, both original signed-in receivers, pairing and all recorder
+files are restored/preserved. Final hosted 0/0/0/2/2/1/1, receiver roles 2/1/1,
+both flags false, no worker file or active driver/recorder. Probe-only repair
+`065fc8e` passes 21 targeted checks, all 474 Flutter tests and full CI 42674469155.
+See `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md` for exact evidence.
 
-Earlier diagnostic validation:
-Ordinary startup and exact receiver/provider/recorder preservation were restored.
-Do not revoke or refresh until current admission is understood and passes. Fixed-category
-diagnostics pass three new regressions, all 472 Flutter tests, analysis and the
-configured build. Diagnostic source `78af5ba` passes full exact-source
-CI 42671262274, including native/debug/release gates. Recheck states and inspect
-its fixed admission label before any action; never bypass a closed guard.
-Retain the single approved action budget; no deliberate revocation ran. See
-`docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
-
-Prior preparation for the Pixel
-server-rejected-refresh check. Sixteen new operator/SDK checks, all 469 Flutter
-tests and analysis pass. The separately gated probe revokes only its own server
-session without clearing local Auth, then invokes one ordinary refresh; no
-service-role credential, global logout or policy edit. Nothing is installed or
-revoked by preparation. Configured probe/recovery builds and all three jobs in
-exact-source CI 42666565560 (`5597d7e`) pass, including native/debug/release gates.
-The maintainer subsequently approved original-account recovery and fresh receiver
-consent with the single test; the admission checkpoint above takes precedence.
-Keep both Guardian functions disabled and all mounted/vehicle work deferred. See
-`docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md`.
+Remaining M6.8 work is active-driver lifecycle/cancellation/ingestion during
+eligible recording, process/network recovery, performance and physical/OEM
+validation. Mounted/vehicle work remains explicitly maintainer-deferred:
+do not simulate mount acknowledgements on a desk or start M7. Any new live Auth
+mutation or driver-capability test needs its own bounded review. Preserve the
+accidental short trip and its private QA exclusion; do not reopen completed
+receiver fault checks to manufacture additional validation.
 
 The passive Pixel access-token rollover check passed after 43 minutes and is
 closed (2026-11-09). The ordinary build, both original sign-ins and existing

@@ -1561,7 +1561,7 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     native suites, debug/release builds, cloud grants/RLS and Edge checks. The
     recipient-only recovery build is prepared; ordinary restoration APK retained.
     Close source preparation only. No probe installation or live revocation ran.
-  - [ ] Obtain specific review, then run at most one Pixel own-session server
+  - [x] Obtain specific review, then run at most one Pixel own-session server
     revocation and one refresh, prove native cleanup/journal preservation and
     recover through ordinary original-owner sign-in plus fresh personal receiver
     consent. Recheck all state and keep both functions false. See the terminal
@@ -1597,7 +1597,26 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     prior docs-only run 42673032133 failed before jobs with an internal server
     error, not a test failure; it is not counted as passed. Persist this repair
     validation before the fresh device admission check. Existing live approval
-    and one-action budget remain; no revocation/test refresh has run.
+    and one-action budget remained at that checkpoint; no revocation/test refresh
+    had run then.
+    Live check passed and recovery closed on 2026-11-11. Repaired Ready state,
+    exact files and fresh disabled baseline passed before one reserved button
+    tap. Server rejection/local owner cleanup completed; Pixel receiver/provider
+    files erased, encrypted revoke journal retained/changed, zero recorder files
+    unchanged and driver absent. Hosted receiver roles remained 2/1/1 while
+    signed out. Ordinary original-owner sign-in reconciled only Pixel to 1/1/0,
+    with no automatic registration and successful read-only unregistered status.
+    After interruption, saved-data AVD restart/debugging reauthorization retained
+    signed-in/no-registration state; hosted 0/0/0/1/1/1/0 and false flags verified.
+    Fresh PERSONAL review restored Pixel's private receiver; ordinary pilot-off
+    update preserves exact replacement bytes, sign-in, local registration and
+    authenticated paired guardian role. All 11,865 current Tecno recorder files
+    and receiver/provider hashes unchanged, including preserved accidental
+    chunks; historical 11,857-file proof retained. Final hosted 0/0/0/2/2/1/1,
+    roles 2/1/1, flags false, no worker file, driver vault or recorder. No send,
+    trip upload, policy/schema/dependency change. The single live action is spent;
+    do not replay. Active-driver and physical/vehicle gates remain open/deferred.
+    See `GUARDIAN_TERMINAL_REFRESH_CHECK.md` for source/hosted evidence and limits.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

@@ -211,3 +211,10 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
 - **Verification:** The clean CI setup reports the documented Flutter/Dart versions, generated-source verification leaves the checkout clean, and the remaining workflow gates run.
 - **Do not:** Commit runner-generated migrations or lockfile upgrades as part of an unrelated product change, weaken the generated-source diff gate, or leave CI on a floating channel while claiming a reproducible baseline.
 - **Last validated / notes:** Added after GitHub's stable channel advanced to Flutter 3.47.0 on 2026-08-13 while Traelyx remained validated on Flutter 3.44.9/Dart 3.12.2.
+
+## First UI dump missing after a Flutter update/launch
+
+- **Scope/symptom:** Android ADB QA immediately after a data-preserving update or cold launch: `uiautomator dump` may return without creating its expected XML file, so the next read reports missing file. Repeated read-only inspections after startup settled succeeded in the validated Pixel runs.
+- **Safe response:** Confirm the actual screen/readiness using a screenshot or the next bounded read-only UI dump. A missing dump alone does not establish an app crash. Never repeat a one-shot product action to repair an inspection failure.
+- **Do not:** Clear app data, reset the emulator, force-stop an active recorder, print raw XML/logcat or treat an unobserved result as success. Keep temporary files scoped to the operator's exact paths.
+- **Last validated:** 2026-11-11, ordinary restoration during M6.8 recovery; no product fix or root cause beyond observed startup timing was established.

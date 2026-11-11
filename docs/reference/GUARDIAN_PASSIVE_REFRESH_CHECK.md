@@ -120,4 +120,7 @@ below. This closes this bounded observation, not M6.8.
 The project currently has no terminal session timebox/inactivity timeout.
 This positive rollover is not a terminal server-rejection/revocation check,
 active-driver teardown proof or physical/OEM/vehicle validation. Those remain
-open, and mounted/vehicle work remains explicitly deferred by the maintainer.
+separate acceptance cases. The subsequent reviewed
+[terminal server-rejection/recovery check](GUARDIAN_TERMINAL_REFRESH_CHECK.md)
+has passed; active-driver and physical/OEM/vehicle work remains open, with
+mounted/vehicle work explicitly deferred by the maintainer.
