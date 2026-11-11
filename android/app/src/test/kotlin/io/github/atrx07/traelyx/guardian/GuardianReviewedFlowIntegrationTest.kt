@@ -10,6 +10,9 @@ class GuardianReviewedFlowIntegrationTest {
     private val owner = "11111111-1111-4111-8111-111111111111"
     private val activation = "22222222-2222-4222-8222-222222222222"
     private val event = "33333333-3333-4333-8333-333333333333"
+    private val otherOwner = "44444444-4444-4444-8444-444444444444"
+    private val otherActivation = "55555555-5555-4555-8555-555555555555"
+    private val otherEvent = "66666666-6666-4666-8666-666666666666"
 
     private class Vault : GuardianVault {
         var value = GuardianVaultSnapshot()
@@ -55,8 +58,10 @@ class GuardianReviewedFlowIntegrationTest {
         val vault = Vault()
         val journal = TestDriverRevokeJournal()
         val outbox = GuardianOutbox(vault, journal::record)
+        var nextActivation = activation
+        var nextEvent = event
         fun newCoordinator() = GuardianActivationCoordinator(outbox, { now }, journal,
-            { activation }, { "a".repeat(64) })
+            { nextActivation }, { "a".repeat(64) })
         var coordinator = newCoordinator()
         val notices = Notices()
         val runner = Runner()
@@ -80,7 +85,7 @@ class GuardianReviewedFlowIntegrationTest {
             })
         val session = GuardianRecordingSession({ coordinator.recordingSnapshot() }, { now },
             { lease, detection, cooldowns, clock ->
-                outbox.enqueue(lease.ownerId, lease.activationId, detection, cooldowns, clock, event)
+                outbox.enqueue(lease.ownerId, lease.activationId, detection, cooldowns, clock, nextEvent)
                 schedule.refresh()
             }, { schedule.invalidate(); coordinator.disable(it); schedule.refresh() },
             { posted.addLast(it) }, createWorker = { _, _, detected, _ ->
@@ -89,13 +94,13 @@ class GuardianReviewedFlowIntegrationTest {
         val bridge = GuardianActivationBridge(coordinator,
             pendingAlerts = controls::views, cancelAlert = controls::cancel, sendingPilotAvailable = true)
 
-        fun activate(sending: Boolean = true) {
-            coordinator.bindOwner(owner)
-            val args = mapOf("ownerId" to owner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)
+        fun activate(sending: Boolean = true, expectedOwner: String = owner) {
+            coordinator.bindOwner(expectedOwner)
+            val args = mapOf("ownerId" to expectedOwner, "forwardAxis" to "+y", "rigidMountConfirmed" to true)
             bridge.dispatch(if (sending) GuardianActivationBridge.BEGIN_SENDING else GuardianActivationBridge.BEGIN,
                 if (sending) args + mapOf("sendingAcknowledged" to true, "sendingReviewVersion" to 1) else args)
-            bridge.dispatch(GuardianActivationBridge.COMMIT, mapOf("ownerId" to owner,
-                "activationId" to activation, "serverExpiresEpochMillis" to now.epochMillis + 28_800_000))
+            bridge.dispatch(GuardianActivationBridge.COMMIT, mapOf("ownerId" to expectedOwner,
+                "activationId" to nextActivation, "serverExpiresEpochMillis" to now.epochMillis + 28_800_000))
             session.refresh()
             schedule.refresh()
         }
@@ -124,6 +129,13 @@ class GuardianReviewedFlowIntegrationTest {
             // Same ordering as the Android host: invalidate queued permits before mutating authority.
             schedule.invalidate()
             bridge.dispatch(GuardianActivationBridge.STOP, mapOf("ownerId" to owner))
+            session.refresh()
+            schedule.refresh()
+        }
+        fun bindOwner(nextOwner: String?) {
+            // Production host order: invalidate permits/offers, bind, then refresh both consumers.
+            schedule.invalidate()
+            bridge.dispatch(GuardianActivationBridge.BIND_OWNER, mapOf("ownerId" to nextOwner))
             session.refresh()
             schedule.refresh()
         }
@@ -193,6 +205,121 @@ class GuardianReviewedFlowIntegrationTest {
         assertTrue(worker.closed)
         assertEquals(1, f.runner.tasks.size)
         assertEquals(listOf(GuardianDriverRevokeTicket(owner, activation)), f.coordinator.pendingRevokes(owner))
+        assertTrue(f.notices.visible.isEmpty())
+        assertFalse(f.wakes.any { !it.cancelled })
+    }
+
+    @Test fun `Auth loss stops evaluation at cancellation queued and in-flight phases without stopping raw recording`() {
+        for (phase in 0..2) {
+            val f = Fixture()
+            f.activate(); val handle = f.start(); f.detect(); f.drain()
+            f.runFor(if (phase == 0) 10_000 else 30_000)
+            val staleWake = f.wakes.last()
+            val task = f.runner.tasks.singleOrNull()
+            if (phase == 2) assertTrue(task!!.permit.tryBegin())
+            val worker = f.workers.single()
+            f.advance(1); f.detect(worker) // Detection queued before the identity callback.
+            f.bindOwner(null)
+            assertTrue(worker.closed)
+            assertFalse(f.session.isEvaluating)
+            assertFalse(handle.isClosed) // Guardian teardown must not stop the raw trip.
+            assertFalse(f.coordinator.sendingReviewed())
+            if (task != null) {
+                assertFalse(task.permit.tryBegin())
+                task.complete(GuardianIngestResult.BACKEND_ACCEPTED)
+            }
+            f.drain(); staleWake.action()
+            f.bindOwner(owner) // Returning identity alone cannot activate or restore consent.
+            f.detect(worker); f.drain(); f.runFor(60_000)
+            assertNull(f.coordinator.snapshot(owner).lease)
+            assertTrue(f.vault.value.alerts.isEmpty())
+            assertEquals(listOf(GuardianDriverRevokeTicket(owner, activation)), f.coordinator.pendingRevokes(owner))
+            assertEquals(1, f.workers.size)
+            assertEquals(if (phase == 0) 0 else 1, f.runner.tasks.size)
+            assertTrue(f.notices.visible.isEmpty())
+            assertFalse(f.wakes.any { !it.cancelled })
+        }
+    }
+
+    @Test fun `account replacement isolates old evidence cleanup and completion while new reviewed work waits`() {
+        for (alreadyStarted in listOf(false, true)) {
+            val f = Fixture()
+            f.activate(); val handle = f.start(); f.detect(); f.drain(); f.runFor(30_000)
+            val oldTask = f.runner.tasks.single()
+            if (alreadyStarted) assertTrue(oldTask.permit.tryBegin())
+            val oldWorker = f.workers.single()
+            f.advance(1); f.detect(oldWorker)
+            f.bindOwner(otherOwner); f.drain()
+            assertTrue(oldWorker.closed)
+            assertFalse(f.session.isEvaluating)
+            assertFalse(handle.isClosed)
+            assertFalse(oldTask.permit.tryBegin())
+            assertFalse(f.coordinator.sendingReviewed())
+            assertTrue(f.coordinator.pendingRevokes(otherOwner).isEmpty())
+            assertNull(f.vault.value.lease)
+            assertTrue(f.vault.value.alerts.isEmpty())
+
+            f.nextActivation = otherActivation; f.nextEvent = otherEvent
+            f.activate(expectedOwner = otherOwner); f.detect(); f.drain(); f.runFor(30_000)
+            assertTrue(f.session.isEvaluating)
+            assertEquals(1, f.runner.tasks.size) // The old unsettled IO retains its slot.
+            assertEquals(1, f.transportConstructed)
+            oldTask.complete(GuardianIngestResult.BACKEND_ACCEPTED); f.drain()
+            val newTask = f.runner.tasks.last()
+            assertEquals(2, f.runner.tasks.size)
+            assertEquals(otherOwner, newTask.attempt.lease.ownerId)
+            assertEquals(otherActivation, newTask.attempt.lease.activationId)
+            assertEquals(otherEvent, newTask.attempt.alert.eventId)
+            val replacement = f.vault.value
+            f.detect(oldWorker); oldTask.complete(GuardianIngestResult.AUTHORIZATION_DENIED); f.drain()
+            assertEquals(replacement, f.vault.value)
+            assertEquals(listOf(GuardianDriverRevokeTicket(otherOwner, otherActivation)),
+                f.coordinator.pendingRevokes(otherOwner))
+            assertTrue(GuardianDriverRevokeTicket(owner, activation) in f.journal.pending())
+            assertTrue(newTask.permit.tryBegin())
+            newTask.complete(GuardianIngestResult.BACKEND_ACCEPTED); f.drain()
+            assertEquals(GuardianSendState.BACKEND_ACCEPTED, f.alert().state)
+            assertTrue(f.notices.visible.isEmpty())
+            assertFalse(f.wakes.any { !it.cancelled })
+        }
+    }
+
+    @Test fun `cancelled evidence stays cancelled while another event retries after trip stop`() {
+        val f = Fixture()
+        f.activate(); val handle = f.start(); f.detect(); f.drain()
+        val staleWake = f.wakes.last()
+        assertEquals(true, f.bridge.dispatch(GuardianActivationBridge.CANCEL_ALERT,
+            mapOf("ownerId" to owner, "activationId" to activation, "eventId" to event)))
+        f.advance(1); f.nextEvent = otherEvent; f.detect(); f.drain()
+        f.schedule.refresh()
+        val worker = f.workers.single()
+        f.advance(1); f.detect(worker) // Stopping the trip discards even an already queued detection.
+        f.session.stop(handle); f.drain(); staleWake.action()
+        assertTrue(worker.closed)
+        assertFalse(f.session.isEvaluating)
+        f.runFor(29_999)
+        val first = f.runner.tasks.single()
+        assertEquals(otherEvent, first.attempt.alert.eventId)
+        assertTrue(first.permit.tryBegin())
+        first.complete(GuardianIngestResult.UNCONFIRMED); f.drain()
+        f.runFor(4_999)
+        assertEquals(1, f.runner.tasks.size)
+        f.runFor(1)
+        val retry = f.runner.tasks.last()
+        assertEquals(2, f.runner.tasks.size)
+        assertEquals(first.attempt.lease, retry.attempt.lease)
+        assertEquals(otherEvent, retry.attempt.alert.eventId)
+        assertEquals(2, retry.attempt.alert.attempts)
+        assertTrue(retry.permit.tryBegin())
+        retry.complete(GuardianIngestResult.BACKEND_ACCEPTED); f.drain(); f.runFor(60_000)
+        val cancelled = f.vault.value.alerts.single { it.eventId == event }
+        assertEquals(GuardianSendState.CANCELLED, cancelled.state)
+        assertEquals(0, cancelled.attempts)
+        assertEquals(GuardianSendState.BACKEND_ACCEPTED,
+            f.vault.value.alerts.single { it.eventId == otherEvent }.state)
+        assertEquals(2, f.vault.value.alerts.size)
+        assertTrue(f.runner.tasks.all { it.attempt.alert.eventId == otherEvent })
+        assertEquals(1, f.workers.size)
         assertTrue(f.notices.visible.isEmpty())
         assertFalse(f.wakes.any { !it.cancelled })
     }

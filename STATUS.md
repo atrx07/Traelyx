@@ -10,6 +10,16 @@
 
 ## Working
 
+- M6.8 desk-safe active-driver recovery review (2026-11-11): coverage mapped;
+  three missing integration tests added for Auth loss, replacement with unsettled
+  IO, and cancellation beside post-trip network retries. Existing restart and
+  ephemeral-consent coverage retained. All eight reviewed-flow tests and all 492
+  app native tests plus dependency suites pass, with zero app failures/errors/
+  skips; repository validation passes. Exact-source CI is pending. Test-only
+  change: no device or production operation, runtime/schema/dependency change.
+  Physical/vehicle gates remain deferred/open; M6.8 is incomplete. See
+  `docs/reference/GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
+
 - M6.8 terminal server-rejection/recovery passed and closed (2026-11-11): one
   Pixel own-session server revocation and one ordinary SDK refresh triggered
   native cleanup with retained encrypted revoke work. Original-owner sign-in

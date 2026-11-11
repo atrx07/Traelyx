@@ -1617,6 +1617,22 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     trip upload, policy/schema/dependency change. The single live action is spent;
     do not replay. Active-driver and physical/vehicle gates remain open/deferred.
     See `GUARDIAN_TERMINAL_REFRESH_CHECK.md` for source/hosted evidence and limits.
+  Desk-safe recovery review (authorized 2026-11-11): map existing component and
+  integration coverage before adding tests. Close only missing cross-component
+  cases: Auth loss/replacement during queued or in-flight dispatch, and a
+  cancelled event sharing an outbox with a retryable event after trip stop.
+  Reuse synthetic callbacks, in-memory vault/journal, virtual clocks/notices and
+  fake ingest runner. Preserve existing process-restart/no-consent-reuse coverage.
+  No device, production, mount acknowledgement, activation or network service.
+  - [x] Add only the three missing integration tests: null Auth in three dispatch
+    phases, owner replacement with queued/started IO, and a cancelled event beside
+    another event's post-trip retry. All eight reviewed-flow tests and all 492
+    app native tests plus dependency suites pass; repository/whitespace checks
+    pass. Existing restart coverage remains unchanged. The coverage map and
+    harness limitations are in `GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
+  - [ ] Persist source and require full exact-source CI before bounded closure.
+    Trip stop is not alert cancellation; a reserved request cannot be retracted.
+    Keep physical/vehicle gates deferred and M6.8 incomplete.
   Next bounded unit: expose credential-free, account-checked local driver status
   through a new native method and an explicit foreground check. Distinguish
   restored consent requiring reactivation from waiting for a trip, calibration,

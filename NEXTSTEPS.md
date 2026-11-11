@@ -10,6 +10,13 @@ The urgent long-trip crash repair is verified on the phone: the 45m27s recording
 
 ## P0 — Define and implement M6.8 Guardian alerts
 
+Desk-safe active-driver recovery coverage is locally validated (2026-11-11):
+three missing cross-component tests added, existing process-restart checks
+retained, all eight reviewed-flow and 492 app native tests plus dependency suites
+pass. Persist the source and require its full CI before closing this bounded
+review. No live operation is authorized by these synthetic tests; mounted/vehicle
+gates stay deferred. See `docs/reference/GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
+
 The reviewed Pixel terminal server-rejection/original-account recovery check
 passed and is closed (2026-11-11). Its single action is spent: do not replay.
 Ordinary builds, both original signed-in receivers, pairing and all recorder
