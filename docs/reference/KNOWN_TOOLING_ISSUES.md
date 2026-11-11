@@ -76,6 +76,20 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   Do not substitute unverified metadata/compiler bytes, broaden its filter,
   drop transitive dependencies or skip tests.
 
+## Windows sandbox Python temporary directories deny writes/cleanup
+
+- **Scope:** Python unittest suites using `TemporaryDirectory` in the desktop
+  sandbox; reproduced with both ML imports and the existing trip-debug tests.
+- **Symptom:** `PermissionError` / WinError 5 under the sandbox package's `AC/Temp`
+  directory, including cleanup of otherwise empty temporary directories.
+- **Safe fix:** In the test process shell, create `.dart_tool/python-test-tmp`
+  inside the checkout, then point both process `TEMP` and `TMP` to its absolute
+  path before launching Python. Keep test-created subdirectory cleanup intact.
+  Do not change global environment/ACLs or ignore cleanup failures.
+- **Verification:** Both offline suites pass together (25 tests, no skips) with
+  resource warnings treated as errors using this workspace-local temp root,
+  2026-11-11. Unsandboxed execution also passes; no test assertions changed.
+
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 
 - **Scope:** PowerShell 7 operator contexts containing ISO UTC timestamps.

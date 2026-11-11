@@ -4,11 +4,28 @@
 
 ## Current phase
 
-**M6 active — M6.1–M6.7 complete; M6.8 in progress**
+**M7 active — M7.1 locally validated, awaiting source CI; M6.8 acceptance remains open**
+
+Maintainer-authorized sequencing exception (2026-11-11): M7.1 development may
+proceed while M6.8 physical active-driver, recovery, performance and mounted/
+vehicle/OEM acceptance stays open; vehicle work remains deferred. This waives
+no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
+See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.1 local dataset pipeline (2026-11-11): standard-library Python registry
+  validation and bounded offline imports preserve source values/labels and
+  versioned license/provenance/hash manifests. Generated corpus: 558 samples,
+  18 sequences, three fictional preassigned driver partitions; synthetic-only.
+  Actual CC BY 4.0 public import: 1,114 rows, publisher SHA-256 verified and
+  repeated byte-identically. Missing driver/trip/time and unverified units keep
+  all public rows quarantined/blocked for training. Twenty-two new dataset
+  tests plus three existing inspector tests pass; downloads/imports stay ignored
+  and local. No dependency, app/schema migration, private trip read or upload.
+  CI wiring added; completion remains gated on full source CI.
 
 - M6.8 desk-safe active-driver recovery review (2026-11-11): coverage mapped;
   three missing integration tests added for Auth loss, replacement with unsettled
@@ -893,4 +910,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M6.8 Guardian alerts is authorized. Firebase `traelyx-e28ff` remains on Spark with Android registered and FCM v1 enabled. The verified client config is Git-ignored. Isolated native evaluator, encrypted lease/outbox, activation coordinator and optional FCM adapter pass their synthetic/native gates. Native owner binding is attached to Auth; driver consent remains dormant and evaluation is not attached to recording. The private alert and retry migrations passed hosted rollback checks. Both Edge functions are deployed but disabled; their isolated hosted denial checks pass. The restricted backend sender credential is installed in Supabase Edge secrets with a verified digest. The first phone was freshly registered after the withdrawal proof; direct hosted counts now verify 1 device/1 unexpired device and zero sessions/events/deliveries. Durable notice claims, v1 upgrade and isolated physical vault checks pass; both source CI runs are green. The narrower positive receipt/retry window was approved; its first attempt found an Android parser defect, now repaired and physically checked. Full source CI and the subsequent hosted receipt/retry pass, with synthetic cleanup complete and both flags false. Approved background FCM/OAuth, receipt, generic notice and actual tap checks now pass; both windows are closed and cleaned, and test worker credentials are retired. Cold-process FCM receipt/notice/tap also passes after immediate process-absence verification; its window is closed and cleaned. Locked/offline one-send receipt and notice-tap checks pass; both functions are closed, the test worker retired and both synthetic cleanups pass with final counts 0/1/1/0/0. Expiry/revocation and actual duplicate FCM behavior, recorder integration and two-phone delivery remain untested. No scheduler or real alert is enabled. M6.7 remains complete; M7 is not authorized.
+**Current step:** M7.1 dataset registry/import is authorized under the maintainer's
+2026-11-11 sequencing exception. Local validation passes; source CI and final
+persistence remain. M6.8 acceptance stays open, with vehicle work deferred; the
+latest working entries above supersede older checkpoint summaries. No new live
+Guardian operation is authorized. M7.2 remains pending explicit approval.

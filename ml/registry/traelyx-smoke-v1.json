@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "dataset_id": "traelyx-smoke",
+  "version": "1",
+  "source": "ml/synthetic_corpus.py:generate (VERSION=1)",
+  "source_kind": "synthetic",
+  "source_sha256": "4e0a866c2745700f8bbf318cd3e6f1fa6b4835905845724bc0fe2263e3fbf4b8",
+  "source_bytes": 48783,
+  "import_format": "traelyx-smoke-v1",
+  "license": "CC0-1.0",
+  "license_evidence": "ml/DATA_LICENSE.md",
+  "attribution": "Traelyx contributors (2026), generated ML import smoke corpus v1. Synthetic fixture data dedicated under CC0-1.0; https://creativecommons.org/publicdomain/zero/1.0/.",
+  "provenance": "Original deterministic arithmetic scenarios, not derived from recordings. Three fictional driver groups test partition plumbing, not driver generalization. Complements the existing M3 native regression corpus; does not reproduce or replace it.",
+  "vehicle_population": [
+    "Synthetic motion only; no measured vehicle"
+  ],
+  "device_population": [
+    "Synthetic vehicle-aligned axes, gravity included, no measured device"
+  ],
+  "channels": {
+    "ax": "m/s2",
+    "ay": "m/s2",
+    "az": "m/s2",
+    "gx": "rad/s",
+    "gy": "rad/s",
+    "gz": "rad/s"
+  },
+  "reported_rate_hz": 50,
+  "time_basis": "synthetic_elapsed_ms",
+  "unit_status": "synthetic_defined",
+  "label_schema": "traelyx-smoke-v1",
+  "source_labels": {
+    "stationary": "stationary",
+    "acceleration": "acceleration",
+    "braking": "braking",
+    "left": "left",
+    "right": "right",
+    "bump": "bump"
+  },
+  "label_provenance": "synthetic_scenario",
+  "label_confidence": "synthetic_not_field_validated",
+  "preprocessing_version": "preserve-source-v1",
+  "privacy": {
+    "precise_location": false,
+    "direct_identifiers": false,
+    "wall_clock": false,
+    "upload": false,
+    "storage": "ignored_local_only"
+  },
+  "known_limitations": [
+    "Tiny arithmetic fixtures test import, grouping and hashing only; they cannot establish model performance or calibrated event thresholds.",
+    "Scenario labels cover entire synthetic sequences, including their quiet prefix/suffix. They are not sample-level event truth or crash labels.",
+    "Fictional driver groups have identical signal shapes. Preassigned partitions demonstrate isolation only; no field generalization claim."
+  ],
+  "training_use": "synthetic_only",
+  "groups": {
+    "synthetic-a": "train",
+    "synthetic-b": "validation",
+    "synthetic-c": "test"
+  }
+}

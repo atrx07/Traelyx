@@ -21,6 +21,8 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 - `technical/SCORING_SPEC.md` — explainable versioned scoring rules.
 - `technical/INTEGRITY_ENGINE.md` — anti-cheat/anomaly/corruption auditing.
 - `technical/ML_SYSTEM.md` — ML roles, model families, deployment.
+- [`../ml/README.md`](../ml/README.md) — M7.1 local dataset registry/import,
+  reproduction commands and training-eligibility limitations.
 - `technical/AUTH_SPEC.md` — accountless + optional auth system.
 - `technical/DATA_MODEL.md` — local/cloud entities and ownership.
 - `technical/SYNC_SPEC.md` — local/cloud sync boundaries.

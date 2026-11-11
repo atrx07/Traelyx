@@ -99,6 +99,12 @@ Initial CI should run:
 
 Heavy ML training is not required on every PR. Run small inference/evaluation sanity tests and separate scheduled/manual training workflows.
 
+M7.1 validates the versioned dataset registry and generated source hash offline,
+then runs import integrity/privacy/grouping/reproducibility tests using synthetic
+input. CI must not download public datasets or read private maintainer recordings.
+An actual public import is a separate local check with a publisher-pinned hash;
+quarantined or synthetic-only data does not establish model-performance evidence.
+
 ## 6. Randomness
 
 Tests involving commentary/random selection/model sampling must use fixed seeds or deterministic mocks.

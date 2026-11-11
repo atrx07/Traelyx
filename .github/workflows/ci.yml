@@ -165,6 +165,12 @@ jobs:
       - name: Test trip-debug inspector
         run: python -m unittest tests.tool.test_inspect_tripdebug
 
+      - name: Validate offline ML dataset registry and imports
+        run: |
+          python -m compileall -q ml tests/tool/test_ml_datasets.py
+          python ml/datasets.py validate
+          python -W error::ResourceWarning -m unittest tests.tool.test_ml_datasets
+
       - name: Validate repository contracts and secrets
         run: dart run tool/validate_repository.dart
 

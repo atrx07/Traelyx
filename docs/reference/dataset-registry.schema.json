@@ -1,63 +1,244 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "dataset-registry.schema.json",
-  "title": "ML Dataset Registry Entry",
+  "title": "Traelyx Dataset Registry Entry v1",
+  "description": "M7.1 offline import contract; cannot authorize production training. No prior registry instances existed.",
   "type": "object",
+  "additionalProperties": false,
   "required": [
+    "schema_version",
     "dataset_id",
     "version",
     "source",
+    "source_kind",
+    "source_sha256",
+    "source_bytes",
+    "import_format",
     "license",
+    "license_evidence",
+    "attribution",
     "provenance",
+    "vehicle_population",
+    "device_population",
+    "channels",
+    "reported_rate_hz",
+    "time_basis",
+    "unit_status",
     "label_schema",
-    "privacy"
+    "source_labels",
+    "label_provenance",
+    "label_confidence",
+    "preprocessing_version",
+    "privacy",
+    "known_limitations",
+    "training_use",
+    "groups"
   ],
   "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
     "dataset_id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
     },
     "version": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,31}$"
     },
     "source": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "public",
+        "synthetic"
+      ]
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8388608
+    },
+    "import_format": {
+      "type": "string",
+      "enum": [
+        "mendeley-raw-v2",
+        "traelyx-smoke-v1"
+      ]
     },
     "license": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    "license_evidence": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "attribution": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
     },
     "provenance": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
     },
     "vehicle_population": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
       }
     },
     "device_population": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
       }
     },
-    "sensor_channels": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "channels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "m/s2",
+          "deg/s",
+          "rad/s"
+        ]
       }
+    },
+    "reported_rate_hz": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0.001,
+      "maximum": 1000
+    },
+    "time_basis": {
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "synthetic_elapsed_ms"
+      ]
+    },
+    "unit_status": {
+      "type": "string",
+      "enum": [
+        "source_declared_unverified",
+        "synthetic_defined"
+      ]
     },
     "label_schema": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "source_labels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]{1,64}$"
+      }
+    },
+    "label_provenance": {
+      "type": "string",
+      "enum": [
+        "publisher_annotations",
+        "synthetic_scenario"
+      ]
+    },
+    "label_confidence": {
+      "type": "string",
+      "enum": [
+        "unverified",
+        "synthetic_not_field_validated"
+      ]
+    },
+    "preprocessing_version": {
+      "type": "string",
+      "const": "preserve-source-v1"
     },
     "privacy": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "precise_location",
+        "direct_identifiers",
+        "wall_clock",
+        "upload",
+        "storage"
+      ],
+      "properties": {
+        "precise_location": {
+          "type": "boolean",
+          "const": false
+        },
+        "direct_identifiers": {
+          "type": "boolean",
+          "const": false
+        },
+        "wall_clock": {
+          "type": "boolean",
+          "const": false
+        },
+        "upload": {
+          "type": "boolean",
+          "const": false
+        },
+        "storage": {
+          "type": "string",
+          "const": "ignored_local_only"
+        }
+      }
     },
     "known_limitations": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1024
+      }
+    },
+    "training_use": {
+      "type": "string",
+      "enum": [
+        "blocked",
+        "synthetic_only"
+      ]
+    },
+    "groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "train",
+          "validation",
+          "test"
+        ]
       }
     }
-  },
-  "additionalProperties": true
+  }
 }

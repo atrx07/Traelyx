@@ -12,6 +12,13 @@ Feature-rich agent-assisted MVP:
 
 Milestones may overlap, especially data collection/ML. Estimates are not promises.
 
+**2026-11-11 sequencing exception:** The maintainer authorized M7.1 while M6.8
+acceptance remains incomplete. Physical active-driver/recovery/performance and
+mounted/vehicle/OEM gates carry forward; vehicle work remains deferred. M7 is
+the current development milestone, but no Guardian acceptance gate is waived.
+Only M7.1 is authorized; each later substep retains the explicit approval gate.
+See `active/M7_ML_COMMENTARY.md` and the retained M6 plan.
+
 ---
 
 # M0 — Project Bootstrap

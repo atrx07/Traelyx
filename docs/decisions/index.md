@@ -28,3 +28,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0031-guardian-dispatch-worker-isolation.md`
 - `ADR-0032-guardian-cancellation-offers.md`
 - `ADR-0033-guardian-versioned-sending-review.md`
+- `ADR-0034-offline-dataset-import-quarantine.md`

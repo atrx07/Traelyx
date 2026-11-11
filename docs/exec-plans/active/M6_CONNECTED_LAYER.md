@@ -4,7 +4,17 @@
 **Owner:** agent/maintainer
 **Milestone:** M6
 **Started:** 2026-09-25
-**Last updated:** 2026-10-17
+**Last updated:** 2026-11-11
+
+## Development sequencing exception — 2026-11-11
+
+The maintainer authorized M7.1 development while M6.8 acceptance stays open.
+Physical active-driver ingestion/cancellation, process/network recovery,
+performance and mounted/vehicle/OEM validation remain outstanding; vehicle
+work is maintainer-deferred. No acceptance gate is waived or live operation
+authorized by that transition. M7 is now the current development milestone;
+see [M7_ML_COMMENTARY.md](M7_ML_COMMENTARY.md). Older approval/status statements
+below describe the authorization in force when recorded.
 
 ## Context budget / references
 

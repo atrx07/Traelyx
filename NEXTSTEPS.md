@@ -4,11 +4,28 @@
 
 ## Current gate
 
-M6 is active. M6.1–M6.7 are complete. M6.8 Guardian alerts includes the authorized live-evaluation and background-push prerequisites.
+M7 is the current development milestone. The maintainer authorized only M7.1
+on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
+M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
+mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 
-The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. Resume the existing M6.8 scope after reporting this repair; no new milestone is authorized.
+## P0 — Finish M7.1 dataset registry/import
 
-## P0 — Define and implement M6.8 Guardian alerts
+Implementation, 25 Python checks and actual public import/reproducibility pass.
+Finish full source CI, atomic persistence and completion synchronization. Public
+data stays training-blocked (missing driver/trip/time; unverified units); generated
+fixtures test plumbing only. No private trip or contributed data is imported.
+See `docs/exec-plans/active/M7_ML_COMMENTARY.md` and `ml/README.md`.
+Stop after M7.1; M7.2 requires explicit maintainer authorization and suitable
+grouped/timed/unit-verified real data for meaningful held-out evaluation.
+
+The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
+
+## M6.8 carried-forward acceptance and prior evidence
+
+The following evidence predates M7.1 authorization unless stated otherwise;
+older prohibitions on starting M7 are superseded only for M7.1 by the current
+sequencing exception. Existing live-operation boundaries remain in force.
 
 Desk-safe active-driver recovery review passed and is closed (2026-11-11):
 three missing cross-component tests added, existing process-restart checks
@@ -17,7 +34,8 @@ pass. Source `b2a3270` passes full CI 42967259142 (all three jobs, including
 Flutter/native tests and debug/release builds). No runtime change was needed.
 No live operation is authorized by these synthetic tests; active physical-driver
 and mounted/vehicle gates stay open/deferred. Do not repeat closed receiver checks
-or start M7. See `docs/reference/GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
+or treat M7.1 authorization as Guardian acceptance. See
+`docs/reference/GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
 
 The reviewed Pixel terminal server-rejection/original-account recovery check
 passed and is closed (2026-11-11). Its single action is spent: do not replay.
@@ -30,7 +48,7 @@ See `docs/reference/GUARDIAN_TERMINAL_REFRESH_CHECK.md` for exact evidence.
 Remaining M6.8 work is active-driver lifecycle/cancellation/ingestion during
 eligible recording, process/network recovery, performance and physical/OEM
 validation. Mounted/vehicle work remains explicitly maintainer-deferred:
-do not simulate mount acknowledgements on a desk or start M7. Any new live Auth
+do not simulate mount acknowledgements on a desk. Any new live Auth
 mutation or driver-capability test needs its own bounded review. Preserve the
 accidental short trip and its private QA exclusion; do not reopen completed
 receiver fault checks to manufacture additional validation.
