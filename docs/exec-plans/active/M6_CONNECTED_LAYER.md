@@ -1630,7 +1630,10 @@ must pass DEPENDENCY_POLICY before introducing a push SDK.
     app native tests plus dependency suites pass; repository/whitespace checks
     pass. Existing restart coverage remains unchanged. The coverage map and
     harness limitations are in `GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
-  - [ ] Persist source and require full exact-source CI before bounded closure.
+  - [x] Source `b2a3270` is committed/pushed and passes full exact-source CI
+    42967259142: all three jobs, Flutter/native tests, debug/release APKs,
+    cloud SQL/RLS, Edge and repository/size gates. Close this desk-safe review;
+    no runtime change was needed and no device or production operation ran.
     Trip stop is not alert cancellation; a reserved request cannot be retracted.
     Keep physical/vehicle gates deferred and M6.8 incomplete.
   Next bounded unit: expose credential-free, account-checked local driver status

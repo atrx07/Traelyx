@@ -15,8 +15,10 @@
   IO, and cancellation beside post-trip network retries. Existing restart and
   ephemeral-consent coverage retained. All eight reviewed-flow tests and all 492
   app native tests plus dependency suites pass, with zero app failures/errors/
-  skips; repository validation passes. Exact-source CI is pending. Test-only
-  change: no device or production operation, runtime/schema/dependency change.
+  skips; repository validation passes. Source `b2a3270` passes all three jobs in
+  full CI 42967259142, including Flutter/native tests, debug/release builds,
+  cloud and Edge checks. This bounded review is closed. Test-only change: no
+  device or production operation, runtime/schema/dependency change.
   Physical/vehicle gates remain deferred/open; M6.8 is incomplete. See
   `docs/reference/GUARDIAN_DRIVER_RECOVERY_REVIEW.md`.
 
