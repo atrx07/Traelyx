@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.1 locally validated, awaiting source CI; M6.8 acceptance remains open**
+**M7 active — M7.1 complete; M6.8 acceptance remains open; M7.2 awaits authorization**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -25,7 +25,7 @@ See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
   all public rows quarantined/blocked for training. Twenty-two new dataset
   tests plus three existing inspector tests pass; downloads/imports stay ignored
   and local. No dependency, app/schema migration, private trip read or upload.
-  CI wiring added; completion remains gated on full source CI.
+  Source `460539f` passes full [CI 42970700095](https://github.com/atrx07/Traelyx/actions/runs/42970700095): all three jobs, Flutter/native tests, debug/release-validation builds, cloud/Edge and artifact gates. M7.1 is complete; M7.2 is not authorized.
 
 - M6.8 desk-safe active-driver recovery review (2026-11-11): coverage mapped;
   three missing integration tests added for Auth loss, replacement with unsettled
@@ -911,7 +911,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 ## Current step
 
 **Current step:** M7.1 dataset registry/import is authorized under the maintainer's
-2026-11-11 sequencing exception. Local validation passes; source CI and final
-persistence remain. M6.8 acceptance stays open, with vehicle work deferred; the
+2026-11-11 sequencing exception and is complete. Local gates and full source
+CI 42970700095 (`460539f`) pass. M6.8 acceptance stays open, with vehicle work deferred; the
 latest working entries above supersede older checkpoint summaries. No new live
 Guardian operation is authorized. M7.2 remains pending explicit approval.

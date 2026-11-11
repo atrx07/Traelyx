@@ -3,6 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
+**Current gate:** M7.1 complete; M7.2 pending explicit authorization
 **Started:** 2026-11-11
 **Last updated:** 2026-11-11
 
@@ -62,7 +63,7 @@ unchanged. Dataset/import versions and source/output hashes preserve replay.
 - [x] Implement registry validation and deterministic fail-closed import.
 - [x] Add governed synthetic fixture and hostile-input/reproducibility tests.
 - [x] Run local gates and an actual checksum-verified public import.
-- [ ] Synchronize documents, inspect diff, commit/push, verify CI and Git sync.
+- [x] Synchronize documents, inspect diff, commit/push, verify CI and Git sync.
 
 ## Tests / validation
 
@@ -100,14 +101,29 @@ do not infer driver boundaries, timestamps, converted units or crash labels.
   compilation and registry validation pass. Actual imports produce 558 synthetic
   samples and 1,114 public rows (class counts 252/288/350/224); an independent
   public reimport is byte-identical. Raw source/summary and outputs are ignored.
-  Repository contracts/secrets and whitespace checks pass. Source CI and final
-  completion persistence remain pending.
+  Repository contracts/secrets and whitespace checks pass.
 - ADR-0034 records local import/quarantine decisions. The M3 native corpus stays
   authoritative and unchanged; the ML smoke corpus is separate synthetic data.
 - Final boundary review added oversized-integer metadata cases: range rejection
   must not convert an arbitrary integer to float or expose a traceback. All
   25 Python checks and registry validation still pass. No valid import changes.
 
+- Final source `460539f9a9872972e63a0d7531045a24fbbad956` passes full
+  [CI 42970700095](https://github.com/atrx07/Traelyx/actions/runs/42970700095),
+  all three jobs: Flutter/native tests, offline dataset checks, debug/release-
+  validation APKs, cloud SQL/RLS, Edge and artifact gates. No gate was waived.
+  Implementation and numeric-boundary follow-up are pushed on `origin/main`;
+  final closure synchronizes this plan, STATUS, NEXTSTEPS and README.
+
 ## Completion summary
 
-Pending validation and publication.
+**M7.1 complete (2026-11-11).** Two governed registry entries and an operational
+local importer preserve licensed source evidence and deterministic audit outputs.
+Twenty-five Python tests, actual public import/reimport, repository checks and
+full exact-source CI pass. No dependency/provider, app/schema migration, sampling,
+scoring, private-data upload or device operation. Registry schema v1 replaces an
+unused draft; no existing registry instances or historical results are migrated.
+Public data remains training-blocked; synthetic data is plumbing evidence only.
+M6.8 physical/vehicle acceptance remains open/deferred. M7 stays active as a
+milestone plan, with M7.2 pending explicit maintainer authorization; no M7.2 work
+was started. Real-device/battery behavior is unchanged and not newly validated.

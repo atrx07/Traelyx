@@ -9,15 +9,17 @@ on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 
-## P0 — Finish M7.1 dataset registry/import
+## P0 — Await M7.2 authorization
 
-Implementation, 25 Python checks and actual public import/reproducibility pass.
-Finish full source CI, atomic persistence and completion synchronization. Public
-data stays training-blocked (missing driver/trip/time; unverified units); generated
-fixtures test plumbing only. No private trip or contributed data is imported.
+M7.1 is complete. Twenty-five Python checks, registry/compilation, actual public
+import/reproducibility, repository validation and full source CI 42970700095
+(`460539f`) pass. No source gate failed or was waived. Public data stays blocked
+for training (missing driver/trip/time; unverified units); generated fixtures
+establish import/grouping behavior only. No private/contributed data was read.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md` and `ml/README.md`.
-Stop after M7.1; M7.2 requires explicit maintainer authorization and suitable
-grouped/timed/unit-verified real data for meaningful held-out evaluation.
+Next planned substep: M7.2 EventNet baseline, pending explicit authorization.
+Meaningful held-out evaluation still requires suitable grouped/timed/unit-verified
+real data. Do not implement or substantially prepare M7.2 while awaiting approval.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 
