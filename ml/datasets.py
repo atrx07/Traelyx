@@ -125,7 +125,7 @@ def validate_schema(value: object, schema: dict, path: str = "entry") -> None:
         if "pattern" in schema:
             require(re.fullmatch(schema["pattern"], value) is not None, f"{path}: invalid text")
     elif type(value) in (int, float):
-        require(math.isfinite(value), f"{path}: non-finite number")
+        require(type(value) is int or math.isfinite(value), f"{path}: non-finite number")
         require(schema.get("minimum", -math.inf) <= value <= schema.get("maximum", math.inf),
                 f"{path}: number out of bounds")
 

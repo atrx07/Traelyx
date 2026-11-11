@@ -153,6 +153,7 @@ class DatasetTests(unittest.TestCase):
         changes = [("dataset_id", "../escape"), ("version", "../../outside"),
                    ("source_bytes", True), ("source_sha256", "not-a-hash"),
                    ("training_use", "production"), ("reported_rate_hz", float("inf")),
+                   ("reported_rate_hz", 10 ** 400), ("source_bytes", 10 ** 400),
                    ("license", "unknown"), ("source_kind", "user_contribution"),
                    ("channels", {"ax": "m/s2"}),
                    ("channels", {**entry["channels"], "gx": "m/s2"}),

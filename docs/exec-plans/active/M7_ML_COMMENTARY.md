@@ -104,6 +104,9 @@ do not infer driver boundaries, timestamps, converted units or crash labels.
   completion persistence remain pending.
 - ADR-0034 records local import/quarantine decisions. The M3 native corpus stays
   authoritative and unchanged; the ML smoke corpus is separate synthetic data.
+- Final boundary review added oversized-integer metadata cases: range rejection
+  must not convert an arbitrary integer to float or expose a traceback. All
+  25 Python checks and registry validation still pass. No valid import changes.
 
 ## Completion summary
 
