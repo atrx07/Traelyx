@@ -1,5 +1,10 @@
 # Local dataset registry and imports (M7.1)
 
+M7.3's optional, computer-only retrospective calibration/error audit is defined
+in [the calibration contract](../docs/reference/EVENTNET_CALIBRATION_V1.md).
+It preserves the existing model/data and keeps unavailable safety metrics and
+data-reuse limitations explicit. Core import commands below remain unchanged.
+
 Requires Python 3.12+ and its standard library only. No account, network,
 package install or mobile change is required. The importer never downloads or
 uploads data and never reads private recordings automatically.

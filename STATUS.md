@@ -4,17 +4,29 @@
 
 ## Current phase
 
-**M7 active — M7.1–M7.2 complete; M7.3 awaits authorization; M6.8 acceptance remains open**
+**M7 active — M7.1–M7.2 complete; M7.3 in progress; M6.8 acceptance remains open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
 vehicle/OEM acceptance stays open; vehicle work remains deferred. This waives
 no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
+M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.3 locally implemented (2026-11-14): frozen validation-only scalar
+  temperature audit, stable NLL, top-label/classwise reliability/ECE and
+  per-class source-label disagreement counts. Weights/split/normalization and
+  M7.2 evidence stay unchanged. All 53 Python tests pass (12 new calibration
+  tests); preserved checkpoint/source hashes verify. The protocol is frozen
+  before actual audit outcomes; clean-commit audit/repeat and full CI remain.
+  Validation/checkpoint-selection reuse and previously reported test data are
+  disclosed. Severe false events/hour remain unavailable, not zero; no severe/
+  normal truth or production mapping exists. No new dependency, device operation,
+  migration or upload. See `docs/reference/EVENTNET_CALIBRATION_V1.md`.
 
 - M7.2 complete (2026-11-14): isolated 492-parameter CPU TCN experiment on
   publisher source v3, with driver 1/2/3 train/validation/locked-test splits
@@ -924,8 +936,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.2 EventNet baseline is complete as an unpromoted source-space
-experiment. Exact-source CI, clean-commit reproducibility and all local gates pass.
-Await explicit authorization for M7.3 calibration and error analysis. M6.8 physical/
-vehicle acceptance remains open/deferred; no new live Guardian operation is
-authorized by this completion.
+**Current step:** M7.3 calibration and error analysis is explicitly authorized.
+Local implementation and 53 Python tests pass; commit reviewed source, run the
+frozen audit/repeat, then finish full CI and completion persistence. Production
+severe-event acceptance remains blocked on suitable evidence. M6.8 physical/
+vehicle acceptance stays open/deferred. Stop before M7.4 pending authorization.

@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1–M7.2 complete; M7.3 pending explicit authorization
+**Current gate:** M7.1–M7.2 complete; M7.3 authorized and in progress
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -224,3 +224,51 @@ Real-device latency/battery and physical/vehicle acceptance are not validated.
 The completion commit synchronizes this plan, STATUS, NEXTSTEPS, README and
 aggregate evidence. Stop before M7.3 pending explicit maintainer authorization;
 M6.8 acceptance remains open/deferred.
+
+## M7.3 boundary — authorized 2026-11-14
+
+The maintainer explicitly continued after M7.2 and the device-requirements
+discussion. Only M7.3 is authorized; stop before M7.4. No phone/emulator,
+new dependency, dataset collection, app integration or live operation is needed.
+
+### Frozen calibration / analysis protocol
+
+Preserve M7.2 weights, data/import hashes, split, normalization, source labels
+and historical report. Add versioned, validation-only scalar temperature scaling
+(Guo et al., PMLR 2017). Fit validation NLL over positive temperature [0.1, 100]
+using 80 deterministic golden-section iterations in inverse temperature, with
+identity and endpoints included; ties prefer identity. No other calibrator,
+range, bin count or model is selected against test results.
+
+Compute before/after per-class metrics, confusion, Brier, stable-logit NLL,
+10-bin top-label/classwise reliability/ECE, and source-label error counts.
+Temperature scaling must preserve class decisions. Validation data were already
+used for checkpoint selection and the held-out driver was already reported in
+M7.2: disclose this reuse; the audit is not fresh blinded validation. Sparse
+bins, only 35 validation/39 test tasks and unresolved source semantics cap all
+interpretation. Never infer causal driving errors from model/source disagreement.
+
+False severe events/hour, severe PR-AUC and timed detection remain unavailable:
+this four-label source experiment has no normal/severe truth or production
+severe-event mapping. Report reasons, not zero rates. Engineering completion
+of this bounded calibration audit is not production safety/ML acceptance; those
+evidence requirements remain blocked and no promotion follows automatically.
+
+### M7.3 acceptance checklist
+
+- [x] Implement frozen, bounded calibration and reproducible data-only artifacts.
+- [x] Test validation-only fitting, stable numerics, argmax preservation, exact
+  reliability bins, invalid input/provenance rejection and repeatability.
+- [ ] Run the frozen audit against the preserved checkpoint; retain both gains
+  and regressions plus class-error/support limitations in aggregate evidence.
+- [ ] Run local gates/full source CI; synchronize status/README/plan, commit,
+  push and verify main alignment. Stop before M7.4 pending explicit approval.
+
+### M7.3 local gates
+
+All 53 Python tests pass (12 calibration, 16 EventNet, 22 registry, 3 inspector),
+with no failures/errors/skips and ResourceWarnings treated as errors. Frozen
+checkpoint/source hashes match before any actual audit outcome evaluation.
+No method/range/bin count was selected using this audit's test results. Raw
+weights and prior records are unchanged; final clean-source run/repeat and CI
+are still required before completion.

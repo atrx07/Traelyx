@@ -8,19 +8,20 @@ M7 is the current development milestone. The maintainer authorized M7.1, then ex
 on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
+M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
 
-## P0 — Await M7.3 authorization
+## P0 — Finish M7.3 calibration and error analysis
 
-M7.1–M7.2 are complete. M7.2's 41 Python checks, byte-identical clean-commit
-baseline/repeat, v1 compatibility and full source CI 43604983837 (`e858ebf`)
-pass. All four jobs are green, including CPU/Linux and both Android build gates.
-The source-space model stays an uncalibrated experiment: macro F1 improves over
-majority, while Brier/NLL regress versus the class-prior baseline. No promotion,
-app integration, mobile benchmark or safety claim. Version 2 stays quarantined;
-version 3 remains experiment-only with unresolved units/frame/timing/label limits.
-See `docs/reference/EVENTNET_BASELINE_V1.md` and its aggregate JSON result.
-Next planned substep: M7.3 calibration and error analysis, pending explicit
-maintainer authorization. Do not implement or substantially prepare it yet.
+The maintainer explicitly continued M7.3 on 2026-11-14. Local code and all 53
+Python tests pass. Freeze method/model/data/split before actual audit outcomes;
+fit the scalar on validation only, retain every gain/regression, and disclose
+validation selection reuse and the previously observed test driver. Severe
+false events/hour cannot be measured on these four source labels; missing
+normal/severe evidence remains a production acceptance blocker, not a zero rate.
+Finish reviewed-source commit, actual frozen audit/repeat, full CI and atomic
+completion persistence. No new dependency, phone/emulator, dataset collection,
+app integration, calibration promotion or live Guardian operation is authorized.
+Stop before M7.4; later substeps still require explicit approval.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 

@@ -111,6 +111,13 @@ TCN causality, validation-only selection, safe JSON checkpoint roundtrip and
 same-environment reproducibility. The actual locked public test is a separate
 local frozen-config experiment; CI must never tune against or download it.
 
+M7.3's generated-evidence tests additionally verify validation-only scalar
+fitting, class-decision invariance, exact reliability bin boundaries, stable
+unclipped NLL, immutable checkpoint/source provenance, audit collision rejection
+and repeatable artifacts. Actual before/after results must disclose reused
+validation and previously observed test data; absent severe/normal truth never
+becomes a measured zero false-event rate.
+
 ## 6. Randomness
 
 Tests involving commentary/random selection/model sampling must use fixed seeds or deterministic mocks.

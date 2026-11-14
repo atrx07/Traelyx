@@ -47,6 +47,14 @@ keep it experiment-only, with uncalibrated probabilities and no app integration.
 See [`EVENTNET_BASELINE_V1.md`](../reference/EVENTNET_BASELINE_V1.md) for the
 frozen feature/window/split/training contract and reproduction commands.
 
+M7.3 adds a separate retrospective scalar-temperature calibration/error audit,
+fitted only on the existing validation driver. Weights, split and normalization
+stay frozen; selection/validation reuse and previously observed test results are
+disclosed. Probability metrics and source-label disagreements remain experimental;
+missing severe/normal truth keeps severe false-event rates unavailable and blocks
+production safety acceptance. See
+[`EVENTNET_CALIBRATION_V1.md`](../reference/EVENTNET_CALIBRATION_V1.md).
+
 ### ContextNet — longer behavioral context
 
 Candidate: tiny GRU or temporal network over lower-rate event/context features for 30–120 second context.
