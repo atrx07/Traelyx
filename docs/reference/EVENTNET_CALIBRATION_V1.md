@@ -1,6 +1,50 @@
 # EventNet retrospective calibration / error audit v1 (M7.3)
 
-**Status:** Protocol frozen; implementation/tests under validation.
+**Status:** M7.3 experimental audit complete, 2026-11-14. Frozen audit/repeat,
+53 local Python checks and full [CI 43607386501](https://github.com/atrx07/Traelyx/actions/runs/43607386501)
+pass for source `5e8d2ff` (all four jobs). No production acceptance/promotion.
+
+## Recorded retrospective audit — 2026-11-14
+
+Frozen audit source `5e8d2ff19824ab1aa045186ce7f77cb4e158c97e` ran twice with
+clean provenance. Calibrator and complete audit report are byte-identical in
+the recorded CPU environment. The M7.2 model/normalization bytes remain unchanged.
+Validation-only fitting selected **T = 1.1457625347025238**, inside the frozen
+bounds; there was no boundary solution or post-test retuning. Aggregate evidence:
+[`eventnet-calibration-v1-result.json`](eventnet-calibration-v1-result.json).
+
+| Metric | Validation before → after (35 tasks) | Previously reported test before → after (39 tasks) |
+|---|---|---|
+| NLL, lower is better | 0.110679 → 0.108903 | 2.504756 → 2.216558 |
+| Multiclass Brier, lower is better | 0.070090 → 0.068655 | 0.889123 → 0.868231 |
+| Top-label ECE, lower is better | 0.044247 → 0.062759 | 0.415610 → 0.416560 |
+| Macro F1 | 0.973389 → 0.973389 | 0.537838 → 0.537838 |
+
+NLL/Brier improve, while top-label ECE regresses in both partitions. The
+test source-braking classwise ECE also worsens (0.313385 → 0.321271); the other
+three test classwise ECE values improve. All four validation classwise ECE
+values worsen. These descriptive sparse-bin results are retained, not used to
+select another scalar or method. The frozen class-prior test Brier/NLL
+(0.761402 / 1.408993) are still better than the scaled model's scores.
+No model or calibrator is promoted; production eligibility remains false.
+
+### Source-label disagreement analysis
+
+The confusion matrix is unchanged: 19 of 39 test tasks disagree with source
+labels. These are class-label disagreements, not measured severe false alerts.
+
+| Source label | Support | Disagreements | Other predicted source labels |
+|---|---:|---:|---|
+| Sudden acceleration | 8 | 3 | Braking: 3 |
+| Sudden right turn | 9 | 2 | Acceleration: 1; braking: 1 |
+| Sudden left turn | 7 | 5 | Acceleration: 4; braking: 1 |
+| Sudden braking | 15 | 9 | Acceleration: 9 |
+
+The validation/test performance gap persists. Source frame, units, annotation
+boundaries and route/device/mount diversity are unverified; this audit cannot
+identify a cause or assign driver fault. A scalar cannot repair class errors.
+False severe events/hour, severe PR-AUC and detection latency remain unavailable.
+Neither a zero rate nor production safety acceptance has been established.
 
 ## Scope and frozen protocol
 

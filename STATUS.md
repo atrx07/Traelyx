@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.1–M7.2 complete; M7.3 in progress; M6.8 acceptance remains open**
+**M7 active — M7.1–M7.3 complete; M7.4 awaits authorization; M6.8 acceptance remains open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -17,16 +17,21 @@ M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
 
 ## Working
 
-- M7.3 locally implemented (2026-11-14): frozen validation-only scalar
-  temperature audit, stable NLL, top-label/classwise reliability/ECE and
-  per-class source-label disagreement counts. Weights/split/normalization and
-  M7.2 evidence stay unchanged. All 53 Python tests pass (12 new calibration
-  tests); preserved checkpoint/source hashes verify. The protocol is frozen
-  before actual audit outcomes; clean-commit audit/repeat and full CI remain.
-  Validation/checkpoint-selection reuse and previously reported test data are
-  disclosed. Severe false events/hour remain unavailable, not zero; no severe/
-  normal truth or production mapping exists. No new dependency, device operation,
-  migration or upload. See `docs/reference/EVENTNET_CALIBRATION_V1.md`.
+- M7.3 experimental audit complete (2026-11-14): frozen validation-only T=
+  1.1457625347025238, with two clean byte-identical calibrator/report runs.
+  Model/split/normalization and decisions are unchanged. On 39 previously
+  reported test tasks, NLL 2.504756→2.216558 and Brier 0.889123→0.868231 improve;
+  top-label ECE 0.415610→0.416560 and source-braking classwise ECE worsen.
+  Macro F1 stays 0.537838; 19/39 source-label disagreements remain. Prior scores
+  are still better. Reused validation/previously observed test data are disclosed;
+  no fresh-validation, causal or safety claim and no promotion. All 53 Python
+  tests, compilation, dependency/repository checks, frozen-provenance/repeat and
+  full [CI 43607386501](https://github.com/atrx07/Traelyx/actions/runs/43607386501)
+  (`5e8d2ff`, all four jobs, including CPU/Linux, Flutter/native and both builds)
+  pass. Aggregate evidence is `docs/reference/eventnet-calibration-v1-result.json`.
+  No new dependency, app/schema change, device operation or upload. Severe
+  events/hour remain unavailable, not zero; production acceptance stays blocked
+  on normal/severe evidence. M7.4 is not authorized.
 
 - M7.2 complete (2026-11-14): isolated 492-parameter CPU TCN experiment on
   publisher source v3, with driver 1/2/3 train/validation/locked-test splits
@@ -40,7 +45,7 @@ M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
   cloud/Edge/artifact gates) pass. Optional development-only PyTorch/transitives
   are hash-pinned. No app dependency/migration, private data, device operation
   or upload. Weights/data stay ignored; aggregate evidence is in
-  `docs/reference/eventnet-baseline-v1-result.json`. M7.3 is not authorized.
+  `docs/reference/eventnet-baseline-v1-result.json`. M7.3 authorization followed separately.
 
 - M7.1 local dataset pipeline (2026-11-11): standard-library Python registry
   validation and bounded offline imports preserve source values/labels and
@@ -936,8 +941,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.3 calibration and error analysis is explicitly authorized.
-Local implementation and 53 Python tests pass; commit reviewed source, run the
-frozen audit/repeat, then finish full CI and completion persistence. Production
-severe-event acceptance remains blocked on suitable evidence. M6.8 physical/
-vehicle acceptance stays open/deferred. Stop before M7.4 pending authorization.
+**Current step:** M7.3 is complete as a bounded retrospective experimental audit;
+all local and exact-source CI gates pass. Await explicit authorization for M7.4
+mobile export/inference. Production severe-event evidence remains blocked;
+M6.8 physical/vehicle acceptance stays open/deferred. No new live operation or
+production model promotion is authorized by this completion.

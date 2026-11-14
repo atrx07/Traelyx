@@ -1,0 +1,585 @@
+{
+  "analysis_code_commit": "5e8d2ff19824ab1aa045186ce7f77cb4e158c97e",
+  "analysis_source_dirty": false,
+  "analysis_source_sha256": {
+    "docs/reference/EVENTNET_CALIBRATION_V1.md": "5947509fce6a46063857cddc6d9e3f13e9b1065ec0475e2adb0e08077bb38fbc",
+    "docs/reference/eventnet-baseline-v1-result.json": "4baf5d652b4c709ac67e48050d3c21d3c8138437161b0ea4b9f5e2719890c66d",
+    "ml/calibration.py": "26778d6899c43d81ef3a3f177f6038339ac8b5869fb656696e70b5facb441a07"
+  },
+  "audit_version": "eventnet-temperature-audit-v1",
+  "baseline_code_commit": "e858ebf22dca4e7d0dcd5f1c4129063d265ef83b",
+  "calibration": {
+    "attribution": "Yuksel, Asim Sinan; Atmaca, Serafettin (2021). Driving Behavior Dataset, version 3. Mendeley Data. DOI: 10.17632/jj3tw8kj6h.3. CC BY 4.0: https://creativecommons.org/licenses/by/4.0/. Traelyx preserves numeric text/labels, reorders columns, pseudonymizes groups and strips clock-of-day. No endorsement implied.",
+    "boundary_solution": false,
+    "calibration_version": "eventnet-temperature-audit-v1",
+    "dataset_license": "CC-BY-4.0",
+    "feature_schema": "eventnet-source-imu-v1",
+    "label_schema": "mendeley-driving-behavior-v3",
+    "production_eligible": false,
+    "protocol": {
+      "fit_partition": "validation",
+      "iterations": 80,
+      "objective": "mean_negative_log_likelihood",
+      "reliability_bins": 10,
+      "temperature_max": 100.0,
+      "temperature_min": 0.1,
+      "tie_tolerance": 1e-12
+    },
+    "source_model_sha256": "46180afd75a818aa96b663253da518b86b5e02e811ec7fc02e9b75e1e848c8cb",
+    "temperature": 1.1457625347025238,
+    "validation_examples": 35,
+    "validation_nll_after": 0.10890266981937766,
+    "validation_nll_before": 0.11067859858719149
+  },
+  "calibrator_sha256": "7e90d59bab3da97766590e5ba15982181272d6ea03252bc205229f75c1702b3f",
+  "class_names": {
+    "1": "sudden_acceleration",
+    "2": "sudden_right_turn",
+    "3": "sudden_left_turn",
+    "4": "sudden_braking"
+  },
+  "class_order": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "completed_local_date": "2026-11-14",
+  "data_reuse": {
+    "fresh_blinded_validation": false,
+    "test_driver_previously_reported_in_m7_2": true,
+    "validation_reused_after_checkpoint_selection": true
+  },
+  "evidence_schema_version": 1,
+  "frozen_class_prior_comparison": {
+    "brier_multiclass_sum": 0.7614024071166935,
+    "macro_f1": 0.0851063829787234,
+    "negative_log_likelihood": 1.4089929387811577
+  },
+  "limitations": [
+    "Experiment only: source coordinate frame and acceleration units remain unverified. Train-only standardization does not establish SI calibration or vehicle-frame compatibility.",
+    "Clock granularity is one second, with repeated timestamps and varying intervals. Seven source rows are an index-domain window, not an aligned 5-8 second feature window. Do not interpolate or claim detection latency.",
+    "Only three drivers in a small shared hardware/vehicle/route population. Held-out-driver results do not establish route, device, mount or motorcycle generalization.",
+    "Four publisher maneuver labels only, with unverified annotation boundaries; no ordinary-driving negative, road-impact, phone-movement or crash label. False severe events/hour cannot be measured.",
+    "One predeclared split: driver 1 train, driver 2 validation, driver 3 locked test. One trailing seven-row window per task, with no cross-task windows. Never train on version-2 quarantine or synthetic-only data as field evidence.",
+    "No governed Traelyx event/score mapping, calibration, severe-event claim or mobile benchmark.",
+    "Reproducibility is checked within the pinned environment; cross-platform numeric identity is not promised.",
+    "Retrospective audit: validation driver selected the original checkpoint; test driver was previously reported.",
+    "35 calibration tasks and 39 test tasks are insufficient for population or safety calibration claims.",
+    "No normal/severe truth or production event mapping: false severe events/hour remains unavailable, not zero.",
+    "Disagreements are with source labels, not confirmed real driving errors or causal explanations."
+  ],
+  "model_weights_unchanged": true,
+  "production_eligible": false,
+  "report_sha256": "96eec4361cec7e7ab5cce278a1cca364fe5952b3623143ae7f94bac53f555c09",
+  "reproducibility": {
+    "calibrator_byte_identical": true,
+    "report_byte_identical": true,
+    "scope": "Two frozen clean-source runs in the same recorded CPU environment; no refitting on test data."
+  },
+  "results": {
+    "test": {
+      "after": {
+        "brier_multiclass_sum": 0.868231162932658,
+        "classwise_ece": {
+          "1": 0.42964988808826926,
+          "2": 0.043508826521247615,
+          "3": 0.118898836543899,
+          "4": 0.3212705656548359
+        },
+        "confusion_matrix_true_rows": [
+          [
+            5,
+            0,
+            0,
+            3
+          ],
+          [
+            1,
+            7,
+            0,
+            1
+          ],
+          [
+            4,
+            0,
+            2,
+            1
+          ],
+          [
+            9,
+            0,
+            0,
+            6
+          ]
+        ],
+        "detection_latency_ms": null,
+        "examples": 39,
+        "false_severe_events_per_hour": null,
+        "macro_f1": 0.5378383190883191,
+        "negative_log_likelihood": 2.216558124675205,
+        "per_class": {
+          "1": {
+            "f1": 0.37037037037037035,
+            "precision": 0.2631578947368421,
+            "recall": 0.625,
+            "support": 8
+          },
+          "2": {
+            "f1": 0.8750000000000001,
+            "precision": 1.0,
+            "recall": 0.7777777777777778,
+            "support": 9
+          },
+          "3": {
+            "f1": 0.4444444444444445,
+            "precision": 1.0,
+            "recall": 0.2857142857142857,
+            "support": 7
+          },
+          "4": {
+            "f1": 0.4615384615384615,
+            "precision": 0.5454545454545454,
+            "recall": 0.4,
+            "support": 15
+          }
+        },
+        "probability_status": "validation_temperature_scaled_experiment",
+        "reliability_bin_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          2,
+          8,
+          25
+        ],
+        "severe_pr_auc": null,
+        "source_label_errors": {
+          "1": {
+            "disagreements": 3,
+            "predicted_as": {
+              "2": 0,
+              "3": 0,
+              "4": 3
+            },
+            "support": 8
+          },
+          "2": {
+            "disagreements": 2,
+            "predicted_as": {
+              "1": 1,
+              "3": 0,
+              "4": 1
+            },
+            "support": 9
+          },
+          "3": {
+            "disagreements": 5,
+            "predicted_as": {
+              "1": 4,
+              "2": 0,
+              "4": 1
+            },
+            "support": 7
+          },
+          "4": {
+            "disagreements": 9,
+            "predicted_as": {
+              "1": 9,
+              "2": 0,
+              "3": 0
+            },
+            "support": 15
+          }
+        },
+        "top_label_ece": 0.4165602519085599,
+        "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+      },
+      "before": {
+        "brier_multiclass_sum": 0.8891229642380449,
+        "classwise_ece": {
+          "1": 0.43572977417849,
+          "2": 0.04509788023781016,
+          "3": 0.129782501630023,
+          "4": 0.3133853739382468
+        },
+        "confusion_matrix_true_rows": [
+          [
+            5,
+            0,
+            0,
+            3
+          ],
+          [
+            1,
+            7,
+            0,
+            1
+          ],
+          [
+            4,
+            0,
+            2,
+            1
+          ],
+          [
+            9,
+            0,
+            0,
+            6
+          ]
+        ],
+        "detection_latency_ms": null,
+        "examples": 39,
+        "false_severe_events_per_hour": null,
+        "macro_f1": 0.5378383190883191,
+        "negative_log_likelihood": 2.5047563568343785,
+        "per_class": {
+          "1": {
+            "f1": 0.37037037037037035,
+            "precision": 0.2631578947368421,
+            "recall": 0.625,
+            "support": 8
+          },
+          "2": {
+            "f1": 0.8750000000000001,
+            "precision": 1.0,
+            "recall": 0.7777777777777778,
+            "support": 9
+          },
+          "3": {
+            "f1": 0.4444444444444445,
+            "precision": 1.0,
+            "recall": 0.2857142857142857,
+            "support": 7
+          },
+          "4": {
+            "f1": 0.4615384615384615,
+            "precision": 0.5454545454545454,
+            "recall": 0.4,
+            "support": 15
+          }
+        },
+        "probability_status": "raw_frozen_logits",
+        "reliability_bin_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          5,
+          28
+        ],
+        "severe_pr_auc": null,
+        "source_label_errors": {
+          "1": {
+            "disagreements": 3,
+            "predicted_as": {
+              "2": 0,
+              "3": 0,
+              "4": 3
+            },
+            "support": 8
+          },
+          "2": {
+            "disagreements": 2,
+            "predicted_as": {
+              "1": 1,
+              "3": 0,
+              "4": 1
+            },
+            "support": 9
+          },
+          "3": {
+            "disagreements": 5,
+            "predicted_as": {
+              "1": 4,
+              "2": 0,
+              "4": 1
+            },
+            "support": 7
+          },
+          "4": {
+            "disagreements": 9,
+            "predicted_as": {
+              "1": 9,
+              "2": 0,
+              "3": 0
+            },
+            "support": 15
+          }
+        },
+        "top_label_ece": 0.4156101930842746,
+        "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+      }
+    },
+    "validation": {
+      "after": {
+        "brier_multiclass_sum": 0.0686554560037862,
+        "classwise_ece": {
+          "1": 0.060773257626158324,
+          "2": 0.001315042865878359,
+          "3": 0.007293171158387207,
+          "4": 0.05633692724578907
+        },
+        "confusion_matrix_true_rows": [
+          [
+            10,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            7,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            9,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            8
+          ]
+        ],
+        "detection_latency_ms": null,
+        "examples": 35,
+        "false_severe_events_per_hour": null,
+        "macro_f1": 0.9733893557422969,
+        "negative_log_likelihood": 0.10890266981937766,
+        "per_class": {
+          "1": {
+            "f1": 0.9523809523809523,
+            "precision": 0.9090909090909091,
+            "recall": 1.0,
+            "support": 10
+          },
+          "2": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 7
+          },
+          "3": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 9
+          },
+          "4": {
+            "f1": 0.9411764705882353,
+            "precision": 1.0,
+            "recall": 0.8888888888888888,
+            "support": 9
+          }
+        },
+        "probability_status": "validation_temperature_scaled_experiment",
+        "reliability_bin_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          1,
+          32
+        ],
+        "severe_pr_auc": null,
+        "source_label_errors": {
+          "1": {
+            "disagreements": 0,
+            "predicted_as": {
+              "2": 0,
+              "3": 0,
+              "4": 0
+            },
+            "support": 10
+          },
+          "2": {
+            "disagreements": 0,
+            "predicted_as": {
+              "1": 0,
+              "3": 0,
+              "4": 0
+            },
+            "support": 7
+          },
+          "3": {
+            "disagreements": 0,
+            "predicted_as": {
+              "1": 0,
+              "2": 0,
+              "4": 0
+            },
+            "support": 9
+          },
+          "4": {
+            "disagreements": 1,
+            "predicted_as": {
+              "1": 1,
+              "2": 0,
+              "3": 0
+            },
+            "support": 9
+          }
+        },
+        "top_label_ece": 0.06275928542651082,
+        "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+      },
+      "before": {
+        "brier_multiclass_sum": 0.07008990059673456,
+        "classwise_ece": {
+          "1": 0.04814107590790022,
+          "2": 0.0006019097267554457,
+          "3": 0.004535293115478485,
+          "4": 0.05327435911875951
+        },
+        "confusion_matrix_true_rows": [
+          [
+            10,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            7,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            9,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            8
+          ]
+        ],
+        "detection_latency_ms": null,
+        "examples": 35,
+        "false_severe_events_per_hour": null,
+        "macro_f1": 0.9733893557422969,
+        "negative_log_likelihood": 0.11067859858719149,
+        "per_class": {
+          "1": {
+            "f1": 0.9523809523809523,
+            "precision": 0.9090909090909091,
+            "recall": 1.0,
+            "support": 10
+          },
+          "2": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 7
+          },
+          "3": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 9
+          },
+          "4": {
+            "f1": 0.9411764705882353,
+            "precision": 1.0,
+            "recall": 0.8888888888888888,
+            "support": 9
+          }
+        },
+        "probability_status": "raw_frozen_logits",
+        "reliability_bin_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          33
+        ],
+        "severe_pr_auc": null,
+        "source_label_errors": {
+          "1": {
+            "disagreements": 0,
+            "predicted_as": {
+              "2": 0,
+              "3": 0,
+              "4": 0
+            },
+            "support": 10
+          },
+          "2": {
+            "disagreements": 0,
+            "predicted_as": {
+              "1": 0,
+              "3": 0,
+              "4": 0
+            },
+            "support": 7
+          },
+          "3": {
+            "disagreements": 0,
+            "predicted_as": {
+              "1": 0,
+              "2": 0,
+              "4": 0
+            },
+            "support": 9
+          },
+          "4": {
+            "disagreements": 1,
+            "predicted_as": {
+              "1": 1,
+              "2": 0,
+              "3": 0
+            },
+            "support": 9
+          }
+        },
+        "top_label_ece": 0.044246879876778326,
+        "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+      }
+    }
+  },
+  "runtime": {
+    "device": "cpu",
+    "python": "3.14.6",
+    "torch": "2.15.0+cpu"
+  },
+  "source_dataset": {
+    "attribution": "Yuksel, Asim Sinan; Atmaca, Serafettin (2021). Driving Behavior Dataset, version 3. Mendeley Data. DOI: 10.17632/jj3tw8kj6h.3. CC BY 4.0: https://creativecommons.org/licenses/by/4.0/. Traelyx preserves numeric text/labels, reorders columns, pseudonymizes groups and strips clock-of-day. No endorsement implied.",
+    "dataset_id": "mendeley-driving-behavior",
+    "license": "CC-BY-4.0",
+    "source_sha256": "9b3a0667562e57eaf5cd7e0c656349518bebf7095dac4627f2353051858d1594",
+    "version": "3"
+  },
+  "source_import_manifest_sha256": "522f3496808def947389aa660f965161ad769a42cb275bfaa0c631efa3e275a5",
+  "source_model_sha256": "46180afd75a818aa96b663253da518b86b5e02e811ec7fc02e9b75e1e848c8cb",
+  "split": {
+    "source-driver-1": "train",
+    "source-driver-2": "validation",
+    "source-driver-3": "test"
+  }
+}

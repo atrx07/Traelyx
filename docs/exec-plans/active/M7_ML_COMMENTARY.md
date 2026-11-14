@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1–M7.2 complete; M7.3 authorized and in progress
+**Current gate:** M7.1–M7.3 experimental work complete; M7.4 pending authorization
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -259,9 +259,9 @@ evidence requirements remain blocked and no promotion follows automatically.
 - [x] Implement frozen, bounded calibration and reproducible data-only artifacts.
 - [x] Test validation-only fitting, stable numerics, argmax preservation, exact
   reliability bins, invalid input/provenance rejection and repeatability.
-- [ ] Run the frozen audit against the preserved checkpoint; retain both gains
+- [x] Run the frozen audit against the preserved checkpoint; retain both gains
   and regressions plus class-error/support limitations in aggregate evidence.
-- [ ] Run local gates/full source CI; synchronize status/README/plan, commit,
+- [x] Run local gates/full source CI; synchronize status/README/plan, commit,
   push and verify main alignment. Stop before M7.4 pending explicit approval.
 
 ### M7.3 local gates
@@ -272,3 +272,37 @@ checkpoint/source hashes match before any actual audit outcome evaluation.
 No method/range/bin count was selected using this audit's test results. Raw
 weights and prior records are unchanged; final clean-source run/repeat and CI
 are still required before completion.
+
+- Frozen source `5e8d2ff` produced two clean, byte-identical real audit reports
+  and calibrators. Validation-only T=1.1457625347025238 preserves original model/
+  normalization and all decisions. Test NLL 2.504756→2.216558 and Brier
+  0.889123→0.868231 improve; top-label ECE 0.415610→0.416560 worsens, as does
+  source-braking classwise ECE. Macro F1 stays 0.537838. Probability scores still
+  trail the frozen class-prior baseline. Retain these regressions and the 19/39
+  source-label disagreements; causal attribution and severe rates remain unknown.
+  Aggregate evidence is `docs/reference/eventnet-calibration-v1-result.json`.
+  Full exact-source CI 43607386501 passes all four jobs, including CPU/Linux,
+  cloud/Edge, Flutter/native tests and debug/release builds. No gate was waived.
+
+### M7.3 completion summary — 2026-11-14
+
+M7.3's explicitly bounded retrospective experimental audit is complete. Source
+`5e8d2ff19824ab1aa045186ce7f77cb4e158c97e` passes full
+[CI 43607386501](https://github.com/atrx07/Traelyx/actions/runs/43607386501),
+all four jobs. All 53 local Python tests, compilation, dependency/repository/
+whitespace checks, preserved source/model/data verification and byte-identical
+actual calibrator/report repeat pass. The original model and all historical
+M7.1–M7.2 records remain unchanged. No new dependency, app/schema migration,
+sampling/scoring/safety-state change, device operation or private-data upload.
+
+T=1.1457625347025238 improves retrospective test NLL/Brier but worsens top-label
+ECE and source-braking classwise ECE; class predictions/F1 are unchanged. Frozen
+prior scores remain better. Per-class source-label disagreements, uncertainty,
+reuse and sparse-bin limits are preserved in aggregate evidence; raw/private
+artifacts stay ignored. False severe events/hour and production safety acceptance
+remain blocked on normal/severe evidence and an appropriate event mapping. No
+unavailable metric became zero and neither model nor scalar is promoted.
+
+The completion commit synchronizes plan, STATUS, NEXTSTEPS, README and evidence.
+Stop before M7.4 pending explicit authorization. M6.8 physical/vehicle acceptance
+remains open/deferred; no real-device performance or battery claim was validated.

@@ -10,18 +10,19 @@ M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance an
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
 
-## P0 — Finish M7.3 calibration and error analysis
+## P0 — Await M7.4 authorization
 
-The maintainer explicitly continued M7.3 on 2026-11-14. Local code and all 53
-Python tests pass. Freeze method/model/data/split before actual audit outcomes;
-fit the scalar on validation only, retain every gain/regression, and disclose
-validation selection reuse and the previously observed test driver. Severe
-false events/hour cannot be measured on these four source labels; missing
-normal/severe evidence remains a production acceptance blocker, not a zero rate.
-Finish reviewed-source commit, actual frozen audit/repeat, full CI and atomic
-completion persistence. No new dependency, phone/emulator, dataset collection,
-app integration, calibration promotion or live Guardian operation is authorized.
-Stop before M7.4; later substeps still require explicit approval.
+M7.1–M7.3 are complete at the explicitly bounded experimental level. M7.3's
+53 Python tests, frozen-source audit/repeat and full source CI 43607386501
+(`5e8d2ff`, all four jobs) pass. T=1.1457625347025238 improves NLL/Brier, while
+ECE regresses; F1/decisions/weights remain unchanged and the class-prior baseline
+still has better probability scores. Keep the disclosed data reuse, tiny support,
+source-quality limits and production eligibility false. False severe events/hour
+remain unavailable and production safety acceptance remains blocked on suitable
+normal/severe truth. See `docs/reference/EVENTNET_CALIBRATION_V1.md` and its
+aggregate JSON evidence. M6.8 physical/vehicle gates are still open/deferred.
+Next planned substep: M7.4 mobile export/inference, pending explicit approval.
+Do not implement or substantially prepare M7.4 until authorized.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 
