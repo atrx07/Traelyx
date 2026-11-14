@@ -39,6 +39,14 @@ Why TCN candidate:
 
 Architecture must be benchmarked; TCN is not dogma.
 
+M7.2's current isolated implementation is a source-space CPU experiment on
+four public maneuver labels, using seven source rows per task and an explicit
+driver-held-out split. It does not implement the proposed aligned 5–8 second
+vehicle-frame feature contract above. Units/frame/timing and annotation limits
+keep it experiment-only, with uncalibrated probabilities and no app integration.
+See [`EVENTNET_BASELINE_V1.md`](../reference/EVENTNET_BASELINE_V1.md) for the
+frozen feature/window/split/training contract and reproduction commands.
+
 ### ContextNet — longer behavioral context
 
 Candidate: tiny GRU or temporal network over lower-rate event/context features for 30–120 second context.

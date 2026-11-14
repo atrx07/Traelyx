@@ -3,9 +3,9 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1 complete; M7.2 pending explicit authorization
+**Current gate:** M7.1 complete; M7.2 authorized and in progress
 **Started:** 2026-11-11
-**Last updated:** 2026-11-11
+**Last updated:** 2026-11-14
 
 ## Context budget / references
 
@@ -13,6 +13,10 @@ Read `ml/AGENTS.md`, roadmap M7.1, dataset governance, ML split/provenance
 requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
+
+Current authorized work: M7.2, explicitly continued by the maintainer on
+2026-11-11 after M7.1 completion. Deliver a reproducible CPU TCN experiment
+with driver-held-out evaluation, not app integration or production promotion.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -127,3 +131,68 @@ Public data remains training-blocked; synthetic data is plumbing evidence only.
 M6.8 physical/vehicle acceptance remains open/deferred. M7 stays active as a
 milestone plan, with M7.2 pending explicit maintainer authorization; no M7.2 work
 was started. Real-device/battery behavior is unchanged and not newly validated.
+
+## M7.2 boundary — authorized 2026-11-11
+
+The maintainer's explicit continuation authorizes only M7.2. M6.8 acceptance
+remains open under the existing sequencing exception. Stop before M7.3.
+
+### Scope and data decision
+
+Review found publisher version 3 of the existing Mendeley source has explicit
+driver/class/task fields: 1,114 rows, three drivers, 109 contiguous labeled
+tasks. Version 2 remains unchanged and training-blocked. Version 3's units,
+axis frame, exact sampling and annotation quality remain unverified. A new
+registry contract may permit **source-space experiment only**, never production
+training eligibility. Preserve numerics, strip source wall-clock columns, retain
+coarse relative time and anonymous grouping, and do not interpolate/infer times.
+
+Use one predeclared split (driver 1 train, driver 2 validation, driver 3 locked
+test), fixed seven-row trailing task windows, train-only normalization, and
+validation-only checkpoint selection. These sample-index windows are not claimed
+to be the proposed production 5–8 second aligned vehicle-frame features. Output
+classes are the publisher's four maneuver labels; no normal, impact, phone-move
+or crash evidence exists. Report unsupported metrics as unavailable.
+
+### Implementation / acceptance checklist
+
+- [x] Freeze the experimental feature/data contract and dependency evaluation.
+- [x] Add a separately versioned source-v3 registry/import without changing v1
+  registry entries, synthetic corpus or previous imports.
+- [x] Implement CPU PyTorch causal TCN, deterministic training/checkpointing,
+  manifest/model hashes, train-only normalization and sealed test evaluation.
+- [x] Report per-class precision/recall/F1, macro F1, confusion, uncalibrated
+  probability metrics and a majority baseline, with provenance/limits.
+- [ ] Validate leakage, causality, serialization, training behavior, integrity
+  and reproducibility in offline synthetic tests; run the actual public baseline.
+- [ ] Run affected local gates and full CI; persist completion atomically,
+  verify Git alignment and stop before M7.3.
+
+### Out of scope / risks
+
+No private/contributed data, unsafe collection, app/model runtime dependency,
+on-device export, calibration/promotion, scoring/Guardian change or upload.
+PyTorch is an isolated optional development dependency; core imports remain
+standard-library-only. The tiny shared-route/device population and missing
+negative/severe classes prohibit safety/generalization claims. If this source
+cannot support the declared experiment, retain M7.2 as incomplete rather than
+fabricating held-out evidence. Historical M7.1 restrictions above remain its
+completion record; this section records the new authorization.
+
+### M7.2 local evidence
+
+Forty-one Python tests pass (16 new EventNet tests plus 25 registry/inspector checks).
+The source-v3 public import verifies publisher SHA-256 and produces 109 grouped
+tasks. A provisional, explicitly dirty-source run selected epoch 60 and reports
+macro F1 0.5378 versus majority 0.0851; Brier 0.8891 versus prior 0.7614 and NLL
+2.5048 versus prior 1.4090. The probability regression prevents promotion; no
+configuration was changed after seeing held-out results. A final clean-commit
+run/repeat, compatibility checks and exact-source CI remain pending. CPU wheel
+and complete transitive requirement hashes reinstall successfully in an ignored
+local virtual environment; v1 import tooling remains standard-library-only.
+
+- 2026-11-14: resumed after the usage-limit interruption. The outstanding test
+  process completed successfully: 41 tests, no failures/errors/skips; pip check
+  passes. Remote main still equals the M7.1 closure commit. Version-2 public
+  reimport remains byte-identical to its historical samples and manifest. No
+  training configuration changed after the provisional held-out evaluation.

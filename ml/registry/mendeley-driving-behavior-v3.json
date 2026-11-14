@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "dataset_id": "mendeley-driving-behavior",
+  "version": "3",
+  "source": "https://data.mendeley.com/datasets/jj3tw8kj6h/3",
+  "source_kind": "public",
+  "source_sha256": "9b3a0667562e57eaf5cd7e0c656349518bebf7095dac4627f2353051858d1594",
+  "source_bytes": 135636,
+  "import_format": "mendeley-grouped-v3",
+  "license": "CC-BY-4.0",
+  "license_evidence": "https://data.mendeley.com/datasets/jj3tw8kj6h/3",
+  "attribution": "Yuksel, Asim Sinan; Atmaca, Serafettin (2021). Driving Behavior Dataset, version 3. Mendeley Data. DOI: 10.17632/jj3tw8kj6h.3. CC BY 4.0: https://creativecommons.org/licenses/by/4.0/. Traelyx preserves numeric text/labels, reorders columns, pseudonymizes groups and strips clock-of-day. No endorsement implied.",
+  "provenance": "Publisher version-3 sensor_raw.csv, file e1983622-19cf-404b-9252-0b1efbdf17c7; SHA-256 checked 2026-11-11. Anonymous DriverID/Class/TaskID jointly identify 109 contiguous tasks. Hour/Minute/Second removed after deriving coarse within-task elapsed time. Not user-contributed data.",
+  "vehicle_population": [
+    "Three passenger cars; no motorcycle evidence"
+  ],
+  "device_population": [
+    "MPU6050 on Raspberry Pi 3 Model B; not an Android smartphone"
+  ],
+  "channels": {
+    "ax": "m/s2",
+    "ay": "m/s2",
+    "az": "m/s2",
+    "gx": "deg/s",
+    "gy": "deg/s",
+    "gz": "deg/s"
+  },
+  "reported_rate_hz": 2,
+  "time_basis": "coarse_relative_ms",
+  "unit_status": "source_declared_unverified",
+  "label_schema": "mendeley-driving-behavior-v3",
+  "source_labels": {
+    "1": "sudden_acceleration",
+    "2": "sudden_right_turn",
+    "3": "sudden_left_turn",
+    "4": "sudden_braking"
+  },
+  "label_provenance": "publisher_annotations",
+  "label_confidence": "unverified",
+  "preprocessing_version": "preserve-source-v2-no-clock",
+  "privacy": {
+    "precise_location": false,
+    "direct_identifiers": false,
+    "wall_clock": false,
+    "upload": false,
+    "storage": "ignored_local_only"
+  },
+  "known_limitations": [
+    "Experiment only: source coordinate frame and acceleration units remain unverified. Train-only standardization does not establish SI calibration or vehicle-frame compatibility.",
+    "Clock granularity is one second, with repeated timestamps and varying intervals. Seven source rows are an index-domain window, not an aligned 5-8 second feature window. Do not interpolate or claim detection latency.",
+    "Only three drivers in a small shared hardware/vehicle/route population. Held-out-driver results do not establish route, device, mount or motorcycle generalization.",
+    "Four publisher maneuver labels only, with unverified annotation boundaries; no ordinary-driving negative, road-impact, phone-movement or crash label. False severe events/hour cannot be measured.",
+    "One predeclared split: driver 1 train, driver 2 validation, driver 3 locked test. One trailing seven-row window per task, with no cross-task windows. Never train on version-2 quarantine or synthetic-only data as field evidence."
+  ],
+  "training_use": "experiment_only",
+  "groups": {
+    "source-driver-1": "train",
+    "source-driver-2": "validation",
+    "source-driver-3": "test"
+  },
+  "feature_schema": "eventnet-source-imu-v1",
+  "window_policy": "trailing-7-source-rows-v1",
+  "split_version": "driver-holdout-v1",
+  "source_expected_rows": 1114,
+  "source_expected_tasks": 109
+}

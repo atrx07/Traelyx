@@ -18,7 +18,8 @@ class DatasetTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        self.entries = {entry["source_kind"]: entry for entry in ds.registry_entries()}
+        self.entries = {entry["source_kind"]: entry for entry in ds.registry_entries()
+                        if entry["schema_version"] == 1}
 
     def public_source(self, data=None):
         # Generated values only; never read a downloaded or private fixture in CI.
@@ -37,7 +38,9 @@ class DatasetTests(unittest.TestCase):
             list(ds.parse_rows(entry, data))
 
     def test_registry_and_generated_source_are_pinned(self):
-        self.assertEqual(len(ds.registry_entries()), 2)
+        self.assertEqual({(entry["dataset_id"], entry["version"]) for entry in ds.registry_entries()},
+                         {("traelyx-smoke", "1"), ("mendeley-driving-behavior", "2"),
+                          ("mendeley-driving-behavior", "3")})
         entry = self.entries["synthetic"]
         data = ds.source_bytes(entry, None)
         self.assertEqual(len(list(ds.parse_rows(entry, data))), 558)
@@ -236,7 +239,7 @@ class DatasetTests(unittest.TestCase):
     def test_cli_validate_runs_offline(self):
         with contextlib.redirect_stdout(io.StringIO()) as output:
             self.assertEqual(ds.main(["validate"]), 0)
-        self.assertIn("2 entries", output.getvalue())
+        self.assertIn("3 entries", output.getvalue())
 
     def test_symbolic_output_ancestor_is_rejected(self):
         destination = self.root / "actual"

@@ -4,9 +4,9 @@
 
 ## Current phase
 
-**M7 active — M7.1 complete; M6.8 acceptance remains open; M7.2 awaits authorization**
+**M7 active — M7.1 complete; M7.2 in progress; M6.8 acceptance remains open**
 
-Maintainer-authorized sequencing exception (2026-11-11): M7.1 development may
+Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
 vehicle/OEM acceptance stays open; vehicle work remains deferred. This waives
 no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
@@ -15,6 +15,18 @@ See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.2 locally implemented (2026-11-11): source-v3 schema/import preserves v1,
+  strips clock-of-day and adds anonymous driver/class/task grouping. Fixed CPU
+  TCN experiment: 492 parameters, train/validation/test on drivers 1/2/3,
+  35/35/39 task windows, seven source rows each; no aligned-time or SI claim.
+  Forty-one Python checks pass, including causality, split/integrity rejection,
+  train-only normalization, checkpoint roundtrip and repeatable fitting.
+  Provisional held-out macro F1 0.538 vs majority 0.085; Brier/log loss regress
+  versus the train-prior baseline. Uncalibrated, experiment-only; no promotion.
+  Optional CPU PyTorch and transitive wheels are hash-pinned; no app dependency,
+  migration, private data, device operation or upload. Clean-source run and
+  full CI remain pending. See `docs/reference/EVENTNET_BASELINE_V1.md`.
 
 - M7.1 local dataset pipeline (2026-11-11): standard-library Python registry
   validation and bounded offline imports preserve source values/labels and
@@ -910,8 +922,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.1 dataset registry/import is authorized under the maintainer's
-2026-11-11 sequencing exception and is complete. Local gates and full source
-CI 42970700095 (`460539f`) pass. M6.8 acceptance stays open, with vehicle work deferred; the
-latest working entries above supersede older checkpoint summaries. No new live
-Guardian operation is authorized. M7.2 remains pending explicit approval.
+**Current step:** M7.2 EventNet baseline is explicitly authorized and locally
+validated with 41 Python checks. Commit the reviewed source, run/repeat the
+frozen public experiment from that clean commit, and finish exact-source CI.
+M6.8 physical/vehicle acceptance stays open/deferred. No new live Guardian
+operation is authorized. Stop before M7.3 pending explicit maintainer approval.

@@ -4,29 +4,31 @@
 
 ## Current gate
 
-M7 is the current development milestone. The maintainer authorized only M7.1
+M7 is the current development milestone. The maintainer authorized M7.1, then explicitly continued M7.2
 on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 
-## P0 — Await M7.2 authorization
+## P0 — Finish M7.2 EventNet baseline
 
-M7.1 is complete. Twenty-five Python checks, registry/compilation, actual public
-import/reproducibility, repository validation and full source CI 42970700095
-(`460539f`) pass. No source gate failed or was waived. Public data stays blocked
-for training (missing driver/trip/time; unverified units); generated fixtures
-establish import/grouping behavior only. No private/contributed data was read.
-See `docs/exec-plans/active/M7_ML_COMMENTARY.md` and `ml/README.md`.
-Next planned substep: M7.2 EventNet baseline, pending explicit authorization.
-Meaningful held-out evaluation still requires suitable grouped/timed/unit-verified
-real data. Do not implement or substantially prepare M7.2 while awaiting approval.
+M7.1 remains complete. M7.2 is explicitly authorized and locally implemented:
+a source-space CPU TCN experiment on publisher version 3, with predeclared
+held-out driver, train-only normalization and validation-only checkpoint selection.
+Forty-one Python checks pass; full source CI and a clean-commit baseline run remain.
+Version 2 stays quarantined. Version 3 is experiment-only despite explicit
+groups: units/frame/timing/annotations remain unverified, and no ordinary/severe
+negative truth exists. Provisional macro F1 improves over majority but Brier/log
+loss regress versus the train-prior baseline. No promotion or app integration.
+See `docs/reference/EVENTNET_BASELINE_V1.md` and the active M7 plan.
+Finish exact-source CI, final reproducibility evidence and completion persistence.
+Stop before M7.3; no later substep is authorized.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 
 ## M6.8 carried-forward acceptance and prior evidence
 
 The following evidence predates M7.1 authorization unless stated otherwise;
-older prohibitions on starting M7 are superseded only for M7.1 by the current
+older prohibitions on starting M7 are superseded only for M7.1–M7.2 by the current
 sequencing exception. Existing live-operation boundaries remain in force.
 
 Desk-safe active-driver recovery review passed and is closed (2026-11-11):

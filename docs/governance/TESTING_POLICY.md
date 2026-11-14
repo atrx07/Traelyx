@@ -105,6 +105,12 @@ input. CI must not download public datasets or read private maintainer recording
 An actual public import is a separate local check with a publisher-pinned hash;
 quarantined or synthetic-only data does not establish model-performance evidence.
 
+M7.2 adds a separate hash-pinned CPU experiment job using generated source-shaped
+data only. Test driver/task isolation before windowing, train-only normalization,
+TCN causality, validation-only selection, safe JSON checkpoint roundtrip and
+same-environment reproducibility. The actual locked public test is a separate
+local frozen-config experiment; CI must never tune against or download it.
+
 ## 6. Randomness
 
 Tests involving commentary/random selection/model sampling must use fixed seeds or deterministic mocks.

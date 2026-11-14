@@ -16,7 +16,8 @@ Milestones may overlap, especially data collection/ML. Estimates are not promise
 acceptance remains incomplete. Physical active-driver/recovery/performance and
 mounted/vehicle/OEM gates carry forward; vehicle work remains deferred. M7 is
 the current development milestone, but no Guardian acceptance gate is waived.
-Only M7.1 is authorized; each later substep retains the explicit approval gate.
+The subsequent explicit continuation authorizes M7.2 after M7.1 completion;
+each later substep retains the explicit approval gate.
 See `active/M7_ML_COMMENTARY.md` and the retained M6 plan.
 
 ---

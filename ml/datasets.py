@@ -131,6 +131,16 @@ def validate_schema(value: object, schema: dict, path: str = "entry") -> None:
 
 
 def validate_entry(entry: dict) -> None:
+    if entry.get("schema_version") == 2:
+        validate_schema(entry, load_json(ROOT / "docs/reference/dataset-registry-v2.schema.json"))
+        require(entry["channels"] == {name: "m/s2" if name.startswith("a") else "deg/s"
+                                      for name in CHANNELS}, "source-v3 channel units contract")
+        require(entry["groups"] == {"source-driver-1": "train", "source-driver-2": "validation",
+                                    "source-driver-3": "test"}, "source-v3 locked split contract")
+        require(entry["source_labels"] == {"1": "sudden_acceleration", "2": "sudden_right_turn",
+                                           "3": "sudden_left_turn", "4": "sudden_braking"},
+                "source-v3 label contract")
+        return
     validate_schema(entry, load_json(SCHEMA))
     require(set(entry["channels"]) == set(CHANNELS), "six explicit IMU channels required")
     require(bool(entry["source_labels"]), "source labels required")
@@ -195,6 +205,9 @@ def source_bytes(entry: dict, source: Path | None) -> bytes:
 
 def parse_rows(entry: dict, data: bytes):
     """Preserve source numerics/labels; never infer time or driver boundaries."""
+    if entry["import_format"] == "mendeley-grouped-v3":
+        yield from _grouped_public_rows(entry, data)
+        return
     try:
         text = data.decode("utf-8")
     except UnicodeError:
@@ -252,6 +265,53 @@ def parse_rows(entry: dict, data: bytes):
         if isinstance(error, InvalidDataset):
             raise
         raise InvalidDataset("malformed CSV") from None
+
+
+def _grouped_public_rows(entry: dict, data: bytes):
+    """V3 clock-of-day never leaves this reader; coarse elapsed is not resampled."""
+    header = ["Class", "DriverID", "TaskID", "Hour", "Minute", "Second",
+              "GyroX", "GyroY", "GyroZ", "AccX", "AccY", "AccZ"]
+    try:
+        reader = csv.reader(io.StringIO(data.decode("utf-8"), newline=""), strict=True)
+        require(next(reader, None) == header, "unexpected source-v3 privacy columns")
+        seen = set()
+        last_trip = None
+        start = previous = 0
+        count = 0
+        for index, row in enumerate(reader):
+            count += 1
+            require(count <= MAX_ROWS and len(row) == len(header), "source-v3 row bounds")
+            require(all(len(value) <= 128 for value in row), "source-v3 field bounds")
+            label, raw_driver, task = row[:3]
+            require(label in entry["source_labels"], "source-v3 unknown label")
+            require(raw_driver in {"Driver-1", "Driver-2", "Driver-3"}, "source-v3 unknown driver")
+            driver = "source-driver-" + raw_driver[-1]
+            require(re.fullmatch(r"[1-9][0-9]{0,3}", task) is not None, "source-v3 invalid task")
+            trip = f"{driver}-c{label}-t{task}"
+            require(all(re.fullmatch(r"[0-9]{1,2}", value) for value in row[3:6]),
+                    "source-v3 invalid clock")
+            hour, minute, second = map(int, row[3:6])
+            require(hour < 24 and minute < 60 and second < 60, "source-v3 clock bounds")
+            clock = hour * 3600 + minute * 60 + second
+            if trip != last_trip:
+                require(trip not in seen, "source-v3 noncontiguous task")
+                seen.add(trip)
+                start = previous = clock
+            require(clock >= previous, "source-v3 time reversal; do not infer midnight")
+            previous, last_trip = clock, trip
+            values = row[9:12] + row[6:9]
+            for value in values:
+                require(re.fullmatch(r"-?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?", value) is not None,
+                        "source-v3 invalid numeric field")
+                require(math.isfinite(float(value)), "source-v3 non-finite numeric field")
+            yield [index, driver, trip, entry["groups"][driver], (clock - start) * 1000,
+                   label, entry["source_labels"][label], *values]
+        require(count == entry["source_expected_rows"] and len(seen) == entry["source_expected_tasks"],
+                "source-v3 row/task population mismatch")
+    except (UnicodeError, csv.Error, ValueError, OverflowError) as error:
+        if isinstance(error, InvalidDataset):
+            raise
+        raise InvalidDataset("malformed source-v3 CSV") from None
 
 
 def import_dataset(entry: dict, source: Path | None, output_root: Path = IMPORT_ROOT) -> dict:

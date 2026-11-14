@@ -30,6 +30,13 @@ unchanged, without conversion, calibration, resampling, windowing or relabeling.
 
 ## Registered sources and limits
 
+- **Mendeley Driving Behavior v3 (M7.2):** adds explicit driver/class/task IDs.
+  Registry schema v2 permits only a source-space experiment with fixed grouping,
+  clock stripping and coarse relative time. Version 2 remains quarantined. No
+  production data/model eligibility follows. See the
+  [EventNet contract](../docs/reference/EVENTNET_BASELINE_V1.md) for its isolated,
+  optional CPU environment and held-out-driver experiment commands.
+
 - **Mendeley Driving Behavior v2:** licensed public IMU data; rows have no
   driver/trip/time fields. Declared units require verification. Import all rows
   into `quarantine`, with empty driver/trip/time and `training_use: blocked`.
@@ -60,11 +67,13 @@ CSV parsing requires exact allowlisted columns, finite numerics, known source
 labels, bounded file/row/field sizes, contiguous synthetic trips, increasing
 elapsed time, stable trip provenance and a single partition per synthetic
 driver. No real-driver partition is claimed for ungrouped public data. The
-schema cannot authorize production model training; adding a usable real corpus
-requires a reviewed new contract/version with reliable grouping, timing, units,
-labels, consent/licensing and a locked held-out test set.
+schema cannot authorize production model training. The separate v2 registry
+contract permits only the reviewed source-v3 experiment; it does not waive
+verified grouping/timing/units/labels/consent/licensing or locked-test requirements
+for production promotion. V1 source bytes and import outputs remain reproducible.
 
 Changing a source, generator, preprocessing meaning or split assignment requires
 a new version and retained historical registry entry/output. Raw removal must
 be user-directed; retain manifest provenance so affected experiments/models can
-be identified. M7.2 training and later promotion remain separately authorized.
+be identified. M7.2 is now explicitly authorized; later substeps/promotion retain
+their own gates. Core registry/import commands remain standard-library-only.
