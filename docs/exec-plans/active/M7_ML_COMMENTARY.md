@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1–M7.3 experimental work complete; M7.4 authorized and in progress
+**Current gate:** M7.1–M7.3 complete; M7.4 evidence recorded, numerical acceptance blocked
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -357,21 +357,21 @@ read its private recordings/accounts. Device identifiers stay ignored locally.
 
 ### Benchmark / acceptance checklist
 
-- [ ] Pin/evaluate optional export/runtime dependencies and document ADR.
-- [ ] Implement deterministic bounded export, training-only quantization,
+- [x] Pin/evaluate optional export/runtime dependencies and document ADR.
+- [x] Implement deterministic bounded export, training-only quantization,
   source/data/model/runtime hashes and numerical comparisons; test failures.
-- [ ] Build/test isolated Android harness; verify package, manifest, permissions
+- [x] Build/test isolated Android harness; verify package, manifest, permissions
   and telemetry defenses, with generated inputs only.
-- [ ] Measure cold session/first inference, warm distribution, thread/process
+- [x] Measure cold session/first inference, warm distribution, thread/process
   CPU, memory and runtime/APK/model sizes on the physical phone. Record test
   conditions, charging/temperature and uncertainty. Short USB-connected tests
   do not establish battery drain/hour; keep that gate explicitly unverified.
-- [ ] Verify native outputs against host references, retain aggregate evidence,
+- [x] Verify native outputs against host references, retain aggregate evidence,
   remove the task-owned harness, preserve the core app and verify cleanup.
-- [ ] Run local/CI gates, synchronize documents, commit/push, verify Git alignment
+- [x] Run local/CI gates, synchronize documents, commit/push, verify Git alignment
   and stop before M7.5 pending explicit authorization.
 
-### Source validation in progress
+### Source validation
 
 Implementation source `3e04ebe` passes 63 local Python tests, native numeric
 helpers, compilation/dependency/repository checks, standalone APK build/lint and
@@ -386,5 +386,55 @@ ML-only fresh checkout has no Flutter-generated Gradle wrapper. Use the existing
 SDK's explicit command-line-tools path and run the same checksum-verified Gradle
 9.1 distribution directly; do not alter SDK/dependency versions or weaken hashes.
 Numerical int8 rejection remains 0.0509469 >0.05, with
-unchanged macro F1. Aggregate evidence/CI closure still pending; M7.4 acceptance
-is not complete and M7.5 is not authorized.
+unchanged macro F1. Corrected source `140e671` preserves export/harness source
+text and passes full CI 43611844686: all four jobs, Linux generated
+export/standalone APK build/lint/privacy, Flutter/native tests, debug/release,
+cloud/Edge and artifact gates. M7.4 numerical acceptance is not complete and
+M7.5 is not authorized.
+
+### M7.4 measured outcome / open acceptance
+
+Aggregate-only evidence: `docs/reference/eventnet-mobile-v1-result.json`.
+No model binaries, task windows, private telemetry or device identifiers enter
+Git. Preserved baseline/calibrator evidence and data hashes identify inputs;
+model/fixture/report hashes and source files identify outputs. Both clean runs
+are byte-identical. Executed local source bytes and CI Git-blob hashes are both
+recorded; only `requirements-mobile.txt` has CRLF versus Git's LF, with identical
+dependency text/hashes. No weights, source partitions, normalization, calibration,
+thresholds or quantization settings were altered after evaluating held-out data.
+
+- FP32 host maximum logit error 5.7220458984375e-6 passes <=1e-4.
+- Training/validation/test int8 max probability drift is respectively
+  0.00117648 / 0.02885900 / 0.05094693. Test exceeds <=0.05: rejected.
+  Test F1 stays 0.537838; Brier 0.868231→0.871556 and NLL
+  2.216558→2.219991 regress slightly. Severe/normal truth remains unavailable.
+- Graphs: float 20,013 bytes, int8 22,927 bytes. Tiny-model QDQ metadata exceeds
+  weight savings. Official AAR is 59,335,382 bytes; standalone arm64 debug APK
+  is 37,371,185 bytes, with 36,399,584 uncompressed packaged native-library bytes.
+  This substantial optional-runtime overhead is not added to the core app.
+- Three fresh processes on TECNO LH8n, API34/arm64, USB charging at battery49%,
+  35–36 C reported battery temperature. All eight generated cases/variant/run
+  pass native parity. Float max logit/probability errors are 1.91e-6/1.59e-8;
+  int8 matches its host reference exactly. Runtime init is 64.9–162.5 ms;
+  cold float/int8 sessions 16.2–19.2 / 7.9–13.4 ms, first inference
+  1.79–3.30 / 0.69–1.02 ms. Ordered within-process measurements have cache/JIT effects.
+- Warm medians float/int8 0.082–0.144 / 0.106–0.127 ms; p95
+  0.170–0.696 / 0.133–0.206 ms. Process busy-loop CPU is 116.5–126.7% /
+  98.7–101.0% of one core, including JIT/GC. Session PSS snapshots are
+  63,428–65,489 / 71,982–74,089 KiB, not peak memory. No consistent speed win,
+  no production sampling-load, sustained battery or recorder reliability claim.
+- Exact packaged manifest/assets verified before install: zero permissions,
+  zero providers, preinit telemetry disable, no app components except own
+  instrumentation. Only generated inputs reached the phone. The task-owned
+  package was removed; both core APK hashes are unchanged. Core private app
+  files/accounts/recordings/settings were neither read nor mutated. No migration,
+  new core dependency, cloud operation or upload occurred.
+
+- [ ] Quantized probability gate passes. **Failed**; keep the rejected artifact
+  and all original thresholds. M7.4 numerical acceptance remains blocked.
+- [x] Corrected full source CI and final evidence/status persistence verified.
+
+Any follow-up model/export experiment requires an explicitly scoped, versioned
+protocol and suitable unseen evaluation evidence. No alternate configurations,
+test-guided tuning or gate waiver is authorized. Stop before M7.5; deferred
+M6.8 physical/vehicle/OEM and production safety/battery gates remain open.

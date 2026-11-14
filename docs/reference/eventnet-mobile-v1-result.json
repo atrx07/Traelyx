@@ -1,0 +1,793 @@
+{
+  "ci": {
+    "coverage": [
+      "Linux generated-data export/quantization/repeat/privacy tests",
+      "standalone arm64 APK build/lint/packaged manifest and assets",
+      "Flutter formatting/analysis/tests and native suites",
+      "debug and release-validation APKs/artifact checks",
+      "cloud schema/Edge tests"
+    ],
+    "export_source_text_matches_ci_commit": true,
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "local_source_differs_only_in_line_endings": [
+      "ml/requirements-mobile.txt"
+    ],
+    "run_id": 43611844686,
+    "source_commit": "140e671b288fd6a30fc6ba00992e6d76e2b98f0e",
+    "source_git_blob_sha256": {
+      "docs/reference/EVENTNET_MOBILE_V1.md": "51f5a899784db2e9cc5fe5e6a05687593dd71c295b8836227a6c08e903ba8882",
+      "ml/android-benchmark/build.gradle": "973b2ff38b5dbe5cb8ecfdc1eea24836588ad022c05366bea07f1c23d37f9b40",
+      "ml/android-benchmark/src/main/AndroidManifest.xml": "94e33b8ff086a4cf404cc6ad801fd3a30fa865785a63c518e788af472ddb94d0",
+      "ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkInstrumentation.java": "607a7365ad06b6420c8f3a349a4c7e80c4b991cc437d59f02db3fe7f911763b1",
+      "ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkMath.java": "01220a81782bb2e8406683c5d2f53d9c483e431bda88003187afa7d8e32c4445",
+      "ml/android-benchmark/src/main/res/xml/no_backup.xml": "ff0d88626958c813576dd881606c697f34955038af74b28c76edba9625a1f40d",
+      "ml/mobile_export.py": "e85222f0e68738db02ed1c748d2076fa9071c44d4e4391fee2baad1b9af8216d",
+      "ml/requirements-mobile.txt": "538ff0feae31e99c7a8800b7a8ade58146ff3dcd15407589e807b046368ca925",
+      "ml/verify_mobile_apk.py": "13583b8824e866a30312488f4427304a8db944c3c4a367be6e77f5d8122cb2ca"
+    },
+    "source_text_normalization": "CRLF to LF only; no code or dependency version changes",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43611844686"
+  },
+  "clean_source_repeat": {
+    "byte_identical": true,
+    "files_sha256": {
+      "eventnet-fp32.onnx": "995d249a8acb0b0d9dc934f2c4a1e647b45a3d3d53e6e54a7f8f4b1de103aa40",
+      "eventnet-int8.onnx": "d93ec48b3abb45027a6b5814bb9b5979e49add400a5d789f1ab092ffa29c9b0b",
+      "export-report.json": "117cf9dde6944a48c284395a3fcdaaaf14116b4e8b005095b73d1f6d2ae9069a",
+      "fixtures.json": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256"
+    }
+  },
+  "cleanup": {
+    "benchmark_removed": true,
+    "core_apk_hashes_unchanged": true,
+    "core_app_mutation_performed": false,
+    "core_packages_checked": 2,
+    "private_app_files_read": false
+  },
+  "dataset_source_sha256": "9b3a0667562e57eaf5cd7e0c656349518bebf7095dac4627f2353051858d1594",
+  "date": "2026-11-14",
+  "evidence_version": "eventnet-mobile-evidence-v1",
+  "export": {
+    "android_runtime": {
+      "aar_sha256": "8e8dbb412ed4939675a157702f0c1e3621b436a645af7f7244536ac20bfad628",
+      "min_sdk": 24,
+      "version": "1.32.0"
+    },
+    "attribution": "Yuksel, Asim Sinan; Atmaca, Serafettin (2021). Driving Behavior Dataset, version 3. Mendeley Data. DOI: 10.17632/jj3tw8kj6h.3. CC BY 4.0: https://creativecommons.org/licenses/by/4.0/. Traelyx preserves numeric text/labels, reorders columns, pseudonymizes groups and strips clock-of-day. No endorsement implied.",
+    "calibrator_sha256": "7e90d59bab3da97766590e5ba15982181272d6ea03252bc205229f75c1702b3f",
+    "export_code_commit": "3e04ebee96317fa41043a4c8fc2f2525db689c63",
+    "export_source_dirty": false,
+    "export_source_sha256": {
+      "docs/reference/EVENTNET_MOBILE_V1.md": "51f5a899784db2e9cc5fe5e6a05687593dd71c295b8836227a6c08e903ba8882",
+      "ml/android-benchmark/build.gradle": "973b2ff38b5dbe5cb8ecfdc1eea24836588ad022c05366bea07f1c23d37f9b40",
+      "ml/android-benchmark/src/main/AndroidManifest.xml": "94e33b8ff086a4cf404cc6ad801fd3a30fa865785a63c518e788af472ddb94d0",
+      "ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkInstrumentation.java": "607a7365ad06b6420c8f3a349a4c7e80c4b991cc437d59f02db3fe7f911763b1",
+      "ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkMath.java": "01220a81782bb2e8406683c5d2f53d9c483e431bda88003187afa7d8e32c4445",
+      "ml/android-benchmark/src/main/res/xml/no_backup.xml": "ff0d88626958c813576dd881606c697f34955038af74b28c76edba9625a1f40d",
+      "ml/mobile_export.py": "e85222f0e68738db02ed1c748d2076fa9071c44d4e4391fee2baad1b9af8216d",
+      "ml/requirements-mobile.txt": "cff0e761476d2047d549a69df98cc2d257758b16e495fe7c2507d7ff3a3feee6",
+      "ml/verify_mobile_apk.py": "13583b8824e866a30312488f4427304a8db944c3c4a367be6e77f5d8122cb2ca"
+    },
+    "export_version": "eventnet-onnx-mobile-v1",
+    "feature_schema": "eventnet-source-imu-v1",
+    "fixtures_sha256": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256",
+    "fp32_numerical_gate_pass": true,
+    "gates": {
+      "android_max_logit_error": 0.001,
+      "android_max_probability_error": 0.0001,
+      "fp32_max_logit_error": 0.0001,
+      "quantized_max_probability_error": 0.05,
+      "quantized_test_macro_f1_loss": 0.02
+    },
+    "limitations": [
+      "Experiment only: source coordinate frame and acceleration units remain unverified. Train-only standardization does not establish SI calibration or vehicle-frame compatibility.",
+      "Clock granularity is one second, with repeated timestamps and varying intervals. Seven source rows are an index-domain window, not an aligned 5-8 second feature window. Do not interpolate or claim detection latency.",
+      "Only three drivers in a small shared hardware/vehicle/route population. Held-out-driver results do not establish route, device, mount or motorcycle generalization.",
+      "Four publisher maneuver labels only, with unverified annotation boundaries; no ordinary-driving negative, road-impact, phone-movement or crash label. False severe events/hour cannot be measured.",
+      "One predeclared split: driver 1 train, driver 2 validation, driver 3 locked test. One trailing seven-row window per task, with no cross-task windows. Never train on version-2 quarantine or synthetic-only data as field evidence.",
+      "No governed Traelyx event/score mapping, calibration, severe-event claim or mobile benchmark.",
+      "Reproducibility is checked within the pinned environment; cross-platform numeric identity is not promised.",
+      "Retrospective audit: validation driver selected the original checkpoint; test driver was previously reported.",
+      "35 calibration tasks and 39 test tasks are insufficient for population or safety calibration claims.",
+      "No normal/severe truth or production event mapping: false severe events/hour remains unavailable, not zero.",
+      "Disagreements are with source labels, not confirmed real driving errors or causal explanations.",
+      "One quantization configuration; numerical failure rejects integration, without test-driven retries.",
+      "Model/graph metadata overhead may exceed weight savings for this 492-parameter experiment.",
+      "Host parity and isolated generated-input phone timings are not production safety or battery validation."
+    ],
+    "model_status": "experiment",
+    "models": {
+      "fp32": {
+        "bytes": 20013,
+        "file": "eventnet-fp32.onnx",
+        "sha256": "995d249a8acb0b0d9dc934f2c4a1e647b45a3d3d53e6e54a7f8f4b1de103aa40"
+      },
+      "int8": {
+        "bytes": 22927,
+        "file": "eventnet-int8.onnx",
+        "sha256": "d93ec48b3abb45027a6b5814bb9b5979e49add400a5d789f1ab092ffa29c9b0b"
+      }
+    },
+    "partition_comparisons": {
+      "test": {
+        "fp32_max_logit_error": 2.384185791015625e-06,
+        "fp32_metrics": {
+          "brier_multiclass_sum": 0.8682311522465074,
+          "confusion_matrix_true_rows": [
+            [
+              5,
+              0,
+              0,
+              3
+            ],
+            [
+              1,
+              7,
+              0,
+              1
+            ],
+            [
+              4,
+              0,
+              2,
+              1
+            ],
+            [
+              9,
+              0,
+              0,
+              6
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 39,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 0.5378383190883191,
+          "negative_log_likelihood": 2.2165581292707515,
+          "per_class": {
+            "1": {
+              "f1": 0.37037037037037035,
+              "precision": 0.2631578947368421,
+              "recall": 0.625,
+              "support": 8
+            },
+            "2": {
+              "f1": 0.8750000000000001,
+              "precision": 1.0,
+              "recall": 0.7777777777777778,
+              "support": 9
+            },
+            "3": {
+              "f1": 0.4444444444444445,
+              "precision": 1.0,
+              "recall": 0.2857142857142857,
+              "support": 7
+            },
+            "4": {
+              "f1": 0.4615384615384615,
+              "precision": 0.5454545454545454,
+              "recall": 0.4,
+              "support": 15
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        },
+        "int8_max_logit_error": 0.7553515434265137,
+        "int8_max_probability_error": 0.05094692758102437,
+        "int8_metrics": {
+          "brier_multiclass_sum": 0.8715559784164021,
+          "confusion_matrix_true_rows": [
+            [
+              5,
+              0,
+              0,
+              3
+            ],
+            [
+              1,
+              7,
+              0,
+              1
+            ],
+            [
+              4,
+              0,
+              2,
+              1
+            ],
+            [
+              9,
+              0,
+              0,
+              6
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 39,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 0.5378383190883191,
+          "negative_log_likelihood": 2.219991389572898,
+          "per_class": {
+            "1": {
+              "f1": 0.37037037037037035,
+              "precision": 0.2631578947368421,
+              "recall": 0.625,
+              "support": 8
+            },
+            "2": {
+              "f1": 0.8750000000000001,
+              "precision": 1.0,
+              "recall": 0.7777777777777778,
+              "support": 9
+            },
+            "3": {
+              "f1": 0.4444444444444445,
+              "precision": 1.0,
+              "recall": 0.2857142857142857,
+              "support": 7
+            },
+            "4": {
+              "f1": 0.4615384615384615,
+              "precision": 0.5454545454545454,
+              "recall": 0.4,
+              "support": 15
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        }
+      },
+      "train": {
+        "fp32_max_logit_error": 2.86102294921875e-06,
+        "fp32_metrics": {
+          "brier_multiclass_sum": 1.5261154778842234e-05,
+          "confusion_matrix_true_rows": [
+            [
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              8
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 35,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 1.0,
+          "negative_log_likelihood": 0.0014874950463981108,
+          "per_class": {
+            "1": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 10
+            },
+            "2": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8
+            },
+            "3": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 9
+            },
+            "4": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        },
+        "int8_max_logit_error": 0.2899289131164551,
+        "int8_max_probability_error": 0.0011764760802520646,
+        "int8_metrics": {
+          "brier_multiclass_sum": 1.7811910907838344e-05,
+          "confusion_matrix_true_rows": [
+            [
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              8
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 35,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 1.0,
+          "negative_log_likelihood": 0.0016061208358493042,
+          "per_class": {
+            "1": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 10
+            },
+            "2": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8
+            },
+            "3": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 9
+            },
+            "4": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 8
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        }
+      },
+      "validation": {
+        "fp32_max_logit_error": 5.7220458984375e-06,
+        "fp32_metrics": {
+          "brier_multiclass_sum": 0.06865545268890061,
+          "confusion_matrix_true_rows": [
+            [
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              8
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 35,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 0.9733893557422969,
+          "negative_log_likelihood": 0.10890266386711699,
+          "per_class": {
+            "1": {
+              "f1": 0.9523809523809523,
+              "precision": 0.9090909090909091,
+              "recall": 1.0,
+              "support": 10
+            },
+            "2": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 7
+            },
+            "3": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 9
+            },
+            "4": {
+              "f1": 0.9411764705882353,
+              "precision": 1.0,
+              "recall": 0.8888888888888888,
+              "support": 9
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        },
+        "int8_max_logit_error": 1.6998977661132812,
+        "int8_max_probability_error": 0.028858998056813245,
+        "int8_metrics": {
+          "brier_multiclass_sum": 0.06813065370444915,
+          "confusion_matrix_true_rows": [
+            [
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              8
+            ]
+          ],
+          "detection_latency_ms": null,
+          "examples": 35,
+          "false_severe_events_per_hour": null,
+          "macro_f1": 0.9733893557422969,
+          "negative_log_likelihood": 0.11203826768341452,
+          "per_class": {
+            "1": {
+              "f1": 0.9523809523809523,
+              "precision": 0.9090909090909091,
+              "recall": 1.0,
+              "support": 10
+            },
+            "2": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 7
+            },
+            "3": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 9
+            },
+            "4": {
+              "f1": 0.9411764705882353,
+              "precision": 1.0,
+              "recall": 0.8888888888888888,
+              "support": 9
+            }
+          },
+          "probability_status": "retrospective_frozen_temperature_experimental",
+          "severe_pr_auc": null,
+          "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+        }
+      }
+    },
+    "production_eligible": false,
+    "quantization": {
+      "alternatives_searched": false,
+      "format": "S8S8_per_channel_QDQ_MinMax",
+      "range_fit_partition": "train",
+      "range_fit_windows": 35
+    },
+    "quantized_numerical_gate_pass": false,
+    "runtime": {
+      "execution_provider": "CPUExecutionProvider",
+      "numpy": "2.5.4",
+      "onnx": "1.23.2",
+      "onnxruntime": "1.32.0",
+      "telemetry_disabled": true,
+      "torch": "2.15.0+cpu"
+    },
+    "source_model_sha256": "46180afd75a818aa96b663253da518b86b5e02e811ec7fc02e9b75e1e848c8cb",
+    "temperature": 1.1457625347025238
+  },
+  "frozen_baseline_evidence_sha256": "4baf5d652b4c709ac67e48050d3c21d3c8138437161b0ea4b9f5e2719890c66d",
+  "frozen_calibration_evidence_sha256": "943153eefde36814e8efe59e9024824825b5b20f20442f685ea218ca634a72f2",
+  "inherited_limitations_context": "export.limitations preserves historical baseline/audit wording. The baseline had no calibration or mobile benchmark; M7.3 subsequently added retrospective temperature scaling and this record adds isolated generated-input phone timings. Neither establishes production calibration, event mapping, safety or battery acceptance.",
+  "limitations": [
+    "Quantized probability drift exceeds its predeclared gate; macro F1 is unchanged. The artifact is rejected, not eligible for hybrid integration.",
+    "No alternate quantization settings or post-test tolerance changes were attempted.",
+    "All existing source-space, label, unit/frame/timing, calibration reuse and previously observed test limitations remain.",
+    "Severe event rate/hour, severe PR-AUC and real event detection latency are unavailable, not zero.",
+    "Three fresh instrumentation processes on one USB-charging TECNO LH8n/API34 arm64 phone use generated inputs only; no representative vehicle/device generalization.",
+    "Fixed float32-then-int8 ordering, OS scheduling, JIT and garbage collection affect timing/CPU/PSS; no production recorder interference or peak-memory guarantee is established.",
+    "Busy-loop process CPU can exceed 100% of one core because Java/JIT/GC may use other threads despite single-threaded inference.",
+    "Short USB charging measurements do not estimate battery drain/hour. The recorder/background/OEM/vehicle and M6.8 gates remain open.",
+    "The benchmark package was removed; core APK hashes are unchanged. Core private storage was neither read nor mutated, so no claim of inspecting all private file contents is made.",
+    "No app dependency, schema migration, scoring/safety change, account operation or telemetry upload was introduced. Models and source windows remain ignored locally."
+  ],
+  "local_validation": {
+    "native_numeric_helper_checks": "pass",
+    "packaged_privacy_and_asset_hashes": "pass",
+    "pip_check": "pass",
+    "python_compileall": "pass",
+    "python_failures": 0,
+    "python_tests": 63,
+    "repository_contracts": "pass",
+    "standalone_build": "pass",
+    "standalone_lint": "pass"
+  },
+  "m7_4_acceptance": "blocked_quantized_probability_drift",
+  "packaged_apk_verification": {
+    "apk_bytes": 37371185,
+    "apk_sha256": "d2b9929437e6d407409615372b40e5280e1ab4c6869bb6274bfeeab1d02e9cc7",
+    "fixtures_sha256": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256",
+    "native_bytes": {
+      "lib/arm64-v8a/libonnxruntime.so": 36307776,
+      "lib/arm64-v8a/libonnxruntime4j_jni.so": 91808
+    },
+    "package": "io.github.atrx07.traelyx.mlbenchmark",
+    "permissions": [],
+    "providers": []
+  },
+  "physical_device_runs": [
+    {
+      "abi": "arm64-v8a",
+      "all_parity_gates_pass": true,
+      "api_level": 34,
+      "baseline_pss_kib": 22893,
+      "battery_after": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 350
+      },
+      "battery_before": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 350
+      },
+      "battery_drain_per_hour": null,
+      "battery_limitation": "Short USB-connected busy-loop benchmark; no production battery estimate",
+      "device_model": "TECNO LH8n",
+      "fixtures_sha256": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256",
+      "measurement_scope": "Java/JNI CPU inference including output extraction/close; no recording, I/O or sensor workload in warm loop",
+      "privacy": "zero_permissions_zero_providers_preinit_telemetry_disabled",
+      "production_eligible": false,
+      "quantized_numerical_gate_pass": false,
+      "runtime_initialization_ms": 162.489846,
+      "runtime_version": "1.32.0",
+      "variants": {
+        "fp32": {
+          "cold_session_ms": 19.179077,
+          "first_inference_ms": 2.986231,
+          "java_heap_used_bytes": 35322256,
+          "max_logit_error": 1.9073486328125e-06,
+          "max_probability_error": 1.5837453015699055e-08,
+          "model_bytes": 20013,
+          "model_sha256": "995d249a8acb0b0d9dc934f2c4a1e647b45a3d3d53e6e54a7f8f4b1de103aa40",
+          "native_heap_allocated_bytes": 15655936,
+          "session_pss_kib": 63428,
+          "warm_iterations": 10000,
+          "warm_max_ms": 65.996846,
+          "warm_median_ms": 0.143616,
+          "warm_p95_ms": 0.695692,
+          "warm_process_cpu_ms": 3698,
+          "warm_process_cpu_percent_one_core": 126.68772909658396,
+          "warm_thread_cpu_ms": 2687.051053,
+          "warm_thread_cpu_us_per_inference": 268.70510529999996,
+          "warm_wall_ms": 2918.988308,
+          "warmup_iterations": 200
+        },
+        "int8": {
+          "cold_session_ms": 13.419385,
+          "first_inference_ms": 1.015692,
+          "java_heap_used_bytes": 45048032,
+          "max_logit_error": 0,
+          "max_probability_error": 0,
+          "model_bytes": 22927,
+          "model_sha256": "d93ec48b3abb45027a6b5814bb9b5979e49add400a5d789f1ab092ffa29c9b0b",
+          "native_heap_allocated_bytes": 15872080,
+          "session_pss_kib": 71982,
+          "warm_iterations": 10000,
+          "warm_max_ms": 1.586461,
+          "warm_median_ms": 0.126769,
+          "warm_p95_ms": 0.206384,
+          "warm_process_cpu_ms": 1365,
+          "warm_process_cpu_percent_one_core": 98.68139519576546,
+          "warm_thread_cpu_ms": 1362.094245,
+          "warm_thread_cpu_us_per_inference": 136.2094245,
+          "warm_wall_ms": 1383.239462,
+          "warmup_iterations": 200
+        }
+      },
+      "version": "eventnet-onnx-mobile-v1"
+    },
+    {
+      "abi": "arm64-v8a",
+      "all_parity_gates_pass": true,
+      "api_level": 34,
+      "baseline_pss_kib": 26873,
+      "battery_after": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 360
+      },
+      "battery_before": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 360
+      },
+      "battery_drain_per_hour": null,
+      "battery_limitation": "Short USB-connected busy-loop benchmark; no production battery estimate",
+      "device_model": "TECNO LH8n",
+      "fixtures_sha256": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256",
+      "measurement_scope": "Java/JNI CPU inference including output extraction/close; no recording, I/O or sensor workload in warm loop",
+      "privacy": "zero_permissions_zero_providers_preinit_telemetry_disabled",
+      "production_eligible": false,
+      "quantized_numerical_gate_pass": false,
+      "runtime_initialization_ms": 84.855462,
+      "runtime_version": "1.32.0",
+      "variants": {
+        "fp32": {
+          "cold_session_ms": 18.888923,
+          "first_inference_ms": 3.301539,
+          "java_heap_used_bytes": 35748240,
+          "max_logit_error": 1.9073486328125e-06,
+          "max_probability_error": 1.5837453015699055e-08,
+          "model_bytes": 20013,
+          "model_sha256": "995d249a8acb0b0d9dc934f2c4a1e647b45a3d3d53e6e54a7f8f4b1de103aa40",
+          "native_heap_allocated_bytes": 15655616,
+          "session_pss_kib": 65325,
+          "warm_iterations": 10000,
+          "warm_max_ms": 1.564231,
+          "warm_median_ms": 0.083923,
+          "warm_p95_ms": 0.169539,
+          "warm_process_cpu_ms": 1111,
+          "warm_process_cpu_percent_one_core": 116.52812194930806,
+          "warm_thread_cpu_ms": 935.5847,
+          "warm_thread_cpu_us_per_inference": 93.55847,
+          "warm_wall_ms": 953.417923,
+          "warmup_iterations": 200
+        },
+        "int8": {
+          "cold_session_ms": 9.197539,
+          "first_inference_ms": 0.879307,
+          "java_heap_used_bytes": 45474016,
+          "max_logit_error": 0,
+          "max_probability_error": 0,
+          "model_bytes": 22927,
+          "model_sha256": "d93ec48b3abb45027a6b5814bb9b5979e49add400a5d789f1ab092ffa29c9b0b",
+          "native_heap_allocated_bytes": 15871968,
+          "session_pss_kib": 73929,
+          "warm_iterations": 10000,
+          "warm_max_ms": 0.379615,
+          "warm_median_ms": 0.105846,
+          "warm_p95_ms": 0.132615,
+          "warm_process_cpu_ms": 1116,
+          "warm_process_cpu_percent_one_core": 100.959687690506,
+          "warm_thread_cpu_ms": 1090.219006,
+          "warm_thread_cpu_us_per_inference": 109.02190060000001,
+          "warm_wall_ms": 1105.391692,
+          "warmup_iterations": 200
+        }
+      },
+      "version": "eventnet-onnx-mobile-v1"
+    },
+    {
+      "abi": "arm64-v8a",
+      "all_parity_gates_pass": true,
+      "api_level": 34,
+      "baseline_pss_kib": 26829,
+      "battery_after": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 350
+      },
+      "battery_before": {
+        "level": 49,
+        "plugged": 2,
+        "status": 2,
+        "temperature_tenths_c": 360
+      },
+      "battery_drain_per_hour": null,
+      "battery_limitation": "Short USB-connected busy-loop benchmark; no production battery estimate",
+      "device_model": "TECNO LH8n",
+      "fixtures_sha256": "11e227e22d1c91174046c171b9312a4a71165cb5eff1490831dd929a02d41256",
+      "measurement_scope": "Java/JNI CPU inference including output extraction/close; no recording, I/O or sensor workload in warm loop",
+      "privacy": "zero_permissions_zero_providers_preinit_telemetry_disabled",
+      "production_eligible": false,
+      "quantized_numerical_gate_pass": false,
+      "runtime_initialization_ms": 64.922539,
+      "runtime_version": "1.32.0",
+      "variants": {
+        "fp32": {
+          "cold_session_ms": 16.231,
+          "first_inference_ms": 1.791384,
+          "java_heap_used_bytes": 35879312,
+          "max_logit_error": 1.9073486328125e-06,
+          "max_probability_error": 1.5837453015699055e-08,
+          "model_bytes": 20013,
+          "model_sha256": "995d249a8acb0b0d9dc934f2c4a1e647b45a3d3d53e6e54a7f8f4b1de103aa40",
+          "native_heap_allocated_bytes": 15655872,
+          "session_pss_kib": 65489,
+          "warm_iterations": 10000,
+          "warm_max_ms": 0.396693,
+          "warm_median_ms": 0.082461,
+          "warm_p95_ms": 0.170769,
+          "warm_process_cpu_ms": 1153,
+          "warm_process_cpu_percent_one_core": 121.32512713884203,
+          "warm_thread_cpu_ms": 933.565534,
+          "warm_thread_cpu_us_per_inference": 93.3565534,
+          "warm_wall_ms": 950.339,
+          "warmup_iterations": 200
+        },
+        "int8": {
+          "cold_session_ms": 7.902154,
+          "first_inference_ms": 0.685461,
+          "java_heap_used_bytes": 45605088,
+          "max_logit_error": 0,
+          "max_probability_error": 0,
+          "model_bytes": 22927,
+          "model_sha256": "d93ec48b3abb45027a6b5814bb9b5979e49add400a5d789f1ab092ffa29c9b0b",
+          "native_heap_allocated_bytes": 15872096,
+          "session_pss_kib": 74089,
+          "warm_iterations": 10000,
+          "warm_max_ms": 0.427769,
+          "warm_median_ms": 0.108385,
+          "warm_p95_ms": 0.132616,
+          "warm_process_cpu_ms": 1111,
+          "warm_process_cpu_percent_one_core": 98.67751094201479,
+          "warm_thread_cpu_ms": 1109.118073,
+          "warm_thread_cpu_us_per_inference": 110.9118073,
+          "warm_wall_ms": 1125.889769,
+          "warmup_iterations": 200
+        }
+      },
+      "version": "eventnet-onnx-mobile-v1"
+    }
+  ],
+  "production_eligible": false,
+  "source_import_manifest_sha256": "522f3496808def947389aa660f965161ad769a42cb275bfaa0c631efa3e275a5"
+}

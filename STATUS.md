@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.1–M7.3 complete; M7.4 authorized/in progress; M6.8 acceptance remains open**
+**M7 active — M7.1–M7.3 complete; M7.4 numerical acceptance blocked; M6.8 remains open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -17,13 +17,29 @@ M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gate
 
 ## Working
 
-- M7.4 export/harness implementation in progress: optional hash-pinned ONNX/
-  CPU ORT tooling and a standalone permission-free Android benchmark preserve
-  the frozen model/calibrator. Generated export and corruption/privacy checks
-  pass locally. Provisional FP32 parity passes; the one prescribed int8 export
-  exceeds the probability drift gate (0.0509469 >0.05), with unchanged macro F1.
-  Retain this rejection without test-guided retries. Native measurements, clean
-  source repeats and CI remain pending. No app/schema change or promotion.
+- M7.4 implementation/physical evidence recorded (2026-11-14); numerical
+  acceptance remains blocked. Clean source `3e04ebe` produces two byte-identical
+  graph/fixture/report runs. Float parity max error 5.73e-6 passes. The one
+  training-only S8S8 QDQ export has test probability drift 0.0509469 >0.05;
+  macro F1 stays 0.537838, but Brier/NLL regress slightly. Retain int8 rejection,
+  with no alternatives searched or gate changes. Float/int8 graph sizes are
+  20,013/22,927 bytes; the isolated arm64 debug APK is 37,371,185 bytes.
+  Three TECNO LH8n/API34 generated-input runs pass native parity; warm median
+  float/int8 times are 0.082–0.144/0.106–0.127 ms, with variable CPU/PSS and no
+  consistent quantized speed advantage. Charging-device runs do not validate
+  battery drain/hour or recorder/vehicle/OEM reliability. All 63 Python tests,
+  native numeric helpers, dependency/compile/repository checks, standalone
+  build/lint and packaged privacy/hash checks pass locally. Full corrected
+  [CI 43611844686](https://github.com/atrx07/Traelyx/actions/runs/43611844686)
+  (`140e671`, same export/harness code; lock-file newline difference recorded)
+  passes all four jobs, including
+  Linux export/standalone APK, Flutter/native, debug/release and cloud/Edge gates.
+  Aggregate evidence:
+  `docs/reference/eventnet-mobile-v1-result.json`. Runtime is optional tooling
+  only: zero benchmark permissions/providers, telemetry disabled before init,
+  generated inputs only, task-owned package removed, both core APK identities
+  unchanged, no core private files read/mutated. No app dependency, migration,
+  upload, event/scoring change or promotion. M7.5 is not authorized.
 
 - M7.3 experimental audit complete (2026-11-14): frozen validation-only T=
   1.1457625347025238, with two clean byte-identical calibrator/report runs.
