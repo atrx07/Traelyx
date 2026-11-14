@@ -11,14 +11,18 @@ mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 and later substeps remain gated.
 
-## P0 — Finish authorized M7.5 foundation; keep model acceptance visible
+## P0 — Await authorization for next M7 work; keep acceptance visible
 
-Implement/test the provider and local audit boundary with production inference
-disabled. Preserve deterministic event/scoring behavior and historical analyses.
-Generated-only checks must cover quality, rejected manifests, malformed/mismatched
-inputs/outputs, provider failure, budgets, cancellation and privacy. Finish
-native/Flutter/build/CI checks and persist this bounded work. Stop before M7.6.
-Full M7.5 hybrid model integration stays pending acceptance below.
+The authorized M7.5 foundation is implemented and validated: provider/local audit
+boundary, production inference disabled, immutable bounded generated-only
+evidence, rejection/quality/identity/failure/budget/cancellation checks, and
+preserved deterministic rules/scores. Local persistence/legacy compatibility and
+public projection privacy pass. All 501 app-native tests plus dependency suites,
+19 targeted Flutter tests, full analysis, debug build, app lint and full source
+CI 43615278473 (`3046201`, all four jobs including release) pass. Evidence:
+`docs/reference/hybrid-event-evidence-v1-result.json`. Stop before M7.6; no next
+step implementation or preparation is authorized. Full M7.5 hybrid model
+integration stays pending acceptance below.
 
 ## Deferred acceptance — revisit before enabling any model
 

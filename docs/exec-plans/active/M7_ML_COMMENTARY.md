@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.5 foundation authorized; M7.4/model acceptance carried forward
+**Current gate:** M7.5 foundation validated; real-model integration/acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -475,10 +475,10 @@ foundation; M7.6 needs separate authorization.
   or mismatched inputs/outputs fail closed, budgets/cancellation hold and audit
   metadata cannot mutate after creation.
 - [x] Replay governed corpus: original event evidence and scoring are identical
-  across disabled, generated agreement/disagreement and provider failure paths.
+  across disabled, opposite generated predictions and provider failure paths.
 - [x] Validate additive local audit persistence/legacy compatibility and absence
   from compact public summary fields; no migration or historical rewrite.
-- [ ] Native/Flutter targeted checks, full relevant suites, analysis, repository
+- [x] Native/Flutter targeted checks, full relevant suites, analysis, repository
   validation, app builds and full CI; atomic persistence and Git alignment.
 
 ### Deferred model acceptance — must revisit before enabling ML
@@ -495,7 +495,7 @@ foundation; M7.6 needs separate authorization.
 M6.8 remains separately open/deferred. This checklist is durable repository
 memory for the maintainer's instruction to tackle model acceptance later.
 
-### Foundation validation in progress
+### Foundation validation / bounded closure
 
 All 501 app-native tests plus dependency suites pass, including nine new
 generated-boundary tests and the ten-scenario governed corpus comparison.
@@ -503,5 +503,14 @@ All 19 targeted local-analysis/ranking Flutter tests, full Flutter analysis,
 formatting, repository checks, debug APK and app lint pass. The known Windows
 local.properties escaping/stale-lint issue was handled with temporary normalized
 paths, forced app-lint analysis/report, and verified byte-for-byte restoration.
-No production device or model operation occurred. Full source CI and final
-evidence persistence remain pending; full M7.5 model integration stays gated.
+No production device or model operation occurred. Source `3046201` passes full
+CI 43615278473: all four jobs, full Flutter/native tests, generated ML/standalone
+APK checks, debug/release builds, cloud/Edge and artifact gates. Aggregate-only
+evidence is `docs/reference/hybrid-event-evidence-v1-result.json`.
+
+The authorized foundation is validated and persisted with synchronized status
+documents. This closes only that bounded work: M7.4/model acceptance and full
+M7.5 model corroboration remain open, with their checklist retained above.
+No runtime/model, dependency, migration, scoring/safety/recorder change, phone
+operation or upload was introduced. Stop before M7.6 pending explicit scope and
+authorization; do not prepare it while waiting.

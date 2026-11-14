@@ -1,0 +1,86 @@
+{
+  "ci": {
+    "coverage": [
+      "generated ML tooling/export and standalone APK privacy",
+      "full Flutter formatting/analysis/tests",
+      "native suites",
+      "debug and release-validation APKs and artifact checks",
+      "cloud schema and Guardian Edge checks"
+    ],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 43615278473,
+    "source_commit": "30462012abe5c8919dbd8c6913654bd212e4e71b",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43615278473"
+  },
+  "date": "2026-11-14",
+  "deferred_acceptance_reference": "docs/exec-plans/active/M7_ML_COMMENTARY.md#deferred-model-acceptance--must-revisit-before-enabling-ml",
+  "evidence_version": 1,
+  "foundation_validation": "passed",
+  "impact": {
+    "dependencies_added": [],
+    "device_operations_performed": false,
+    "migrations": [],
+    "model_or_gate_promoted": false,
+    "network_fields_added": [],
+    "private_recordings_read": false,
+    "recorder_sampling_or_lifecycle_changed": false
+  },
+  "limitations": [
+    "Generated-only provider validation establishes plumbing and rule preservation, not predictive quality, production inference readiness or corroboration policy.",
+    "No production feature layout/units/frame/timing, accepted model, real source-class mapping, model threshold or probability/confidence fusion is implemented.",
+    "The existing int8 artifact remains rejected; no model training, alternate quantization configuration or test-guided gate change occurred.",
+    "No phone, battery, recorder, vehicle, OEM or real-driving validation was performed for this foundation; existing acceptance gates remain open.",
+    "Generated callbacks are synchronous caller-owned fixture functions with a per-session attempt cap, not a production runtime scheduler or wall-clock timeout guarantee.",
+    "M7.5 full hybrid integration remains incomplete and M7.6 is not authorized by this bounded work.",
+    "Provider digest comparison checks declared fixture metadata; production model binary loading/verification is not implemented in this boundary."
+  ],
+  "local_validation": {
+    "app_lint": "pass",
+    "app_native_tests": 501,
+    "dart_format": "pass",
+    "debug_apk": "pass",
+    "dependency_native_suites": "pass",
+    "errors": 0,
+    "failures": 0,
+    "full_flutter_analysis": "pass",
+    "governed_fixture_scenarios": 10,
+    "local_properties_restored_byte_for_byte": true,
+    "new_native_boundary_tests": 9,
+    "repeated_rule_scores_unchanged": true,
+    "repository_contracts": "pass",
+    "rule_windows_preserved_for_generated_provider_outcomes": true,
+    "skipped": 0,
+    "targeted_flutter_tests": 19
+  },
+  "m7_4_acceptance": "open_rejected_artifact_preserved",
+  "m7_5_real_model_integration": "pending_model_and_feature_acceptance",
+  "production": {
+    "audit_field": "mlEvidence",
+    "audit_status": "disabled_model_acceptance_deferred",
+    "event_merge_version": 1,
+    "event_taxonomy_version": 1,
+    "generated_provider_connected": false,
+    "historical_results_recomputed": false,
+    "inference_enabled": false,
+    "legacy_missing_audit_accepted": true,
+    "model_input_probabilities": null,
+    "persistence": "existing_local_analysis_json",
+    "public_ranking_projection_includes_model_audit": false,
+    "runtime_or_model_bundled": false,
+    "scoring_version": 1
+  },
+  "scope": "M7.5 foundation",
+  "source_commit": "30462012abe5c8919dbd8c6913654bd212e4e71b",
+  "source_git_blob_sha256": {
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/HybridEventEvidence.kt": "d9e410bcc2b43790afeeaf1825589164bb66b22a01e16f39d625fac7ae3e40e6",
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/LocalTripAnalysis.kt": "96da2142829794e30ea45d7264263b3f9ab8209923472df5995c04949fd3a45e",
+    "docs/reference/hybrid-event-evidence-v1.yaml": "e4bbb705e295dca7a18f235e602aab4e279cf16599b948b3349caebd0e8758b9",
+    "lib/features/trip_analysis/local_trip_analysis.dart": "476c858437c116929df3183a7617e8163407869740dca31f3f67c7ef7d6e70ff"
+  }
+}

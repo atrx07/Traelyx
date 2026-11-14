@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.5 foundation authorized; M7.4/model acceptance carried forward; M6.8 open**
+**M7 active — M7.5 foundation validated; model acceptance/integration carried forward; M6.8 open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -19,7 +19,7 @@ M7.6 and later substeps need separate authorization.
 
 ## Working
 
-- M7.5 foundation in progress: versioned provider/audit boundary, generated-only
+- M7.5 foundation validated (2026-11-14): versioned provider/audit boundary, generated-only
   evaluation and explicit rules-only production audit. No model/runtime is
   enabled or bundled. Rejected/experimental manifests and limited/invalidated
   quality never initialize providers/features; bounded inputs, probabilities,
@@ -29,7 +29,10 @@ M7.6 and later substeps need separate authorization.
   semantics and historical results remain unchanged. All 501 app-native tests
   plus dependency suites, 19 local-analysis/ranking Flutter tests, full analysis,
   formatting/repository checks, debug APK and app lint pass locally. Full source
-  CI remains pending.
+  [CI 43615278473](https://github.com/atrx07/Traelyx/actions/runs/43615278473)
+  (`3046201`) passes all four jobs, including full Flutter/native tests,
+  debug/release builds, generated ML/standalone APK, cloud/Edge and artifact gates.
+  Aggregate evidence is `docs/reference/hybrid-event-evidence-v1-result.json`.
   No dependency, migration, phone, recorder, network or Guardian operation.
   M7.4 rejection and full model acceptance remain explicit follow-ups in the
   active M7 plan. M7.5 real-model integration is not complete.
