@@ -63,6 +63,9 @@ key.properties
 # Private telemetry and local ML artifacts
 ml/data/private/
 ml/checkpoints/
+/ml/android-benchmark/build/
+/ml/android-benchmark/.gradle/
+/ml/android-benchmark/local.properties
 *.tripdebug.private
 *.tripdebug
 !tests/fixtures/**/*.tripdebug

@@ -8,9 +8,9 @@ M7 is the current development milestone. The maintainer authorized M7.1, then ex
 on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
-M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
+M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gated.
 
-## P0 — Await M7.4 authorization
+## P0 — Finish authorized M7.4 evidence; preserve numerical rejection
 
 M7.1–M7.3 are complete at the explicitly bounded experimental level. M7.3's
 53 Python tests, frozen-source audit/repeat and full source CI 43607386501
@@ -21,8 +21,12 @@ source-quality limits and production eligibility false. False severe events/hour
 remain unavailable and production safety acceptance remains blocked on suitable
 normal/severe truth. See `docs/reference/EVENTNET_CALIBRATION_V1.md` and its
 aggregate JSON evidence. M6.8 physical/vehicle gates are still open/deferred.
-Next planned substep: M7.4 mobile export/inference, pending explicit approval.
-Do not implement or substantially prepare M7.4 until authorized.
+M7.4 is now authorized and in progress. Complete clean-source export repeats,
+permission-free standalone physical CPU benchmark, cleanup and CI. The prescribed
+int8 export provisionally exceeds probability drift (0.0509469 >0.05); do not tune
+against the observed test. M7.4 numerical acceptance remains open unless its
+predeclared gate passes. Do not start M7.5 or integrate the rejected artifact.
+Do not implement or substantially prepare M7.5 until authorized.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 

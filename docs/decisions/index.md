@@ -30,3 +30,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0033-guardian-versioned-sending-review.md`
 - `ADR-0034-offline-dataset-import-quarantine.md`
 - `ADR-0035-source-space-eventnet-experiment.md`
+- `ADR-0036-isolated-mobile-ml-runtime.md`

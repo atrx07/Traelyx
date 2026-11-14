@@ -1,0 +1,51 @@
+plugins { id 'com.android.application' version '9.0.1' }
+
+def repositoryRoot = rootDir.toPath().resolve('../..').normalize().toFile()
+def runtimeAar = new File(repositoryRoot, '.dart_tool/m7-runtime-review/onnxruntime-android-1.32.0.aar')
+def assetPath = providers.gradleProperty('exportDir').orElse('../checkpoints/mobile-source-v1-20261114')
+def exportAssets = file(assetPath.get())
+
+android {
+    namespace 'io.github.atrx07.traelyx.mlbenchmark'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'io.github.atrx07.traelyx.mlbenchmark'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName 'eventnet-onnx-mobile-v1'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    sourceSets.main.assets.srcDirs = [layout.buildDirectory.dir('verified-assets')]
+}
+
+dependencies { implementation files(runtimeAar) }
+
+tasks.register('verifyExperimentInputs') {
+    doLast {
+        def digest = { byte[] bytes -> java.security.MessageDigest.getInstance('SHA-256').digest(bytes).encodeHex().toString() }
+        if (!runtimeAar.isFile() || digest(runtimeAar.bytes) != '8e8dbb412ed4939675a157702f0c1e3621b436a645af7f7244536ac20bfad628') {
+            throw new GradleException('Download the pinned official runtime AAR; see EVENTNET_MOBILE_V1.md')
+        }
+        def fixtureFile = new File(exportAssets, 'fixtures.json')
+        if (!fixtureFile.isFile() || fixtureFile.length() > 100000) throw new GradleException('Bounded generated fixtures required')
+        def fixtures = new groovy.json.JsonSlurper().parse(fixtureFile)
+        if (fixtures.version != 'eventnet-onnx-mobile-v1' || fixtures.fixture_origin != 'generated_not_sensors_or_recorded_tasks') {
+            throw new GradleException('Only generated experimental inputs allowed')
+        }
+        def out = layout.buildDirectory.dir('verified-assets').get().asFile
+        delete(out)
+        out.mkdirs()
+        ['fp32', 'int8'].each { kind ->
+            def metadata = fixtures.models[kind]
+            def name = "eventnet-${kind}.onnx"
+            def model = new File(exportAssets, name)
+            if (metadata.file != name || !model.isFile() || model.length() > 1000000 ||
+                model.length() != metadata.bytes || digest(model.bytes) != metadata.sha256) throw new GradleException('Model digest mismatch')
+            new File(out, name).bytes = model.bytes
+        }
+        new File(out, 'fixtures.json').bytes = fixtureFile.bytes
+    }
+}
+tasks.named('preBuild').configure { dependsOn 'verifyExperimentInputs' }

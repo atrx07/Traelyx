@@ -1,0 +1,32 @@
+# Optional export additions; first install requirements-eventnet.txt in a separate venv.
+# Host/CI: Windows CPython 3.14 or Linux CPython 3.12. No app dependency.
+--index-url https://pypi.org/simple
+--only-binary=:all:
+--require-hashes
+flatbuffers==25.12.19 \
+    --hash=sha256:7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4
+ml_dtypes==0.6.0 \
+    --hash=sha256:3b4a480aa8fd54a1805b8ac10f3f91763926a74f73c0c364c10f9231854f4170 \
+    --hash=sha256:3be9911d953f97cddded4b9961d7b650473b7e55806d20f6176f8356dfe7b38e \
+    --hash=sha256:d574c2b28921dc72e869df248f1a278f6eee176a1f237c8642e1a71eb15f3977
+numpy==2.5.4 \
+    --hash=sha256:067374eb538c34c745436365cf7b0112595c1d326f21ce4ff340f61230239fbb \
+    --hash=sha256:2ca144f15135b6212a5c47b1e2aeca6e412f102f95a2d5d88d8aec77eb255de3 \
+    --hash=sha256:fbde6962867ee75b48b0ee29b2b9372ec5d617799dbaf38e82dc0596f2f7738a
+onnx==1.23.2 \
+    --hash=sha256:16ef247e51dbf42e32bd92f47ad772d17dda77f64c4017e0ded9725ff9ab3922 \
+    --hash=sha256:7abf381d278f31ac62487fddedc9dd42da842dce94d5d43536836ee3efdf4a2b \
+    --hash=sha256:9b382ba898a7c142a0801d03cf04ecabced96c1543c7b643a86f0928143802de
+onnx-ir==1.1.0 \
+    --hash=sha256:76cc313a788c073b75271c1b6abb172aaf90fcc6335ed40f9f3238b2064a2fa3
+onnxruntime==1.32.0 \
+    --hash=sha256:2b08ee990d00ab2ee129c5e039f7339963335a4d76f5bd22bfb4f896ae1cec0a \
+    --hash=sha256:99e1074c4b2197accd5073052a465361be17b89c093b8ffb6e6bd8f986c52df8
+onnxscript==0.7.2 \
+    --hash=sha256:d0e7121c6a1eefd608058928e111cbdb76709f70d269ff0d07aee493bd1d13c9
+packaging==26.3 \
+    --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
+protobuf==7.36.2 \
+    --hash=sha256:89f23aa53c24553a2416fd4fd1ec06f74fa42b14b546d8883128813f775bbfd2 \
+    --hash=sha256:a300819d441e078a5608c0d3c709796bb548136058fda017ae51d425b44fd353 \
+    --hash=sha256:bdb3a345d48db958e6ce1f18e508beb0cc981d64f24088427549c866cd039f1e

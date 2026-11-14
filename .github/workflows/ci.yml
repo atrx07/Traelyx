@@ -11,7 +11,9 @@ permissions:
 jobs:
   eventnet-cpu:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      ORT_DISABLE_TELEMETRY: '1'
     steps:
       - name: Check out source
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -26,6 +28,40 @@ jobs:
           python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py
           python -m pip check
           python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration
+      - name: Install isolated hash-pinned mobile export additions
+        run: |
+          python -m pip install --no-deps -r ml/requirements-mobile.txt
+          python -m pip check
+          python -W error::ResourceWarning -m unittest tests.tool.test_mobile_export tests.tool.test_mobile_apk
+          python -m ml.mobile_smoke .dart_tool/mobile-ci-assets
+      - name: Set up Java for isolated benchmark
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify native benchmark numeric helpers
+        run: |
+          mkdir -p .dart_tool/mobile-java-tests
+          javac -d .dart_tool/mobile-java-tests ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkMath.java tests/tool/MobileBenchmarkMathTest.java
+          java -cp .dart_tool/mobile-java-tests MobileBenchmarkMathTest
+      - name: Prepare verified runtime and Gradle for isolated APK
+        run: |
+          mkdir -p .dart_tool/m7-runtime-review
+          curl --fail --location --silent --show-error --retry 3 --max-time 120 https://repo.maven.apache.org/maven2/com/microsoft/onnxruntime/onnxruntime-android/1.32.0/onnxruntime-android-1.32.0.aar -o .dart_tool/m7-runtime-review/onnxruntime-android-1.32.0.aar
+          printf '%s  %s\n' 8e8dbb412ed4939675a157702f0c1e3621b436a645af7f7244536ac20bfad628 .dart_tool/m7-runtime-review/onnxruntime-android-1.32.0.aar | sha256sum --check --status
+          asset="$RUNNER_TEMP/mobile-gradle-9.1.0-all.zip"
+          curl --fail --location --silent --show-error --retry 3 --max-time 180 --header 'Accept: application/octet-stream' https://api.github.com/repos/gradle/gradle-distributions/releases/assets/294652018 --output "$asset"
+          printf '%s  %s\n' b84e04fa845fecba48551f425957641074fcc00a88a84d2aae5808743b35fc85 "$asset" | sha256sum --check --status
+          cache="${GRADLE_USER_HOME:-$HOME/.gradle}/wrapper/dists/gradle-9.1.0-all/7wzd0jkjit61aq2p43wpjgij9"
+          mkdir -p "$cache"
+          mv "$asset" "$cache/gradle-9.1.0-all.zip"
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Build lint and verify permission-free standalone benchmark
+        run: |
+          android/gradlew -p ml/android-benchmark -PexportDir="$GITHUB_WORKSPACE/.dart_tool/mobile-ci-assets" assembleDebug lintDebug --no-daemon
+          apk=ml/android-benchmark/build/outputs/apk/debug/TraelyxMlBenchmark-debug.apk
+          "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest print "$apk" > .dart_tool/mobile-manifest.xml
+          python -m ml.verify_mobile_apk "$apk" .dart_tool/mobile-manifest.xml
 
   guardian-dispatch:
     runs-on: ubuntu-latest

@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1–M7.3 experimental work complete; M7.4 pending authorization
+**Current gate:** M7.1–M7.3 experimental work complete; M7.4 authorized and in progress
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -14,9 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.2, explicitly continued by the maintainer on
-2026-11-11 after M7.1 completion. Deliver a reproducible CPU TCN experiment
-with driver-held-out evaluation, not app integration or production promotion.
+Current authorized work: M7.4, explicitly continued by the maintainer on
+2026-11-14 after M7.1–M7.3 completion. Deliver reproducible mobile export and
+isolated physical benchmark evidence; preserve any numerical rejection and
+stop before M7.5. The appended boundaries supersede earlier step-specific scope.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -306,3 +307,66 @@ unavailable metric became zero and neither model nor scalar is promoted.
 The completion commit synchronizes plan, STATUS, NEXTSTEPS, README and evidence.
 Stop before M7.4 pending explicit authorization. M6.8 physical/vehicle acceptance
 remains open/deferred; no real-device performance or battery claim was validated.
+
+## M7.4 boundary — authorized 2026-11-14
+
+The maintainer explicitly continued M7.4. Only mobile export/inference and its
+isolated benchmark are authorized; stop before M7.5. Preserve all historical
+weights/calibrator/data/split/results and keep production eligibility false.
+
+### Scope / dependency choice / privacy
+
+Evaluate ONNX/ONNX Runtime as a replaceable experimental runtime, not a new app
+dependency. The reviewed ExecuTorch 1.6 export wheel requires broader tooling
+(including pandas/torchao and platform-conditioned CoreML/sklearn); ONNX Runtime
+1.32 has verified Windows CPython 3.14 tooling and an Android AAR. Record this
+bounded choice in an ADR and dependency evaluation; no production-runtime
+selection follows. ONNX/ORT/NumPy and transitive development wheels must be pinned.
+
+The official ORT Android AAR contains default telemetry provider/network
+permissions. Before loading ORT, set `ORT_DISABLE_TELEMETRY=1` on host/device,
+remove the provider and network permissions from the benchmark manifest, and
+disable environment telemetry explicitly. Verify the merged/packaged manifest
+and permissions before any install; abort on failed privacy checks. Never load
+arbitrary downloaded models. Verify generated artifact/runtime hashes.
+
+Use a separate, permission-free `io.github.atrx07.traelyx.mlbenchmark` APK,
+with no Flutter/core-app dependency, Auth/Guardian/recorder access, sensors,
+network changes, driving or UI interaction. An authorized physical TECNO LH8n
+is available (Android API 34, arm64). Install only the verified standalone APK,
+run bounded generated-input instrumentation, save aggregate results and remove
+only that task-owned package afterward. Do not update/reinstall the core app or
+read its private recordings/accounts. Device identifiers stay ignored locally.
+
+### Frozen export / numerical gates
+
+- Export fixed batch-1 `[1,6,7]` raw-source inputs, embedding preserved train
+  normalization, with four raw logits and the separately versioned experimental
+  temperature postprocessing. No new feature/scoring/event mapping.
+- Float32 ONNX versus frozen PyTorch: max absolute logit error <=1e-4.
+- One predeclared static S8S8, per-channel QDQ export, MinMax ranges fitted only
+  from the 35 training task windows. Never use validation/test for quantization
+  ranges or tune the quantization configuration after their results.
+- Report quantized drift for every partition. Gate maximum source-class
+  probability error <=0.05 and test macro F1 loss <=0.02 against the frozen
+  float model. Retain any failure as a rejected artifact, not a passing model;
+  do not try alternatives against the test to manufacture a pass.
+- On-device parity uses generated inputs only: raw logit drift versus the
+  same host runtime/artifact <=1e-3 and probability drift <=1e-4. Quantization
+  and runtime evaluation do not authorize production model promotion.
+
+### Benchmark / acceptance checklist
+
+- [ ] Pin/evaluate optional export/runtime dependencies and document ADR.
+- [ ] Implement deterministic bounded export, training-only quantization,
+  source/data/model/runtime hashes and numerical comparisons; test failures.
+- [ ] Build/test isolated Android harness; verify package, manifest, permissions
+  and telemetry defenses, with generated inputs only.
+- [ ] Measure cold session/first inference, warm distribution, thread/process
+  CPU, memory and runtime/APK/model sizes on the physical phone. Record test
+  conditions, charging/temperature and uncertainty. Short USB-connected tests
+  do not establish battery drain/hour; keep that gate explicitly unverified.
+- [ ] Verify native outputs against host references, retain aggregate evidence,
+  remove the task-owned harness, preserve the core app and verify cleanup.
+- [ ] Run local/CI gates, synchronize documents, commit/push, verify Git alignment
+  and stop before M7.5 pending explicit authorization.

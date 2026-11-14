@@ -4,18 +4,26 @@
 
 ## Current phase
 
-**M7 active — M7.1–M7.3 complete; M7.4 awaits authorization; M6.8 acceptance remains open**
+**M7 active — M7.1–M7.3 complete; M7.4 authorized/in progress; M6.8 acceptance remains open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
 vehicle/OEM acceptance stays open; vehicle work remains deferred. This waives
 no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
-M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
+M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gated.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.4 export/harness implementation in progress: optional hash-pinned ONNX/
+  CPU ORT tooling and a standalone permission-free Android benchmark preserve
+  the frozen model/calibrator. Generated export and corruption/privacy checks
+  pass locally. Provisional FP32 parity passes; the one prescribed int8 export
+  exceeds the probability drift gate (0.0509469 >0.05), with unchanged macro F1.
+  Retain this rejection without test-guided retries. Native measurements, clean
+  source repeats and CI remain pending. No app/schema change or promotion.
 
 - M7.3 experimental audit complete (2026-11-14): frozen validation-only T=
   1.1457625347025238, with two clean byte-identical calibrator/report runs.
@@ -31,7 +39,7 @@ M7.3 was explicitly continued on 2026-11-14; later substeps remain gated.
   pass. Aggregate evidence is `docs/reference/eventnet-calibration-v1-result.json`.
   No new dependency, app/schema change, device operation or upload. Severe
   events/hour remain unavailable, not zero; production acceptance stays blocked
-  on normal/severe evidence. M7.4 is not authorized.
+  on normal/severe evidence. M7.4 authorization followed separately.
 
 - M7.2 complete (2026-11-14): isolated 492-parameter CPU TCN experiment on
   publisher source v3, with driver 1/2/3 train/validation/locked-test splits

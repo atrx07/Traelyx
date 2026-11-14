@@ -55,6 +55,11 @@ missing severe/normal truth keeps severe false-event rates unavailable and block
 production safety acceptance. See
 [`EVENTNET_CALIBRATION_V1.md`](../reference/EVENTNET_CALIBRATION_V1.md).
 
+M7.4 exports that same experiment through optional ONNX tooling and an isolated,
+permission-free Android benchmark. No runtime or model is added to the app.
+Numerical rejection is preserved without test-guided retries; see
+[`EVENTNET_MOBILE_V1.md`](../reference/EVENTNET_MOBILE_V1.md).
+
 ### ContextNet — longer behavioral context
 
 Candidate: tiny GRU or temporal network over lower-rate event/context features for 30–120 second context.

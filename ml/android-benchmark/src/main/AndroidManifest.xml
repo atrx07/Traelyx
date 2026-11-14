@@ -1,0 +1,13 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
+    <application android:allowBackup="false" android:label="Traelyx ML benchmark"
+        android:fullBackupContent="false" android:dataExtractionRules="@xml/no_backup"
+        android:usesCleartextTraffic="false" android:supportsRtl="true">
+        <provider android:name="ai.onnxruntime.TelemetryInitializer" tools:node="remove" />
+    </application>
+    <instrumentation android:name="io.github.atrx07.traelyx.mlbenchmark.BenchmarkInstrumentation"
+        android:targetPackage="io.github.atrx07.traelyx.mlbenchmark"
+        android:label="Generated-input CPU benchmark" />
+</manifest>

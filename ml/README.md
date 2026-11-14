@@ -82,3 +82,12 @@ a new version and retained historical registry entry/output. Raw removal must
 be user-directed; retain manifest provenance so affected experiments/models can
 be identified. M7.2 is now explicitly authorized; later substeps/promotion retain
 their own gates. Core registry/import commands remain standard-library-only.
+
+## Optional mobile experiment
+
+M7.4 uses a separate hash-pinned export environment and permission-free standalone
+Android benchmark; no runtime/model is added to the app. Follow
+[the frozen mobile protocol](../docs/reference/EVENTNET_MOBILE_V1.md) for numerical
+acceptance/rejection, pre-initialization telemetry defenses, generated inputs,
+physical measurement and package cleanup. Rejected quantization stays rejected;
+there is no test-guided retry or implied production promotion.
