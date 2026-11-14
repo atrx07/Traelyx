@@ -167,6 +167,32 @@ class LocalAnalysisService {
     String axis,
     List<TripChunk> chunks,
   ) {
+    // Older native v1 responses omit this additive audit. New responses must
+    // remain rules-only until a separately reviewed model contract is enabled.
+    if (a.containsKey('mlEvidence')) {
+      final ml = a['mlEvidence'];
+      const keys = {
+        'boundaryVersion',
+        'policy',
+        'status',
+        'model',
+        'input',
+        'rule',
+        'probabilities',
+      };
+      if (ml is! Map ||
+          ml.length != keys.length ||
+          !ml.keys.every(keys.contains) ||
+          ml['boundaryVersion'] != 1 ||
+          ml['policy'] != 'rules_authoritative_no_ml_effect' ||
+          ml['status'] != 'disabled_model_acceptance_deferred' ||
+          ml['model'] != null ||
+          ml['input'] != null ||
+          ml['rule'] != null ||
+          ml['probabilities'] != null) {
+        throw const FormatException('Unsupported local model evidence.');
+      }
+    }
     final score = a['score'] as Map<String, dynamic>;
     final integrity = score['integrity'] as Map<String, dynamic>;
     final dimensions = score['dimensions'] as Map<String, dynamic>;

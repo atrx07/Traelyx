@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1–M7.3 complete; M7.4 evidence recorded, numerical acceptance blocked
+**Current gate:** M7.5 foundation authorized; M7.4/model acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -14,10 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.4, explicitly continued by the maintainer on
-2026-11-14 after M7.1–M7.3 completion. Deliver reproducible mobile export and
-isolated physical benchmark evidence; preserve any numerical rejection and
-stop before M7.5. The appended boundaries supersede earlier step-specific scope.
+Current authorized work: the M7.5 foundation, explicitly continued by the
+maintainer after accepting development with model integration gated. Preserve
+M7.4 numerical rejection and model acceptance as open follow-ups. The appended
+boundaries supersede earlier step-specific scope. Stop before M7.6.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -438,3 +438,70 @@ Any follow-up model/export experiment requires an explicitly scoped, versioned
 protocol and suitable unseen evaluation evidence. No alternate configurations,
 test-guided tuning or gate waiver is authorized. Stop before M7.5; deferred
 M6.8 physical/vehicle/OEM and production safety/battery gates remain open.
+
+## M7.5 foundation boundary — authorized 2026-11-14
+
+The maintainer accepted continued M7 development while tackling model acceptance
+later. This authorizes provider boundaries, local audit provenance and explicit
+rules-only fallback, not loading/promoting the rejected model, waiving M7.4,
+or proceeding continuously through later substeps. M7.5 full hybrid model
+integration stays pending model/feature acceptance. Stop after this bounded
+foundation; M7.6 needs separate authorization.
+
+### Scope / invariants
+
+- Add a versioned pure native evidence boundary. Production has no ML-enabled
+  mode, model asset/runtime/provider, feature extraction, or per-frame overhead.
+- Add one explicit disabled/model-acceptance-deferred record to newly requested
+  local analyses. Existing audit JSON retains it; no DB migration or historical
+  recomputation. Event IDs, confidence, severity, merge/scoring versions and
+  results stay unchanged. No Guardian, recorder, acquisition or UI changes.
+- Separately exercise a generated-fixture-only provider interface with bounded
+  finite features/probabilities, immutable metadata, input digest/time/schema
+  binding, quality gates, lazy provider creation, attempt budget, sanitized
+  failures and cancellation propagation. Never map source classes to governed
+  events or use predictions to alter events/scores/confidence/safety.
+- Audit generated probabilities alongside original rule identity/evidence,
+  quality and model/calibrator hashes. No raw features/routes/exception strings
+  in audit records. Generated harness is not connected to the app's analysis.
+- No new dependency, network/data upload, provider service, phone operation,
+  battery/sampling/lifecycle change or production-performance claim.
+
+### Acceptance / validation
+
+- [x] Document contract/ADR and preserve deferred acceptance checklist below.
+- [x] Implement boundary, generated-only evaluation and production status audit.
+- [x] Verify rejection/disabled paths never construct provider/features, malformed
+  or mismatched inputs/outputs fail closed, budgets/cancellation hold and audit
+  metadata cannot mutate after creation.
+- [x] Replay governed corpus: original event evidence and scoring are identical
+  across disabled, generated agreement/disagreement and provider failure paths.
+- [x] Validate additive local audit persistence/legacy compatibility and absence
+  from compact public summary fields; no migration or historical rewrite.
+- [ ] Native/Flutter targeted checks, full relevant suites, analysis, repository
+  validation, app builds and full CI; atomic persistence and Git alignment.
+
+### Deferred model acceptance — must revisit before enabling ML
+
+- [ ] New explicitly scoped/versioned experiment with suitable unseen held-out
+  evidence; preserve rejected int8 artifact, old splits/results and thresholds.
+- [ ] Verified production feature units/frame/timing and governed label mapping.
+- [ ] Representative normal/severe truth, per-class/calibration/error evaluation
+  and false severe events/hour; unavailable metrics must never become zero.
+- [ ] Accepted numerical export, runtime/size efficiency, sustained battery/CPU,
+  physical/vehicle/device validation, explicit promotion and rollback plan.
+- [ ] Finish M7.5 real-model corroboration only after those gates pass.
+
+M6.8 remains separately open/deferred. This checklist is durable repository
+memory for the maintainer's instruction to tackle model acceptance later.
+
+### Foundation validation in progress
+
+All 501 app-native tests plus dependency suites pass, including nine new
+generated-boundary tests and the ten-scenario governed corpus comparison.
+All 19 targeted local-analysis/ranking Flutter tests, full Flutter analysis,
+formatting, repository checks, debug APK and app lint pass. The known Windows
+local.properties escaping/stale-lint issue was handled with temporary normalized
+paths, forced app-lint analysis/report, and verified byte-for-byte restoration.
+No production device or model operation occurred. Full source CI and final
+evidence persistence remain pending; full M7.5 model integration stays gated.

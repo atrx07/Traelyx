@@ -102,6 +102,25 @@ class FakeRankings implements RankingGateway {
 }
 
 void main() {
+  test('local ML boundary audit never enters compact ranking evidence', () {
+    final original = eligibleAudit();
+    final withLocalAudit = {
+      ...original,
+      'mlEvidence': {
+        'boundaryVersion': 1,
+        'status': 'disabled_model_acceptance_deferred',
+        'private_marker': 'local-only-model-audit',
+      },
+    };
+    expect(
+      RankingCandidate.fromAudit(withLocalAudit, 120000),
+      RankingCandidate.fromAudit(original, 120000),
+    );
+    expect(
+      jsonEncode(RankingCandidate.fromAudit(withLocalAudit, 120000)),
+      isNot(contains('local-only-model-audit')),
+    );
+  });
   late AppDatabase db;
   late TestAccount account;
   late FakeRankings cloud;

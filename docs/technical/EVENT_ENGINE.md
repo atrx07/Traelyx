@@ -112,6 +112,25 @@ The engine may also identify positive/neutral patterns such as long smooth strea
 
 EventNet may output per-window class probabilities. Deterministic signals corroborate/adjust eligibility. Preserve both evidence sources for audit.
 
+The M7.5 foundation deliberately keeps production analysis rules-only while
+M7.4/model acceptance is open. One additive `mlEvidence` audit records disabled
+inference on newly requested local analyses, with no model/input/probabilities.
+The existing local audit retains it without a migration or historical rewrite;
+Flutter rejects other model states or extra model fields in this production
+contract. Compact ranking publication continues to exclude it.
+
+`GeneratedEventEvidenceSession` is a separate bounded generated-fixture harness,
+not a production inference adapter. Manifest identity/calibrator references,
+feature schema/count and exact input/rule bounds must agree. Only generated
+fixture artifacts with fully supported rule evidence can invoke a lazy provider.
+Experimental/rejected artifacts, degraded/invalidated evidence, absent providers,
+budget exhaustion, malformed probabilities and failures retain original rules
+with explicit audit status. Interruptions/cancellation propagate. No source-class
+mapping, confidence fusion, event change or scoring/safety effect is implemented.
+The versioned limits and audit shape are
+[`hybrid-event-evidence-v1.yaml`](../reference/hybrid-event-evidence-v1.yaml).
+Real-model corroboration remains a separate gated completion of M7.5.
+
 ## 10. Versioning
 
 Event definitions/merging/confidence logic must be versioned. Persist version with events if historical replay/audit depends on it.

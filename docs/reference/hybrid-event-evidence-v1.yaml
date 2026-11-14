@@ -1,0 +1,31 @@
+version: 1
+policy: rules_authoritative_no_ml_effect
+scope: M7.5 foundation
+production:
+  inference_enabled: false
+  feature_extraction_enabled: false
+  model_runtime_bundled: false
+  audit_field: mlEvidence
+  audit_keys: [boundaryVersion, policy, status, model, input, rule, probabilities]
+  audit_status: disabled_model_acceptance_deferred
+  null_fields: [model, input, rule, probabilities]
+  legacy_missing_field: accepted
+  persistence: existing_local_analysis_json
+  public_projection: excluded
+generated_evaluation:
+  artifact_statuses: [GENERATED_FIXTURE, EXPERIMENT, REJECTED]
+  admitted_status: GENERATED_FIXTURE
+  feature_count: {min: 1, max: 4096}
+  feature_dtype: float32
+  feature_absolute_max: 1000000000
+  class_count: {min: 2, max: 16}
+  probability_range: [0, 1]
+  probability_sum_absolute_tolerance: 0.000001
+  attempts: {default: 32, min: 1, max: 256}
+  identity_hash: sha256
+  input_hash_encoding: generated-event-input-v1_schema_newline_int64le_bounds_int32le_count_float32le_values
+  effect_on_rule_event_score_confidence_safety: none
+acceptance:
+  m7_4_numerical_gate: open_rejected_artifact_preserved
+  m7_5_real_model_integration: pending_accepted_model_features_and_validation
+  m6_8_physical_vehicle_gates: open_deferred

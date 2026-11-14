@@ -8,9 +8,19 @@ M7 is the current development milestone. The maintainer authorized M7.1, then ex
 on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
-M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gated.
+On 2026-11-14 the maintainer authorized M7.5 foundation development while model
+acceptance stays deferred. M7.6 and later substeps remain gated.
 
-## P0 — Resolve M7.4 numerical rejection through a separately governed decision
+## P0 — Finish authorized M7.5 foundation; keep model acceptance visible
+
+Implement/test the provider and local audit boundary with production inference
+disabled. Preserve deterministic event/scoring behavior and historical analyses.
+Generated-only checks must cover quality, rejected manifests, malformed/mismatched
+inputs/outputs, provider failure, budgets, cancellation and privacy. Finish
+native/Flutter/build/CI checks and persist this bounded work. Stop before M7.6.
+Full M7.5 hybrid model integration stays pending acceptance below.
+
+## Deferred acceptance — revisit before enabling any model
 
 M7.1–M7.3 are complete at the explicitly bounded experimental level. M7.3's
 53 Python tests, frozen-source audit/repeat and full source CI 43607386501
@@ -31,8 +41,12 @@ consistent warm speed advantage. Retain the rejection and frozen protocol;
 do not tune against observed test results or relax the gate. M7.4 acceptance
 remains blocked. Any new export/model experiment needs a versioned, explicitly
 scoped protocol and suitable unseen evaluation evidence; no such work has begun.
-No production promotion, M7.5 integration or numerical waiver is authorized.
-Do not implement or substantially prepare M7.5 until authorized.
+The maintainer accepted carrying this work forward, not deleting it. The active
+M7 plan retains the unchecked acceptance list: unseen evaluation data, verified
+feature units/frame/timing and label mapping, normal/severe truth/calibration,
+accepted export, runtime/size efficiency, sustained battery/physical validation,
+explicit promotion and rollback. Production promotion, real-model integration
+and numerical waiver remain unauthorized. No follow-up experiment has begun.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 

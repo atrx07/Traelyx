@@ -120,6 +120,7 @@ class LocalTripAnalysis(private val store: TelemetryChunkStore) {
                 "distanceDecisionCounts" to gnssResult.summary.decisionCounts.mapKeys { it.key.name },
                 "score" to score.localMap(),
                 "events" to events.map { it.localMap() },
+                "mlEvidence" to HybridEventEvidenceBoundary.productionAudit().localMap(),
             )
         }
     }

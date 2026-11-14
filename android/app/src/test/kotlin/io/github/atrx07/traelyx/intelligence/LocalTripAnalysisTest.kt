@@ -76,6 +76,8 @@ class LocalTripAnalysisTest {
         assertNotEquals("full", score["state"])
         assertTrue(first.containsKey("referenceCalibration"))
         assertFalse(first.containsKey("latitude"))
+        assertEquals(HybridEventEvidenceBoundary.productionAudit().localMap(), first["mlEvidence"])
+        assertEquals(null, (first["mlEvidence"] as Map<*, *>)["probabilities"])
     }
 
     @Test

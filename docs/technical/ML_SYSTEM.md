@@ -60,6 +60,15 @@ permission-free Android benchmark. No runtime or model is added to the app.
 Numerical rejection is preserved without test-guided retries; see
 [`EVENTNET_MOBILE_V1.md`](../reference/EVENTNET_MOBILE_V1.md).
 
+The maintainer subsequently authorized the M7.5 provider/audit/fallback foundation
+while carrying model acceptance forward. Production ML stays disabled. A separate
+generated-fixture harness exercises bounded model evidence without changing
+rule events, scores, confidence or safety. Newly requested analyses retain an
+explicit disabled-model record in existing local audit JSON; legacy analyses
+remain valid. No model runtime, source-space feature adapter, production model
+selection or class mapping is introduced. See `EVENT_ENGINE.md` section 9 and
+[`ADR-0037`](../decisions/ADR-0037-gated-event-model-evidence.md) for the contract and follow-up.
+
 ### ContextNet — longer behavioral context
 
 Candidate: tiny GRU or temporal network over lower-rate event/context features for 30–120 second context.

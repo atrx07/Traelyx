@@ -27,6 +27,46 @@ void main() {
   tearDown(() => db.close());
 
   test(
+    'disabled model audit is retained locally without changing score version',
+    () async {
+      final ml = disabledModelAudit();
+      gateway.payload['mlEvidence'] = ml;
+      await service.analyze(tripId, 'top');
+      final score = await db.select(db.tripScores).getSingle();
+      expect(jsonDecode(score.auditContributionsJson)['mlEvidence'], ml);
+      expect(score.scoringVersion, '1');
+      expect(score.overallScore, isNull);
+      expect(await db.select(db.tripEvents).get(), isEmpty);
+      expect(await db.select(db.tripAccountLinks).get(), isEmpty);
+    },
+  );
+
+  test(
+    'unsupported model evidence cannot enter preserved production analysis',
+    () async {
+      for (final invalid in [
+        {...disabledModelAudit(), 'status': 'generated_evidence_only'},
+        {
+          ...disabledModelAudit(),
+          'probabilities': {'braking': 1.0},
+        },
+        {
+          ...disabledModelAudit(),
+          'features': [1, 2],
+        },
+        {...disabledModelAudit(), 'boundaryVersion': 2},
+      ]) {
+        gateway.payload['mlEvidence'] = invalid;
+        await expectLater(
+          service.analyze(tripId, 'top'),
+          throwsFormatException,
+        );
+        expect(await db.select(db.tripScores).get(), isEmpty);
+      }
+    },
+  );
+
+  test(
     'atomic local analysis preserves trip, chunks and cloud consent',
     () async {
       await service.analyze(tripId, 'top');
@@ -125,6 +165,16 @@ void main() {
     },
   );
 }
+
+Map<String, dynamic> disabledModelAudit() => {
+  'boundaryVersion': 1,
+  'policy': 'rules_authoritative_no_ml_effect',
+  'status': 'disabled_model_acceptance_deferred',
+  'model': null,
+  'input': null,
+  'rule': null,
+  'probabilities': null,
+};
 
 Map<String, dynamic> analysisFixture() => {
   'analysisVersion': 1,

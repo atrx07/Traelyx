@@ -4,18 +4,35 @@
 
 ## Current phase
 
-**M7 active — M7.1–M7.3 complete; M7.4 numerical acceptance blocked; M6.8 remains open**
+**M7 active — M7.5 foundation authorized; M7.4/model acceptance carried forward; M6.8 open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
 vehicle/OEM acceptance stays open; vehicle work remains deferred. This waives
 no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
-M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gated.
+On 2026-11-14 the maintainer authorized continued M7.5 foundation development
+with model acceptance deferred. Production model integration remains gated;
+M7.6 and later substeps need separate authorization.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.5 foundation in progress: versioned provider/audit boundary, generated-only
+  evaluation and explicit rules-only production audit. No model/runtime is
+  enabled or bundled. Rejected/experimental manifests and limited/invalidated
+  quality never initialize providers/features; bounded inputs, probabilities,
+  identity/time/schema binding, sanitized failures and cancellation are checked.
+  New native status audit persists in existing local analysis JSON; Flutter
+  accepts legacy absence and rejects non-disabled model payloads. Event/scoring
+  semantics and historical results remain unchanged. All 501 app-native tests
+  plus dependency suites, 19 local-analysis/ranking Flutter tests, full analysis,
+  formatting/repository checks, debug APK and app lint pass locally. Full source
+  CI remains pending.
+  No dependency, migration, phone, recorder, network or Guardian operation.
+  M7.4 rejection and full model acceptance remain explicit follow-ups in the
+  active M7 plan. M7.5 real-model integration is not complete.
 
 - M7.4 implementation/physical evidence recorded (2026-11-14); numerical
   acceptance remains blocked. Clean source `3e04ebe` produces two byte-identical
@@ -39,7 +56,8 @@ M7.4 was explicitly continued on 2026-11-14; M7.5 and later substeps remain gate
   only: zero benchmark permissions/providers, telemetry disabled before init,
   generated inputs only, task-owned package removed, both core APK identities
   unchanged, no core private files read/mutated. No app dependency, migration,
-  upload, event/scoring change or promotion. M7.5 is not authorized.
+  upload, event/scoring change or promotion. M7.5 foundation authorization
+  followed separately; real-model integration remains gated.
 
 - M7.3 experimental audit complete (2026-11-14): frozen validation-only T=
   1.1457625347025238, with two clean byte-identical calibrator/report runs.
