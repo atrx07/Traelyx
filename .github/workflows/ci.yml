@@ -55,7 +55,7 @@ jobs:
           cache="${GRADLE_USER_HOME:-$HOME/.gradle}/wrapper/dists/gradle-9.1.0-all/7wzd0jkjit61aq2p43wpjgij9"
           mkdir -p "$cache"
           mv "$asset" "$cache/gradle-9.1.0-all.zip"
-          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
       - name: Build lint and verify permission-free standalone benchmark
         run: |
           android/gradlew -p ml/android-benchmark -PexportDir="$GITHUB_WORKSPACE/.dart_tool/mobile-ci-assets" assembleDebug lintDebug --no-daemon

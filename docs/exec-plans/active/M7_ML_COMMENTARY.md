@@ -370,3 +370,19 @@ read its private recordings/accounts. Device identifiers stay ignored locally.
   remove the task-owned harness, preserve the core app and verify cleanup.
 - [ ] Run local/CI gates, synchronize documents, commit/push, verify Git alignment
   and stop before M7.5 pending explicit authorization.
+
+### Source validation in progress
+
+Implementation source `3e04ebe` passes 63 local Python tests, native numeric
+helpers, compilation/dependency/repository checks, standalone APK build/lint and
+packaged privacy verification. Two clean-source runs are byte-identical for both
+graphs, generated fixtures and export report. Three physical generated-input
+runs pass native parity; the task-owned package is removed and both installed
+core APK hashes are unchanged. No core private app files were read or mutated.
+
+Source CI 43611283110 passes Linux export tests/helpers but its new standalone
+Android preparation fails because `sdkmanager` is not on the runner PATH.
+Use the existing SDK's explicit command-line-tools path; do not alter SDK or
+dependency versions. Numerical int8 rejection remains 0.0509469 >0.05, with
+unchanged macro F1. Aggregate evidence/CI closure still pending; M7.4 acceptance
+is not complete and M7.5 is not authorized.
