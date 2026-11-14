@@ -380,9 +380,11 @@ graphs, generated fixtures and export report. Three physical generated-input
 runs pass native parity; the task-owned package is removed and both installed
 core APK hashes are unchanged. No core private app files were read or mutated.
 
-Source CI 43611283110 passes Linux export tests/helpers but its new standalone
-Android preparation fails because `sdkmanager` is not on the runner PATH.
-Use the existing SDK's explicit command-line-tools path; do not alter SDK or
-dependency versions. Numerical int8 rejection remains 0.0509469 >0.05, with
+Source CI 43611283110 and 43611645609 pass Linux export tests/helpers but expose
+two new-job setup assumptions: `sdkmanager` is not on the runner PATH, and an
+ML-only fresh checkout has no Flutter-generated Gradle wrapper. Use the existing
+SDK's explicit command-line-tools path and run the same checksum-verified Gradle
+9.1 distribution directly; do not alter SDK/dependency versions or weaken hashes.
+Numerical int8 rejection remains 0.0509469 >0.05, with
 unchanged macro F1. Aggregate evidence/CI closure still pending; M7.4 acceptance
 is not complete and M7.5 is not authorized.
