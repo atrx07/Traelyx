@@ -1,6 +1,33 @@
 # EventNet source-space baseline v1 (M7.2)
 
-**Status:** Implemented locally; source CI and clean-commit run pending.
+**Status:** M7.2 complete as an unpromoted experiment, 2026-11-14. All 41 Python
+checks, clean-source repeat and full [CI 43604983837](https://github.com/atrx07/Traelyx/actions/runs/43604983837)
+pass for source `e858ebf` (all four jobs, including CPU/Linux and Android builds).
+
+## Recorded baseline result — 2026-11-14
+
+Source commit `e858ebf22dca4e7d0dcd5f1c4129063d265ef83b`, Python 3.14.6,
+PyTorch 2.15.0+cpu on Windows. Both frozen runs have clean source and produce
+byte-identical checkpoints and complete reports. Configuration is unchanged
+from the provisional run; test results were not used for tuning. Selected epoch
+60, 492 parameters, 20,393-byte JSON checkpoint, SHA-256 `46180afd…848c8cb`.
+Machine-readable aggregate evidence is
+[`eventnet-baseline-v1-result.json`](eventnet-baseline-v1-result.json).
+Raw public inputs, weights and task-level prediction reports stay ignored locally.
+
+| Held-out source class | Precision | Recall | F1 | Support |
+|---|---:|---:|---:|---:|
+| Sudden acceleration | 0.263 | 0.625 | 0.370 | 8 |
+| Sudden right turn | 1.000 | 0.778 | 0.875 | 9 |
+| Sudden left turn | 1.000 | 0.286 | 0.444 | 7 |
+| Sudden braking | 0.545 | 0.400 | 0.462 | 15 |
+
+Macro F1 is **0.5378**, versus majority **0.0851** on 39 held-out-driver tasks.
+Probability quality regresses: multiclass Brier **0.8891** versus the training
+class-prior baseline **0.7614**, and negative log likelihood **2.5048** versus
+**1.4090** (lower is better for both). The model remains an **uncalibrated
+experiment**, with production eligibility false. These results do not validate
+normal/severe-event detection, road safety or on-device behavior.
 
 ## Contract / scope
 

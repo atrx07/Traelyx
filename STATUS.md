@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.1 complete; M7.2 in progress; M6.8 acceptance remains open**
+**M7 active — M7.1–M7.2 complete; M7.3 awaits authorization; M6.8 acceptance remains open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -16,17 +16,19 @@ See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 
 ## Working
 
-- M7.2 locally implemented (2026-11-11): source-v3 schema/import preserves v1,
-  strips clock-of-day and adds anonymous driver/class/task grouping. Fixed CPU
-  TCN experiment: 492 parameters, train/validation/test on drivers 1/2/3,
-  35/35/39 task windows, seven source rows each; no aligned-time or SI claim.
-  Forty-one Python checks pass, including causality, split/integrity rejection,
-  train-only normalization, checkpoint roundtrip and repeatable fitting.
-  Provisional held-out macro F1 0.538 vs majority 0.085; Brier/log loss regress
-  versus the train-prior baseline. Uncalibrated, experiment-only; no promotion.
-  Optional CPU PyTorch and transitive wheels are hash-pinned; no app dependency,
-  migration, private data, device operation or upload. Clean-source run and
-  full CI remain pending. See `docs/reference/EVENTNET_BASELINE_V1.md`.
+- M7.2 complete (2026-11-14): isolated 492-parameter CPU TCN experiment on
+  publisher source v3, with driver 1/2/3 train/validation/locked-test splits
+  (35/35/39 seven-row task windows). Two clean-source runs are byte-identical
+  for checkpoint and report. Held-out macro F1 0.5378 vs majority 0.0851;
+  Brier 0.8891 vs prior 0.7614 and NLL 2.5048 vs 1.4090 regress. Uncalibrated,
+  experiment-only, production eligibility false; no aligned-time/SI/safety claim.
+  All 41 Python checks, v1 byte-compatibility, repository checks and full source
+  [CI 43604983837](https://github.com/atrx07/Traelyx/actions/runs/43604983837)
+  (`e858ebf`, all four jobs, including CPU/Linux, Flutter/native, debug/release,
+  cloud/Edge/artifact gates) pass. Optional development-only PyTorch/transitives
+  are hash-pinned. No app dependency/migration, private data, device operation
+  or upload. Weights/data stay ignored; aggregate evidence is in
+  `docs/reference/eventnet-baseline-v1-result.json`. M7.3 is not authorized.
 
 - M7.1 local dataset pipeline (2026-11-11): standard-library Python registry
   validation and bounded offline imports preserve source values/labels and
@@ -37,7 +39,7 @@ See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
   all public rows quarantined/blocked for training. Twenty-two new dataset
   tests plus three existing inspector tests pass; downloads/imports stay ignored
   and local. No dependency, app/schema migration, private trip read or upload.
-  Source `460539f` passes full [CI 42970700095](https://github.com/atrx07/Traelyx/actions/runs/42970700095): all three jobs, Flutter/native tests, debug/release-validation builds, cloud/Edge and artifact gates. M7.1 is complete; M7.2 is not authorized.
+  Source `460539f` passes full [CI 42970700095](https://github.com/atrx07/Traelyx/actions/runs/42970700095): all three jobs, Flutter/native tests, debug/release-validation builds, cloud/Edge and artifact gates. M7.1 is complete; M7.2 authorization followed separately.
 
 - M6.8 desk-safe active-driver recovery review (2026-11-11): coverage mapped;
   three missing integration tests added for Auth loss, replacement with unsettled
@@ -922,8 +924,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.2 EventNet baseline is explicitly authorized and locally
-validated with 41 Python checks. Commit the reviewed source, run/repeat the
-frozen public experiment from that clean commit, and finish exact-source CI.
-M6.8 physical/vehicle acceptance stays open/deferred. No new live Guardian
-operation is authorized. Stop before M7.3 pending explicit maintainer approval.
+**Current step:** M7.2 EventNet baseline is complete as an unpromoted source-space
+experiment. Exact-source CI, clean-commit reproducibility and all local gates pass.
+Await explicit authorization for M7.3 calibration and error analysis. M6.8 physical/
+vehicle acceptance remains open/deferred; no new live Guardian operation is
+authorized by this completion.

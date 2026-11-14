@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.1 complete; M7.2 authorized and in progress
+**Current gate:** M7.1–M7.2 complete; M7.3 pending explicit authorization
 **Started:** 2026-11-11
 **Last updated:** 2026-11-14
 
@@ -163,9 +163,9 @@ or crash evidence exists. Report unsupported metrics as unavailable.
   manifest/model hashes, train-only normalization and sealed test evaluation.
 - [x] Report per-class precision/recall/F1, macro F1, confusion, uncalibrated
   probability metrics and a majority baseline, with provenance/limits.
-- [ ] Validate leakage, causality, serialization, training behavior, integrity
+- [x] Validate leakage, causality, serialization, training behavior, integrity
   and reproducibility in offline synthetic tests; run the actual public baseline.
-- [ ] Run affected local gates and full CI; persist completion atomically,
+- [x] Run affected local gates and full CI; persist completion atomically,
   verify Git alignment and stop before M7.3.
 
 ### Out of scope / risks
@@ -196,3 +196,31 @@ local virtual environment; v1 import tooling remains standard-library-only.
   passes. Remote main still equals the M7.1 closure commit. Version-2 public
   reimport remains byte-identical to its historical samples and manifest. No
   training configuration changed after the provisional held-out evaluation.
+- Clean-source commit `e858ebf` now has two byte-identical actual baseline
+  checkpoints/reports, with dirty-source false. Macro F1/Brier/NLL match the
+  provisional result exactly. Aggregate evidence is retained in
+  `docs/reference/eventnet-baseline-v1-result.json`; raw data, weights and
+  task predictions stay ignored. Full source CI 43604983837 passes all four
+  jobs, including Linux CPU, cloud/Edge, Flutter/native tests, debug/release
+  builds and artifact gates. No acceptance gate was waived.
+
+### M7.2 completion summary — 2026-11-14
+
+M7.2 is complete as the explicitly bounded source-space experiment. Source
+`e858ebf22dca4e7d0dcd5f1c4129063d265ef83b` passes full
+[CI 43604983837](https://github.com/atrx07/Traelyx/actions/runs/43604983837),
+all four jobs. All 41 local Python tests, compilation, pip consistency,
+repository/whitespace gates, source-v2 byte compatibility and actual frozen
+clean-source experiment/repeat pass. Model and report bytes match exactly.
+
+Held-out macro F1 improves over majority, but Brier/NLL regress versus prior;
+probabilities remain uncalibrated and production eligibility false. The aggregate
+result preserves hashes, metrics, supports, split, runtime/config and limits;
+raw data/weights/task predictions stay ignored. PyTorch/transitive dependencies
+are optional development-only and hash-pinned; the app gains no dependency,
+migration, sensor/scoring/Guardian behavior, upload or on-device model. Registry
+v2 is additive; historical v1 entries/results and M3 fixtures remain unchanged.
+Real-device latency/battery and physical/vehicle acceptance are not validated.
+The completion commit synchronizes this plan, STATUS, NEXTSTEPS, README and
+aggregate evidence. Stop before M7.3 pending explicit maintainer authorization;
+M6.8 acceptance remains open/deferred.

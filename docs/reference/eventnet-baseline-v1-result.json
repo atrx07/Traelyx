@@ -1,0 +1,218 @@
+{
+  "attribution": "Yuksel, Asim Sinan; Atmaca, Serafettin (2021). Driving Behavior Dataset, version 3. Mendeley Data. DOI: 10.17632/jj3tw8kj6h.3. CC BY 4.0: https://creativecommons.org/licenses/by/4.0/. Traelyx preserves numeric text/labels, reorders columns, pseudonymizes groups and strips clock-of-day. No endorsement implied.",
+  "class_names": {
+    "1": "sudden_acceleration",
+    "2": "sudden_right_turn",
+    "3": "sudden_left_turn",
+    "4": "sudden_braking"
+  },
+  "class_order": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "completed_local_date": "2026-11-14",
+  "config": {
+    "dilations": [
+      1,
+      2
+    ],
+    "epochs": 60,
+    "kernel_size": 3,
+    "learning_rate": 0.01,
+    "seed": 7462,
+    "threads": 1,
+    "width": 8
+  },
+  "dataset_id": "mendeley-driving-behavior",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_registry": "ml/registry/mendeley-driving-behavior-v3.json",
+  "dataset_source_sha256": "9b3a0667562e57eaf5cd7e0c656349518bebf7095dac4627f2353051858d1594",
+  "dataset_version": "3",
+  "evidence_schema_version": 1,
+  "feature_schema": "eventnet-source-imu-v1",
+  "import_manifest_sha256": "522f3496808def947389aa660f965161ad769a42cb275bfaa0c631efa3e275a5",
+  "limitations": [
+    "Experiment only: source coordinate frame and acceleration units remain unverified. Train-only standardization does not establish SI calibration or vehicle-frame compatibility.",
+    "Clock granularity is one second, with repeated timestamps and varying intervals. Seven source rows are an index-domain window, not an aligned 5-8 second feature window. Do not interpolate or claim detection latency.",
+    "Only three drivers in a small shared hardware/vehicle/route population. Held-out-driver results do not establish route, device, mount or motorcycle generalization.",
+    "Four publisher maneuver labels only, with unverified annotation boundaries; no ordinary-driving negative, road-impact, phone-movement or crash label. False severe events/hour cannot be measured.",
+    "One predeclared split: driver 1 train, driver 2 validation, driver 3 locked test. One trailing seven-row window per task, with no cross-task windows. Never train on version-2 quarantine or synthetic-only data as field evidence.",
+    "No governed Traelyx event/score mapping, calibration, severe-event claim or mobile benchmark.",
+    "Reproducibility is checked within the pinned environment; cross-platform numeric identity is not promised."
+  ],
+  "majority_baseline": {
+    "class": "1",
+    "metrics": {
+      "brier_multiclass_sum": 0.7614024071166935,
+      "confusion_matrix_true_rows": [
+        [
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          9,
+          0,
+          0,
+          0
+        ],
+        [
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          15,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detection_latency_ms": null,
+      "examples": 39,
+      "false_severe_events_per_hour": null,
+      "macro_f1": 0.0851063829787234,
+      "negative_log_likelihood": 1.4089929387811577,
+      "per_class": {
+        "1": {
+          "f1": 0.3404255319148936,
+          "precision": 0.20512820512820512,
+          "recall": 1.0,
+          "support": 8
+        },
+        "2": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 9
+        },
+        "3": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 7
+        },
+        "4": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 15
+        }
+      },
+      "probability_status": "uncalibrated",
+      "severe_pr_auc": null,
+      "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+    }
+  },
+  "model_json_bytes": 20393,
+  "model_sha256": "46180afd75a818aa96b663253da518b86b5e02e811ec7fc02e9b75e1e848c8cb",
+  "model_status": "experiment",
+  "model_version": "eventnet-source-tcn-v1",
+  "normalization_fit_partition": "train",
+  "parameters": 492,
+  "partition_examples": {
+    "test": 39,
+    "train": 35,
+    "validation": 35
+  },
+  "production_eligible": false,
+  "report_sha256": "d8c10fbb7a036e1a7b829936e4074c8aacc18a0a80510f8deffe18778d839e10",
+  "reproducibility": {
+    "checkpoint_byte_identical": true,
+    "report_byte_identical": true,
+    "scope": "Two frozen runs in the same recorded Windows CPU environment; no retuning or cross-platform identity claim."
+  },
+  "runtime": {
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "platform": "Windows",
+    "python": "3.14.6",
+    "torch": "2.15.0+cpu"
+  },
+  "selection": {
+    "selected_epoch": 60,
+    "selection": "minimum_validation_cross_entropy_earliest_tie"
+  },
+  "source_files_sha256": {
+    "docs/reference/dataset-registry-v2.schema.json": "e18daa57668eac656573daae559c9dea3ac260f2df6baa5f4060530c96a011f0",
+    "ml/datasets.py": "1b8a1519955fdc6a27499365ad28587ed480d116c9110a20746ad138fd944a03",
+    "ml/eventnet.py": "52db404a95531d365d367795db2b6d7604edf4a7d2d6c0f6bd67468d66cf757a",
+    "ml/registry/mendeley-driving-behavior-v3.json": "f8fd3aa73b07cd029bbc4a2d59af2c600d1375852e45af5e6a6f72ece640f57b",
+    "ml/requirements-eventnet.txt": "9fa56c7d7a91ae709784417cd793f9dc0c20dcf6ac6b026d469f5059e687198c"
+  },
+  "split": {
+    "source-driver-1": "train",
+    "source-driver-2": "validation",
+    "source-driver-3": "test"
+  },
+  "test_metrics": {
+    "brier_multiclass_sum": 0.8891229658405783,
+    "confusion_matrix_true_rows": [
+      [
+        5,
+        0,
+        0,
+        3
+      ],
+      [
+        1,
+        7,
+        0,
+        1
+      ],
+      [
+        4,
+        0,
+        2,
+        1
+      ],
+      [
+        9,
+        0,
+        0,
+        6
+      ]
+    ],
+    "detection_latency_ms": null,
+    "examples": 39,
+    "false_severe_events_per_hour": null,
+    "macro_f1": 0.5378383190883191,
+    "negative_log_likelihood": 2.504756355379298,
+    "per_class": {
+      "1": {
+        "f1": 0.37037037037037035,
+        "precision": 0.2631578947368421,
+        "recall": 0.625,
+        "support": 8
+      },
+      "2": {
+        "f1": 0.8750000000000001,
+        "precision": 1.0,
+        "recall": 0.7777777777777778,
+        "support": 9
+      },
+      "3": {
+        "f1": 0.4444444444444445,
+        "precision": 1.0,
+        "recall": 0.2857142857142857,
+        "support": 7
+      },
+      "4": {
+        "f1": 0.4615384615384615,
+        "precision": 0.5454545454545454,
+        "recall": 0.4,
+        "support": 15
+      }
+    },
+    "probability_status": "uncalibrated",
+    "severe_pr_auc": null,
+    "unavailable_reason": "No severe/negative truth or trustworthy high-rate time axis."
+  },
+  "training_code_commit": "e858ebf22dca4e7d0dcd5f1c4129063d265ef83b",
+  "training_source_dirty": false,
+  "window_policy": "one_trailing_7_row_window_per_driver_class_task"
+}

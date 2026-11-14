@@ -9,19 +9,18 @@ on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 
-## P0 — Finish M7.2 EventNet baseline
+## P0 — Await M7.3 authorization
 
-M7.1 remains complete. M7.2 is explicitly authorized and locally implemented:
-a source-space CPU TCN experiment on publisher version 3, with predeclared
-held-out driver, train-only normalization and validation-only checkpoint selection.
-Forty-one Python checks pass; full source CI and a clean-commit baseline run remain.
-Version 2 stays quarantined. Version 3 is experiment-only despite explicit
-groups: units/frame/timing/annotations remain unverified, and no ordinary/severe
-negative truth exists. Provisional macro F1 improves over majority but Brier/log
-loss regress versus the train-prior baseline. No promotion or app integration.
-See `docs/reference/EVENTNET_BASELINE_V1.md` and the active M7 plan.
-Finish exact-source CI, final reproducibility evidence and completion persistence.
-Stop before M7.3; no later substep is authorized.
+M7.1–M7.2 are complete. M7.2's 41 Python checks, byte-identical clean-commit
+baseline/repeat, v1 compatibility and full source CI 43604983837 (`e858ebf`)
+pass. All four jobs are green, including CPU/Linux and both Android build gates.
+The source-space model stays an uncalibrated experiment: macro F1 improves over
+majority, while Brier/NLL regress versus the class-prior baseline. No promotion,
+app integration, mobile benchmark or safety claim. Version 2 stays quarantined;
+version 3 remains experiment-only with unresolved units/frame/timing/label limits.
+See `docs/reference/EVENTNET_BASELINE_V1.md` and its aggregate JSON result.
+Next planned substep: M7.3 calibration and error analysis, pending explicit
+maintainer authorization. Do not implement or substantially prepare it yet.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 
