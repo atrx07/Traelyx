@@ -89,6 +89,13 @@ Candidate: small autoencoder or compact anomaly model trained on coherent teleme
 
 High reconstruction error contributes to integrity uncertainty; it does not autonomously ban a trip.
 
+M7.6 adds an isolated generated-only CPU summary-autoencoder experiment compared
+with unchanged native integrity rules. It fits only coherent training fixtures
+and a validation-clean threshold; quality, platform signals and decoder corruption
+remain separate diagnostic slices. It is not production integrity evidence,
+field false-positive measurement or an accepted model. See
+[`INTEGRITYNET_BASELINE_V1.md`](../reference/INTEGRITYNET_BASELINE_V1.md).
+
 ### DriveDNA encoder — future self-supervised style representation
 
 A small segment/trip encoder may produce a low-dimensional embedding of driving style used for similarity/deviation trends.

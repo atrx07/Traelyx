@@ -3,9 +3,9 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.5 foundation validated; real-model integration/acceptance carried forward
+**Current gate:** M7.6 IntegrityNet experiment authorized; prior model acceptance carried forward
 **Started:** 2026-11-11
-**Last updated:** 2026-11-14
+**Last updated:** 2026-11-15
 
 ## Context budget / references
 
@@ -14,10 +14,11 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: the M7.5 foundation, explicitly continued by the
-maintainer after accepting development with model integration gated. Preserve
-M7.4 numerical rejection and model acceptance as open follow-ups. The appended
-boundaries supersede earlier step-specific scope. Stop before M7.6.
+Current authorized work: M7.6, explicitly continued after the M7.5 foundation.
+Compare an isolated anomaly experiment against the existing deterministic
+integrity baseline, preserving all model acceptance follow-ups and disabled
+production inference. The appended boundaries supersede earlier scope. Stop
+before M7.7.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -514,3 +515,68 @@ M7.5 model corroboration remain open, with their checklist retained above.
 No runtime/model, dependency, migration, scoring/safety/recorder change, phone
 operation or upload was introduced. Stop before M7.6 pending explicit scope and
 authorization; do not prepare it while waiting.
+
+## M7.6 boundary — authorized 2026-11-14
+
+The maintainer explicitly continued M7.6. Only a CPU IntegrityNet experiment and
+comparison against unchanged deterministic integrity rules are authorized. No
+production promotion, ranking/integrity/Guardian/scoring changes, device work,
+new public download, private recording use or new dependency. Stop before M7.7.
+M7.4 acceptance, M7.5 real-model integration and M6.8 gates remain open.
+
+### Frozen experiment (before observing results)
+
+- Public maneuver labels do not establish integrity ground truth. Use a new
+  generated-only experiment manifest (separate from frozen M7.1 registry/imports)
+  and native test exporter built on the existing governed M3 corpus. Export
+  aggregate features and actual `IntegrityPipeline` results only, never positions,
+  raw samples, trip/device/account identity or wall clocks.
+- Nine fictional profiles: train 1/3/5/7/9, validation 2/8, test 4/6. Assign
+  groups before generating cases/aggregating; shared scenario templates mean
+  these are plumbing splits, not independent real-driver generalization.
+- Forty training cases: eight coherent corpus scenarios per training profile.
+  Each held-out profile has those eight plus three numeric injections, one
+  platform signal, two quality scenarios and two decoder-corruption cases.
+  Total 104 cases (40/32/32). Ground truth is injection provenance, not rule
+  output. Keep clean, numeric inconsistency, platform, quality and corruption
+  categories distinct. Decoder rejection abstains from learned inference.
+- Eight whole-trip raw-signal summary statistics: GNSS source speed mean/max/std,
+  acceleration norm mean/std and gyro norm mean/max/std, in explicit generated
+  SI units. No baseline finding/label/profile ID enters the model. This loses
+  timing/direction/local structure and is not a production feature contract.
+- One 98-parameter autoencoder: 8→4→2→4→8, ReLU hidden, linear output. CPU
+  PyTorch 2.15.0+cpu from the existing hash-pinned lock, one thread, seed 7606,
+  Adam lr0.01, 200 epochs, all training-clean cases, train-only mean/std with
+  1e-6 floor. No hyperparameter search, early stopping or test-driven retries.
+- Freeze threshold at validation-clean reconstruction-MSE nearest-rank 97.5th
+  percentile plus 1e-12. Validation anomalies never fit anything. Evaluate test
+  once thereafter; fixed sensitivity multipliers 0.5/1/2 are diagnostics only.
+- Compare synthetic clean false-flag rate and numeric-injection recall against
+  native `INCONSISTENCY` findings. Report each family, coverage/abstentions and
+  platform/quality/corruption slices separately. Generated added-value requires
+  no clean-FPR or numeric-recall regression and a strict improvement in one;
+  never implies production eligibility. Real legitimate-drive FPR remains null.
+- Preserve source/fixture/model hashes, config/threshold/provenance, safe JSON
+  checkpoints and byte-identical within-platform repeats. No pickle, old artifact
+  overwrite, unit/label reinterpretation, malicious-intent or safety claim.
+
+### Acceptance / checks
+
+- [x] Freeze versioned contract/manifest and native generated baseline exporter.
+- [x] Implement bounded loader, training-only fitting, validation-clean threshold,
+  comparator/slices, safe checkpoint and audit/provenance; test leakage/failures.
+- [ ] Run native generated-fixture regression/export and CPU generated comparison;
+  preserve all outcomes and clean-source repeats without searching configurations.
+- [ ] CI exercises generated native export→CPU experiment on the same fixture;
+  retain existing full native/Flutter/build/cloud/ML gates.
+- [ ] Record aggregate results/limitations and model decision, synchronize status,
+  commit/push/verify Git and stop before M7.7.
+
+### Local implementation validation
+
+All 74 Python tests (including 11 new IntegrityNet tests), compilation,
+dependency/repository checks, all 502 app-native tests plus dependency suites and
+debug build pass. Native export is repeatable at 104 cases (40/32/32), 24,913
+bytes in this host environment. No model result from the native fixture has yet
+been inspected. Commit the frozen source before its comparison and repeats.
+No new package or production app behavior, private data or device operation.

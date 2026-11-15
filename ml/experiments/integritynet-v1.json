@@ -1,0 +1,28 @@
+{
+  "experiment_version": "integritynet-generated-ae-v1",
+  "status": "experiment",
+  "production_eligible": false,
+  "dataset_id": "traelyx-integrity-generated-v1",
+  "source_kind": "generated_only",
+  "license": "CC0-1.0",
+  "license_evidence": "ml/DATA_LICENSE.md",
+  "attribution": "Traelyx contributors (2026), original generated integrity experiment fixtures, CC0-1.0. No field recordings or measured drivers.",
+  "source": "android/app/src/test/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityExperimentFixtureTest.kt",
+  "corpus_version": 1,
+  "integrity_version": 1,
+  "feature_schema": "integritynet-generated-summary-v1",
+  "features": ["speed_mean_mps", "speed_max_mps", "speed_std_mps", "accel_norm_mean_mps2", "accel_norm_std_mps2", "gyro_norm_mean_radps", "gyro_norm_max_radps", "gyro_norm_std_radps"],
+  "groups": {"sim-profile-01": "train", "sim-profile-02": "validation", "sim-profile-03": "train", "sim-profile-04": "test", "sim-profile-05": "train", "sim-profile-06": "test", "sim-profile-07": "train", "sim-profile-08": "validation", "sim-profile-09": "train"},
+  "clean_scenarios": ["STATIONARY", "SMOOTH_STRAIGHT", "SMOOTH_ACCELERATION", "BRAKING", "LEFT_CORNER", "RIGHT_CORNER", "POTHOLE", "MOTORCYCLE_VIBRATION"],
+  "extra_categories": {"SPEED_INJECTION": "numeric_inconsistency", "GYRO_INJECTION": "numeric_inconsistency", "ACCEL_INJECTION": "numeric_inconsistency", "MOCK_SIGNAL": "platform_signal", "GNSS_LOSS": "quality_limitation", "PHONE_MOVE": "quality_limitation", "CORRUPT_HEADER": "corruption", "TRUNCATED_CHUNK": "corruption"},
+  "rule_kinds": {"INT_RAW_TRIP_INVALID": "DATA_CORRUPTION", "INT_GNSS_MOCK_SIGNAL": "PLATFORM_SIGNAL", "INT_GNSS_IMPOSSIBLE_JUMP": "INCONSISTENCY", "INT_GNSS_SOURCE_SPEED_IMPLAUSIBLE": "INCONSISTENCY", "INT_GNSS_SOURCE_GAP": "QUALITY_LIMITATION", "INT_CLOCK_DISCONTINUITY": "INCONSISTENCY", "INT_IMU_SOURCE_DROPOUT": "QUALITY_LIMITATION", "INT_IMU_SENSOR_UNRELIABLE": "QUALITY_LIMITATION", "INT_CROSS_SENSOR_DISAGREEMENT": "INCONSISTENCY", "INT_PHONE_MOVEMENT_INVALIDATION": "QUALITY_LIMITATION", "INT_MOTION_WITHOUT_IMU": "INCONSISTENCY"},
+  "config": {"seed": 7606, "epochs": 200, "learning_rate": 0.01, "hidden": [4, 2], "threads": 1, "normalizer_scale_floor": 0.000001, "validation_clean_quantile": 0.975, "threshold_epsilon": 0.000000000001, "sensitivity_multipliers": [0.5, 1.0, 2.0]},
+  "limitations": [
+    "Generated-only experiment. Fictional profile holdout and shared templates are not independent real-driver, route, device, mount or vehicle evidence.",
+    "Whole-trip source-summary features discard direction, localized timing and many physical relationships; not a production feature contract.",
+    "Known injection labels are generated operations, not evidence of malicious intent, real attacks or field integrity truth.",
+    "Quality limitations, platform signals and raw corruption remain distinct; decoder failures abstain from model inference rather than receiving fabricated features.",
+    "Real legitimate-drive false-positive rate, calibrated anomaly probability, production usefulness, mobile latency and battery cost remain unavailable.",
+    "No model output changes deterministic integrity/ranking, event/scoring or safety behavior. Previous model acceptance gates remain open."
+  ]
+}

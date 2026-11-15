@@ -25,9 +25,9 @@ jobs:
         run: python -m pip install -r ml/requirements-eventnet.txt
       - name: Test EventNet with generated evidence only
         run: |
-          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py
+          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py tests/tool/test_integritynet.py
           python -m pip check
-          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration
+          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration tests.tool.test_integritynet
       - name: Install isolated hash-pinned mobile export additions
         run: |
           python -m pip install --no-deps -r ml/requirements-mobile.txt
@@ -279,7 +279,29 @@ jobs:
 
       - name: Test native Kotlin
         working-directory: android
+        env:
+          TRAELYX_INTEGRITY_FIXTURE_OUTPUT: ${{ github.workspace }}/.dart_tool/integrity-fixtures-v1.csv
         run: ./gradlew testDebugUnitTest
+
+      - name: Set up isolated IntegrityNet CPU Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+
+      - name: Compare generated native integrity baseline with CPU model
+        run: |
+          python -m venv .dart_tool/integritynet-ci-venv
+          py=.dart_tool/integritynet-ci-venv/bin/python
+          "$py" -m pip install -r ml/requirements-eventnet.txt
+          "$py" -m pip check
+          "$py" -W error::ResourceWarning -m unittest tests.tool.test_integritynet
+          expected=$(sha256sum .dart_tool/integrity-fixtures-v1.csv | cut -d ' ' -f 1)
+          "$py" -m ml.integritynet --source .dart_tool/integrity-fixtures-v1.csv --expected-sha256 "$expected" --run-name integritynet-ci-one
+          "$py" -m ml.integritynet --source .dart_tool/integrity-fixtures-v1.csv --expected-sha256 "$expected" --run-name integritynet-ci-two
+          cmp ml/checkpoints/integritynet-ci-one/checkpoint.json ml/checkpoints/integritynet-ci-two/checkpoint.json
+          cmp ml/checkpoints/integritynet-ci-one/report.json ml/checkpoints/integritynet-ci-two/report.json
+          mkdir -p build/reports
+          cp ml/checkpoints/integritynet-ci-one/report.json build/reports/integritynet-generated-comparison.json
 
       - name: Build release-validation APK
         run: flutter build apk --release
@@ -295,4 +317,5 @@ jobs:
             build/app/outputs/flutter-apk/app-debug.apk
             build/app/outputs/flutter-apk/app-release.apk
             build/reports/apk-size.json
+            build/reports/integritynet-generated-comparison.json
           if-no-files-found: error

@@ -9,6 +9,11 @@ Requires Python 3.12+ and its standard library only. No account, network,
 package install or mobile change is required. The importer never downloads or
 uploads data and never reads private recordings automatically.
 
+M7.6's separate optional CPU IntegrityNet comparison uses only governed generated
+native fixtures. Its manifest is `experiments/integritynet-v1.json`; it does not
+change the historical registry/imports or accept maneuver labels as integrity
+truth. Follow [the frozen experiment protocol](../docs/reference/INTEGRITYNET_BASELINE_V1.md).
+
 ```text
 python ml/datasets.py validate
 python -m unittest tests.tool.test_ml_datasets

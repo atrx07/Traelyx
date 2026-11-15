@@ -9,9 +9,10 @@ on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
 M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
-acceptance stays deferred. M7.6 and later substeps remain gated.
+acceptance stays deferred. M7.6 was subsequently continued for its isolated
+IntegrityNet experiment; M7.7 and later substeps remain gated.
 
-## P0 — Await authorization for next M7 work; keep acceptance visible
+## P0 — Finish authorized M7.6 generated comparison; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -20,9 +21,11 @@ preserved deterministic rules/scores. Local persistence/legacy compatibility and
 public projection privacy pass. All 501 app-native tests plus dependency suites,
 19 targeted Flutter tests, full analysis, debug build, app lint and full source
 CI 43615278473 (`3046201`, all four jobs including release) pass. Evidence:
-`docs/reference/hybrid-event-evidence-v1-result.json`. Stop before M7.6; no next
-step implementation or preparation is authorized. Full M7.5 hybrid model
-integration stays pending acceptance below.
+`docs/reference/hybrid-event-evidence-v1-result.json`. Full M7.5 hybrid model
+integration stays pending acceptance below. M7.6 is now authorized: finish the
+frozen generated native-baseline/CPU autoencoder comparison, clean-source repeats,
+full CI and aggregate evidence. No tuning against evaluation results, production
+promotion or change to integrity/ranking/scoring. Stop before M7.7.
 
 ## Deferred acceptance — revisit before enabling any model
 

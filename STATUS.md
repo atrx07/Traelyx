@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.5 foundation validated; model acceptance/integration carried forward; M6.8 open**
+**M7 active — M7.6 experiment in progress; prior model acceptance/integration carried forward**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -13,11 +13,23 @@ no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
-M7.6 and later substeps need separate authorization.
+M7.6 was subsequently continued; only its isolated IntegrityNet comparison is
+authorized. M7.7 and later substeps need separate authorization. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.6 in progress: frozen generated-only native baseline→CPU autoencoder
+  experiment. Nine fictional groups precede 104 aggregate cases; training sees
+  only 40 coherent cases, normalization is train-only and threshold fits only
+  validation-clean data. Native findings remain the unchanged comparator, not
+  labels/model inputs; corruption abstains and quality/platform roles stay
+  distinct. All 74 Python checks, all 502 app-native tests plus dependency suites,
+  compilation/dependency/repository checks and debug build pass locally. Clean
+  source model runs, comparison evidence and full CI are pending. No new
+  dependency, production app/runtime, migration, private recording, upload or
+  phone operation. Model acceptance remains deferred; stop before M7.7.
 
 - M7.5 foundation validated (2026-11-14): versioned provider/audit boundary, generated-only
   evaluation and explicit rules-only production audit. No model/runtime is

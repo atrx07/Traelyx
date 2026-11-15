@@ -31,6 +31,15 @@ It does not attempt to prove malicious intent.
 
 A small autoencoder or other anomaly detector may learn legitimate relationships between motion channels. High reconstruction/anomaly score is evidence, not guilt.
 
+The M7.6 experiment tests this plumbing with generated native fixtures and a
+fixed CPU autoencoder. Injection provenance supplies experimental labels; native
+version-1 findings are the comparator, not training labels or model features.
+Clean/numeric-inconsistency metrics do not reinterpret quality limitations,
+platform signals or decoder corruption. Invalid raw evidence abstains from
+learned inference. No model output enters integrity/rank/scoring/safety state.
+The protocol, features/split, limitations and reproduction commands are
+[`INTEGRITYNET_BASELINE_V1.md`](../reference/INTEGRITYNET_BASELINE_V1.md).
+
 ## 3. Integrity output
 
 Keep separate sub-scores/evidence:
