@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.7 ContextNet value experiment authorized; prior acceptance carried forward
+**Current gate:** M7.7 experiment complete; await M7.8 authorization; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,11 +14,11 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.7, explicitly continued after M7.6. Compare an
-isolated ContextNet experiment with transparent temporal rules; only a material
-validation gain permits test evaluation. Preserve all acceptance follow-ups and
-disabled production inference. The appended boundaries supersede earlier scope.
-Stop before M7.8.
+M7.7, explicitly continued after M7.6, is complete as an isolated ContextNet
+experiment. Its fixed validation value gate failed; retain the no-added-value
+result, uncomputed test predictions, prior acceptance follow-ups and disabled
+production inference. The appended boundaries supersede earlier scope. Await
+authorization before M7.8.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -685,11 +685,51 @@ operation. Stop before M7.8. All prior acceptance gates remain open.
   train-only normalization, optional test opening and safe checkpoint/replay.
 - [x] Test time/shape/quality validation, padding invariance, split/leakage controls,
   baseline diagnostics, model reproducibility and failed-gate test non-evaluation.
-- [ ] Run clean-source experiment/repeats and full CI, retaining every outcome;
+- [x] Run clean-source experiment/repeats and full CI, retaining every outcome;
   no production change or post-result tuning.
-- [ ] Persist aggregate evidence/status, commit/push/verify Git and stop before M7.8.
+- [x] Persist aggregate evidence/status, commit/push/verify Git and stop before M7.8.
 
 Local implementation gate: all 86 Python tests (including 12 ContextNet tests),
 compile, pinned CPU dependency check, repository JSON/YAML/secrets validation and
 diff checks pass. No complete ContextNet experiment result has been observed at
-the source freeze. Full source CI and clean-source repeats remain required.
+the source freeze. At that point full source CI and clean-source repeats remained
+required; their completed evidence follows.
+
+### Observed comparison / closure — 2026-11-15
+
+Clean implementation/protocol source `657f6bc4365c3ca01c00bbd0a07aeebd25f4fb7c`
+produces two byte-identical local source/checkpoint/report runs. Source generation
+SHA-256 is `a02be4088aa2759f2da675e6784c3dbcaabf8bab4aa1a12ed5c2cc3f277c8fd8`;
+the 12,493-byte JSON checkpoint hash is
+`b615782441e065398818d62f4b137c49b493e0be69a4b2111f28fbfa251f69d7`.
+Train-only statistics cover 150 sequences/10,500 valid frames; 381 parameters.
+
+Validation (60 labelled, 20 quality-unavailable, four open cases): temporal-rule
+macro F1/coverage are 1.0/1.0; GRU argmax F1 is 0.7829565 and fixed-selective
+F1/coverage are 0.6/0.6. All 12 cruise and 12 smooth-variation selective outputs
+abstain. The GRU labels all four stationary/mixed cases, while rules abstain;
+both abstain on all 20 quality-unavailable cases before GRU invocation. Four of
+five value checks fail; quality handling passes. No added value is validated.
+Test predictions/metrics remain uncomputed; no model, cutoff or rule was retuned.
+
+Linux CI's downloaded generated-only report confirms the same classification,
+abstention and gate decision, with test predictions also unopened and clean
+source hashes matching frozen Git blobs. Each platform repeats byte-identically;
+cross-platform source/model/report identity is not asserted. This bounded negative
+result is not field accuracy or a verdict on every possible context model.
+Aggregate evidence is `docs/reference/contextnet-generated-v1-result.json`;
+data/checkpoints stay ignored. Full source
+[CI 43692438655](https://github.com/atrx07/Traelyx/actions/runs/43692438655)
+passes all four jobs, including formatting/analysis, full Flutter/native tests,
+generated/schema/privacy checks, debug/release builds, standalone benchmark,
+ContextNet repeats and existing native→CPU IntegrityNet comparison. All 86 local
+Python tests (12 new ContextNet checks), compile, pinned dependency, repository
+validation and diff checks pass. Historical dataset/EventNet/calibration/
+IntegrityNet code, licenses and dependency locks remain unchanged.
+
+M7.7 is complete at the explicitly bounded experiment level. No new dependency,
+app/runtime/provider, migration, private-data, phone/emulator, narrator or
+production operation. Real context labels/overlap/open-set/calibration, accepted
+features and runtime/battery/physical evidence remain open alongside all prior
+acceptance gates. The deferred follow-up is retained in `NEXTSTEPS.md`. Stop
+before M7.8 pending explicit authorization; no next-step work is prepared.

@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.7 ContextNet experiment authorized/in progress; model acceptance open**
+**M7 active — M7.7 experiment complete; awaiting M7.8 authorization; model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -13,20 +13,28 @@ no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
-M7.6 was subsequently completed; M7.7 is now explicitly continued for its isolated
-ContextNet comparison. Stop before M7.8. M6.8 stays open.
+M7.6 and M7.7's isolated experiments are now complete. M7.8 and later substeps
+need separate authorization. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
 
-- M7.7 in progress (2026-11-15): original generated context sequence contract,
-  experimental temporal-rule comparator, packed tiny GRU and validation-first
-  value gate implemented. Regression checks cover missing/unsupported evidence,
-  training-only normalization, padding and test non-evaluation after validation
-  failure. Freeze source before the full comparison; completion needs clean-source
-  repeats, full CI and aggregate evidence. No production inference or narrator
-  change. All earlier model and physical acceptance gates remain open.
+- M7.7 generated experiment complete (2026-11-15), with no validated added value:
+  frozen 381-parameter GRU on 318 analytical sequences, train-only normalization
+  and packed lengths. On 60 labelled validation cases selective F1/coverage are
+  0.6/0.6 vs experimental temporal rules' 1.0/1.0. GRU labels all four stationary/
+  mixed diagnostics where rules abstain; both abstain on 20 unavailable-quality
+  cases before model inference. Value gate fails; test predictions/metrics remain
+  uncomputed. No post-result tuning. Clean source `657f6bc` repeats source/model/
+  report byte-identically locally; Linux repeats and reaches the same decision,
+  without a cross-platform byte-identity claim. All 86 local Python tests and
+  [source CI 43692438655](https://github.com/atrx07/Traelyx/actions/runs/43692438655)
+  pass: four jobs, full Flutter/native checks, both builds and ML comparisons.
+  Evidence: `docs/reference/contextnet-generated-v1-result.json`. This bounded
+  negative result is not field accuracy or a verdict on all context models.
+  No app/runtime, narrator, dependency, migration, private-data or device change.
+  All earlier model/physical gates remain open; stop before M7.8.
 
 - M7.6 generated experiment complete (2026-11-15): frozen 98-parameter CPU
   autoencoder on 104 fictional-profile cases (40/32/32), train-clean normalization
@@ -1016,8 +1024,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.7 generated ContextNet comparison is authorized and in
-progress. Local unit/integrity checks pass; freeze source, reproduce the fixed
-comparison and complete full CI before recording the experiment's decision.
-Production model acceptance and M6.8 physical/vehicle checks remain open/deferred.
-Stop before M7.8; no production promotion is authorized.
+**Current step:** M7.7's generated ContextNet experiment is complete with the
+no-added-value result retained. Local checks, clean-source repeats and all four
+source CI jobs pass; production stays rules-only and test predictions uncomputed.
+Await M7.8 authorization. Model acceptance and M6.8 physical/vehicle checks remain
+open/deferred; no production promotion is authorized.

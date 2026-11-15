@@ -10,10 +10,10 @@ M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance an
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
-IntegrityNet experiment. M7.7 is now explicitly continued for its isolated
-ContextNet comparison; M7.8 and later substeps remain gated.
+IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
+also complete; M7.8 and later substeps remain gated.
 
-## P0 — Finish authorized M7.7; keep acceptance visible
+## P0 — Await M7.8 authorization; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -30,11 +30,14 @@ and full CI 43689186048 (`4e0fe9a`, four jobs) pass. Evidence is
 `docs/reference/integritynet-generated-v1-result.json`. Synthetic signal is not
 production acceptance; rules and disabled inference remain unchanged.
 
-M7.7 now compares a generated-only tiny GRU against explicit experimental
-temporal rules. Freeze the source/protocol, run clean-source repeats and full CI,
-preserve the validation value decision and test-opening status, then persist
-aggregate evidence. A negative value result completes the experiment without
-promotion. Stop before M7.8; no next-step preparation is authorized.
+M7.7's generated comparison is complete with no validated added value: selective
+validation F1/coverage 0.6/0.6 vs experimental temporal rules' 1.0/1.0, with four
+open cases labelled by GRU where rules abstain. Both abstain on unavailable
+quality; test predictions remain uncomputed after the failed value gate. All 86
+local Python tests, clean-source repeats and full CI 43692438655 (`657f6bc`, all
+four jobs) pass. Evidence: `docs/reference/contextnet-generated-v1-result.json`.
+No app/narrator change or model promotion. Stop before M7.8; no next-step
+implementation or preparation is authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 
@@ -72,6 +75,14 @@ do not establish field FPR. Preserve native platform signals/corruption checks,
 review threshold sensitivity, and complete real feature/runtime/battery/device
 validation before any model adoption. The new experiment does not waive any
 EventNet, M7.5 integration or M6.8 physical/vehicle gate.
+
+ContextNet adoption is also deferred: the fixed M7.7 generated candidate fails
+its validation value gate and leaves test predictions uncomputed. Keep the
+negative result and rules. Any future candidate needs a separately authorized,
+versioned protocol with suitable unseen context labels, overlap/open-set and
+quality semantics, accepted feature extraction, calibrated outputs and physical
+runtime/battery evidence. Do not tune against this observed validation result or
+claim the shared generated templates establish field accuracy.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 

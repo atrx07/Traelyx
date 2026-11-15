@@ -31,9 +31,14 @@ Milestones M0–M5 and M6.1–M6.7 are complete. The optional cloud schema, owne
 
 ## Roadmap
 
-M7.7's generated ContextNet comparison is now authorized and in progress. It must
-show validation value over frozen temporal rules before test predictions open.
-Production inference stays disabled and earlier acceptance gates remain open.
+M7.7's generated ContextNet experiment is complete with no validated added value:
+selective validation macro F1 is 0.60 vs temporal rules' 1.00, with worse coverage
+and open-case handling. Test predictions remain uncomputed after the failed
+validation gate. All 86 local Python tests and
+[four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43692438655)
+pass, including full app regressions and debug/release builds. See
+[aggregate evidence](docs/reference/contextnet-generated-v1-result.json).
+Production inference stays disabled; earlier acceptance gates remain open.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
@@ -46,14 +51,14 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | M7.7 authorized/in progress; acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
+| M7 | ML & Advanced Commentary | M7.7 experiment complete; awaiting M7.8 authorization, acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
 | M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
 | M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
 | M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
 | M7.4 |  | Mobile export/inference; int8 artifact rejected | ⛔ Blocked | Re-plan required | 2026-11-14 (partial) |
 | M7.5 |  | Foundation validated; real-model integration gated | 🟡 In progress | ~1–2 days plus acceptance | 2026-11-14 (partial) |
 | M7.6 |  | IntegrityNet generated experiment vs native rules | ✅ Complete | Done | 2026-11-15 |
-| M7.7 |  | ContextNet generated experiment vs temporal rules | 🟡 In progress | ~1–2 days | — |
+| M7.7 |  | ContextNet generated experiment; no added value, rules retained | ✅ Complete | Done | 2026-11-15 |
 | M7.8 |  | DriveDNA embedding experiment | ⚪ Pending | ~1–2 days | — |
 | M7.9 |  | User post-drive correction | ⚪ Pending | ~1–2 days | — |
 | M7.10 |  | BYO cloud commentary | ⚪ Pending | ~1–2 days | — |

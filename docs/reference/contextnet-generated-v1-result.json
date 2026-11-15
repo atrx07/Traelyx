@@ -1,0 +1,525 @@
+{
+  "decision": "no_validated_added_value_keep_rules",
+  "evidence_version": "contextnet-generated-value-result-v1",
+  "experiment_complete": true,
+  "impact": {
+    "database_migration": false,
+    "new_dependency": false,
+    "new_runtime_or_provider": false,
+    "phone_or_emulator_used": false,
+    "previous_model_acceptance": "open_deferred",
+    "private_data_used_or_uploaded": false,
+    "production_behavior_changed": false,
+    "vehicle_oem_battery_acceptance": "open_deferred"
+  },
+  "interpretation": [
+    "This fixed generated-only candidate did not add value over the explicit experimental temporal rules; this is not a field verdict on all possible context models.",
+    "The temporal comparator is separate from existing procedural commentary. No five-state production classifier, feature adapter or narrator integration was introduced.",
+    "Rules classify all 60 pure validation programs and abstain on all four open cases. Selective GRU coverage is 36/60; cruise and smooth variation each abstain on all 12 cases.",
+    "GRU argmax confuses cruise and smooth variation; its fixed selective cutoff does not prevent labels on the four stationary/mixed diagnostics. Both methods abstain on all 20 unavailable-quality cases before inference.",
+    "Validation failed. Test metadata/structure was validated; no ContextNet test predictions or metrics were computed. Rule unit checks on generated programs are not a claimed unseen test comparison.",
+    "Real context accuracy, calibrated confidence, suitable overlap/open-set labels, accepted feature extraction and mobile/battery/device performance remain unavailable. No post-result tuning was performed."
+  ],
+  "local_report": {
+    "attribution": "Traelyx contributors (2026), original analytical generated context sequences v1, CC0-1.0. No recordings or measured drivers.",
+    "baseline_config": {
+      "cruise_acceleration_max_mps2": 0.75,
+      "cruise_speed_span_mps": 1.0,
+      "jerk_mps3": 3.5,
+      "lateral_load_mps2": 2.0,
+      "lateral_occupancy_min": 0.5,
+      "minimum_jerk_episodes": 3,
+      "minimum_stop_transitions": 1,
+      "moving_fraction_min": 0.85,
+      "smooth_acceleration_max_mps2": 1.0,
+      "stop_fraction_max": 0.8,
+      "stop_fraction_min": 0.15,
+      "stopped_speed_mps": 0.5,
+      "version": "context-temporal-rules-v1"
+    },
+    "calibrated_confidence": null,
+    "classes": [
+      "steady_cruise",
+      "stop_and_go",
+      "high_dynamic_load",
+      "repeated_abrupt_transitions",
+      "smooth_variable"
+    ],
+    "config": {
+      "epochs": 80,
+      "hidden": 8,
+      "learning_rate": 0.01,
+      "minimum_macro_f1_gain": 0.02,
+      "normalizer_scale_floor": 1e-06,
+      "seed": 7707,
+      "selective_probability_cutoff": 0.6,
+      "threads": 1
+    },
+    "decision": "no_validated_added_value_keep_rules",
+    "experiment_version": "contextnet-generated-gru-v1",
+    "feature_schema": "contextnet-generated-sequence-v1",
+    "groups": {
+      "ctx-profile-01": "train",
+      "ctx-profile-02": "validation",
+      "ctx-profile-03": "train",
+      "ctx-profile-04": "test",
+      "ctx-profile-05": "train",
+      "ctx-profile-06": "test",
+      "ctx-profile-07": "train",
+      "ctx-profile-08": "validation",
+      "ctx-profile-09": "train"
+    },
+    "license": "CC0-1.0",
+    "limitations": [
+      "Generated fixture programs and fictional profile holdout share templates; they are not independent real-driver, route, device or field context evidence.",
+      "Midpoint analytical 1 Hz physical channels are not an accepted production feature extraction/calibration contract.",
+      "Five program labels do not prove mutually exclusive real-world contexts. Stationary and mixed-program diagnostics are outside the closed label set.",
+      "Temporal rules are a separate transparent experimental comparator, not the production narrator or a claimed existing five-state classifier.",
+      "Max-softmax cutoff is fixed experimental selection, not calibrated confidence. Real context accuracy/calibration, mobile latency and battery metrics remain unavailable.",
+      "No result changes event/scoring/integrity/narration/Guardian behavior or waives prior acceptance gates. A failed validation gate leaves test predictions/metrics unopened."
+    ],
+    "manifest_sha256": "90676da282e899722d98dc100fdc324a5ab7ebe669333adce0d812b2f1460f6c",
+    "mobile_runtime_metrics": null,
+    "model_bytes": 12493,
+    "model_sha256": "b615782441e065398818d62f4b137c49b493e0be69a4b2111f28fbfa251f69d7",
+    "model_status": "experiment",
+    "normalizer": {
+      "mean": [
+        8.4932222366333,
+        -0.008772456087172031,
+        0.4878687262535095,
+        -0.004263830371201038
+      ],
+      "scale": [
+        3.4165542125701904,
+        1.4305051565170288,
+        0.9594871401786804,
+        2.152419328689575
+      ]
+    },
+    "normalizer_fit_partition": "training_valid_frames",
+    "parameters": 381,
+    "production_eligible": false,
+    "real_context_accuracy": null,
+    "runtime": {
+      "device": "cpu",
+      "python": "3.14.6",
+      "torch": "2.15.0+cpu"
+    },
+    "source_commit": "657f6bc4365c3ca01c00bbd0a07aeebd25f4fb7c",
+    "source_dirty": false,
+    "source_files_sha256": {
+      "docs/reference/CONTEXTNET_EXPERIMENT_V1.md": "15bccb9ce19010114759f37730cfa5d22cbe88fc1468513d2e316835cb01b7f4",
+      "ml/contextnet.py": "ee1a1ed6a89e0151c4d95dfc6269da7a23c2fe4ae4d66df2d5eb0a5abb7a6946",
+      "ml/contextnet_corpus.py": "97aedee5618afb4219d364b26ef2d47d095254a6cf8b9a2c4410b466b3ab3573",
+      "ml/experiments/CONTEXTNET_DATA_LICENSE.md": "c8dc14da9b8cf8b37be3cd238a84bf9992243db1e1173250deee4efba0e2682b",
+      "ml/experiments/contextnet-v1.json": "1c4c19e27bfea7e16ecffa689da36c8e5e89935b4fbeea41cf16bc13e345a536",
+      "ml/requirements-eventnet.txt": "9fa56c7d7a91ae709784417cd793f9dc0c20dcf6ac6b026d469f5059e687198c"
+    },
+    "source_kind": "generated_only",
+    "source_sha256": "a02be4088aa2759f2da675e6784c3dbcaabf8bab4aa1a12ed5c2cc3f277c8fd8",
+    "test": {
+      "cases_available": 84,
+      "metadata_validated": true,
+      "metrics": null,
+      "predictions_computed": false,
+      "value_gate": null
+    },
+    "training": {
+      "cases": 150,
+      "initial_loss": 1.6467971801757812,
+      "last_epoch_loss": 0.2986474633216858,
+      "valid_frames": 10500
+    },
+    "validation": {
+      "model_argmax": {
+        "abstentions": 0,
+        "cases": 60,
+        "confusion_true_rows_abstention_last_column": [
+          [
+            6,
+            0,
+            0,
+            0,
+            6,
+            0
+          ],
+          [
+            0,
+            12,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            12,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            12,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            0,
+            0,
+            5,
+            0
+          ]
+        ],
+        "coverage": 1.0,
+        "macro_f1": 0.7829565217391304,
+        "per_class": {
+          "high_dynamic_load": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "repeated_abrupt_transitions": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "smooth_variable": {
+            "f1": 0.43478260869565216,
+            "precision": 0.45454545454545453,
+            "recall": 0.4166666666666667,
+            "support": 12
+          },
+          "steady_cruise": {
+            "f1": 0.48000000000000004,
+            "precision": 0.46153846153846156,
+            "recall": 0.5,
+            "support": 12
+          },
+          "stop_and_go": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          }
+        }
+      },
+      "model_diagnostics": {
+        "open_mixed": {
+          "abstentions": 0,
+          "cases": 2,
+          "non_abstained": 2
+        },
+        "open_stationary": {
+          "abstentions": 0,
+          "cases": 2,
+          "non_abstained": 2
+        },
+        "quality_missing": {
+          "abstentions": 10,
+          "cases": 10,
+          "non_abstained": 0
+        },
+        "quality_unsupported": {
+          "abstentions": 10,
+          "cases": 10,
+          "non_abstained": 0
+        }
+      },
+      "model_evaluated": 64,
+      "model_selective": {
+        "abstentions": 24,
+        "cases": 60,
+        "confusion_true_rows_abstention_last_column": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            12
+          ],
+          [
+            0,
+            12,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            12,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            12
+          ]
+        ],
+        "coverage": 0.6,
+        "macro_f1": 0.6,
+        "per_class": {
+          "high_dynamic_load": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "repeated_abrupt_transitions": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "smooth_variable": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 12
+          },
+          "steady_cruise": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "support": 12
+          },
+          "stop_and_go": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          }
+        }
+      },
+      "quality_cases_inferred": 0,
+      "raw_probability_diagnostics": {
+        "brier_multiclass_sum": 0.19498249081527017,
+        "negative_log_likelihood": 0.2973053035324192,
+        "status": "uncalibrated_generated_only"
+      },
+      "rule_diagnostics": {
+        "open_mixed": {
+          "abstentions": 2,
+          "cases": 2,
+          "non_abstained": 0
+        },
+        "open_stationary": {
+          "abstentions": 2,
+          "cases": 2,
+          "non_abstained": 0
+        },
+        "quality_missing": {
+          "abstentions": 10,
+          "cases": 10,
+          "non_abstained": 0
+        },
+        "quality_unsupported": {
+          "abstentions": 10,
+          "cases": 10,
+          "non_abstained": 0
+        }
+      },
+      "temporal_rules": {
+        "abstentions": 0,
+        "cases": 60,
+        "confusion_true_rows_abstention_last_column": [
+          [
+            12,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            12,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            12,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            12,
+            0
+          ]
+        ],
+        "coverage": 1.0,
+        "macro_f1": 1.0,
+        "per_class": {
+          "high_dynamic_load": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "repeated_abrupt_transitions": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "smooth_variable": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "steady_cruise": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          },
+          "stop_and_go": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 12
+          }
+        }
+      }
+    },
+    "validation_value_gate": {
+      "checks": {
+        "material_macro_f1_gain": false,
+        "no_additional_open_claims": false,
+        "no_class_recall_regression": false,
+        "no_labelled_coverage_regression": false,
+        "quality_abstention_preserved": true
+      },
+      "passed": false
+    }
+  },
+  "milestone": "M7.7",
+  "production_eligible": false,
+  "recorded_date": "2026-11-15",
+  "reproducibility": {
+    "artifacts": {
+      "checkpoint.json": {
+        "bytes": 12493,
+        "repeat_byte_identical": true,
+        "sha256": "b615782441e065398818d62f4b137c49b493e0be69a4b2111f28fbfa251f69d7"
+      },
+      "report.json": {
+        "bytes": 10236,
+        "repeat_byte_identical": true,
+        "sha256": "92c62c6d5d50c1ee7713af668999a5fa7e2064bf94f6bd00555045f928dc39fd"
+      }
+    },
+    "cross_platform_byte_identity_claimed": false,
+    "frozen_git_blob_sha256": {
+      "docs/reference/CONTEXTNET_EXPERIMENT_V1.md": "15bccb9ce19010114759f37730cfa5d22cbe88fc1468513d2e316835cb01b7f4",
+      "ml/contextnet.py": "ee1a1ed6a89e0151c4d95dfc6269da7a23c2fe4ae4d66df2d5eb0a5abb7a6946",
+      "ml/contextnet_corpus.py": "97aedee5618afb4219d364b26ef2d47d095254a6cf8b9a2c4410b466b3ab3573",
+      "ml/experiments/CONTEXTNET_DATA_LICENSE.md": "c8dc14da9b8cf8b37be3cd238a84bf9992243db1e1173250deee4efba0e2682b",
+      "ml/experiments/contextnet-v1.json": "1c4c19e27bfea7e16ecffa689da36c8e5e89935b4fbeea41cf16bc13e345a536",
+      "ml/requirements-eventnet.txt": "51e35f3ef68be675b0dbee9f433a464d4aa1a2356981a37071af142387976f0e"
+    },
+    "linux": {
+      "decision_matches_local": true,
+      "model_bytes": 12499,
+      "model_sha256": "e574f01a9f0312a4a9dce1acee00be9c3a5b638810568c6c660829183719fcba",
+      "raw_probability_diagnostics": {
+        "brier_multiclass_sum": 0.19498248482309294,
+        "negative_log_likelihood": 0.2973052982920807,
+        "status": "uncalibrated_generated_only"
+      },
+      "report_download": "contextnet-generated-comparison/report.json",
+      "report_sha256": "8056ba04ed7d50c08a828018dae006144d8c784c6cb4027e38f5bc8b86b0cea6",
+      "runtime": {
+        "device": "cpu",
+        "python": "3.12.16",
+        "torch": "2.15.0+cpu"
+      },
+      "source_dirty": false,
+      "source_files_match_frozen_git_blobs": true,
+      "source_sha256": "b4c5a1bf365ff9e3a96c712c4366243e2ab0ceb947f6428e0abe0f4adf0f0e5c",
+      "test_predictions_computed": false,
+      "validation_classification_and_abstention_metrics_match_local": true,
+      "within_linux_repeat_checks": "CI comparison step passed"
+    },
+    "runs": [
+      "contextnet-generated-v1-20261115",
+      "contextnet-generated-v1-20261115-repeat"
+    ],
+    "source_bytes": 1950727,
+    "source_generation_repeat_byte_identical": true,
+    "working_source_matches_frozen_git_after_crlf_normalization": true
+  },
+  "validation": {
+    "compile": "pass",
+    "contextnet_regression_tests": 12,
+    "cpu_pinned_dependencies": "pass",
+    "diff_check": "pass",
+    "historical_source_files_unchanged": [
+      "ml/datasets.py",
+      "ml/eventnet.py",
+      "ml/calibration.py",
+      "ml/integritynet.py",
+      "ml/DATA_LICENSE.md",
+      "ml/requirements-eventnet.txt",
+      "ml/requirements-mobile.txt"
+    ],
+    "local_python_tests": 86,
+    "repository_json_yaml_secrets": "pass",
+    "source_ci": {
+      "app_checks": "Formatting, analysis, full Flutter/native tests, schema/generated checks, debug/release builds, APK size/artifact gates and native-to-CPU IntegrityNet comparison pass.",
+      "conclusion": "success",
+      "head_sha": "657f6bc4365c3ca01c00bbd0a07aeebd25f4fb7c",
+      "jobs": {
+        "cloud-schema": "success",
+        "eventnet-cpu": "success",
+        "guardian-dispatch": "success",
+        "validate": "success"
+      },
+      "run_id": 43692438655,
+      "status": "completed",
+      "url": "https://github.com/atrx07/Traelyx/actions/runs/43692438655"
+    }
+  }
+}
