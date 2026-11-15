@@ -1,0 +1,148 @@
+{
+  "ci": {
+    "coverage": [
+      "generated/schema equality",
+      "format/analysis/full Flutter tests",
+      "offline contribution receiver tests",
+      "native suites",
+      "normal app debug/release builds and artifacts",
+      "isolated ML tooling and benchmark",
+      "Guardian and cloud regressions"
+    ],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 43727767552,
+    "source_commit": "46acca361077ce67c8ce5409c2b8fae1d320d63d",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43727767552"
+  },
+  "consent_race_validation": {
+    "cross_writer_withdrawal_while_picker_pending": "Dart service regression passed",
+    "native_callback_positive_document_write": "isolated emulator passed",
+    "native_callback_timeout_runtime_exercised": false,
+    "one_use_request_bound_callback_errors": "Dart channel regression passed",
+    "pre_picker_revision_source_check": "pass",
+    "recorder_becoming_active_while_picker_pending": "Dart service regression passed"
+  },
+  "date": "2026-11-15",
+  "emulator_qa": {
+    "abi": "x86_64",
+    "airplane_mode": true,
+    "android_api": 37,
+    "earlier_iteration_probe": [
+      "default-off local note",
+      "cold note and consent persistence",
+      "picker cancellation preserves prior export hash",
+      "revoke permission retains local note",
+      "explicit clear removes notes and preserves detector evidence"
+    ],
+    "final_callback_enabled_probe": [
+      "parked acknowledgment gates controls",
+      "limited source quality is visible",
+      "explicit per-note opt-in",
+      "separate categorical copy review",
+      "system document save with final authorization",
+      "parked acknowledgment reset after picker",
+      "actual saved file accepted by strict receiver"
+    ],
+    "generated_data_only": true,
+    "page_size_bytes": 16384,
+    "receipt_consent_evidence": "self_reported_declaration_not_authenticated",
+    "receipt_training_use": "blocked",
+    "received_labels": 1,
+    "saved_export_bytes": 404,
+    "saved_export_sha256": "56cc59d5361715fdb9f0acef9c37ee7b64818f40e4d4ed3d996c2a0d33b6ccfb",
+    "task_adb_keys_removed": true,
+    "task_emulator_and_dedicated_adb_server_stopped": true,
+    "user_adb_server_untouched": true
+  },
+  "evidence_version": 1,
+  "impact": {
+    "detector_score_ranking_guardian_logic_changed": false,
+    "model_or_gate_promoted": false,
+    "new_dependencies": [],
+    "new_providers": [],
+    "physical_phone_modified": false,
+    "private_recordings_read": false,
+    "production_inference_enabled": false,
+    "recorder_sampling_or_background_service_changed": false
+  },
+  "limitations": [
+    "Recorder idle and parked acknowledgment do not prove physical driving state.",
+    "Reports and consent declarations are unverified; categorical exports have no aligned features, source quality or driver/trip grouping and remain blocked from training.",
+    "The operating system or chosen document provider manages the selected external destination; Traelyx adds no uploader.",
+    "No physical driving, vehicle/OEM, background reliability or battery acceptance is established.",
+    "M7.4 rejection, M7.5 full model integration, other model acceptance and M6.8 physical/vehicle gates remain open/deferred.",
+    "M7.10 requires separate maintainer authorization; no subsequent substep work is included."
+  ],
+  "local_validation": {
+    "analysis": "pass",
+    "app_lint": "pass",
+    "app_lint_errors": 0,
+    "app_lint_warnings_in_untouched_code": 7,
+    "app_native_tests": 506,
+    "correction_flutter_tests": 25,
+    "debug_apk_bytes": 194325986,
+    "errors": 0,
+    "failures": 0,
+    "flutter_tests": 503,
+    "format": "pass",
+    "generated_source_and_schema_equality": "pass",
+    "lint_local_properties_restored_byte_for_byte": true,
+    "new_migration_tests": 1,
+    "normal_entrypoint_debug_apk": "pass",
+    "normal_entrypoint_release_validation_apk": "pass",
+    "python_tool_tests": 105,
+    "release_validation_apk_bytes": 64203046,
+    "repository_contracts_and_secrets": "pass",
+    "skipped": 0
+  },
+  "migration": {
+    "existing_settings_trips_events_scores_links_cache_queue_preserved": true,
+    "from_versions": [
+      1,
+      2,
+      3
+    ],
+    "kind": "additive_trip_event_corrections_table",
+    "old_schema_snapshots_unchanged": true,
+    "raw_only_cleanup_preserves_notes": true,
+    "source_replacement_keeps_stale_notes_excluded_from_export": true,
+    "to_version": 4,
+    "whole_trip_delete_cascades_notes": true
+  },
+  "milestone_substep": "M7.9",
+  "privacy": {
+    "automatic_upload_or_training": false,
+    "consent_and_exact_source_reauthorized_on_picker_return": true,
+    "default_per_note_contribution_permission": false,
+    "editing_requires_reselected_permission": true,
+    "export_excludes": [
+      "routes",
+      "raw sensors",
+      "measurements",
+      "features",
+      "trip/event/account/device IDs",
+      "absolute and relative times",
+      "free text",
+      "source snapshots"
+    ],
+    "export_fields": [
+      "categorical detected event",
+      "categorical user report",
+      "detector and telemetry versions",
+      "declared consent and unverified quarantine provenance"
+    ],
+    "export_review_required": true,
+    "network_endpoint_added": false,
+    "receiver_training_eligible": false,
+    "saved_external_copies_recallable": false
+  },
+  "scope": "Source-bound local post-drive reports, manually reviewed categorical document export, and private quarantine-only receipt.",
+  "source_commit": "46acca361077ce67c8ce5409c2b8fae1d320d63d",
+  "validation_status": "passed_for_scoped_corrections_and_quarantine_pipeline"
+}

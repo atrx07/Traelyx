@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.9 post-drive corrections authorized; prior acceptance carried forward
+**Current gate:** M7.9 complete; await M7.10 authorization; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,10 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.9, explicitly continued after M7.8. Deliver local
-post-drive event notes and separately consented, reviewed label-only export with
-quarantined import. Preserve original event/score evidence and all prior acceptance.
-The appended boundaries supersede earlier scope. Stop before M7.10.
+M7.9 is complete for local post-drive notes, separately consented categorical
+export and a private quarantine-only receiver. Original detections/scores and
+prior model/physical acceptance remain unchanged. The appended boundaries
+supersede earlier scope. Await authorization before M7.10.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -868,9 +868,9 @@ enter existing datasets/models or become training-eligible.
 - [x] Implement explicit quarantine-only receiver and consent/provenance contract.
 - [x] Test unchanged source scores/events, stale revisions/evidence, quality,
   safety gates, consent races, deletion, privacy rejection and v1/2/3 upgrades.
-- [ ] Format/analyze, generated/schema drift, full Flutter/native/Python tests,
+- [x] Format/analyze, generated/schema drift, full Flutter/native/Python tests,
   app lint/builds, repository validation and relevant UI QA; run source CI.
-- [ ] Persist evidence/spec/status/README, commit/push/verify Git and stop before M7.10.
+- [x] Persist evidence/spec/status/README, commit/push/verify Git and stop before M7.10.
 
 No new dependency/provider is planned. The additive migration preserves all prior
 evidence and queues. Core sensor/recording behavior and all model decisions stay
@@ -904,3 +904,26 @@ OEM/background behavior or battery. No original evidence/model gate changed.
 Commit/push this validated source for full CI; M7.9 remains in progress until
 all source jobs pass and the aggregate result/status closure is persisted.
 M7.10 remains unauthorized; no next-step work was prepared.
+
+
+### Source CI / closure - 2026-11-15
+
+Source `46acca361077ce67c8ce5409c2b8fae1d320d63d` passes all four jobs in
+[CI 43727767552](https://github.com/atrx07/Traelyx/actions/runs/43727767552),
+including Linux regeneration/schema, full Flutter/native/tool tests, app builds,
+ML repeats/standalone APK and cloud/Guardian regressions. Local lint has zero
+errors and seven warnings in untouched code; none were suppressed.
+Aggregate evidence: `docs/reference/event-correction-v1-result.json`.
+
+M7.9 is complete for this bounded local/consented export and quarantine pipeline.
+No aligned-feature or driver/trip-grouped training dataset is claimed. Reports
+and consent declarations remain unverified; further use requires separate
+provenance/consent review and governed versioned evidence. No model, historical
+result or safety/scoring decision changed. Schema4 is additive; old evidence and
+queues survive. No new dependency/provider or uploader. The isolated emulator
+and its dedicated ADB server were stopped and task-generated keys removed;
+no physical phone or user ADB server was modified. Physical driving, vehicle/OEM,
+background/battery and all prior model gates remain open/deferred.
+
+Commit/push/verify this evidence/status closure, report M7.9, and stop before
+M7.10. No subsequent substep implementation or preparation is authorized.

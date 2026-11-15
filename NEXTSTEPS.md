@@ -12,9 +12,9 @@ On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
 also complete. M7.8's subsequently authorized embedding experiment is complete;
-M7.9 is now explicitly continued; M7.10 and later remain gated.
+M7.9's local correction/export pipeline is complete; M7.10 and later remain gated.
 
-## P0 — Finish authorized M7.9; keep acceptance visible
+## P0 — Await M7.10 authorization; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -48,12 +48,16 @@ clean-source repeats and full CI 43716929988 (`ac2e1ee`, four jobs) pass. Eviden
 without post-result tuning or promotion. Existing dimensions and production
 inference stay unchanged.
 
-M7.9 now delivers source-bound local corrections, separate per-note consent and
-reviewed categorical document export with a quarantine-only receiver. Complete
-full source CI and aggregate evidence. All 503 Flutter/506 native/105 Python
-tests, offline generated emulator export/receiver QA, builds/lint and exact
-schema checks pass; v1/2/3 data and detector/score evidence are preserved. No model promotion or automatic upload/training. Stop before
-M7.10; no next-step implementation/preparation is authorized.
+M7.9 is complete for source-bound local corrections, default-off per-note consent,
+reviewed categorical document export and private quarantine receipt. All 503
+Flutter/506 native/105 Python tests, offline generated emulator QA, builds/lint,
+schema checks and full CI 43727767552 (`46acca3`, four jobs) pass. Evidence:
+`docs/reference/event-correction-v1-result.json`. Additive schema4 preserves
+v1/2/3 evidence/queues; corrections never rewrite detections/scores. No new
+provider/dependency, uploader or model promotion. Categorical reports remain
+unverified and blocked from training; aligned features/grouping/source quality
+and consent provenance need separately governed work before training use.
+Await M7.10 authorization; no next-step implementation/preparation is authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 

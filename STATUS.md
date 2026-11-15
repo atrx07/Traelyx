@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.9 post-drive corrections authorized/in progress; model acceptance open**
+**M7 active — M7.9 complete; awaiting M7.10 authorization; model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -13,20 +13,21 @@ no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
-M7.6–M7.8's isolated experiments are complete. M7.9 is now explicitly continued;
-stop before M7.10. M6.8 stays open.
+M7.6–M7.8's isolated experiments and M7.9's local correction/export pipeline
+are complete. Await M7.10 authorization. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
 
-- M7.9 in progress (2026-11-15): separate source-bound local corrections, additive
-  schema4 with v1/2/3 data-preservation checks, parked/idle guards, default-off
-  per-note export permission, reviewed categorical document export and a strict
-  quarantine-only receiver. All 503 Flutter/506 native/105 Python tests, offline
-  generated emulator export/receiver QA, builds/lint and schema checks pass.
-  Full source CI and aggregate evidence remain. No original event,
-  score, ranking, Guardian or production model behavior changes.
+- M7.9 complete (2026-11-15): source-bound local corrections, additive schema4
+  with v1/2/3 preservation, parked/idle guards, default-off per-note permission,
+  reviewed categorical document export and private quarantine-only receiver.
+  All 503 Flutter/506 native/105 Python tests, offline generated emulator QA,
+  builds/lint/schema checks and four source CI jobs 43727767552 (`46acca3`) pass.
+  Evidence: `docs/reference/event-correction-v1-result.json`. No detector/score,
+  ranking, Guardian, model, dependency/provider or automatic upload/training change.
+  Categorical reports lack aligned features/grouping; training stays blocked.
 
 - M7.8 generated embedding experiment complete (2026-11-15): fixed 155-parameter
   self-supervised denoiser on 408 fictional summary fixtures (200/104/104), with
@@ -1051,6 +1052,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.9 is authorized and in progress. Finish correction/export
-full source CI and aggregate evidence before closure. All model
-and M6.8 physical/vehicle acceptance stays open/deferred. Stop before M7.10.
+**Current step:** M7.9 is complete for local corrections, reviewed categorical
+export and quarantine receipt. Local checks and all four source CI jobs pass.
+Await M7.10 authorization. Model acceptance and M6.8 physical/vehicle checks
+remain open/deferred; production inference remains disabled.
