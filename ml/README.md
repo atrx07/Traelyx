@@ -20,6 +20,12 @@ uncomputed if the fixed validation value gate fails. Follow
 [the context protocol](../docs/reference/CONTEXTNET_EXPERIMENT_V1.md); no app
 runtime, production context labels or narrator behavior is introduced.
 
+M7.8's optional generated-only DriveDNA embedding experiment compares a small
+self-supervised representation with distances over the same physical summaries.
+No explicit production dimension or lifecycle changes. Follow
+[the embedding protocol](../docs/reference/DRIVEDNA_EMBEDDING_V1.md) for scoped/
+versioned comparisons, train-only cutoffs and validation-first test opening.
+
 ```text
 python ml/datasets.py validate
 python -m unittest tests.tool.test_ml_datasets

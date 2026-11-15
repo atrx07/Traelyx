@@ -109,6 +109,13 @@ A small segment/trip encoder may produce a low-dimensional embedding of driving 
 
 It must supplement, not replace, explainable Drive DNA dimensions.
 
+M7.8 isolates a generated-only self-supervised summary autoencoder and transparent
+summary-distance comparator. Train-only normalization/pair cutoffs, exact model/
+scope compatibility and validation-first test opening do not change production
+dimensions, lifecycle or scoring. See
+[`DRIVEDNA_EMBEDDING_V1.md`](../reference/DRIVEDNA_EMBEDDING_V1.md) and
+[`ADR-0040`](../decisions/ADR-0040-isolated-versioned-style-embeddings.md).
+
 ### Narrator selector — optional
 
 A small ranking/classifier could estimate whether an event is interesting enough for commentary and its category. Generative text is separate.

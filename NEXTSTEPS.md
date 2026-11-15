@@ -11,9 +11,9 @@ mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
-also complete; M7.8 and later substeps remain gated.
+also complete. M7.8 is now explicitly continued; M7.9 and later remain gated.
 
-## P0 — Await M7.8 authorization; keep acceptance visible
+## P0 — Finish authorized M7.8; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -36,8 +36,13 @@ open cases labelled by GRU where rules abstain. Both abstain on unavailable
 quality; test predictions remain uncomputed after the failed value gate. All 86
 local Python tests, clean-source repeats and full CI 43692438655 (`657f6bc`, all
 four jobs) pass. Evidence: `docs/reference/contextnet-generated-v1-result.json`.
-No app/narrator change or model promotion. Stop before M7.8; no next-step
-implementation or preparation is authorized.
+No app/narrator change or model promotion.
+
+M7.8 now compares a generated-only self-supervised embedding with transparent
+physical-summary distances. Freeze the protocol/source, validate train-only
+statistics/cutoffs, scopes/versions and test-opening guard, run clean-source
+repeats/full CI and retain aggregate evidence. Existing dimensions and production
+inference stay unchanged. Stop before M7.9; no next-step preparation authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 

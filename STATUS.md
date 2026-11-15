@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.7 experiment complete; awaiting M7.8 authorization; model acceptance open**
+**M7 active — M7.8 embedding experiment authorized/in progress; model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -13,12 +13,18 @@ no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
-M7.6 and M7.7's isolated experiments are now complete. M7.8 and later substeps
-need separate authorization. M6.8 stays open.
+M7.6 and M7.7's isolated experiments are complete. M7.8 is now explicitly
+continued; stop before M7.9. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.8 in progress (2026-11-15): generated-only self-supervised embedding and
+  transparent physical-summary distance comparison. Frozen protocol retains
+  training-only statistics/cutoffs, scope/version checks, quality abstention and
+  validation-first test opening. Source freeze/repeats/full CI and aggregate
+  result remain required. Existing Drive DNA, scores and production ML unchanged.
 
 - M7.7 generated experiment complete (2026-11-15), with no validated added value:
   frozen 381-parameter GRU on 318 analytical sequences, train-only normalization
@@ -1024,8 +1030,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.7's generated ContextNet experiment is complete with the
-no-added-value result retained. Local checks, clean-source repeats and all four
-source CI jobs pass; production stays rules-only and test predictions uncomputed.
-Await M7.8 authorization. Model acceptance and M6.8 physical/vehicle checks remain
-open/deferred; no production promotion is authorized.
+**Current step:** M7.8's isolated embedding experiment is authorized/in progress.
+Complete its implementation checks, clean-source comparison/repeats and full CI
+before recording the result. Model acceptance and M6.8 physical/vehicle checks
+remain open/deferred; no production promotion. Stop before M7.9.

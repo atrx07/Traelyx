@@ -1,0 +1,32 @@
+{
+  "experiment_version": "drivedna-generated-ae-v1",
+  "status": "experiment",
+  "production_eligible": false,
+  "source_kind": "generated_only",
+  "dataset_id": "traelyx-style-summary-generated-v1",
+  "license": "CC0-1.0",
+  "license_evidence": "ml/experiments/DRIVEDNA_DATA_LICENSE.md",
+  "attribution": "Traelyx contributors (2026), original analytical style-summary fixtures v1, CC0-1.0; no measured drivers or recordings.",
+  "feature_schema": "drivedna-generated-summary-v1",
+  "features": ["mean_abs_longitudinal_acceleration_mps2", "rms_longitudinal_acceleration_mps2", "mean_abs_longitudinal_jerk_mps3", "rms_longitudinal_jerk_mps3", "mean_abs_lateral_acceleration_mps2", "rms_lateral_acceleration_mps2", "stopped_fraction", "speed_standard_deviation_mps"],
+  "programs": ["steady", "progressive", "stop_go", "lateral", "abrupt"],
+  "groups": {"style-profile-01": "train", "style-profile-02": "validation", "style-profile-03": "train", "style-profile-04": "test", "style-profile-05": "train", "style-profile-06": "test", "style-profile-07": "train", "style-profile-08": "validation", "style-profile-09": "train"},
+  "vehicle_scopes": ["generated-vehicle-a", "generated-vehicle-b"],
+  "driving_contexts": ["generated-context-a", "generated-context-b"],
+  "sensor_scope": "analytical-sensors-v1",
+  "mount_scope": "analytical-vehicle-frame-v1",
+  "duration_seconds": 60,
+  "sample_interval_ms": 1000,
+  "variants": [1, 2],
+  "minimum_moving_fraction": 0.1,
+  "baseline_version": "normalized-summary-euclidean-v1",
+  "config": {"seed": 7808, "augmentation_seed": 7809, "epochs": 200, "learning_rate": 0.01, "hidden": 6, "latent": 3, "threads": 1, "normalizer_scale_floor": 0.000001, "training_noise_std": 0.05, "normal_pair_quantile": 0.95, "distance_floor": 1e-12, "minimum_retrieval_f1_gain": 0.02, "minimum_change_detection_gain": 0.05},
+  "limitations": [
+    "Original generated programs and fictional groups share analytical templates; they do not establish independent real-driver, route, vehicle, device or style generalization.",
+    "Eight physical summaries are experimental inputs, not the four production Drive DNA dimensions or an accepted production feature adapter.",
+    "Program names and paired variants are generation metadata used only for diagnostic retrieval and stable/changed-pair comparisons, not encoder training targets or real driving-style truth.",
+    "Distances and the training-pair cutoff are not probabilities, calibrated confidence, impairment/fatigue evidence, safety or driver-quality judgments.",
+    "Fewer latent coordinates alone do not justify a model; real similarity/deviation usefulness, interpretation, mobile latency and battery remain unavailable.",
+    "Production dimensions, scoring, lifecycle, cohort selection, persistence, narration and Guardian remain unchanged. Failed validation leaves test predictions and metrics uncomputed."
+  ]
+}

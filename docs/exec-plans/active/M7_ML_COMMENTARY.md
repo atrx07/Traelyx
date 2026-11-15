@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.7 experiment complete; await M7.8 authorization; prior acceptance carried forward
+**Current gate:** M7.8 embedding experiment authorized; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,11 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-M7.7, explicitly continued after M7.6, is complete as an isolated ContextNet
-experiment. Its fixed validation value gate failed; retain the no-added-value
-result, uncomputed test predictions, prior acceptance follow-ups and disabled
-production inference. The appended boundaries supersede earlier scope. Await
-authorization before M7.8.
+Current authorized work: M7.8, explicitly continued after M7.7. Compare an
+isolated self-supervised embedding with transparent physical-summary distances,
+preserving the explainable Drive DNA baseline and all deferred acceptance.
+The appended boundaries supersede earlier scope. Stop before M7.9.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -733,3 +732,52 @@ production operation. Real context labels/overlap/open-set/calibration, accepted
 features and runtime/battery/physical evidence remain open alongside all prior
 acceptance gates. The deferred follow-up is retained in `NEXTSTEPS.md`. Stop
 before M7.8 pending explicit authorization; no next-step work is prepared.
+
+## M7.8 boundary — authorized 2026-11-15
+
+The maintainer explicitly continued M7.8. Implement only a bounded generated CPU
+embedding experiment after the deterministic baseline. No production dimensions,
+scoring, lifecycle/cohorts, history, narrator, Guardian, provider or device changes.
+No new dependency, real/private data or promotion. All prior acceptance remains
+open/deferred; stop before M7.9.
+
+### Frozen protocol before results
+
+Authoritative experiment contract: `docs/reference/DRIVEDNA_EMBEDDING_V1.md` and
+`ml/experiments/drivedna-v1.json`. Use 408 original mathematical summary fixtures
+(200/104/104), fictional groups split first, five program diagnostics, two vehicle
+scopes and two contexts. Eight physical summaries omit identities, routes and
+maximum speed. Missing/unsupported and insufficient stationary evidence abstain.
+
+Fit one self-supervised denoising 8→6→3→6→8 autoencoder (155 parameters), fixed
+seed/noise/200 epochs and training-only normalization. Labels/groups/scope tags
+do not enter the encoder loss. Compare distances to the same eight normalized
+summaries, not a claimed replacement for native Drive DNA dimensions. Fit each
+method's stable-pair distance cutoff from training pairs only; program metadata
+is diagnostic generation provenance, not field style truth or probability.
+
+Report program retrieval per-class F1/recall/confusion, hit rate/MRR, stable false
+flags and controlled changed detections, including cohort slices. Validation
+requires material gain and no recall/retrieval/deviation/quality regression;
+failure retains the baseline and leaves test predictions uncomputed. Exact
+model/normalizer version, dataset, vehicle/context, sensor/mount scope must match
+before any distance comparison. Do not expose raw vectors to app users or infer
+impairment/fatigue. Shared templates cannot establish real-driver generalization.
+
+### Acceptance / checks
+
+- [x] Freeze manifest/license/protocol before observing the experiment result.
+- [x] Implement strict generated source, self-supervised candidate, deterministic
+  comparator, scoped/versioned distance contract, train-only cutoffs and safe replay.
+- [x] Validate split/quality/scopes, label-independent training, cutoff isolation,
+  reproducibility, failure paths and failed-gate test non-evaluation.
+- [ ] Run clean-source repeats and full CI; retain negative results without tuning.
+- [ ] Persist aggregate evidence and synchronized status; commit/push/verify Git
+  and stop before M7.9.
+
+Implementation gate: all 99 Python tests (13 new embedding tests), compile,
+pinned CPU dependency check, repository contracts/secrets and diff checks pass.
+The first combined suite hit a Windows rename permission failure in an unchanged
+calibration test; its targeted retry and the complete 99-test rerun pass without
+assertion changes. No complete embedding experiment result has been observed
+before the source freeze. Clean-source comparisons/repeats/full CI remain required.

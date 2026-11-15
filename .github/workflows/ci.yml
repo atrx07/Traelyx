@@ -25,9 +25,23 @@ jobs:
         run: python -m pip install -r ml/requirements-eventnet.txt
       - name: Test isolated CPU experiments
         run: |
-          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py tests/tool/test_integritynet.py tests/tool/test_contextnet.py
+          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py tests/tool/test_integritynet.py tests/tool/test_contextnet.py tests/tool/test_drivedna.py
           python -m pip check
-          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration tests.tool.test_integritynet tests.tool.test_contextnet
+          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration tests.tool.test_integritynet tests.tool.test_contextnet tests.tool.test_drivedna
+      - name: Compare generated DriveDNA embedding and summaries twice
+        run: |
+          python -m ml.drivedna_corpus --output .dart_tool/drivedna-fixtures-v1.json
+          expected=$(sha256sum .dart_tool/drivedna-fixtures-v1.json | cut -d ' ' -f 1)
+          python -m ml.drivedna --source .dart_tool/drivedna-fixtures-v1.json --expected-sha256 "$expected" --run-name drivedna-ci-one
+          python -m ml.drivedna --source .dart_tool/drivedna-fixtures-v1.json --expected-sha256 "$expected" --run-name drivedna-ci-two
+          cmp ml/checkpoints/drivedna-ci-one/checkpoint.json ml/checkpoints/drivedna-ci-two/checkpoint.json
+          cmp ml/checkpoints/drivedna-ci-one/report.json ml/checkpoints/drivedna-ci-two/report.json
+      - name: Retain generated DriveDNA comparison only
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: drivedna-generated-comparison
+          path: ml/checkpoints/drivedna-ci-one/report.json
+          if-no-files-found: error
       - name: Compare generated ContextNet with frozen temporal rules twice
         run: |
           python -m ml.contextnet_corpus --output .dart_tool/contextnet-fixtures-v1.json
