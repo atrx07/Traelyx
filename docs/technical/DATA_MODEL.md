@@ -89,6 +89,16 @@ entity type `account_metadata_v1`, mutation UUID idempotency, and expected
 revision. Profile/vehicle cloud rows gain server-maintained `revision` and
 `last_mutation_id`; no new raw/private telemetry fields are introduced.
 
+### `trip_event_corrections` — Drift schema 4
+
+M7.9 adds local-only reports keyed by trip ID, event ID and exact source snapshot
+JSON, with report choice/revision, local creation/update times and optional
+consent-version/time. They cascade with the trip, not event replacement; stale
+notes remain local until removal and are excluded from export. The additive
+v1/2/3→4 migration preserves prior evidence, links/cache and queues. Corrections
+never alter events, scores, rank eligibility or cloud payloads. See
+[the correction contract](../reference/EVENT_CORRECTION_V1.md).
+
 ## 2. Cloud database — compact connected layer
 
 M6.1 begins with private `profiles`, sanitized `vehicles`, and compact

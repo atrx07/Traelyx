@@ -7290,6 +7290,613 @@ class AccountMetadataCacheCompanion
   }
 }
 
+class $TripEventCorrectionsTable extends TripEventCorrections
+    with TableInfo<$TripEventCorrectionsTable, TripEventCorrection> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TripEventCorrectionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _tripIdMeta = const VerificationMeta('tripId');
+  @override
+  late final GeneratedColumn<String> tripId = GeneratedColumn<String>(
+    'trip_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES trips (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceSnapshotJsonMeta =
+      const VerificationMeta('sourceSnapshotJson');
+  @override
+  late final GeneratedColumn<String> sourceSnapshotJson =
+      GeneratedColumn<String>(
+        'source_snapshot_json',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _reportedLabelMeta = const VerificationMeta(
+    'reportedLabel',
+  );
+  @override
+  late final GeneratedColumn<String> reportedLabel = GeneratedColumn<String>(
+    'reported_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMicrosMeta = const VerificationMeta(
+    'createdAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> createdAtMicros = GeneratedColumn<int>(
+    'created_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMicrosMeta = const VerificationMeta(
+    'updatedAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAtMicros = GeneratedColumn<int>(
+    'updated_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _consentVersionMeta = const VerificationMeta(
+    'consentVersion',
+  );
+  @override
+  late final GeneratedColumn<int> consentVersion = GeneratedColumn<int>(
+    'consent_version',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _consentedAtMicrosMeta = const VerificationMeta(
+    'consentedAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> consentedAtMicros = GeneratedColumn<int>(
+    'consented_at_micros',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    tripId,
+    eventId,
+    sourceSnapshotJson,
+    reportedLabel,
+    revision,
+    createdAtMicros,
+    updatedAtMicros,
+    consentVersion,
+    consentedAtMicros,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'trip_event_corrections';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TripEventCorrection> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('trip_id')) {
+      context.handle(
+        _tripIdMeta,
+        tripId.isAcceptableOrUnknown(data['trip_id']!, _tripIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tripIdMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('source_snapshot_json')) {
+      context.handle(
+        _sourceSnapshotJsonMeta,
+        sourceSnapshotJson.isAcceptableOrUnknown(
+          data['source_snapshot_json']!,
+          _sourceSnapshotJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceSnapshotJsonMeta);
+    }
+    if (data.containsKey('reported_label')) {
+      context.handle(
+        _reportedLabelMeta,
+        reportedLabel.isAcceptableOrUnknown(
+          data['reported_label']!,
+          _reportedLabelMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_reportedLabelMeta);
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionMeta);
+    }
+    if (data.containsKey('created_at_micros')) {
+      context.handle(
+        _createdAtMicrosMeta,
+        createdAtMicros.isAcceptableOrUnknown(
+          data['created_at_micros']!,
+          _createdAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMicrosMeta);
+    }
+    if (data.containsKey('updated_at_micros')) {
+      context.handle(
+        _updatedAtMicrosMeta,
+        updatedAtMicros.isAcceptableOrUnknown(
+          data['updated_at_micros']!,
+          _updatedAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMicrosMeta);
+    }
+    if (data.containsKey('consent_version')) {
+      context.handle(
+        _consentVersionMeta,
+        consentVersion.isAcceptableOrUnknown(
+          data['consent_version']!,
+          _consentVersionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('consented_at_micros')) {
+      context.handle(
+        _consentedAtMicrosMeta,
+        consentedAtMicros.isAcceptableOrUnknown(
+          data['consented_at_micros']!,
+          _consentedAtMicrosMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {tripId, eventId, sourceSnapshotJson};
+  @override
+  TripEventCorrection map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TripEventCorrection(
+      tripId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}trip_id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      sourceSnapshotJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_snapshot_json'],
+      )!,
+      reportedLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reported_label'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      createdAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at_micros'],
+      )!,
+      updatedAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at_micros'],
+      )!,
+      consentVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}consent_version'],
+      ),
+      consentedAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}consented_at_micros'],
+      ),
+    );
+  }
+
+  @override
+  $TripEventCorrectionsTable createAlias(String alias) {
+    return $TripEventCorrectionsTable(attachedDatabase, alias);
+  }
+}
+
+class TripEventCorrection extends DataClass
+    implements Insertable<TripEventCorrection> {
+  final String tripId;
+  final String eventId;
+  final String sourceSnapshotJson;
+  final String reportedLabel;
+  final int revision;
+  final int createdAtMicros;
+  final int updatedAtMicros;
+  final int? consentVersion;
+  final int? consentedAtMicros;
+  const TripEventCorrection({
+    required this.tripId,
+    required this.eventId,
+    required this.sourceSnapshotJson,
+    required this.reportedLabel,
+    required this.revision,
+    required this.createdAtMicros,
+    required this.updatedAtMicros,
+    this.consentVersion,
+    this.consentedAtMicros,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['trip_id'] = Variable<String>(tripId);
+    map['event_id'] = Variable<String>(eventId);
+    map['source_snapshot_json'] = Variable<String>(sourceSnapshotJson);
+    map['reported_label'] = Variable<String>(reportedLabel);
+    map['revision'] = Variable<int>(revision);
+    map['created_at_micros'] = Variable<int>(createdAtMicros);
+    map['updated_at_micros'] = Variable<int>(updatedAtMicros);
+    if (!nullToAbsent || consentVersion != null) {
+      map['consent_version'] = Variable<int>(consentVersion);
+    }
+    if (!nullToAbsent || consentedAtMicros != null) {
+      map['consented_at_micros'] = Variable<int>(consentedAtMicros);
+    }
+    return map;
+  }
+
+  TripEventCorrectionsCompanion toCompanion(bool nullToAbsent) {
+    return TripEventCorrectionsCompanion(
+      tripId: Value(tripId),
+      eventId: Value(eventId),
+      sourceSnapshotJson: Value(sourceSnapshotJson),
+      reportedLabel: Value(reportedLabel),
+      revision: Value(revision),
+      createdAtMicros: Value(createdAtMicros),
+      updatedAtMicros: Value(updatedAtMicros),
+      consentVersion: consentVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(consentVersion),
+      consentedAtMicros: consentedAtMicros == null && nullToAbsent
+          ? const Value.absent()
+          : Value(consentedAtMicros),
+    );
+  }
+
+  factory TripEventCorrection.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TripEventCorrection(
+      tripId: serializer.fromJson<String>(json['tripId']),
+      eventId: serializer.fromJson<String>(json['eventId']),
+      sourceSnapshotJson: serializer.fromJson<String>(
+        json['sourceSnapshotJson'],
+      ),
+      reportedLabel: serializer.fromJson<String>(json['reportedLabel']),
+      revision: serializer.fromJson<int>(json['revision']),
+      createdAtMicros: serializer.fromJson<int>(json['createdAtMicros']),
+      updatedAtMicros: serializer.fromJson<int>(json['updatedAtMicros']),
+      consentVersion: serializer.fromJson<int?>(json['consentVersion']),
+      consentedAtMicros: serializer.fromJson<int?>(json['consentedAtMicros']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'tripId': serializer.toJson<String>(tripId),
+      'eventId': serializer.toJson<String>(eventId),
+      'sourceSnapshotJson': serializer.toJson<String>(sourceSnapshotJson),
+      'reportedLabel': serializer.toJson<String>(reportedLabel),
+      'revision': serializer.toJson<int>(revision),
+      'createdAtMicros': serializer.toJson<int>(createdAtMicros),
+      'updatedAtMicros': serializer.toJson<int>(updatedAtMicros),
+      'consentVersion': serializer.toJson<int?>(consentVersion),
+      'consentedAtMicros': serializer.toJson<int?>(consentedAtMicros),
+    };
+  }
+
+  TripEventCorrection copyWith({
+    String? tripId,
+    String? eventId,
+    String? sourceSnapshotJson,
+    String? reportedLabel,
+    int? revision,
+    int? createdAtMicros,
+    int? updatedAtMicros,
+    Value<int?> consentVersion = const Value.absent(),
+    Value<int?> consentedAtMicros = const Value.absent(),
+  }) => TripEventCorrection(
+    tripId: tripId ?? this.tripId,
+    eventId: eventId ?? this.eventId,
+    sourceSnapshotJson: sourceSnapshotJson ?? this.sourceSnapshotJson,
+    reportedLabel: reportedLabel ?? this.reportedLabel,
+    revision: revision ?? this.revision,
+    createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+    updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
+    consentVersion: consentVersion.present
+        ? consentVersion.value
+        : this.consentVersion,
+    consentedAtMicros: consentedAtMicros.present
+        ? consentedAtMicros.value
+        : this.consentedAtMicros,
+  );
+  TripEventCorrection copyWithCompanion(TripEventCorrectionsCompanion data) {
+    return TripEventCorrection(
+      tripId: data.tripId.present ? data.tripId.value : this.tripId,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      sourceSnapshotJson: data.sourceSnapshotJson.present
+          ? data.sourceSnapshotJson.value
+          : this.sourceSnapshotJson,
+      reportedLabel: data.reportedLabel.present
+          ? data.reportedLabel.value
+          : this.reportedLabel,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      createdAtMicros: data.createdAtMicros.present
+          ? data.createdAtMicros.value
+          : this.createdAtMicros,
+      updatedAtMicros: data.updatedAtMicros.present
+          ? data.updatedAtMicros.value
+          : this.updatedAtMicros,
+      consentVersion: data.consentVersion.present
+          ? data.consentVersion.value
+          : this.consentVersion,
+      consentedAtMicros: data.consentedAtMicros.present
+          ? data.consentedAtMicros.value
+          : this.consentedAtMicros,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TripEventCorrection(')
+          ..write('tripId: $tripId, ')
+          ..write('eventId: $eventId, ')
+          ..write('sourceSnapshotJson: $sourceSnapshotJson, ')
+          ..write('reportedLabel: $reportedLabel, ')
+          ..write('revision: $revision, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros, ')
+          ..write('consentVersion: $consentVersion, ')
+          ..write('consentedAtMicros: $consentedAtMicros')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    tripId,
+    eventId,
+    sourceSnapshotJson,
+    reportedLabel,
+    revision,
+    createdAtMicros,
+    updatedAtMicros,
+    consentVersion,
+    consentedAtMicros,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TripEventCorrection &&
+          other.tripId == this.tripId &&
+          other.eventId == this.eventId &&
+          other.sourceSnapshotJson == this.sourceSnapshotJson &&
+          other.reportedLabel == this.reportedLabel &&
+          other.revision == this.revision &&
+          other.createdAtMicros == this.createdAtMicros &&
+          other.updatedAtMicros == this.updatedAtMicros &&
+          other.consentVersion == this.consentVersion &&
+          other.consentedAtMicros == this.consentedAtMicros);
+}
+
+class TripEventCorrectionsCompanion
+    extends UpdateCompanion<TripEventCorrection> {
+  final Value<String> tripId;
+  final Value<String> eventId;
+  final Value<String> sourceSnapshotJson;
+  final Value<String> reportedLabel;
+  final Value<int> revision;
+  final Value<int> createdAtMicros;
+  final Value<int> updatedAtMicros;
+  final Value<int?> consentVersion;
+  final Value<int?> consentedAtMicros;
+  final Value<int> rowid;
+  const TripEventCorrectionsCompanion({
+    this.tripId = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.sourceSnapshotJson = const Value.absent(),
+    this.reportedLabel = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.createdAtMicros = const Value.absent(),
+    this.updatedAtMicros = const Value.absent(),
+    this.consentVersion = const Value.absent(),
+    this.consentedAtMicros = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TripEventCorrectionsCompanion.insert({
+    required String tripId,
+    required String eventId,
+    required String sourceSnapshotJson,
+    required String reportedLabel,
+    required int revision,
+    required int createdAtMicros,
+    required int updatedAtMicros,
+    this.consentVersion = const Value.absent(),
+    this.consentedAtMicros = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : tripId = Value(tripId),
+       eventId = Value(eventId),
+       sourceSnapshotJson = Value(sourceSnapshotJson),
+       reportedLabel = Value(reportedLabel),
+       revision = Value(revision),
+       createdAtMicros = Value(createdAtMicros),
+       updatedAtMicros = Value(updatedAtMicros);
+  static Insertable<TripEventCorrection> custom({
+    Expression<String>? tripId,
+    Expression<String>? eventId,
+    Expression<String>? sourceSnapshotJson,
+    Expression<String>? reportedLabel,
+    Expression<int>? revision,
+    Expression<int>? createdAtMicros,
+    Expression<int>? updatedAtMicros,
+    Expression<int>? consentVersion,
+    Expression<int>? consentedAtMicros,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (tripId != null) 'trip_id': tripId,
+      if (eventId != null) 'event_id': eventId,
+      if (sourceSnapshotJson != null)
+        'source_snapshot_json': sourceSnapshotJson,
+      if (reportedLabel != null) 'reported_label': reportedLabel,
+      if (revision != null) 'revision': revision,
+      if (createdAtMicros != null) 'created_at_micros': createdAtMicros,
+      if (updatedAtMicros != null) 'updated_at_micros': updatedAtMicros,
+      if (consentVersion != null) 'consent_version': consentVersion,
+      if (consentedAtMicros != null) 'consented_at_micros': consentedAtMicros,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TripEventCorrectionsCompanion copyWith({
+    Value<String>? tripId,
+    Value<String>? eventId,
+    Value<String>? sourceSnapshotJson,
+    Value<String>? reportedLabel,
+    Value<int>? revision,
+    Value<int>? createdAtMicros,
+    Value<int>? updatedAtMicros,
+    Value<int?>? consentVersion,
+    Value<int?>? consentedAtMicros,
+    Value<int>? rowid,
+  }) {
+    return TripEventCorrectionsCompanion(
+      tripId: tripId ?? this.tripId,
+      eventId: eventId ?? this.eventId,
+      sourceSnapshotJson: sourceSnapshotJson ?? this.sourceSnapshotJson,
+      reportedLabel: reportedLabel ?? this.reportedLabel,
+      revision: revision ?? this.revision,
+      createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+      updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
+      consentVersion: consentVersion ?? this.consentVersion,
+      consentedAtMicros: consentedAtMicros ?? this.consentedAtMicros,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (tripId.present) {
+      map['trip_id'] = Variable<String>(tripId.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (sourceSnapshotJson.present) {
+      map['source_snapshot_json'] = Variable<String>(sourceSnapshotJson.value);
+    }
+    if (reportedLabel.present) {
+      map['reported_label'] = Variable<String>(reportedLabel.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (createdAtMicros.present) {
+      map['created_at_micros'] = Variable<int>(createdAtMicros.value);
+    }
+    if (updatedAtMicros.present) {
+      map['updated_at_micros'] = Variable<int>(updatedAtMicros.value);
+    }
+    if (consentVersion.present) {
+      map['consent_version'] = Variable<int>(consentVersion.value);
+    }
+    if (consentedAtMicros.present) {
+      map['consented_at_micros'] = Variable<int>(consentedAtMicros.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TripEventCorrectionsCompanion(')
+          ..write('tripId: $tripId, ')
+          ..write('eventId: $eventId, ')
+          ..write('sourceSnapshotJson: $sourceSnapshotJson, ')
+          ..write('reportedLabel: $reportedLabel, ')
+          ..write('revision: $revision, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros, ')
+          ..write('consentVersion: $consentVersion, ')
+          ..write('consentedAtMicros: $consentedAtMicros, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7308,6 +7915,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $AccountMetadataCacheTable accountMetadataCache =
       $AccountMetadataCacheTable(this);
+  late final $TripEventCorrectionsTable tripEventCorrections =
+      $TripEventCorrectionsTable(this);
   late final Index vehiclesOwnerNamespace = Index(
     'vehicles_owner_namespace',
     'CREATE INDEX vehicles_owner_namespace ON vehicles (owner_namespace)',
@@ -7355,6 +7964,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     syncQueue,
     tripAccountLinks,
     accountMetadataCache,
+    tripEventCorrections,
     vehiclesOwnerNamespace,
     tripsVehicleStart,
     tripsStartTime,
@@ -7407,6 +8017,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('trip_account_links', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'trips',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('trip_event_corrections', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -8247,6 +8864,31 @@ final class $$TripsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $TripEventCorrectionsTable,
+    List<TripEventCorrection>
+  >
+  _tripEventCorrectionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.tripEventCorrections,
+        aliasName: 'trips__id__trip_event_corrections__trip_id',
+      );
+
+  $$TripEventCorrectionsTableProcessedTableManager
+  get tripEventCorrectionsRefs {
+    final manager = $$TripEventCorrectionsTableTableManager(
+      $_db,
+      $_db.tripEventCorrections,
+    ).filter((f) => f.tripId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _tripEventCorrectionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$TripsTableFilterComposer extends Composer<_$AppDatabase, $TripsTable> {
@@ -8466,6 +9108,31 @@ class $$TripsTableFilterComposer extends Composer<_$AppDatabase, $TripsTable> {
           }) => $$TripAccountLinksTableFilterComposer(
             $db: $db,
             $table: $db.tripAccountLinks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> tripEventCorrectionsRefs(
+    Expression<bool> Function($$TripEventCorrectionsTableFilterComposer f) f,
+  ) {
+    final $$TripEventCorrectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.tripEventCorrections,
+      getReferencedColumn: (t) => t.tripId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TripEventCorrectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.tripEventCorrections,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8828,6 +9495,32 @@ class $$TripsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> tripEventCorrectionsRefs<T extends Object>(
+    Expression<T> Function($$TripEventCorrectionsTableAnnotationComposer a) f,
+  ) {
+    final $$TripEventCorrectionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.tripEventCorrections,
+          getReferencedColumn: (t) => t.tripId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TripEventCorrectionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.tripEventCorrections,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$TripsTableTableManager
@@ -8849,6 +9542,7 @@ class $$TripsTableTableManager
             bool tripEventsRefs,
             bool tripScoresRefs,
             bool tripAccountLinksRefs,
+            bool tripEventCorrectionsRefs,
           })
         > {
   $$TripsTableTableManager(_$AppDatabase db, $TripsTable table)
@@ -8969,6 +9663,7 @@ class $$TripsTableTableManager
                 tripEventsRefs = false,
                 tripScoresRefs = false,
                 tripAccountLinksRefs = false,
+                tripEventCorrectionsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -8977,6 +9672,7 @@ class $$TripsTableTableManager
                     if (tripEventsRefs) db.tripEvents,
                     if (tripScoresRefs) db.tripScores,
                     if (tripAccountLinksRefs) db.tripAccountLinks,
+                    if (tripEventCorrectionsRefs) db.tripEventCorrections,
                   ],
                   addJoins:
                       <
@@ -9084,6 +9780,27 @@ class $$TripsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (tripEventCorrectionsRefs)
+                        await $_getPrefetchedData<
+                          Trip,
+                          $TripsTable,
+                          TripEventCorrection
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TripsTableReferences
+                              ._tripEventCorrectionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TripsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).tripEventCorrectionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.tripId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -9110,6 +9827,7 @@ typedef $$TripsTableProcessedTableManager =
         bool tripEventsRefs,
         bool tripScoresRefs,
         bool tripAccountLinksRefs,
+        bool tripEventCorrectionsRefs,
       })
     >;
 typedef $$TripChunksTableCreateCompanionBuilder =
@@ -12241,6 +12959,430 @@ typedef $$AccountMetadataCacheTableProcessedTableManager =
       AccountMetadataCacheData,
       PrefetchHooks Function()
     >;
+typedef $$TripEventCorrectionsTableCreateCompanionBuilder =
+    TripEventCorrectionsCompanion Function({
+      required String tripId,
+      required String eventId,
+      required String sourceSnapshotJson,
+      required String reportedLabel,
+      required int revision,
+      required int createdAtMicros,
+      required int updatedAtMicros,
+      Value<int?> consentVersion,
+      Value<int?> consentedAtMicros,
+      Value<int> rowid,
+    });
+typedef $$TripEventCorrectionsTableUpdateCompanionBuilder =
+    TripEventCorrectionsCompanion Function({
+      Value<String> tripId,
+      Value<String> eventId,
+      Value<String> sourceSnapshotJson,
+      Value<String> reportedLabel,
+      Value<int> revision,
+      Value<int> createdAtMicros,
+      Value<int> updatedAtMicros,
+      Value<int?> consentVersion,
+      Value<int?> consentedAtMicros,
+      Value<int> rowid,
+    });
+
+final class $$TripEventCorrectionsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $TripEventCorrectionsTable,
+          TripEventCorrection
+        > {
+  $$TripEventCorrectionsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TripsTable _tripIdTable(_$AppDatabase db) =>
+      db.trips.createAlias('trip_event_corrections__trip_id__trips__id');
+
+  $$TripsTableProcessedTableManager get tripId {
+    final $_column = $_itemColumn<String>('trip_id')!;
+
+    final manager = $$TripsTableTableManager(
+      $_db,
+      $_db.trips,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tripIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TripEventCorrectionsTableFilterComposer
+    extends Composer<_$AppDatabase, $TripEventCorrectionsTable> {
+  $$TripEventCorrectionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceSnapshotJson => $composableBuilder(
+    column: $table.sourceSnapshotJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reportedLabel => $composableBuilder(
+    column: $table.reportedLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get consentVersion => $composableBuilder(
+    column: $table.consentVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get consentedAtMicros => $composableBuilder(
+    column: $table.consentedAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TripsTableFilterComposer get tripId {
+    final $$TripsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.trips,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TripsTableFilterComposer(
+            $db: $db,
+            $table: $db.trips,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TripEventCorrectionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TripEventCorrectionsTable> {
+  $$TripEventCorrectionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceSnapshotJson => $composableBuilder(
+    column: $table.sourceSnapshotJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reportedLabel => $composableBuilder(
+    column: $table.reportedLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get consentVersion => $composableBuilder(
+    column: $table.consentVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get consentedAtMicros => $composableBuilder(
+    column: $table.consentedAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TripsTableOrderingComposer get tripId {
+    final $$TripsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.trips,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TripsTableOrderingComposer(
+            $db: $db,
+            $table: $db.trips,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TripEventCorrectionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TripEventCorrectionsTable> {
+  $$TripEventCorrectionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceSnapshotJson => $composableBuilder(
+    column: $table.sourceSnapshotJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reportedLabel => $composableBuilder(
+    column: $table.reportedLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get consentVersion => $composableBuilder(
+    column: $table.consentVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get consentedAtMicros => $composableBuilder(
+    column: $table.consentedAtMicros,
+    builder: (column) => column,
+  );
+
+  $$TripsTableAnnotationComposer get tripId {
+    final $$TripsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.trips,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TripsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trips,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TripEventCorrectionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TripEventCorrectionsTable,
+          TripEventCorrection,
+          $$TripEventCorrectionsTableFilterComposer,
+          $$TripEventCorrectionsTableOrderingComposer,
+          $$TripEventCorrectionsTableAnnotationComposer,
+          $$TripEventCorrectionsTableCreateCompanionBuilder,
+          $$TripEventCorrectionsTableUpdateCompanionBuilder,
+          (TripEventCorrection, $$TripEventCorrectionsTableReferences),
+          TripEventCorrection,
+          PrefetchHooks Function({bool tripId})
+        > {
+  $$TripEventCorrectionsTableTableManager(
+    _$AppDatabase db,
+    $TripEventCorrectionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TripEventCorrectionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TripEventCorrectionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$TripEventCorrectionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> tripId = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<String> sourceSnapshotJson = const Value.absent(),
+                Value<String> reportedLabel = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<int> createdAtMicros = const Value.absent(),
+                Value<int> updatedAtMicros = const Value.absent(),
+                Value<int?> consentVersion = const Value.absent(),
+                Value<int?> consentedAtMicros = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TripEventCorrectionsCompanion(
+                tripId: tripId,
+                eventId: eventId,
+                sourceSnapshotJson: sourceSnapshotJson,
+                reportedLabel: reportedLabel,
+                revision: revision,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
+                consentVersion: consentVersion,
+                consentedAtMicros: consentedAtMicros,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String tripId,
+                required String eventId,
+                required String sourceSnapshotJson,
+                required String reportedLabel,
+                required int revision,
+                required int createdAtMicros,
+                required int updatedAtMicros,
+                Value<int?> consentVersion = const Value.absent(),
+                Value<int?> consentedAtMicros = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TripEventCorrectionsCompanion.insert(
+                tripId: tripId,
+                eventId: eventId,
+                sourceSnapshotJson: sourceSnapshotJson,
+                reportedLabel: reportedLabel,
+                revision: revision,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
+                consentVersion: consentVersion,
+                consentedAtMicros: consentedAtMicros,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TripEventCorrectionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({tripId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (tripId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.tripId,
+                                referencedTable:
+                                    $$TripEventCorrectionsTableReferences
+                                        ._tripIdTable(db),
+                                referencedColumn:
+                                    $$TripEventCorrectionsTableReferences
+                                        ._tripIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TripEventCorrectionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TripEventCorrectionsTable,
+      TripEventCorrection,
+      $$TripEventCorrectionsTableFilterComposer,
+      $$TripEventCorrectionsTableOrderingComposer,
+      $$TripEventCorrectionsTableAnnotationComposer,
+      $$TripEventCorrectionsTableCreateCompanionBuilder,
+      $$TripEventCorrectionsTableUpdateCompanionBuilder,
+      (TripEventCorrection, $$TripEventCorrectionsTableReferences),
+      TripEventCorrection,
+      PrefetchHooks Function({bool tripId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12265,4 +13407,6 @@ class $AppDatabaseManager {
       $$TripAccountLinksTableTableManager(_db, _db.tripAccountLinks);
   $$AccountMetadataCacheTableTableManager get accountMetadataCache =>
       $$AccountMetadataCacheTableTableManager(_db, _db.accountMetadataCache);
+  $$TripEventCorrectionsTableTableManager get tripEventCorrections =>
+      $$TripEventCorrectionsTableTableManager(_db, _db.tripEventCorrections);
 }

@@ -106,6 +106,17 @@ Information hierarchy:
 7. replay;
 8. deeper graphs/details.
 
+### Post-drive detection review — M7.9
+
+**Review detections after driving** opens under a trip's notable moments only
+with known idle recorder status. The user confirms they are parked before any
+labeling controls appear. Notes default to no contribution permission, edits
+require fresh opt-in, and export has a separate readable review and document
+destination. Leaving the app resets the parked confirmation. No drive-mode
+prompts, arbitrary free text or changed scores are introduced. Use existing
+theme/accessible controls and respect reduced motion/large text. See
+`../reference/EVENT_CORRECTION_V1.md` for the data and consent contract.
+
 ## 8. Drive DNA visual language
 
 Primary presentation should not rely solely on a generic radar chart.

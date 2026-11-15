@@ -86,9 +86,15 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   inside the checkout, then point both process `TEMP` and `TMP` to its absolute
   path before launching Python. Keep test-created subdirectory cleanup intact.
   Do not change global environment/ACLs or ignore cleanup failures.
+- **If it persists:** An atomic directory rename can still raise WinError5 inside
+  the workspace-local temp root. Rerun the unchanged test command with the needed
+  filesystem permission, retaining the same TEMP/TMP and all assertions. Do not
+  replace atomic publication, suppress cleanup or change dataset/model logic.
 - **Verification:** Both offline suites pass together (25 tests, no skips) with
   resource warnings treated as errors using this workspace-local temp root,
   2026-11-11. Unsandboxed execution also passes; no test assertions changed.
+  On2026-11-15, a 105-test run reproduced a sandbox rename failure; the permitted
+  unchanged full run passed105 tests with ResourceWarning treated as an error.
 
 ## PowerShell JSON timestamps lose UTC when reparsed through strings
 

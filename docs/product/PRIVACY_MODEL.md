@@ -108,6 +108,15 @@ If users opt in to improve detection:
 - document retention and dataset versioning;
 - do not assume account signup equals training consent.
 
+M7.9 stores post-drive corrections locally, with default-off permission per note.
+Editing requires choosing permission again. A separate review/export includes
+only categorical detections/reports and source versions, with no IDs, timestamps,
+routes, measurements or raw samples. The user chooses a document destination;
+Traelyx adds no upload. Revocation/removal stops future app exports but cannot
+recall saved files. Receiver consent is an unverified declaration; imports remain
+quarantined and blocked from training pending further governance. See
+[`EVENT_CORRECTION_V1.md`](../reference/EVENT_CORRECTION_V1.md).
+
 ## 9. Deletion
 
 Support:

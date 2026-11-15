@@ -229,6 +229,14 @@ Never ask for labels while driving.
 
 Corrections become training data only under explicit contribution consent.
 
+M7.9 implements local, source-bound post-drive reports without changing detector
+results/scores. Recorder-idle and fresh parked confirmation gate actions. A
+separate consented review permits a categorical-only local document export;
+`ml.contributions` validates it into private quarantine, never existing training
+sets. Unknown grouping/features and unverified label/consent provenance remain
+explicit blockers. No model is enabled or trained. Follow
+[`EVENT_CORRECTION_V1.md`](../reference/EVENT_CORRECTION_V1.md).
+
 ## 12. LLMs
 
 LLMs are optional commentary engines only. They do not analyze raw telemetry for safety/scoring in the MVP.

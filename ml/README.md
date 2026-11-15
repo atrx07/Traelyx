@@ -26,6 +26,19 @@ No explicit production dimension or lifecycle changes. Follow
 [the embedding protocol](../docs/reference/DRIVEDNA_EMBEDDING_V1.md) for scoped/
 versioned comparisons, train-only cutoffs and validation-first test opening.
 
+M7.9 adds a separate standard-library receiver for explicitly exported categorical
+corrections. It never reads recordings, uploads or trains:
+
+```text
+python -m ml.contributions --source <reviewed-file> --expected-sha256 <digest> --accept-declared-consent
+```
+
+Consent is an unverified declaration. Receipts remain under ignored
+`data/private/contributions/<sha256>/` with training blocked: no verified labels,
+aligned features or driver/trip grouping is supplied. Follow
+[the correction contract](../docs/reference/EVENT_CORRECTION_V1.md); existing
+datasets/models and historical imports remain unchanged.
+
 ```text
 python ml/datasets.py validate
 python -m unittest tests.tool.test_ml_datasets

@@ -8,6 +8,9 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.github.atrx07.traelyx.data.DataManagementContract
+import io.github.atrx07.traelyx.data.CorrectionContributionExporter
+import io.github.atrx07.traelyx.data.correctionRecorderIdle
+import io.github.atrx07.traelyx.data.correctionExportResult
 import io.github.atrx07.traelyx.data.RedactedTripSummaryPayload
 import io.github.atrx07.traelyx.data.rawTelemetryDeletionMap
 import io.github.atrx07.traelyx.data.redactedSummaryExportMap
@@ -53,6 +56,7 @@ class MainActivity : FlutterActivity() {
     private val analysisExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val finalizationExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private var analysisBusy = false
+    private var correctionExporter: CorrectionContributionExporter? = null
 
     override fun onPostResume() {
         super.onPostResume()
@@ -61,6 +65,20 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        correctionExporter?.close()
+        val correctionChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CorrectionContributionExporter.CHANNEL)
+        correctionExporter = CorrectionContributionExporter(this, dataManagementExecutor, correctionChannel,
+            isIdle = { correctionRecorderIdle(AndroidRecorderBridgeGateway(this).status()) },
+            otherExportPending = { pendingTripDebugResult != null || pendingRedactedSummaryResult != null },
+        )
+        correctionChannel.setMethodCallHandler { call, result ->
+                if (call.method == "exportContribution") {
+                    val exporter = correctionExporter
+                    if (exporter == null) result.success(correctionExportResult(false, 0, "export_activity_destroyed"))
+                    else exporter.begin(call.arguments, result)
+                } else result.notImplemented()
+            }
 
         val localAnalysis = LocalTripAnalysis(AtomicFileTelemetryChunkStore(applicationContext))
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LocalTripAnalysis.CHANNEL)
@@ -245,7 +263,7 @@ class MainActivity : FlutterActivity() {
         tripId: String?,
         result: MethodChannel.Result,
     ) {
-        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null) {
+        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null || correctionExporter?.busy == true) {
             result.success(tripDebugExportFailureMap(tripId, "export_in_progress"))
             return
         }
@@ -307,6 +325,7 @@ class MainActivity : FlutterActivity() {
         data: Intent?,
     ) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (correctionExporter?.onActivityResult(requestCode, resultCode, data) == true) return
         if (requestCode == REDACTED_SUMMARY_EXPORT_REQUEST_CODE) {
             if (resultCode != Activity.RESULT_OK || data?.data == null) {
                 completeRedactedSummaryExport(false, "export_cancelled")
@@ -410,7 +429,7 @@ class MainActivity : FlutterActivity() {
         payload: RedactedTripSummaryPayload?,
         result: MethodChannel.Result,
     ) {
-        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null) {
+        if (pendingTripDebugResult != null || pendingRedactedSummaryResult != null || correctionExporter?.busy == true) {
             result.success(redactedSummaryExportMap(false, 0L, "export_in_progress"))
             return
         }
@@ -445,6 +464,8 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onDestroy() {
+        correctionExporter?.close()
+        correctionExporter = null
         runCatching {
             pendingTripDebugResult?.success(
                 tripDebugExportFailureMap(pendingTripDebugTripId, "export_activity_destroyed"),

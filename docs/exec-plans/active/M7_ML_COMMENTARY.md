@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.8 experiment complete; await M7.9 authorization; prior acceptance carried forward
+**Current gate:** M7.9 post-drive corrections authorized; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,11 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-M7.8, explicitly continued after M7.7, is complete as an isolated self-supervised
-embedding experiment. Retain the lower synthetic false-flag count, failed fixed
-value gate, uncomputed test predictions, explainable dimensions and deferred
-acceptance. The appended boundaries supersede earlier scope. Await authorization
-before M7.9.
+Current authorized work: M7.9, explicitly continued after M7.8. Deliver local
+post-drive event notes and separately consented, reviewed label-only export with
+quarantined import. Preserve original event/score evidence and all prior acceptance.
+The appended boundaries supersede earlier scope. Stop before M7.10.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -827,3 +826,81 @@ Real style/deviation evidence, accepted extraction/uncertainty and mobile/batter
 physical acceptance remain open along with all prior gates. `NEXTSTEPS.md` retains
 the follow-up. Commit/push/verify this closure and stop before M7.9; no next-step
 work is prepared or authorized.
+
+## M7.9 boundary — authorized 2026-11-15
+
+The maintainer explicitly continued M7.9. Deliver safe post-drive labeling and a
+manual consented contribution pipeline. No production model, scoring, ranking,
+Guardian, sample rate, account/cloud endpoint or background upload is enabled.
+All prior model and physical/vehicle gates remain open/deferred. Stop before M7.10.
+
+### Contract / implementation plan
+
+See `docs/reference/EVENT_CORRECTION_V1.md` and ADR-0041. Add schema 4 local
+corrections separately from immutable detections/scores, bind exact source
+snapshots, use optimistic revisions, and preserve stale annotations after analysis
+replacement until user removal. Whole-trip deletion cascades; raw cleanup does not
+delete notes. Bound notes to 128 per trip and exports to 128 categorical reports.
+
+No automatic prompts or live-drive labels. Open from a completed trip explicitly;
+require recorder idle, known finalized trip, foreground/parked confirmation and
+fresh action checks. Unknown/error/active recorder states fail closed. Missing or
+unsupported detector versions cannot silently become contribution evidence.
+
+Local notes default to no contribution permission. Changes require renewed
+permission; clear/remove and revocation are local actions. Export reviews exact
+consented current-source notes and serializes app actions through picker completion.
+Only categorical detection/report and detector/telemetry versions leave the app,
+via an explicit Android document destination. No route, raw samples, measurements,
+IDs, wall/relative timestamps, free text or account binding. Saved copies cannot
+be recalled. No transport/server retention or automatic training is implied.
+
+The standard-library receiver validates strict fields/limits/digest/declared
+consent and stores a versioned private quarantine manifest. Unverified reports,
+missing grouping/features and consent provenance remain explicit; they do not
+enter existing datasets/models or become training-eligible.
+
+### Checks / acceptance
+
+- [x] Implement domain, additive schema/migrations and guarded correction store.
+- [x] Implement parked post-drive UI, opt-in/revocation/review and bounded native
+  document export with strict cross-language privacy validation.
+- [x] Implement explicit quarantine-only receiver and consent/provenance contract.
+- [x] Test unchanged source scores/events, stale revisions/evidence, quality,
+  safety gates, consent races, deletion, privacy rejection and v1/2/3 upgrades.
+- [ ] Format/analyze, generated/schema drift, full Flutter/native/Python tests,
+  app lint/builds, repository validation and relevant UI QA; run source CI.
+- [ ] Persist evidence/spec/status/README, commit/push/verify Git and stop before M7.10.
+
+No new dependency/provider is planned. The additive migration preserves all prior
+evidence and queues. Core sensor/recording behavior and all model decisions stay
+unchanged. Real active-driver, field-label truth and physical/vehicle acceptance
+are not claimed by synthetic/widget/emulator checks.
+
+
+### Local validation / source freeze - 2026-11-15
+
+All 503 Flutter tests (25 correction tests plus the new migration regression),
+506 app-native tests and 105 Python/tool tests pass. Format/analysis, exact
+regeneration/schema equality, repository privacy/secret checks, app lint and
+normal-entrypoint debug/release validation builds pass. The ignored lint path
+normalization was restored byte-for-byte. Old schemas 1-3 remain unchanged.
+The universal release validation APK is 64,203,046 bytes (61.23 MiB); no ML/runtime
+or other dependency was added. This is a build size, not a sensor/battery claim.
+
+An isolated offline Android API37/x86_64/16KiB emulator with generated trip data
+verified parked/default-off notes, explicit opt-in/review, document picker/save,
+cancellation without changing the prior copy, cold persistence, revocation and
+removal. The final callback-enabled build saves a 404-byte categorical export
+(SHA-256 `56cc59d5361715fdb9f0acef9c37ee7b64818f40e4d4ed3d996c2a0d33b6ccfb`)
+which the receiver accepts into private quarantine with training blocked.
+A one-use native-to-Dart callback rechecks exact source/revision/consent after
+picker return before any write; absent/failed/timed-out authorization refuses it.
+Tests cover another writer withdrawing notes while the picker is pending.
+The physical phone, user ADB server, real telemetry and accounts were untouched.
+These generated checks do not validate field label truth, physical driving,
+OEM/background behavior or battery. No original evidence/model gate changed.
+
+Commit/push this validated source for full CI; M7.9 remains in progress until
+all source jobs pass and the aggregate result/status closure is persisted.
+M7.10 remains unauthorized; no next-step work was prepared.

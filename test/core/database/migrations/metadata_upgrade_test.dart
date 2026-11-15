@@ -81,7 +81,7 @@ void main() {
       final db = AppDatabase(schema.newConnection());
       await verifier.migrateAndValidate(
         db,
-        3,
+        4,
         options: const ValidationOptions(validateDropped: true),
       );
       for (final table in tables) {

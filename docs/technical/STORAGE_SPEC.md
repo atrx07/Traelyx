@@ -106,6 +106,15 @@ The existing `.tripdebug` path remains version 1 `precise_private`. M5.9 adds a 
 
 Every migration requires upgrade tests with existing fixture DB. Never let a release migration destroy local trip history without explicit user-controlled recovery path.
 
+M7.9's additive schema4 stores up to128 local event corrections per trip, each
+bound to a source snapshot bounded to16KiB. Notes and their export permission
+survive raw-only cleanup, but cascade with whole-trip deletion; explicit local
+removal/revocation is also available. Existing raw chunks, event/score evidence,
+queues and schemas1–3 remain reproducible. A separately consented categorical
+JSON export uses the system document picker with no private temporary file;
+saved copies are outside app retention/deletion control. No automatic uploader
+or cleaner is added. See `../reference/EVENT_CORRECTION_V1.md`.
+
 ## 9. Corruption
 
 A corrupt chunk should not make all history unreadable. Isolate affected trip/chunk and expose diagnostic status.

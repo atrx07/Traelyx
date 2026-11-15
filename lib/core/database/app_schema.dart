@@ -195,6 +195,31 @@ class TripEvents extends Table {
   ];
 }
 
+class TripEventCorrections extends Table {
+  TextColumn get tripId =>
+      text().references(Trips, #id, onDelete: KeyAction.cascade)();
+  TextColumn get eventId => text()();
+  TextColumn get sourceSnapshotJson => text()();
+  TextColumn get reportedLabel => text()();
+  IntColumn get revision => integer()();
+  IntColumn get createdAtMicros => integer()();
+  IntColumn get updatedAtMicros => integer()();
+  IntColumn get consentVersion => integer().nullable()();
+  IntColumn get consentedAtMicros => integer().nullable()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {tripId, eventId, sourceSnapshotJson};
+
+  @override
+  List<String> get customConstraints => [
+    'CHECK (revision > 0)',
+    'CHECK (created_at_micros > 0 AND updated_at_micros > 0)',
+    "CHECK (reported_label IN ('correct', 'not_this_event', 'road_impact', 'device_moved', 'unsure'))",
+    'CHECK ((consent_version IS NULL AND consented_at_micros IS NULL) OR '
+        '(consent_version IS NOT NULL AND consent_version = 1 AND consented_at_micros IS NOT NULL AND consented_at_micros > 0))',
+  ];
+}
+
 @TableIndex(
   name: 'trip_scores_trip_version',
   columns: {#tripId, #scoreSchemaVersion, #scoringVersion},

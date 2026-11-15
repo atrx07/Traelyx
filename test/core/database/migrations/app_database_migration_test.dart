@@ -19,7 +19,7 @@ void main() {
     verifier = SchemaVerifier(GeneratedHelper());
   });
 
-  test('version 1 upgrades to version 3 while preserving settings', () async {
+  test('version 1 upgrades to version 4 while preserving settings', () async {
     final schema = await verifier.schemaAt(1);
     final fixture = v1.DatabaseAtV1(schema.newConnection());
     await fixture
@@ -36,7 +36,7 @@ void main() {
     final database = AppDatabase(schema.newConnection());
     await verifier.migrateAndValidate(
       database,
-      3,
+      4,
       options: const ValidationOptions(validateDropped: true),
     );
     final setting = await database.select(database.appSettings).getSingle();
@@ -60,6 +60,7 @@ void main() {
       'sync_queue',
       'trip_account_links',
       'trip_chunks',
+      'trip_event_corrections',
       'trip_events',
       'trip_scores',
       'trips',
@@ -80,7 +81,7 @@ void main() {
   });
 
   test(
-    'v1 trip evidence and pending queue survive the additive v3 upgrade',
+    'v1 trip evidence and pending queue survive the additive v4 upgrade',
     () async {
       final schema = await verifier.schemaAt(1);
       final fixture = v1.DatabaseAtV1(schema.newConnection());
@@ -161,7 +162,7 @@ void main() {
       final database = AppDatabase(schema.newConnection());
       await verifier.migrateAndValidate(
         database,
-        3,
+        4,
         options: const ValidationOptions(validateDropped: true),
       );
       for (final table in tables) {
