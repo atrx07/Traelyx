@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.6 IntegrityNet experiment authorized; prior model acceptance carried forward
+**Current gate:** M7.6 generated experiment complete; await M7.7 authorization; acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -489,6 +489,9 @@ foundation; M7.6 needs separate authorization.
 - [ ] Verified production feature units/frame/timing and governed label mapping.
 - [ ] Representative normal/severe truth, per-class/calibration/error evaluation
   and false severe events/hour; unavailable metrics must never become zero.
+- [ ] IntegrityNet: compare strengthened deterministic consistency alternatives
+  and suitable unseen legitimate/inconsistent data; generated signal alone does
+  not establish model value, calibrated probability or field false-positive rate.
 - [ ] Accepted numerical export, runtime/size efficiency, sustained battery/CPU,
   physical/vehicle/device validation, explicit promotion and rollback plan.
 - [ ] Finish M7.5 real-model corroboration only after those gates pass.
@@ -565,11 +568,11 @@ M7.4 acceptance, M7.5 real-model integration and M6.8 gates remain open.
 - [x] Freeze versioned contract/manifest and native generated baseline exporter.
 - [x] Implement bounded loader, training-only fitting, validation-clean threshold,
   comparator/slices, safe checkpoint and audit/provenance; test leakage/failures.
-- [ ] Run native generated-fixture regression/export and CPU generated comparison;
+- [x] Run native generated-fixture regression/export and CPU generated comparison;
   preserve all outcomes and clean-source repeats without searching configurations.
-- [ ] CI exercises generated native export→CPU experiment on the same fixture;
+- [x] CI exercises generated native export→CPU experiment on the same fixture;
   retain existing full native/Flutter/build/cloud/ML gates.
-- [ ] Record aggregate results/limitations and model decision, synchronize status,
+- [x] Record aggregate results/limitations and model decision, synchronize status,
   commit/push/verify Git and stop before M7.7.
 
 ### Local implementation validation
@@ -580,3 +583,42 @@ debug build pass. Native export is repeatable at 104 cases (40/32/32), 24,913
 bytes in this host environment. No model result from the native fixture has yet
 been inspected. Commit the frozen source before its comparison and repeats.
 No new package or production app behavior, private data or device operation.
+
+### M7.6 generated outcome / bounded closure — 2026-11-15
+
+Source `4e0fe9a` produces identical native CSV bytes (SHA-256
+`ae0489d3c276d49653b2bea86947e722dc4306447fd61a667c78beaea7cfa205`)
+and two byte-identical clean-source checkpoint/report runs. The checkpoint is
+4,732-byte JSON with 98 parameters (SHA-256
+`d3b57208444989057838fabad33c6c6598348235babc3b24d42d9d9f6ca7e636`).
+No fitting/configuration/gate/threshold changed after test results were seen.
+
+Frozen validation-clean threshold 3.49100923538308 yields 0/16 clean test flags
+for both model/native baseline and 6/6 numeric-injection detections vs native
+4/6. The extra signal is two acceleration/speed mismatch injections; native
+gyro/source-speed findings are preserved. Quality cases receive no model flags;
+native limited-confidence findings remain distinct. The model flags 0/2 explicit
+mock signals, which native platform findings still identify, and abstains on
+all four raw-corruption cases, which native decoding marks unranked. Diagnostic
+0.5× threshold flags 2/16 clean cases; 1×/2× flag zero and detect 6/6. No diagnostic
+was used to change the threshold or select another model.
+
+This is generated added signal against existing rules v1 only. Clean families
+were already-governed fixtures expected to be verified; shared templates and
+fictional profile holdout do not establish field FPR or real driver/device
+generalization. Strengthened deterministic alternatives were not evaluated and
+may offer the same signal; that comparison is retained in deferred acceptance.
+Real legitimate-drive FPR, calibrated anomaly probability, mobile latency and
+battery metrics remain null/unavailable. Production eligibility/inference stays
+false, and no integrity/rank/scoring/Guardian state consumes these outputs.
+
+All 74 Python tests, 502 app-native tests plus dependency suites, compile/pip/
+repository checks and debug build pass locally. Full source CI 43689186048
+passes all four jobs, including Linux generated native→CPU fit/replay and
+byte-identical repeats, full Flutter/native tests, both APK builds, cloud/Edge
+and artifact checks. Linux reaches the same qualitative decision; numeric/
+artifact byte identity across platforms is not claimed. Aggregate-only evidence
+is `docs/reference/integritynet-generated-v1-result.json`; data/checkpoints stay
+ignored. No new dependency, app/runtime change, migration, private recording,
+phone or production operation. The M7.6 experiment is complete, with all prior
+acceptance/physical gates carried forward. Stop before M7.7 pending authorization.

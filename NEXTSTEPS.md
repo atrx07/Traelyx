@@ -12,7 +12,7 @@ On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment; M7.7 and later substeps remain gated.
 
-## P0 — Finish authorized M7.6 generated comparison; keep acceptance visible
+## P0 — Await M7.7 authorization; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -22,10 +22,13 @@ public projection privacy pass. All 501 app-native tests plus dependency suites,
 19 targeted Flutter tests, full analysis, debug build, app lint and full source
 CI 43615278473 (`3046201`, all four jobs including release) pass. Evidence:
 `docs/reference/hybrid-event-evidence-v1-result.json`. Full M7.5 hybrid model
-integration stays pending acceptance below. M7.6 is now authorized: finish the
-frozen generated native-baseline/CPU autoencoder comparison, clean-source repeats,
-full CI and aggregate evidence. No tuning against evaluation results, production
-promotion or change to integrity/ranking/scoring. Stop before M7.7.
+integration stays pending acceptance below. M7.6's bounded generated comparison
+is complete: 6/6 numeric injections detected vs native 4/6, both zero flags on
+16 known clean fixtures. All 74 Python/502 app-native tests, clean-source repeats
+and full CI 43689186048 (`4e0fe9a`, four jobs) pass. Evidence is
+`docs/reference/integritynet-generated-v1-result.json`. Synthetic signal is not
+production acceptance; rules and disabled inference remain unchanged. Stop
+before M7.7; no next-step implementation or preparation is authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 
@@ -46,14 +49,23 @@ fails probability drift
 (0.0509469 >0.05), despite unchanged F1. It is larger than float32 and shows no
 consistent warm speed advantage. Retain the rejection and frozen protocol;
 do not tune against observed test results or relax the gate. M7.4 acceptance
-remains blocked. Any new export/model experiment needs a versioned, explicitly
-scoped protocol and suitable unseen evaluation evidence; no such work has begun.
+remains blocked. Any EventNet acceptance/export follow-up needs a versioned,
+explicitly scoped protocol and suitable unseen evaluation evidence; no such
+follow-up has begun.
 The maintainer accepted carrying this work forward, not deleting it. The active
 M7 plan retains the unchecked acceptance list: unseen evaluation data, verified
 feature units/frame/timing and label mapping, normal/severe truth/calibration,
 accepted export, runtime/size efficiency, sustained battery/physical validation,
 explicit promotion and rollback. Production promotion, real-model integration
-and numerical waiver remain unauthorized. No follow-up experiment has begun.
+and numerical waiver remain unauthorized. No EventNet acceptance follow-up has begun.
+
+IntegrityNet acceptance is also deferred: its generated-only result must be
+compared with strengthened deterministic consistency alternatives and suitable
+unseen legitimate/inconsistent data. Shared templates and 16 known clean cases
+do not establish field FPR. Preserve native platform signals/corruption checks,
+review threshold sensitivity, and complete real feature/runtime/battery/device
+validation before any model adoption. The new experiment does not waive any
+EventNet, M7.5 integration or M6.8 physical/vehicle gate.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 

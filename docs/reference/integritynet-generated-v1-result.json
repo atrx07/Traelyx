@@ -1,0 +1,1954 @@
+{
+  "ci": {
+    "coverage": [
+      "full Flutter/native tests and repository contracts",
+      "Linux generated native export to pinned CPU experiment, safe-checkpoint replay and repeat comparison",
+      "existing ML export and standalone APK privacy",
+      "debug and release-validation APKs/artifacts",
+      "cloud schema and Guardian Edge tests"
+    ],
+    "cross_platform_numeric_identity": "not_asserted",
+    "generated_native_to_cpu_comparison": "pass",
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "linux_decision": "generated_signal_only_keep_rules",
+    "run_id": 43689186048,
+    "source_commit": "4e0fe9aa817d645385b72307d9bee1b972d52fe1",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43689186048",
+    "within_platform_repeat": "byte_identical"
+  },
+  "data_uploaded": "generated_aggregate_reports_only_no_private_data",
+  "date": "2026-11-15",
+  "device_operations_performed": false,
+  "evidence_version": 1,
+  "experimental_step_status": "complete",
+  "full_report_sha256": "6d3db6b259d5d0a2ad2394d29c73f70bb10bb9692a568697ec5518f82e22bc50",
+  "limitations_after_comparison": [
+    "Added value is measured only against unchanged integrity-rules v1 on large, known generated injections; a strengthened deterministic consistency check was not evaluated and may provide the same signal. Compare that alternative before any ML adoption.",
+    "Zero false flags on 16 generated clean test cases does not estimate a zero real-drive false-positive rate or establish subgroup/generalization safety.",
+    "Lowering the frozen threshold to the predeclared 0.5 sensitivity diagnostic flags 2/16 clean cases; diagnostics were not used to change the selected threshold.",
+    "Native platform-signal and corruption handling remain necessary: the model flags 0/2 mock-signal cases and abstains on all 4 raw-corruption cases.",
+    "M7.4 acceptance, M7.5 real-model integration, physical/vehicle/M6.8 and production feature/data/runtime/battery gates remain open.",
+    "Clean families are predeclared governed fixtures already expected to be verified by the native rules. Their zero native false flags are not independent validation on representative legitimate drives."
+  ],
+  "local_validation": {
+    "app_native_tests": 502,
+    "debug_build": "pass",
+    "dependency_native_suites": "pass",
+    "errors": 0,
+    "failures": 0,
+    "new_integritynet_tests": 11,
+    "pip_check": "pass",
+    "python_compileall": "pass",
+    "python_tests": 74,
+    "repository_contracts": "pass",
+    "skipped": 0
+  },
+  "migrations": [],
+  "milestone": "M7.6",
+  "new_dependencies": [],
+  "private_recordings_read": false,
+  "production_acceptance": "deferred",
+  "production_eligible": false,
+  "production_inference_enabled": false,
+  "repeat": {
+    "byte_identical": true,
+    "files_sha256": {
+      "checkpoint.json": "d3b57208444989057838fabad33c6c6598348235babc3b24d42d9d9f6ca7e636",
+      "report.json": "6d3db6b259d5d0a2ad2394d29c73f70bb10bb9692a568697ec5518f82e22bc50"
+    },
+    "native_export_repeat_identical": true
+  },
+  "report": {
+    "attribution": "Traelyx contributors (2026), original generated integrity experiment fixtures, CC0-1.0. No field recordings or measured drivers.",
+    "calibrated_anomaly_probability": null,
+    "comparisons": {
+      "test": {
+        "by_category": {
+          "clean": {
+            "cases": 16,
+            "model_evaluated": 16,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 16
+            }
+          },
+          "corruption": {
+            "cases": 4,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 4,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 4
+            }
+          },
+          "numeric_inconsistency": {
+            "cases": 6,
+            "model_evaluated": 6,
+            "model_flagged": 6,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 4,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 4,
+              "VERIFIED": 2
+            }
+          },
+          "platform_signal": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "quality_limitation": {
+            "cases": 4,
+            "model_evaluated": 4,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 4
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 4
+            }
+          }
+        },
+        "by_family": {
+          "ACCEL_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "BRAKING": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "CORRUPT_HEADER": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          },
+          "GNSS_LOSS": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "GYRO_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "MOCK_SIGNAL": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "PHONE_MOVE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "POTHOLE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SPEED_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "STATIONARY": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "TRUNCATED_CHUNK": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          }
+        },
+        "cases": 32,
+        "decoder_abstentions": 4,
+        "model": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 1.0,
+          "numeric_injection_detections": 6,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        },
+        "model_evaluated": 28,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 0.6666666666666666,
+          "numeric_injection_detections": 4,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      },
+      "train": {
+        "by_category": {
+          "clean": {
+            "cases": 40,
+            "model_evaluated": 40,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 40
+            }
+          }
+        },
+        "by_family": {
+          "BRAKING": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "POTHOLE": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          },
+          "STATIONARY": {
+            "cases": 5,
+            "model_evaluated": 5,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 5
+            }
+          }
+        },
+        "cases": 40,
+        "decoder_abstentions": 0,
+        "model": {
+          "numeric_injection_cases": 0,
+          "numeric_injection_detection_rate": null,
+          "numeric_injection_detections": 0,
+          "synthetic_clean_cases": 40,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        },
+        "model_evaluated": 40,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 0,
+          "numeric_injection_detection_rate": null,
+          "numeric_injection_detections": 0,
+          "synthetic_clean_cases": 40,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      },
+      "validation": {
+        "by_category": {
+          "clean": {
+            "cases": 16,
+            "model_evaluated": 16,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 16
+            }
+          },
+          "corruption": {
+            "cases": 4,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 4,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 4
+            }
+          },
+          "numeric_inconsistency": {
+            "cases": 6,
+            "model_evaluated": 6,
+            "model_flagged": 6,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 4,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 4,
+              "VERIFIED": 2
+            }
+          },
+          "platform_signal": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "quality_limitation": {
+            "cases": 4,
+            "model_evaluated": 4,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 4
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 4
+            }
+          }
+        },
+        "by_family": {
+          "ACCEL_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "BRAKING": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "CORRUPT_HEADER": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          },
+          "GNSS_LOSS": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "GYRO_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "MOCK_SIGNAL": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "PHONE_MOVE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "POTHOLE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SPEED_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "STATIONARY": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "TRUNCATED_CHUNK": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          }
+        },
+        "cases": 32,
+        "decoder_abstentions": 4,
+        "model": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 1.0,
+          "numeric_injection_detections": 6,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        },
+        "model_evaluated": 28,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 0.6666666666666666,
+          "numeric_injection_detections": 4,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      }
+    },
+    "config": {
+      "epochs": 200,
+      "hidden": [
+        4,
+        2
+      ],
+      "learning_rate": 0.01,
+      "normalizer_scale_floor": 1e-06,
+      "seed": 7606,
+      "sensitivity_multipliers": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "threads": 1,
+      "threshold_epsilon": 1e-12,
+      "validation_clean_quantile": 0.975
+    },
+    "dataset_id": "traelyx-integrity-generated-v1",
+    "decision": "generated_signal_only_keep_rules",
+    "experiment_manifest_sha256": "742b1c07400ff220eb4632fc22b15bfa5ec0c5e0279b526aae8b96da094136a3",
+    "experiment_version": "integritynet-generated-ae-v1",
+    "feature_names": [
+      "speed_mean_mps",
+      "speed_max_mps",
+      "speed_std_mps",
+      "accel_norm_mean_mps2",
+      "accel_norm_std_mps2",
+      "gyro_norm_mean_radps",
+      "gyro_norm_max_radps",
+      "gyro_norm_std_radps"
+    ],
+    "feature_schema": "integritynet-generated-summary-v1",
+    "generated_added_value": true,
+    "groups": {
+      "sim-profile-01": "train",
+      "sim-profile-02": "validation",
+      "sim-profile-03": "train",
+      "sim-profile-04": "test",
+      "sim-profile-05": "train",
+      "sim-profile-06": "test",
+      "sim-profile-07": "train",
+      "sim-profile-08": "validation",
+      "sim-profile-09": "train"
+    },
+    "license": "CC0-1.0",
+    "limitations": [
+      "Generated-only experiment. Fictional profile holdout and shared templates are not independent real-driver, route, device, mount or vehicle evidence.",
+      "Whole-trip source-summary features discard direction, localized timing and many physical relationships; not a production feature contract.",
+      "Known injection labels are generated operations, not evidence of malicious intent, real attacks or field integrity truth.",
+      "Quality limitations, platform signals and raw corruption remain distinct; decoder failures abstain from model inference rather than receiving fabricated features.",
+      "Real legitimate-drive false-positive rate, calibrated anomaly probability, production usefulness, mobile latency and battery cost remain unavailable.",
+      "No model output changes deterministic integrity/ranking, event/scoring or safety behavior. Previous model acceptance gates remain open."
+    ],
+    "mobile_runtime_metrics": null,
+    "model_bytes": 4732,
+    "model_sha256": "d3b57208444989057838fabad33c6c6598348235babc3b24d42d9d9f6ca7e636",
+    "model_status": "experiment",
+    "normalizer": {
+      "mean": [
+        4.354855060577393,
+        8.75,
+        3.87316632270813,
+        9.943964004516602,
+        0.191181942820549,
+        0.04022582992911339,
+        0.06790680438280106,
+        0.03172100707888603
+      ],
+      "scale": [
+        1.9579108953475952,
+        3.455068826675415,
+        1.5739154815673828,
+        0.08084117621183395,
+        0.1943136751651764,
+        0.062313832342624664,
+        0.10626240819692612,
+        0.05250060185790062
+      ]
+    },
+    "normalizer_fit_cases": 40,
+    "normalizer_fit_partition": "train_clean",
+    "parameters": 98,
+    "production_eligible": false,
+    "real_legitimate_drive_false_positive_rate": null,
+    "runtime": {
+      "device": "cpu",
+      "python": "3.14.6",
+      "torch": "2.15.0+cpu"
+    },
+    "sensitivity_test": {
+      "0.5": {
+        "by_category": {
+          "clean": {
+            "cases": 16,
+            "model_evaluated": 16,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 16
+            }
+          },
+          "corruption": {
+            "cases": 4,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 4,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 4
+            }
+          },
+          "numeric_inconsistency": {
+            "cases": 6,
+            "model_evaluated": 6,
+            "model_flagged": 6,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 4,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 4,
+              "VERIFIED": 2
+            }
+          },
+          "platform_signal": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "quality_limitation": {
+            "cases": 4,
+            "model_evaluated": 4,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 4
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 4
+            }
+          }
+        },
+        "by_family": {
+          "ACCEL_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "BRAKING": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "CORRUPT_HEADER": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          },
+          "GNSS_LOSS": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "GYRO_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "MOCK_SIGNAL": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "PHONE_MOVE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "POTHOLE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SPEED_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "STATIONARY": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "TRUNCATED_CHUNK": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          }
+        },
+        "cases": 32,
+        "decoder_abstentions": 4,
+        "model": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 1.0,
+          "numeric_injection_detections": 6,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.125,
+          "synthetic_clean_false_flags": 2
+        },
+        "model_evaluated": 28,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 0.6666666666666666,
+          "numeric_injection_detections": 4,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      },
+      "1.0": {
+        "by_category": {
+          "clean": {
+            "cases": 16,
+            "model_evaluated": 16,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 16
+            }
+          },
+          "corruption": {
+            "cases": 4,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 4,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 4
+            }
+          },
+          "numeric_inconsistency": {
+            "cases": 6,
+            "model_evaluated": 6,
+            "model_flagged": 6,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 4,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 4,
+              "VERIFIED": 2
+            }
+          },
+          "platform_signal": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "quality_limitation": {
+            "cases": 4,
+            "model_evaluated": 4,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 4
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 4
+            }
+          }
+        },
+        "by_family": {
+          "ACCEL_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "BRAKING": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "CORRUPT_HEADER": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          },
+          "GNSS_LOSS": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "GYRO_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "MOCK_SIGNAL": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "PHONE_MOVE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "POTHOLE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SPEED_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "STATIONARY": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "TRUNCATED_CHUNK": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          }
+        },
+        "cases": 32,
+        "decoder_abstentions": 4,
+        "model": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 1.0,
+          "numeric_injection_detections": 6,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        },
+        "model_evaluated": 28,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 0.6666666666666666,
+          "numeric_injection_detections": 4,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      },
+      "2.0": {
+        "by_category": {
+          "clean": {
+            "cases": 16,
+            "model_evaluated": 16,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 16
+            }
+          },
+          "corruption": {
+            "cases": 4,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 4,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 4
+            }
+          },
+          "numeric_inconsistency": {
+            "cases": 6,
+            "model_evaluated": 6,
+            "model_flagged": 6,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 4,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 4,
+              "VERIFIED": 2
+            }
+          },
+          "platform_signal": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "quality_limitation": {
+            "cases": 4,
+            "model_evaluated": 4,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 4
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 4
+            }
+          }
+        },
+        "by_family": {
+          "ACCEL_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "BRAKING": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "CORRUPT_HEADER": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          },
+          "GNSS_LOSS": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "GYRO_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "LEFT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "MOCK_SIGNAL": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 2,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "MOTORCYCLE_VIBRATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "PHONE_MOVE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 2
+            },
+            "native_states": {
+              "LIMITED_CONFIDENCE": 2
+            }
+          },
+          "POTHOLE": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "RIGHT_CORNER": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_ACCELERATION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SMOOTH_STRAIGHT": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "SPEED_INJECTION": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 2,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 2,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "QUESTIONABLE": 2
+            }
+          },
+          "STATIONARY": {
+            "cases": 2,
+            "model_evaluated": 2,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 0,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "VERIFIED": 2
+            }
+          },
+          "TRUNCATED_CHUNK": {
+            "cases": 2,
+            "model_evaluated": 0,
+            "model_flagged": 0,
+            "native_findings_by_kind": {
+              "DATA_CORRUPTION": 2,
+              "INCONSISTENCY": 0,
+              "PLATFORM_SIGNAL": 0,
+              "QUALITY_LIMITATION": 0
+            },
+            "native_states": {
+              "UNRANKED": 2
+            }
+          }
+        },
+        "cases": 32,
+        "decoder_abstentions": 4,
+        "model": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 1.0,
+          "numeric_injection_detections": 6,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        },
+        "model_evaluated": 28,
+        "native_inconsistency_baseline": {
+          "numeric_injection_cases": 6,
+          "numeric_injection_detection_rate": 0.6666666666666666,
+          "numeric_injection_detections": 4,
+          "synthetic_clean_cases": 16,
+          "synthetic_clean_false_flag_rate": 0.0,
+          "synthetic_clean_false_flags": 0
+        }
+      }
+    },
+    "source_files_sha256": {
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityModels.kt": "6fed6dde999faba239dd7559c44efbff2fe8d11f939f6baf97e0c9195e4bb98b",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityPipeline.kt": "e872835784ca8ad06d44b5375a4d5a91c898f9d9891b8cea96188ce35e7ada27",
+      "android/app/src/test/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityExperimentFixtureTest.kt": "8afac818177db7d78e92ba03eb0f412cdb74f0cb7ff3eb53a4e79d1c568c02e3",
+      "android/app/src/test/kotlin/io/github/atrx07/traelyx/intelligence/IntelligencePipelineTestHarness.kt": "7d540d3d9829e4967000d828c4c98da0e5ff170a8f325cf712ef13fcb5e9aadd",
+      "android/app/src/test/kotlin/io/github/atrx07/traelyx/telemetry/TelemetryRegressionFixtureCorpus.kt": "8e7106c48120e00023758581adf33f53dba6b07e67a7b3349e3ea716f866b8ea",
+      "docs/reference/INTEGRITYNET_BASELINE_V1.md": "9d8bb512c7742eee02e094cf1983130cfb089f40da1fb88ec8c193a7b959b132",
+      "ml/DATA_LICENSE.md": "4572865db2265b8f9995ffd5b977e960df2654ac60f2bba41ade8fe05626a3fe",
+      "ml/experiments/integritynet-v1.json": "4361235533082915300dfe683cab03090ff8e05f0cb0f98b0670cd9f53e83e4e",
+      "ml/integritynet.py": "6a7203bf8ac62fc7e36f512006b6398bdba2286803095e0661f31f5391f67d03",
+      "ml/requirements-eventnet.txt": "9fa56c7d7a91ae709784417cd793f9dc0c20dcf6ac6b026d469f5059e687198c"
+    },
+    "source_fixture_sha256": "ae0489d3c276d49653b2bea86947e722dc4306447fd61a667c78beaea7cfa205",
+    "source_kind": "generated_only",
+    "threshold": 3.49100923538308,
+    "threshold_fit_cases": 16,
+    "threshold_fit_partition": "validation_clean",
+    "threshold_method": "nearest_rank_97_5_percentile_plus_1e_12",
+    "training": {
+      "initial_loss": 1.0723516941070557,
+      "last_epoch_loss": 1.0
+    },
+    "training_code_commit": "4e0fe9aa817d645385b72307d9bee1b972d52fe1",
+    "training_source_dirty": false
+  },
+  "scope": "generated_only_cpu_integrity_comparison",
+  "source_git_blob_sha256": {
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityModels.kt": "6fed6dde999faba239dd7559c44efbff2fe8d11f939f6baf97e0c9195e4bb98b",
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityPipeline.kt": "e872835784ca8ad06d44b5375a4d5a91c898f9d9891b8cea96188ce35e7ada27",
+    "android/app/src/test/kotlin/io/github/atrx07/traelyx/intelligence/IntegrityExperimentFixtureTest.kt": "8afac818177db7d78e92ba03eb0f412cdb74f0cb7ff3eb53a4e79d1c568c02e3",
+    "android/app/src/test/kotlin/io/github/atrx07/traelyx/intelligence/IntelligencePipelineTestHarness.kt": "7d540d3d9829e4967000d828c4c98da0e5ff170a8f325cf712ef13fcb5e9aadd",
+    "android/app/src/test/kotlin/io/github/atrx07/traelyx/telemetry/TelemetryRegressionFixtureCorpus.kt": "8e7106c48120e00023758581adf33f53dba6b07e67a7b3349e3ea716f866b8ea",
+    "docs/reference/INTEGRITYNET_BASELINE_V1.md": "9d8bb512c7742eee02e094cf1983130cfb089f40da1fb88ec8c193a7b959b132",
+    "ml/DATA_LICENSE.md": "4572865db2265b8f9995ffd5b977e960df2654ac60f2bba41ade8fe05626a3fe",
+    "ml/experiments/integritynet-v1.json": "4361235533082915300dfe683cab03090ff8e05f0cb0f98b0670cd9f53e83e4e",
+    "ml/integritynet.py": "6a7203bf8ac62fc7e36f512006b6398bdba2286803095e0661f31f5391f67d03",
+    "ml/requirements-eventnet.txt": "51e35f3ef68be675b0dbee9f433a464d4aa1a2356981a37071af142387976f0e"
+  },
+  "source_text_note": "Local executed-byte hashes and Git-blob hashes are recorded separately; CRLF/LF-only differences are allowed."
+}

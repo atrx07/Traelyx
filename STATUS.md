@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.6 experiment in progress; prior model acceptance/integration carried forward**
+**M7 active — M7.6 experiment complete; awaiting M7.7 authorization; model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -20,16 +20,26 @@ authorized. M7.7 and later substeps need separate authorization. M6.8 stays open
 
 ## Working
 
-- M7.6 in progress: frozen generated-only native baseline→CPU autoencoder
-  experiment. Nine fictional groups precede 104 aggregate cases; training sees
-  only 40 coherent cases, normalization is train-only and threshold fits only
-  validation-clean data. Native findings remain the unchanged comparator, not
-  labels/model inputs; corruption abstains and quality/platform roles stay
-  distinct. All 74 Python checks, all 502 app-native tests plus dependency suites,
-  compilation/dependency/repository checks and debug build pass locally. Clean
-  source model runs, comparison evidence and full CI are pending. No new
-  dependency, production app/runtime, migration, private recording, upload or
-  phone operation. Model acceptance remains deferred; stop before M7.7.
+- M7.6 generated experiment complete (2026-11-15): frozen 98-parameter CPU
+  autoencoder on 104 fictional-profile cases (40/32/32), train-clean normalization
+  and validation-clean threshold only. Clean source `4e0fe9a` repeats native
+  export and 4,732-byte safe JSON checkpoint/report byte-identically. On 16 clean
+  test cases both model/rules flag zero; model detects 6/6 numeric injections vs
+  native inconsistency findings on 4/6. Added signal is the two injected
+  acceleration/speed mismatches, not field validation. At 0.5× diagnostic threshold
+  the model flags 2/16 clean cases; no threshold was changed. It flags 0/2 mock
+  signals and abstains on four corrupt cases, preserving distinct native
+  platform/corruption handling. Compare strengthened deterministic alternatives
+  and suitable unseen real data before any adoption. Real-drive FPR, calibrated
+  anomaly probability and mobile/battery metrics remain unavailable.
+  All 74 Python and 502 app-native tests plus dependency suites, compile/dependency/
+  repository checks, debug build and full [CI 43689186048](https://github.com/atrx07/Traelyx/actions/runs/43689186048)
+  pass: four jobs including Linux native→CPU comparison/repeats and both builds.
+  Linux reaches the same qualitative decision; cross-platform byte identity is
+  not asserted. Aggregate evidence: `docs/reference/integritynet-generated-v1-result.json`.
+  Models/features stay ignored; no new dependency, app runtime, migration,
+  private data, phone operation or production inference. All prior acceptance
+  gates remain open. Stop before M7.7.
 
 - M7.5 foundation validated (2026-11-14): versioned provider/audit boundary, generated-only
   evaluation and explicit rules-only production audit. No model/runtime is
