@@ -40,6 +40,14 @@ pass, including full app regressions and debug/release builds. See
 [aggregate evidence](docs/reference/contextnet-generated-v1-result.json).
 Production inference stays disabled; earlier acceptance gates remain open.
 
+M7.8's generated DriveDNA embedding experiment is complete. Both methods retrieve
+all 80 validation programs and detect 40/40 controlled changes; embedding stable
+pair false flags are 2/40 versus 5/40 for summary distances. Its prespecified value gate
+still fails, leaving test predictions uncomputed and explicit dimensions intact.
+All 99 local Python tests and [four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43716929988)
+pass, including both app builds. See [aggregate evidence](docs/reference/drivedna-generated-v1-result.json).
+These are generated diagnostics, not real driving-style acceptance.
+
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |
@@ -51,7 +59,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | M7.8 authorized/in progress; acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
+| M7 | ML & Advanced Commentary | M7.8 experiment complete; awaiting M7.9 authorization, acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
 | M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
 | M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
 | M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
@@ -59,7 +67,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M7.5 |  | Foundation validated; real-model integration gated | 🟡 In progress | ~1–2 days plus acceptance | 2026-11-14 (partial) |
 | M7.6 |  | IntegrityNet generated experiment vs native rules | ✅ Complete | Done | 2026-11-15 |
 | M7.7 |  | ContextNet generated experiment; no added value, rules retained | ✅ Complete | Done | 2026-11-15 |
-| M7.8 |  | DriveDNA generated embedding vs physical-summary distances | 🟡 In progress | ~1–2 days | — |
+| M7.8 |  | DriveDNA generated embedding; value gate unmet, dimensions retained | ✅ Complete | Done | 2026-11-15 |
 | M7.9 |  | User post-drive correction | ⚪ Pending | ~1–2 days | — |
 | M7.10 |  | BYO cloud commentary | ⚪ Pending | ~1–2 days | — |
 | M7.11 |  | Local AI commentary provider | ⚪ Pending | Optional; performance-gated | — |

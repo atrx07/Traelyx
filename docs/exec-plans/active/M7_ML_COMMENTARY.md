@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.8 embedding experiment authorized; prior acceptance carried forward
+**Current gate:** M7.8 experiment complete; await M7.9 authorization; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,10 +14,11 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.8, explicitly continued after M7.7. Compare an
-isolated self-supervised embedding with transparent physical-summary distances,
-preserving the explainable Drive DNA baseline and all deferred acceptance.
-The appended boundaries supersede earlier scope. Stop before M7.9.
+M7.8, explicitly continued after M7.7, is complete as an isolated self-supervised
+embedding experiment. Retain the lower synthetic false-flag count, failed fixed
+value gate, uncomputed test predictions, explainable dimensions and deferred
+acceptance. The appended boundaries supersede earlier scope. Await authorization
+before M7.9.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -771,8 +772,8 @@ impairment/fatigue. Shared templates cannot establish real-driver generalization
   comparator, scoped/versioned distance contract, train-only cutoffs and safe replay.
 - [x] Validate split/quality/scopes, label-independent training, cutoff isolation,
   reproducibility, failure paths and failed-gate test non-evaluation.
-- [ ] Run clean-source repeats and full CI; retain negative results without tuning.
-- [ ] Persist aggregate evidence and synchronized status; commit/push/verify Git
+- [x] Run clean-source repeats and full CI; retain negative results without tuning.
+- [x] Persist aggregate evidence and synchronized status; commit/push/verify Git
   and stop before M7.9.
 
 Implementation gate: all 99 Python tests (13 new embedding tests), compile,
@@ -780,4 +781,49 @@ pinned CPU dependency check, repository contracts/secrets and diff checks pass.
 The first combined suite hit a Windows rename permission failure in an unchanged
 calibration test; its targeted retry and the complete 99-test rerun pass without
 assertion changes. No complete embedding experiment result has been observed
-before the source freeze. Clean-source comparisons/repeats/full CI remain required.
+before the source freeze. At that point clean-source comparisons/repeats/full CI
+remained required; their completed evidence follows.
+
+### Observed comparison / closure — 2026-11-15
+
+Clean source `ac2e1eec595012682b1934c31b90f7a627351504` produces byte-identical
+local source/checkpoint/report repeats. The source SHA-256 is
+`f0f7d3522a07b1b7fb93cf2b4e0e1a87d78eef3daa16224bc6d900a0ca4a1669`;
+the 6,466-byte safe JSON checkpoint hash is
+`46aa9f25a2675e86039af8be47817e00eb63311b4dec1c8bafc05314b9b7ad13`.
+The 155-parameter denoiser fits 200 training summaries; both distance cutoffs use
+100 training correspondence pairs only (embedding 0.1128645472, summary 0.2137519959;
+these are different coordinate units, not comparable probabilities).
+
+On 80 supported validation queries, both methods have macro F1/hit rate/MRR1.0;
+both detect all 40 controlled changed pairs. Embedding stable-pair false flags
+are 2/40 versus 5/40 for summary distances, with no generated cohort regression.
+Both abstain on all 24 missing/unsupported/stationary diagnostics before inference.
+The lower false-flag count is a synthetic signal, not field FPR. The prespecified
+material gate requires retrieval-F1 or changed-detection improvement, so it fails
+despite the lower stable count; the criterion was not broadened after results.
+No source, model, noise, cutoff or baseline was tuned. Test predictions/metrics
+remain uncomputed. Aggregate evidence is
+`docs/reference/drivedna-generated-v1-result.json`; all prior acceptance remains
+open/deferred.
+
+Linux's downloaded generated-only report matches the complete local validation
+metrics/gate decision and unopened test status. Its source files match frozen Git
+blobs and its model/report repeat comparisons pass. Source/float artifacts differ
+between Windows Python3.14 and Linux Python3.12; no cross-platform byte identity
+is claimed. Local repeat and clean-source provenance checks pass. Full source
+[CI 43716929988](https://github.com/atrx07/Traelyx/actions/runs/43716929988) passes
+all four jobs, including formatting/analysis/full Flutter/native tests, generated/
+schema/privacy checks, debug/release builds and size/artifact gates, standalone
+benchmark, DriveDNA/ContextNet repeats and native→CPU IntegrityNet comparison.
+All 99 local Python tests, compile, pinned CPU dependency, repository validation
+and diff checks pass. Historical ML source, data licenses and dependency locks
+remain unchanged. No tests or gates were weakened.
+
+M7.8 is complete at the bounded experiment level, without production adoption.
+No new dependency/provider/runtime, database migration, private data, phone/
+emulator, recorder, dimensions/lifecycle/scoring/narrator/Guardian change.
+Real style/deviation evidence, accepted extraction/uncertainty and mobile/battery/
+physical acceptance remain open along with all prior gates. `NEXTSTEPS.md` retains
+the follow-up. Commit/push/verify this closure and stop before M7.9; no next-step
+work is prepared or authorized.

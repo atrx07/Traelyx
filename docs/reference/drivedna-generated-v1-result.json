@@ -1,0 +1,635 @@
+{
+  "decision": "no_validated_added_value_keep_explicit_dimensions",
+  "evidence_version": "drivedna-generated-embedding-result-v1",
+  "experiment_complete": true,
+  "impact": {
+    "database_migration": false,
+    "new_dependency": false,
+    "new_runtime_or_provider": false,
+    "phone_or_emulator_used": false,
+    "previous_model_acceptance": "open_deferred",
+    "private_data_used_or_uploaded": false,
+    "production_behavior_changed": false,
+    "vehicle_oem_battery_acceptance": "open_deferred"
+  },
+  "interpretation": [
+    "The fixed generated-only candidate did not meet its prespecified material-value criterion. Retain the result and the explicit production Drive DNA dimensions; this is not a field verdict on every embedding.",
+    "Both methods retrieve 80/80 supported validation programs with macro F1/MRR 1.0 and detect 40/40 controlled changed pairs. The embedding flags 2/40 stable pairs versus 5/40 for normalized summaries, with no generated cohort regression.",
+    "The lower stable-pair false-flag count is a synthetic signal, not validated real-drive FPR. The frozen gate requires retrieval-F1 or changed-detection improvement; neither improved. It was not broadened after observing the lower false-flag count.",
+    "Both abstain before inference on all 24 missing/unsupported/stationary validation diagnostics. Scope/version checks bind actual weights/normalizer as well as external identity; no incompatible coordinate-space comparisons are permitted.",
+    "Test structure/metadata was validated, but test predictions and metrics remain uncomputed after validation failure. No after-result model, noise, cutoff, baseline or gate tuning was performed.",
+    "Shared generated programs and fictional scopes are not independent real-driver/style/vehicle evidence. These inputs are physical summaries, not accepted production dimensions or a feature adapter. Distances and cutoffs are not confidence, impairment, fatigue or safety judgments.",
+    "Three latent coordinates versus eight summaries and the safe JSON checkpoint size do not establish mobile speed, battery or useful real-world compression. All earlier model and physical acceptance remains open."
+  ],
+  "local_report": {
+    "attribution": "Traelyx contributors (2026), original analytical style-summary fixtures v1, CC0-1.0; no measured drivers or recordings.",
+    "baseline_version": "normalized-summary-euclidean-v1",
+    "calibrated_confidence": null,
+    "config": {
+      "augmentation_seed": 7809,
+      "distance_floor": 1e-12,
+      "epochs": 200,
+      "hidden": 6,
+      "latent": 3,
+      "learning_rate": 0.01,
+      "minimum_change_detection_gain": 0.05,
+      "minimum_retrieval_f1_gain": 0.02,
+      "normal_pair_quantile": 0.95,
+      "normalizer_scale_floor": 1e-06,
+      "seed": 7808,
+      "threads": 1,
+      "training_noise_std": 0.05
+    },
+    "cutoffs": {
+      "embedding": {
+        "fit_partition": "train_generated_correspondence",
+        "pairs": 100,
+        "quantile": 0.95,
+        "value": 0.11286454721882277
+      },
+      "summary": {
+        "fit_partition": "train_generated_correspondence",
+        "pairs": 100,
+        "quantile": 0.95,
+        "value": 0.21375199589528399
+      }
+    },
+    "decision": "no_validated_added_value_keep_explicit_dimensions",
+    "experiment_version": "drivedna-generated-ae-v1",
+    "feature_schema": "drivedna-generated-summary-v1",
+    "groups": {
+      "style-profile-01": "train",
+      "style-profile-02": "validation",
+      "style-profile-03": "train",
+      "style-profile-04": "test",
+      "style-profile-05": "train",
+      "style-profile-06": "test",
+      "style-profile-07": "train",
+      "style-profile-08": "validation",
+      "style-profile-09": "train"
+    },
+    "license": "CC0-1.0",
+    "limitations": [
+      "Original generated programs and fictional groups share analytical templates; they do not establish independent real-driver, route, vehicle, device or style generalization.",
+      "Eight physical summaries are experimental inputs, not the four production Drive DNA dimensions or an accepted production feature adapter.",
+      "Program names and paired variants are generation metadata used only for diagnostic retrieval and stable/changed-pair comparisons, not encoder training targets or real driving-style truth.",
+      "Distances and the training-pair cutoff are not probabilities, calibrated confidence, impairment/fatigue evidence, safety or driver-quality judgments.",
+      "Fewer latent coordinates alone do not justify a model; real similarity/deviation usefulness, interpretation, mobile latency and battery remain unavailable.",
+      "Production dimensions, scoring, lifecycle, cohort selection, persistence, narration and Guardian remain unchanged. Failed validation leaves test predictions and metrics uncomputed."
+    ],
+    "manifest_sha256": "1937cbdeb9c30117224e5c89eeb3c76ce4eefdeb6f154cce077e65cb2f8c840b",
+    "mobile_runtime_metrics": null,
+    "model_bytes": 6466,
+    "model_sha256": "46aa9f25a2675e86039af8be47817e00eb63311b4dec1c8bafc05314b9b7ad13",
+    "model_status": "experiment",
+    "normalizer": {
+      "mean": [
+        0.43432191014289856,
+        0.520540714263916,
+        0.43478935956954956,
+        0.5027681589126587,
+        0.24014945328235626,
+        0.2677624821662903,
+        0.09091666340827942,
+        1.2787389755249023
+      ],
+      "scale": [
+        0.5311185717582703,
+        0.6152834296226501,
+        0.8075447082519531,
+        0.9206817150115967,
+        0.3598094880580902,
+        0.39691412448883057,
+        0.18225285410881042,
+        1.3137953281402588
+      ]
+    },
+    "normalizer_fit_partition": "train",
+    "parameters": 155,
+    "production_eligible": false,
+    "programs": [
+      "steady",
+      "progressive",
+      "stop_go",
+      "lateral",
+      "abrupt"
+    ],
+    "real_style_accuracy": null,
+    "representation_widths": {
+      "embedding": 3,
+      "summary": 8
+    },
+    "runtime": {
+      "device": "cpu",
+      "python": "3.14.6",
+      "torch": "2.15.0+cpu"
+    },
+    "source_commit": "ac2e1eec595012682b1934c31b90f7a627351504",
+    "source_dirty": false,
+    "source_files_sha256": {
+      "docs/reference/DRIVEDNA_EMBEDDING_V1.md": "2ccf17a75f1070491acd5f9544916ac114c6969909d7f7af668ac9b2308f7e6e",
+      "ml/drivedna.py": "ec16c06b5538be44c736ea833b030049c0fd94ec64d98fad0017fcbf05b80d5b",
+      "ml/drivedna_corpus.py": "4995c3d6be340a54797947368fa7773f5db6a75d649180bb5498cd46eb38b096",
+      "ml/experiments/DRIVEDNA_DATA_LICENSE.md": "4d801db5c4feeae7358641d8b0acb59ebc99825c4d0f035a7f455b89321f171c",
+      "ml/experiments/drivedna-v1.json": "892e09bd6c17d5d8be0f5b0b0eccd2e99fc113ded642dd4441549a331da1b93a",
+      "ml/requirements-eventnet.txt": "9fa56c7d7a91ae709784417cd793f9dc0c20dcf6ac6b026d469f5059e687198c"
+    },
+    "source_kind": "generated_only",
+    "source_sha256": "f0f7d3522a07b1b7fb93cf2b4e0e1a87d78eef3daa16224bc6d900a0ca4a1669",
+    "test": {
+      "cases_available": 104,
+      "metadata_validated": true,
+      "metrics": null,
+      "predictions_computed": false,
+      "value_gate": null
+    },
+    "training": {
+      "cases": 200,
+      "initial_loss": 1.1226638555526733,
+      "last_epoch_loss": 0.0148745933547616,
+      "target": "clean_normalized_training_summaries_only"
+    },
+    "validation": {
+      "embedding": {
+        "deviation": {
+          "by_cohort": {
+            "generated-vehicle-a/generated-context-a": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  10,
+                  0
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.0,
+              "stable_false_flags": 0,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-a/generated-context-b": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  10,
+                  0
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.0,
+              "stable_false_flags": 0,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-b/generated-context-a": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  9,
+                  1
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.1,
+              "stable_false_flags": 1,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-b/generated-context-b": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  9,
+                  1
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.1,
+              "stable_false_flags": 1,
+              "stable_pairs": 10
+            }
+          },
+          "overall": {
+            "changed_detection_rate": 1.0,
+            "changed_detections": 40,
+            "changed_pairs": 40,
+            "confusion_true_stable_changed_rows": [
+              [
+                38,
+                2
+              ],
+              [
+                0,
+                40
+              ]
+            ],
+            "stable_false_flag_rate": 0.05,
+            "stable_false_flags": 2,
+            "stable_pairs": 40
+          }
+        },
+        "diagnostics": {
+          "missing": {
+            "abstentions": 8,
+            "cases": 8
+          },
+          "stationary": {
+            "abstentions": 8,
+            "cases": 8
+          },
+          "unsupported": {
+            "abstentions": 8,
+            "cases": 8
+          }
+        },
+        "ineligible_inferred": 0,
+        "retrieval": {
+          "cases": 80,
+          "confusion_true_rows": [
+            [
+              16,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              16,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              16,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              16,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              16
+            ]
+          ],
+          "macro_f1": 1.0,
+          "mean_reciprocal_rank": 1.0,
+          "per_program": {
+            "abrupt": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "lateral": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "progressive": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "steady": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "stop_go": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            }
+          },
+          "top_1_hit_rate": 1.0
+        }
+      },
+      "summary": {
+        "deviation": {
+          "by_cohort": {
+            "generated-vehicle-a/generated-context-a": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  9,
+                  1
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.1,
+              "stable_false_flags": 1,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-a/generated-context-b": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  10,
+                  0
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.0,
+              "stable_false_flags": 0,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-b/generated-context-a": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  7,
+                  3
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.3,
+              "stable_false_flags": 3,
+              "stable_pairs": 10
+            },
+            "generated-vehicle-b/generated-context-b": {
+              "changed_detection_rate": 1.0,
+              "changed_detections": 10,
+              "changed_pairs": 10,
+              "confusion_true_stable_changed_rows": [
+                [
+                  9,
+                  1
+                ],
+                [
+                  0,
+                  10
+                ]
+              ],
+              "stable_false_flag_rate": 0.1,
+              "stable_false_flags": 1,
+              "stable_pairs": 10
+            }
+          },
+          "overall": {
+            "changed_detection_rate": 1.0,
+            "changed_detections": 40,
+            "changed_pairs": 40,
+            "confusion_true_stable_changed_rows": [
+              [
+                35,
+                5
+              ],
+              [
+                0,
+                40
+              ]
+            ],
+            "stable_false_flag_rate": 0.125,
+            "stable_false_flags": 5,
+            "stable_pairs": 40
+          }
+        },
+        "diagnostics": {
+          "missing": {
+            "abstentions": 8,
+            "cases": 8
+          },
+          "stationary": {
+            "abstentions": 8,
+            "cases": 8
+          },
+          "unsupported": {
+            "abstentions": 8,
+            "cases": 8
+          }
+        },
+        "ineligible_inferred": 0,
+        "retrieval": {
+          "cases": 80,
+          "confusion_true_rows": [
+            [
+              16,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              16,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              16,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              16,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              16
+            ]
+          ],
+          "macro_f1": 1.0,
+          "mean_reciprocal_rank": 1.0,
+          "per_program": {
+            "abrupt": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "lateral": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "progressive": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "steady": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            },
+            "stop_go": {
+              "f1": 1.0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "support": 16
+            }
+          },
+          "top_1_hit_rate": 1.0
+        }
+      }
+    },
+    "validation_value_gate": {
+      "checks": {
+        "deviation_preserved": true,
+        "material_gain": false,
+        "quality_preserved": true,
+        "retrieval_preserved": true
+      },
+      "passed": false
+    }
+  },
+  "milestone": "M7.8",
+  "production_eligible": false,
+  "recorded_date": "2026-11-15",
+  "reproducibility": {
+    "artifacts": {
+      "checkpoint.json": {
+        "bytes": 6466,
+        "repeat_byte_identical": true,
+        "sha256": "46aa9f25a2675e86039af8be47817e00eb63311b4dec1c8bafc05314b9b7ad13"
+      },
+      "report.json": {
+        "bytes": 13623,
+        "repeat_byte_identical": true,
+        "sha256": "1ae01430544f2acc2adbcf68420824ccf2045cf146c3ada76e5160bcc7319580"
+      }
+    },
+    "cross_platform_byte_identity_claimed": false,
+    "frozen_git_blob_sha256": {
+      "docs/reference/DRIVEDNA_EMBEDDING_V1.md": "2ccf17a75f1070491acd5f9544916ac114c6969909d7f7af668ac9b2308f7e6e",
+      "ml/drivedna.py": "ec16c06b5538be44c736ea833b030049c0fd94ec64d98fad0017fcbf05b80d5b",
+      "ml/drivedna_corpus.py": "4995c3d6be340a54797947368fa7773f5db6a75d649180bb5498cd46eb38b096",
+      "ml/experiments/DRIVEDNA_DATA_LICENSE.md": "4d801db5c4feeae7358641d8b0acb59ebc99825c4d0f035a7f455b89321f171c",
+      "ml/experiments/drivedna-v1.json": "892e09bd6c17d5d8be0f5b0b0eccd2e99fc113ded642dd4441549a331da1b93a",
+      "ml/requirements-eventnet.txt": "51e35f3ef68be675b0dbee9f433a464d4aa1a2356981a37071af142387976f0e"
+    },
+    "linux": {
+      "cutoffs": {
+        "embedding": {
+          "fit_partition": "train_generated_correspondence",
+          "pairs": 100,
+          "quantile": 0.95,
+          "value": 0.11286472642106393
+        },
+        "summary": {
+          "fit_partition": "train_generated_correspondence",
+          "pairs": 100,
+          "quantile": 0.95,
+          "value": 0.21375199589528399
+        }
+      },
+      "decision_matches_local": true,
+      "model_bytes": 6459,
+      "model_sha256": "e1622045005ec59c02fcc76a5efa87b1fede535cc3f176c3ddf404b3566a2903",
+      "report_download": "drivedna-generated-comparison/report.json",
+      "report_sha256": "c91bf97d0a66848103543dc55a93171cda6db4ca59dbaad01916580a28d6449a",
+      "runtime": {
+        "device": "cpu",
+        "python": "3.12.16",
+        "torch": "2.15.0+cpu"
+      },
+      "source_dirty": false,
+      "source_files_match_frozen_git_blobs": true,
+      "source_sha256": "ec0194a5c8c3b5b755f1fed61b4218dfe5f480a9c59a9120e6c089ecc5344a18",
+      "test_predictions_computed": false,
+      "validation_metrics_match_local": true,
+      "within_linux_repeat_checks": "CI comparison step passed"
+    },
+    "runs": [
+      "drivedna-generated-v1-20261115",
+      "drivedna-generated-v1-20261115-repeat"
+    ],
+    "source_bytes": 172998,
+    "source_generation_repeat_byte_identical": true,
+    "working_source_matches_frozen_git_after_crlf_normalization": true
+  },
+  "validation": {
+    "compile": "pass",
+    "diff_check": "pass",
+    "embedding_regression_tests": 13,
+    "historical_source_files_unchanged": [
+      "ml/datasets.py",
+      "ml/eventnet.py",
+      "ml/calibration.py",
+      "ml/integritynet.py",
+      "ml/contextnet.py",
+      "ml/contextnet_corpus.py",
+      "ml/DATA_LICENSE.md",
+      "ml/requirements-eventnet.txt",
+      "ml/requirements-mobile.txt"
+    ],
+    "host_test_note": "One unchanged calibration test initially hit Windows rename WinError 5; targeted retry and full 99-test rerun passed, with no assertion changes.",
+    "local_python_tests": 99,
+    "pinned_cpu_dependencies": "pass",
+    "repository_json_yaml_secrets": "pass",
+    "source_ci": {
+      "app_checks": "Formatting, analysis, full Flutter/native tests, generated/schema checks, debug/release builds, APK size/artifact gates and existing native-to-CPU IntegrityNet comparison pass.",
+      "conclusion": "success",
+      "head_sha": "ac2e1eec595012682b1934c31b90f7a627351504",
+      "jobs": {
+        "cloud-schema": "success",
+        "eventnet-cpu": "success",
+        "guardian-dispatch": "success",
+        "validate": "success"
+      },
+      "run_id": 43716929988,
+      "status": "completed",
+      "url": "https://github.com/atrx07/Traelyx/actions/runs/43716929988"
+    }
+  }
+}

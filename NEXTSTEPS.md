@@ -11,9 +11,10 @@ mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
-also complete. M7.8 is now explicitly continued; M7.9 and later remain gated.
+also complete. M7.8's subsequently authorized embedding experiment is complete;
+M7.9 and later remain gated.
 
-## P0 — Finish authorized M7.8; keep acceptance visible
+## P0 — Await M7.9 authorization; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -38,11 +39,15 @@ local Python tests, clean-source repeats and full CI 43692438655 (`657f6bc`, all
 four jobs) pass. Evidence: `docs/reference/contextnet-generated-v1-result.json`.
 No app/narrator change or model promotion.
 
-M7.8 now compares a generated-only self-supervised embedding with transparent
-physical-summary distances. Freeze the protocol/source, validate train-only
-statistics/cutoffs, scopes/versions and test-opening guard, run clean-source
-repeats/full CI and retain aggregate evidence. Existing dimensions and production
-inference stay unchanged. Stop before M7.9; no next-step preparation authorized.
+M7.8's generated embedding experiment is complete: both methods retrieve 80/80
+programs and detect 40/40 changed validation pairs; stable-pair false flags are
+2/40 for embedding vs5/40 for summary distances. The frozen material-value gate
+still fails, and test predictions remain uncomputed. All 99 local Python tests,
+clean-source repeats and full CI 43716929988 (`ac2e1ee`, four jobs) pass. Evidence:
+`docs/reference/drivedna-generated-v1-result.json`. Preserve the synthetic signal
+without post-result tuning or promotion. Existing dimensions and production
+inference stay unchanged. Stop before M7.9; no next-step implementation or
+preparation is authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 
@@ -88,6 +93,15 @@ versioned protocol with suitable unseen context labels, overlap/open-set and
 quality semantics, accepted feature extraction, calibrated outputs and physical
 runtime/battery evidence. Do not tune against this observed validation result or
 claim the shared generated templates establish field accuracy.
+
+DriveDNA embedding adoption is also deferred. M7.8's fixed candidate shows fewer
+generated stable-pair false flags (2/40 vs5/40) while tying program retrieval and
+controlled changed detection, so its prespecified material-value gate fails and
+test predictions stay uncomputed. Preserve that signal without changing the gate
+after results. Any future work needs a separately authorized/versioned protocol,
+suitable unseen style/deviation evidence, accepted extraction, comparable cohorts,
+coordinate-space compatibility and physical/runtime/uncertainty validation.
+Existing explainable dimensions and historical profiles remain authoritative.
 
 The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
 
