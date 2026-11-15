@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.6 experiment complete; awaiting M7.7 authorization; model acceptance open**
+**M7 active — M7.7 ContextNet experiment authorized/in progress; model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -13,12 +13,20 @@ no Guardian gate and authorizes no live operation. M6.1–M6.7 remain complete.
 See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
-M7.6 was subsequently continued; only its isolated IntegrityNet comparison is
-authorized. M7.7 and later substeps need separate authorization. M6.8 stays open.
+M7.6 was subsequently completed; M7.7 is now explicitly continued for its isolated
+ContextNet comparison. Stop before M7.8. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
 ## Working
+
+- M7.7 in progress (2026-11-15): original generated context sequence contract,
+  experimental temporal-rule comparator, packed tiny GRU and validation-first
+  value gate implemented. Regression checks cover missing/unsupported evidence,
+  training-only normalization, padding and test non-evaluation after validation
+  failure. Freeze source before the full comparison; completion needs clean-source
+  repeats, full CI and aggregate evidence. No production inference or narrator
+  change. All earlier model and physical acceptance gates remain open.
 
 - M7.6 generated experiment complete (2026-11-15): frozen 98-parameter CPU
   autoencoder on 104 fictional-profile cases (40/32/32), train-clean normalization
@@ -1008,8 +1016,8 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.3 is complete as a bounded retrospective experimental audit;
-all local and exact-source CI gates pass. Await explicit authorization for M7.4
-mobile export/inference. Production severe-event evidence remains blocked;
-M6.8 physical/vehicle acceptance stays open/deferred. No new live operation or
-production model promotion is authorized by this completion.
+**Current step:** M7.7 generated ContextNet comparison is authorized and in
+progress. Local unit/integrity checks pass; freeze source, reproduce the fixed
+comparison and complete full CI before recording the experiment's decision.
+Production model acceptance and M6.8 physical/vehicle checks remain open/deferred.
+Stop before M7.8; no production promotion is authorized.

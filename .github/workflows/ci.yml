@@ -23,11 +23,25 @@ jobs:
           python-version: '3.12'
       - name: Install hash-pinned CPU experiment dependencies
         run: python -m pip install -r ml/requirements-eventnet.txt
-      - name: Test EventNet with generated evidence only
+      - name: Test isolated CPU experiments
         run: |
-          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py tests/tool/test_integritynet.py
+          python -m compileall -q ml tests/tool/test_eventnet.py tests/tool/test_calibration.py tests/tool/test_integritynet.py tests/tool/test_contextnet.py
           python -m pip check
-          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration tests.tool.test_integritynet
+          python -W error::ResourceWarning -m unittest tests.tool.test_eventnet tests.tool.test_calibration tests.tool.test_integritynet tests.tool.test_contextnet
+      - name: Compare generated ContextNet with frozen temporal rules twice
+        run: |
+          python -m ml.contextnet_corpus --output .dart_tool/contextnet-fixtures-v1.json
+          expected=$(sha256sum .dart_tool/contextnet-fixtures-v1.json | cut -d ' ' -f 1)
+          python -m ml.contextnet --source .dart_tool/contextnet-fixtures-v1.json --expected-sha256 "$expected" --run-name contextnet-ci-one
+          python -m ml.contextnet --source .dart_tool/contextnet-fixtures-v1.json --expected-sha256 "$expected" --run-name contextnet-ci-two
+          cmp ml/checkpoints/contextnet-ci-one/checkpoint.json ml/checkpoints/contextnet-ci-two/checkpoint.json
+          cmp ml/checkpoints/contextnet-ci-one/report.json ml/checkpoints/contextnet-ci-two/report.json
+      - name: Retain generated ContextNet comparison only
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: contextnet-generated-comparison
+          path: ml/checkpoints/contextnet-ci-one/report.json
+          if-no-files-found: error
       - name: Install isolated hash-pinned mobile export additions
         run: |
           python -m pip install --no-deps -r ml/requirements-mobile.txt

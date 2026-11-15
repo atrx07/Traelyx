@@ -10,9 +10,10 @@ M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance an
 mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
 On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
-IntegrityNet experiment; M7.7 and later substeps remain gated.
+IntegrityNet experiment. M7.7 is now explicitly continued for its isolated
+ContextNet comparison; M7.8 and later substeps remain gated.
 
-## P0 — Await M7.7 authorization; keep acceptance visible
+## P0 — Finish authorized M7.7; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -27,8 +28,13 @@ is complete: 6/6 numeric injections detected vs native 4/6, both zero flags on
 16 known clean fixtures. All 74 Python/502 app-native tests, clean-source repeats
 and full CI 43689186048 (`4e0fe9a`, four jobs) pass. Evidence is
 `docs/reference/integritynet-generated-v1-result.json`. Synthetic signal is not
-production acceptance; rules and disabled inference remain unchanged. Stop
-before M7.7; no next-step implementation or preparation is authorized.
+production acceptance; rules and disabled inference remain unchanged.
+
+M7.7 now compares a generated-only tiny GRU against explicit experimental
+temporal rules. Freeze the source/protocol, run clean-source repeats and full CI,
+preserve the validation value decision and test-opening status, then persist
+aggregate evidence. A negative value result completes the experiment without
+promotion. Stop before M7.8; no next-step preparation is authorized.
 
 ## Deferred acceptance — revisit before enabling any model
 

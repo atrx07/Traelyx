@@ -1,0 +1,26 @@
+{
+  "experiment_version": "contextnet-generated-gru-v1",
+  "status": "experiment",
+  "production_eligible": false,
+  "dataset_id": "traelyx-context-generated-v1",
+  "source_kind": "generated_only",
+  "license": "CC0-1.0",
+  "license_evidence": "ml/experiments/CONTEXTNET_DATA_LICENSE.md",
+  "attribution": "Traelyx contributors (2026), original analytical generated context sequences v1, CC0-1.0. No recordings or measured drivers.",
+  "feature_schema": "contextnet-generated-sequence-v1",
+  "features": ["speed_mps", "longitudinal_acceleration_mps2", "lateral_acceleration_mps2", "longitudinal_jerk_mps3"],
+  "classes": ["steady_cruise", "stop_and_go", "high_dynamic_load", "repeated_abrupt_transitions", "smooth_variable"],
+  "durations_seconds": [30, 60, 120],
+  "variants": [1, 2],
+  "groups": {"ctx-profile-01": "train", "ctx-profile-02": "validation", "ctx-profile-03": "train", "ctx-profile-04": "test", "ctx-profile-05": "train", "ctx-profile-06": "test", "ctx-profile-07": "train", "ctx-profile-08": "validation", "ctx-profile-09": "train"},
+  "baseline": {"version": "context-temporal-rules-v1", "stopped_speed_mps": 0.5, "stop_fraction_min": 0.15, "stop_fraction_max": 0.8, "minimum_stop_transitions": 1, "lateral_load_mps2": 2.0, "lateral_occupancy_min": 0.5, "jerk_mps3": 3.5, "minimum_jerk_episodes": 3, "moving_fraction_min": 0.85, "cruise_speed_span_mps": 1.0, "cruise_acceleration_max_mps2": 0.75, "smooth_acceleration_max_mps2": 1.0},
+  "config": {"seed": 7707, "epochs": 80, "learning_rate": 0.01, "hidden": 8, "threads": 1, "normalizer_scale_floor": 0.000001, "selective_probability_cutoff": 0.6, "minimum_macro_f1_gain": 0.02},
+  "limitations": [
+    "Generated fixture programs and fictional profile holdout share templates; they are not independent real-driver, route, device or field context evidence.",
+    "Midpoint analytical 1 Hz physical channels are not an accepted production feature extraction/calibration contract.",
+    "Five program labels do not prove mutually exclusive real-world contexts. Stationary and mixed-program diagnostics are outside the closed label set.",
+    "Temporal rules are a separate transparent experimental comparator, not the production narrator or a claimed existing five-state classifier.",
+    "Max-softmax cutoff is fixed experimental selection, not calibrated confidence. Real context accuracy/calibration, mobile latency and battery metrics remain unavailable.",
+    "No result changes event/scoring/integrity/narration/Guardian behavior or waives prior acceptance gates. A failed validation gate leaves test predictions/metrics unopened."
+  ]
+}

@@ -83,6 +83,13 @@ Possible states:
 
 Use only if it adds validated value over deterministic context.
 
+M7.7 isolates a generated-only CPU GRU and explicit experimental temporal-rule
+comparison. Validation must show material improvement without recall, coverage,
+quality or open-set regression before computing any test predictions. It does not
+change production commentary or provide field acceptance. Follow
+[`CONTEXTNET_EXPERIMENT_V1.md`](../reference/CONTEXTNET_EXPERIMENT_V1.md) and
+[`ADR-0039`](../decisions/ADR-0039-contextnet-validation-value-gate.md).
+
 ### IntegrityNet — anomaly evidence
 
 Candidate: small autoencoder or compact anomaly model trained on coherent telemetry relationships.

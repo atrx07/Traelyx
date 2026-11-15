@@ -14,6 +14,12 @@ native fixtures. Its manifest is `experiments/integritynet-v1.json`; it does not
 change the historical registry/imports or accept maneuver labels as integrity
 truth. Follow [the frozen experiment protocol](../docs/reference/INTEGRITYNET_BASELINE_V1.md).
 
+M7.7's isolated ContextNet comparison uses original analytical 30/60/120-second
+sequences and explicit experimental temporal rules. It leaves test predictions
+uncomputed if the fixed validation value gate fails. Follow
+[the context protocol](../docs/reference/CONTEXTNET_EXPERIMENT_V1.md); no app
+runtime, production context labels or narrator behavior is introduced.
+
 ```text
 python ml/datasets.py validate
 python -m unittest tests.tool.test_ml_datasets

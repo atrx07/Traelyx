@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.6 generated experiment complete; await M7.7 authorization; acceptance carried forward
+**Current gate:** M7.7 ContextNet value experiment authorized; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-15
 
@@ -14,11 +14,11 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.6, explicitly continued after the M7.5 foundation.
-Compare an isolated anomaly experiment against the existing deterministic
-integrity baseline, preserving all model acceptance follow-ups and disabled
-production inference. The appended boundaries supersede earlier scope. Stop
-before M7.7.
+Current authorized work: M7.7, explicitly continued after M7.6. Compare an
+isolated ContextNet experiment with transparent temporal rules; only a material
+validation gain permits test evaluation. Preserve all acceptance follow-ups and
+disabled production inference. The appended boundaries supersede earlier scope.
+Stop before M7.8.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -622,3 +622,74 @@ is `docs/reference/integritynet-generated-v1-result.json`; data/checkpoints stay
 ignored. No new dependency, app/runtime change, migration, private recording,
 phone or production operation. The M7.6 experiment is complete, with all prior
 acceptance/physical gates carried forward. Stop before M7.7 pending authorization.
+
+## M7.7 boundary — authorized 2026-11-15
+
+The maintainer explicitly continued M7.7. Only a bounded CPU ContextNet value
+experiment is authorized. No model promotion, narrator/event/scoring/integrity/
+Guardian change, new dependency, private-data use, public download or device
+operation. Stop before M7.8. All prior acceptance gates remain open.
+
+### Frozen comparison (before observing model results)
+
+- Existing procedural commentary uses deterministic event repetition/cooldown;
+  it is not a five-state context classifier. Compare against a separately
+  versioned experimental temporal-rule baseline, not a fabricated production
+  classifier. Do not modify narration, source thresholds or historical results.
+- Original analytical generated sequences at 1 Hz cover 30/60/120 seconds.
+  Do not tile/stretch M3's 12-second corpus or claim recorded/field evidence.
+  Four vehicle-frame generated channels: speed m/s, longitudinal acceleration
+  m/s², lateral acceleration m/s² and longitudinal jerk m/s³. One analytical
+  midpoint sample per one-second bin; explicit relative times/support/missingness.
+- Five *fixture* programs: steady cruise, stop/go, high lateral load, repeated
+  abrupt transitions and smoothly varying speed. Labels come from generation
+  programs, not rule/model predictions; mutually exclusive programs do not prove
+  real context labels are disjoint. Mixed-load/abrupt and stationary diagnostics
+  are intentionally outside this closed label set and require abstention.
+- Nine fictional groups assigned first: 1/3/5/7/9 train, 2/8 validation, 4/6 test.
+  Each group has 5 programs ×3 lengths ×2 variants: 270 labelled cases (150/60/60).
+  Held-out groups add 20 quality-unavailable and four open/mixed diagnostics per
+  partition: totals 150/84/84 (318). Shared generators are not real-driver holdout.
+- Missing spans/unsupported evidence abstain in both methods; no zero-filling,
+  interpolation, sample repair, quality-derived label feature or padded training
+  statistics. Normalization fits valid training frames only; packed lengths
+  exclude batch padding from GRU state. Source IDs/labels/split do not enter features.
+- One GRU: input4/hidden8/head5, 381 parameters; CPU PyTorch2.15.0+cpu, one thread,
+  seed7707, Adam lr0.01, 80 full-batch epochs, no search/selection/early stopping.
+  Mean/population-std fitted on training only, std floor1e-6. Final model only.
+- Frozen temporal rules use stopped speed<=0.5 m/s, stop fraction0.15–0.8 plus
+  at least one stop/move transition; high lateral-load occupancy>=0.5 at |ay|>=2;
+  at least three |jerk|>=3.5 signed episodes (a sign change starts a new episode);
+  otherwise moving fraction>=0.85,
+  speed span<=1/max|ax|<=0.75 for cruise or span>1/max|ax|<=1 for smooth variation.
+  Multiple dynamic matches abstain. These are experiment rules, not production
+  context/score definitions. Baseline receives the same sequence/quality as GRU.
+- Model's selective prediction uses fixed max-softmax>=0.6; probabilities are
+  explicitly uncalibrated. Report argmax/selective per-class precision/recall/F1,
+  confusion, coverage, Brier/NLL and missing/open-case abstention diagnostics.
+- Validation gate: selective macro F1 >= rules+0.02, no per-class recall or
+  labelled coverage regression, no increase in non-abstained open/mixed cases,
+  and matching quality abstention. If it fails, reject added-value claim and do
+  not compute test predictions/metrics. Test metadata/schema validation is not
+  claimed to be physically unseen data. If it passes, evaluate test once with
+  the same gate; no calibration/search or retry after either outcome.
+- Preserve safe JSON checkpoint, manifests, source/data/model hashes, validation
+  result and within-platform byte-identical repeats. A negative result closes
+  the experiment with rules retained. Any result stays production-ineligible;
+  real context accuracy/calibration, runtime/battery and suitable data stay open.
+
+### Acceptance / checks
+
+- [x] Freeze generated manifest/license, comparison protocol and explicit value gate.
+- [x] Implement bounded generation/loading, temporal baseline, packed GRU,
+  train-only normalization, optional test opening and safe checkpoint/replay.
+- [x] Test time/shape/quality validation, padding invariance, split/leakage controls,
+  baseline diagnostics, model reproducibility and failed-gate test non-evaluation.
+- [ ] Run clean-source experiment/repeats and full CI, retaining every outcome;
+  no production change or post-result tuning.
+- [ ] Persist aggregate evidence/status, commit/push/verify Git and stop before M7.8.
+
+Local implementation gate: all 86 Python tests (including 12 ContextNet tests),
+compile, pinned CPU dependency check, repository JSON/YAML/secrets validation and
+diff checks pass. No complete ContextNet experiment result has been observed at
+the source freeze. Full source CI and clean-source repeats remain required.
