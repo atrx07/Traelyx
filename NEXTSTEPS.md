@@ -19,13 +19,17 @@ For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
 setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
 preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
-## P0 — Choose next work; keep model acceptance visible
+## P0 — Resolve model acceptance before M8
 
-M7 audit recommends beginning M8 hardening only with an explicit sequencing
-exception: keep production ML disabled and retain M7.4/M7.5 and M6.8 gates.
-Formal M7 exit and public release are not approved. Audit:
-`docs/reference/M7_EXIT_AUDIT_2026-11-16.md`. Await maintainer direction; no M8
-implementation or model-promotion follow-up is activated by the audit.
+The maintainer chose to tackle M7.4/M7.5 before M8 (2026-11-16), superseding the
+conditional M8-hardening recommendation. Active follow-up:
+`docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`. Read-only old-recording
+intake preserves all original chunks and the accidental-trip exclusion, but admits
+no model data. All 120 local Python tests pass; source CI pending. Qualify public
+event-interval data next: the maintainer reports permanent Tecno damage and no
+available second ADB phone. Confirmed-g desk readings are a provisional diagnostic
+proposal only. Existing v1 rejection/results/gates
+remain frozen; no model promotion, M8 activation or invented labels.
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only

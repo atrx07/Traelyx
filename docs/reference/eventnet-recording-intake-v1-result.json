@@ -1,0 +1,59 @@
+{
+  "aggregate_intake": {
+    "accelerometer_samples": 1471506,
+    "accelerometer_status_0_samples": 1471506,
+    "archived_duration_minutes": 129.21,
+    "disposition": "diagnostic_only",
+    "evaluation_admitted": false,
+    "gyroscope_samples": 1553811,
+    "maximum_gnss_coverage_gap_seconds": 680.210482,
+    "original_chunks": 11857,
+    "original_recordings": 6,
+    "recordings_missing_gnss": 1,
+    "source_checksum_verified_before_and_after": true,
+    "training_admitted": false
+  },
+  "calibration_observation": {
+    "historical_bias_stability_validated": false,
+    "production_approved": false,
+    "raw_data_modified": false,
+    "source": "Rounded maintainer six-face desk observations",
+    "unit_confirmed": "g"
+  },
+  "ci": {
+    "status": "pending"
+  },
+  "date": "2026-11-16",
+  "device_preservation": {
+    "additional_already_excluded_chunks": 8,
+    "database_entries_decoded": false,
+    "device_writes": false,
+    "original_chunks_changed_or_missing": 0,
+    "original_chunks_matching_existing_local_backup": 11857,
+    "phone_chunks_before_and_after": 11865,
+    "raw_telemetry_uploaded": false,
+    "recorder_idle_before_and_after": true,
+    "unchanged_chunk_hashes": 11865
+  },
+  "evidence_version": "eventnet-recording-intake-v1",
+  "local_validation": {
+    "failures": 0,
+    "focused_decoder_intake_tests": 18,
+    "python_tests": 120,
+    "skips": 0
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "privacy": "Reviewed aggregate evidence only; raw files, identifiers, routes, timestamps and per-recording diagnostics remain ignored/local",
+  "purpose": "Read-only source qualification; no model acceptance or promotion",
+  "remaining_gates": [
+    "governed independently labelled event and negative exposure evidence",
+    "production feature units/frame/timing/quality contract",
+    "unseen grouped evaluation under a prespecified protocol",
+    "numerical and value/calibration acceptance",
+    "real size/CPU/memory/battery and device acceptance",
+    "accepted runtime integration and explicit promotion"
+  ],
+  "upstream_review_commit": "6582922fdc84dda649ae307da80ad1acaf9a7bac"
+}

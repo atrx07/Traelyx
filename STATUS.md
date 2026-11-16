@@ -31,6 +31,16 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7.4/M7.5 follow-up intake (2026-11-16): all 11,857 original Tecno chunks match
+  the existing local backup; all 11,865 phone chunk hashes are unchanged after
+  read-only inspection. Six original recordings (129.21 archived minutes) retain
+  unreliable accelerometer status throughout and lack accepted event/frame
+  evidence. No training/evaluation data admitted. All 120 local Python tests pass,
+  including 18 decoder/intake tests; source CI pending. Maintainer-confirmed g
+  desk readings support only a provisional calibration proposal, not a waiver.
+  Public-source qualification is next; M8 remains inactive. See
+  `docs/reference/EVENTNET_RECORDING_INTAKE_V1.md`.
+
 - M7 exit audit (2026-11-16): conditionally suitable for M8 hardening with ML
   disabled; formal M7 completion remains blocked by M7.4 acceptance and M7.5
   real integration. M6.8 physical/vehicle gates remain open. No M8 activation or
@@ -1087,7 +1097,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7 audit completed; M8 hardening is a conditional recommendation, awaiting explicit maintainer authorization to carry the open acceptance gates forward.
+**Current step:** M7.4/M7.5 acceptance follow-up before M8. Old Tecno recording intake is diagnostic-only; public-source qualification is next because no available phone provides accepted new sensor/event evidence. See `docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`.
 Actual local neural runtime/download activation remains conditional on accepted
 quality/device evidence. Preserve Groq and built-in narration. Stop before M8;
 M7 and prior sensor-model/physical/vehicle acceptance are not complete.

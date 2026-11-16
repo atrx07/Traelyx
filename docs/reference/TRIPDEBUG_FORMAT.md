@@ -41,3 +41,13 @@ Its output includes duration, byte/chunk/sample counts, and maximum coverage gap
 ## Compatibility
 
 Archive version, telemetry schema version, and native chunk encoding version are independent. Readers must reject unknown versions rather than reinterpret them. A future anonymized/public fixture format must use an explicit transformation/version and must not relabel this precise-private archive.
+
+## M7.4/M7.5 acceptance intake
+
+The decoder also serves the explicitly invoked private recording-backup quality
+inspector. Its optional quality summary adds aggregate Android accuracy/flag/mock
+counts without altering legacy archive inspector output. Inflation is bounded
+while decoding, and unfinished/trailing compressed streams are rejected. No
+archive/schema/encoding version, valid sample interpretation or source bytes change.
+See [recording intake v1](EVENTNET_RECORDING_INTAKE_V1.md); successful structural
+verification never implies event-label, mounting, driver-split or model acceptance.

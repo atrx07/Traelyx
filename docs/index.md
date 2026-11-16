@@ -76,3 +76,8 @@ when that tooling or device setup is relevant.
 For M7.11 local narrator artifact/provider work only, read
 [local commentary v1](reference/LOCAL_COMMENTARY_V1.md), the empty bundled catalog
 and its separate manifest schema. Runtime/model activation is still gated.
+
+For the authorized M7.4/M7.5 acceptance follow-up, read
+[recording intake v1](reference/EVENTNET_RECORDING_INTAKE_V1.md) and
+[the active plan](exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md) before
+accessing old private phone evidence. Intake does not grant model promotion.

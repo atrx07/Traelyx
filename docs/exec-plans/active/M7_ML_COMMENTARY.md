@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.11 architecture complete; awaiting maintainer direction; model/runtime activation performance-gated
+**Current gate:** M7.4/M7.5 acceptance follow-up authorized before M8; old-recording intake diagnostic-only
 **Started:** 2026-11-11
 **Last updated:** 2026-11-16
 
@@ -14,13 +14,13 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.11, continued by the maintainer on 2026-11-16.
-Deliver the local commentary provider architecture: shared reviewed-wording
-contract, versioned trusted manifests, capability/admission gates, cancellable
-verified app-private artifact management and explicit local-model status/removal.
-Real model/runtime adoption and network download activation are optional under
-the roadmap's performance clause and remain gated pending accepted evidence.
-Stop before M8; do not mark M7 complete while earlier acceptance remains open.
+Current authorized work: resolve M7.4 acceptance and then M7.5 real integration,
+per the maintainer's decision after the M7 audit. The active bounded follow-up is
+`M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`. Old phone recordings may be inspected
+read-only after upstream preservation review. They are not automatically labelled,
+vehicle-frame, unseen or training/evaluation-eligible. Preserve all frozen v1
+rejections/results and keep production inference disabled pending accepted data,
+features, numerical/runtime evidence and explicit promotion. M8 remains inactive.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is

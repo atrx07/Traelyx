@@ -79,8 +79,10 @@ See [contract](docs/reference/LOCAL_COMMENTARY_V1.md) and
 performance/quality and earlier model/vehicle acceptance remain open.
 
 The [M7 exit audit](docs/reference/M7_EXIT_AUDIT_2026-11-16.md) recommends M8
-hardening with unaccepted ML disabled, subject to maintainer authorization.
-M7.4/M7.5 acceptance remains open; formal M7 exit and public release are not approved.
+hardening with unaccepted ML disabled. The maintainer subsequently chose to tackle
+M7.4/M7.5 acceptance first. [Recording intake](docs/reference/EVENTNET_RECORDING_INTAKE_V1.md)
+preserves old phone evidence but admits no training/evaluation data. Formal M7 exit,
+M8 activation and public release remain open.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
@@ -93,11 +95,11 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | M7.11 architecture complete; prior model acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
+| M7 | ML & Advanced Commentary | M7.4/M7.5 acceptance follow-up active; M8 inactive | 🔵 Active | ~2–3 weeks plus data collection | — |
 | M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
 | M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
 | M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
-| M7.4 |  | Mobile export/inference; int8 artifact rejected | ⛔ Blocked | Re-plan required | 2026-11-14 (partial) |
+| M7.4 |  | V1 int8 rejected; recording/data qualification active | ⛔ Blocked | Re-plan required | 2026-11-14 (partial) |
 | M7.5 |  | Foundation validated; real-model integration gated | 🟡 In progress | ~1–2 days plus acceptance | 2026-11-14 (partial) |
 | M7.6 |  | IntegrityNet generated experiment vs native rules | ✅ Complete | Done | 2026-11-15 |
 | M7.7 |  | ContextNet generated experiment; no added value, rules retained | ✅ Complete | Done | 2026-11-15 |

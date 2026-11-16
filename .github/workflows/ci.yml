@@ -245,7 +245,9 @@ jobs:
         run: flutter test
 
       - name: Test trip-debug inspector
-        run: python -m unittest tests.tool.test_inspect_tripdebug
+        run: |
+          python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tests/tool/test_inspect_ml_recordings.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings
 
       - name: Validate offline ML dataset registry and imports
         run: |

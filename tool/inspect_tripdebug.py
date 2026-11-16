@@ -190,7 +190,7 @@ def _optional(reader: Reader, fmt: str) -> None:
             raise TripDebugInvalid("sample_non_finite")
 
 
-def decode_chunk(data: bytes) -> dict[str, object]:
+def decode_chunk(data: bytes, *, include_quality: bool = False) -> dict[str, object]:
     reader = Reader(data)
     if reader.integer() != CHUNK_MAGIC:
         raise TripDebugInvalid("chunk_magic_invalid")
@@ -220,12 +220,20 @@ def decode_chunk(data: bytes) -> dict[str, object]:
         raise TripDebugInvalid("chunk_incomplete")
     reader.finish()
     try:
-        raw = zlib.decompress(payload)
+        decompressor = zlib.decompressobj()
+        raw = decompressor.decompress(payload, MAX_PAYLOAD_BYTES + 1)
     except zlib.error as error:
         raise TripDebugInvalid("chunk_decompression_failed") from error
-    if len(raw) > MAX_PAYLOAD_BYTES:
+    if len(raw) > MAX_PAYLOAD_BYTES or decompressor.unconsumed_tail:
         raise TripDebugInvalid("chunk_payload_limit")
+    if not decompressor.eof or decompressor.unused_data:
+        raise TripDebugInvalid("chunk_decompression_invalid")
 
+    quality = {
+        "gnss_mock_samples": 0,
+        "flagged_samples": {1: 0, 2: 0, 3: 0},
+        "imu_accuracy": {2: {str(i): 0 for i in range(-1, 4)}, 3: {str(i): 0 for i in range(-1, 4)}},
+    }
     records = Reader(raw)
     count = records.integer()
     if count <= 0 or count > 256 or count != sum(declared_counts):
@@ -263,20 +271,27 @@ def decode_chunk(data: bytes) -> dict[str, object]:
                 _optional(records, "f")
             if not records.utf():
                 raise TripDebugInvalid("provider_invalid")
-            records.boolean()
-            records.integer()
+            mock = records.boolean()
+            flags = records.integer()
+            if include_quality:
+                quality["gnss_mock_samples"] += int(mock)
+                quality["flagged_samples"][channel] += int(flags != 0)
         else:
             for _ in range(3):
                 if not math.isfinite(records.unpack("f")):
                     raise TripDebugInvalid("sample_non_finite")
-            records.integer()
-            records.integer()
+            accuracy = records.integer()
+            flags = records.integer()
+            if include_quality:
+                key = str(accuracy) if accuracy in range(4) else "-1"
+                quality["imu_accuracy"][channel][key] += 1
+                quality["flagged_samples"][channel] += int(flags != 0)
     records.finish()
     if actual_counts != declared_counts or ordered != sorted(ordered):
         raise TripDebugInvalid("chunk_record_order_invalid")
     if ordered[0][0] != start or ordered[-1][0] != end:
         raise TripDebugInvalid("chunk_bounds_invalid")
-    return {
+    result = {
         "trip_id": trip_id,
         "sequence": sequence,
         "encoding_version": encoding_version,
@@ -286,6 +301,9 @@ def decode_chunk(data: bytes) -> dict[str, object]:
         "counts": actual_counts,
         "elapsed_by_channel": elapsed_by_channel,
     }
+    if include_quality:
+        result["quality"] = quality
+    return result
 
 
 def _coverage_gaps(
