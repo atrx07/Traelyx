@@ -1,0 +1,95 @@
+{
+  "audit_version": 1,
+  "date": "2026-11-16",
+  "baseline_commit": "6ce5ca91afd5fa6a0681239a5704698e1e7c83e4",
+  "review_scope": "M7.1-M7.11; evidence, code boundaries and milestone transition readiness",
+  "verdict": {
+    "m8_hardening": "conditional_go_after_explicit_sequencing_authorization",
+    "formal_m7_exit": "no_go",
+    "public_release": "no_go",
+    "m8_activated": false,
+    "production_model_promotion_authorized": false
+  },
+  "required_conditions": [
+    "Keep production event/integrity/context/embedding ML disabled until separately accepted.",
+    "Retain M7.4 blocked and M7.5 partial states; no numerical waiver or post-result gate change.",
+    "Carry M6.8 physical/Guardian/vehicle/OEM gates forward without release waiver.",
+    "Obtain explicit maintainer authorization before activating M8."
+  ],
+  "step_dispositions": {
+    "M7.1": "registry/import complete; production data not accepted",
+    "M7.2": "source-space experiment complete; promotion blocked",
+    "M7.3": "retrospective audit complete; safety calibration unaccepted",
+    "M7.4": "blocked_quantized_probability_drift",
+    "M7.5": "foundation complete; real integration incomplete",
+    "M7.6": "generated experiment complete; not promoted",
+    "M7.7": "experiment complete; no validated added value; test predictions unopened",
+    "M7.8": "experiment complete; material value gate failed; test predictions unopened",
+    "M7.9": "correction/export/quarantine contract complete; training blocked",
+    "M7.10": "reviewed-wording cloud contract complete; free-form quality not accepted",
+    "M7.11": "architecture complete; optional model/runtime activation deferred"
+  },
+  "fresh_validation": {
+    "flutter_tests": 592,
+    "python_tests": 105,
+    "dataset_registry_entries": 3,
+    "format": "pass",
+    "analysis": "no issues",
+    "failures": 0,
+    "retraining_performed": false,
+    "frozen_test_sets_reopened": false,
+    "source_file_hash_checks": 39,
+    "direct_git_blob_matches": 36,
+    "documented_crlf_representation_matches": 3,
+    "semantic_source_hash_mismatches": 0,
+    "frozen_evidence_links_verified": 2,
+    "retained_onnx_artifacts_hash_and_size_verified": 2,
+    "private_ml_imports_or_checkpoints_tracked": false,
+    "main_app_model_weights_tracked": false,
+    "repository_json_yaml_secrets": "pass"
+  },
+  "prior_validation": {
+    "native_tests": 509,
+    "native_failures": 0,
+    "native_skips": 0,
+    "android_lint_errors": 0,
+    "android_lint_warnings": 8,
+    "local_release_bytes": 65400562,
+    "source_commit": "06d01083c08046e97cd586ae53a6ce8512d6642b",
+    "source_ci_run": 43886630798,
+    "source_ci_jobs": "4/4 success",
+    "baseline_diff_from_source": "five evidence/status documents only"
+  },
+  "baseline_ci": {
+    "run_id": 43888823803,
+    "commit": "6ce5ca91afd5fa6a0681239a5704698e1e7c83e4",
+    "initial_failure": "HTTP 403 at checksum-verified SQLite download, before app tests",
+    "failed_job_only_retried": true,
+    "checks_or_dependencies_changed": false,
+    "retry_status": "success",
+    "attempt": 2,
+    "jobs": {
+      "validate": "success",
+      "guardian-dispatch": "success",
+      "cloud-schema": "success",
+      "eventnet-cpu": "success"
+    },
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43888823803"
+  },
+  "limits": [
+    "Not a substitute for M8 torture, battery/performance, security, signed upgrade/install and release gates.",
+    "No new physical/vehicle/OEM/background validation, live Groq/Auth/Guardian request or deployment.",
+    "No claim that all runtime defects or security issues have been excluded."
+  ],
+  "report": "docs/reference/M7_EXIT_AUDIT_2026-11-16.md",
+  "findings_summary": {
+    "additional_blocking_runtime_defect_identified": false,
+    "formal_exit_blockers": [
+      "M7.4 rejected numerical/efficiency acceptance",
+      "M7.5 missing accepted-model production integration"
+    ],
+    "scientific_promotion_gates_waived": false,
+    "physical_guardian_vehicle_acceptance_waived": false
+  },
+  "audit_status": "complete"
+}

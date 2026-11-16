@@ -78,6 +78,10 @@ See [contract](docs/reference/LOCAL_COMMENTARY_V1.md) and
 [aggregate evidence](docs/reference/local-commentary-v1-result.json). Physical
 performance/quality and earlier model/vehicle acceptance remain open.
 
+The [M7 exit audit](docs/reference/M7_EXIT_AUDIT_2026-11-16.md) recommends M8
+hardening with unaccepted ML disabled, subject to maintainer authorization.
+M7.4/M7.5 acceptance remains open; formal M7 exit and public release are not approved.
+
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |

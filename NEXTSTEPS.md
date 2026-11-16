@@ -21,6 +21,12 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Choose next work; keep model acceptance visible
 
+M7 audit recommends beginning M8 hardening only with an explicit sequencing
+exception: keep production ML disabled and retain M7.4/M7.5 and M6.8 gates.
+Formal M7 exit and public release are not approved. Audit:
+`docs/reference/M7_EXIT_AUDIT_2026-11-16.md`. Await maintainer direction; no M8
+implementation or model-promotion follow-up is activated by the audit.
+
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
 evidence, rejection/quality/identity/failure/budget/cancellation checks, and

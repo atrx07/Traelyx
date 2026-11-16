@@ -31,6 +31,12 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 exit audit (2026-11-16): conditionally suitable for M8 hardening with ML
+  disabled; formal M7 completion remains blocked by M7.4 acceptance and M7.5
+  real integration. M6.8 physical/vehicle gates remain open. No M8 activation or
+  waiver. See `docs/reference/M7_EXIT_AUDIT_2026-11-16.md` for all eleven steps,
+  runtime boundaries, independent provenance checks and validation limits.
+
 - M7.11 architecture complete (2026-11-16): shared reviewed-wording contract,
   strict manifests/admission, verified no-backup artifact management and explicit
   status/removal. All 592 Flutter/509 native/105 Python tests, Pixel generated-only
@@ -1081,7 +1087,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.11 architecture is complete; awaiting maintainer direction before further roadmap work.
+**Current step:** M7 audit completed; M8 hardening is a conditional recommendation, awaiting explicit maintainer authorization to carry the open acceptance gates forward.
 Actual local neural runtime/download activation remains conditional on accepted
 quality/device evidence. Preserve Groq and built-in narration. Stop before M8;
 M7 and prior sensor-model/physical/vehicle acceptance are not complete.

@@ -1178,3 +1178,39 @@ No LLM inference, production weight download, recorder/scoring/Guardian change,
 migration or detector promotion is claimed. Model/vehicle/M6.8 gates remain open;
 M7 is not complete and M8 is not activated. Commit/push/verify this evidence closure,
 report the scoped result and stop for maintainer direction.
+
+## M7 milestone exit audit - authorized 2026-11-16
+
+Goal: audit all M7.1-M7.11 delivery, evidence and production boundaries, then
+recommend whether M8 hardening may proceed. This review does not activate M8,
+waive model/vehicle gates or change any experiment/promotion threshold.
+
+- [x] Map all substeps to current evidence and unclosed milestone criteria.
+- [x] Inspect runtime admission, rules/scoring isolation, contribution privacy,
+  provider credential/review controls and historical-result compatibility.
+- [x] Verify reproducibility/provenance links, current source CI coverage and
+  offline regression/contract checks without reopening frozen model test sets.
+- [x] Persist a scoped audit with findings, go/no-go and concrete remaining gates;
+  synchronize status/priority references, commit/push/verify and report.
+
+No device/account mutation, live API request, retraining, model download,
+benchmark under new conditions, M8 preparation or release action is authorized
+by this audit. Earlier recorded device tests may be cited with their limits.
+
+Audit completed: `docs/reference/M7_EXIT_AUDIT_2026-11-16.md` and its JSON result
+record all eleven substeps, formal M7.4/M7.5 blockers, optional-model limits and
+carried-forward physical/Guardian gates. Fresh 592 Flutter/105 Python tests,
+registry/format/analysis/privacy checks pass; 39 historical source hashes plus
+frozen evidence and retained artifact hashes verify. No new blocking runtime
+defect was identified in the reviewed paths; this is not a complete security or
+field-reliability guarantee. No runtime/test/model/dependency change occurred.
+
+Exact baseline `6ce5ca9` CI 43888823803 initially failed before app tests on official
+SQLite HTTP 403. Failed-job-only retry, attempt 2, passes all four jobs, including
+native tests and debug/release builds. Keep the initial failure recorded; no
+checksum/gate workaround or tooling-source change was needed.
+
+Recommendation: conditionally proceed to M8 hardening with production ML disabled
+and open acceptance carried forward only after explicit maintainer authorization.
+Formal M7 completion and public release remain no-go. Commit/push/verify this
+bounded audit; do not activate M8 or waive any prior model/vehicle/Guardian gate.
