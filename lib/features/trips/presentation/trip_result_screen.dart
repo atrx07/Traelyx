@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:traelyx/core/maps/map_contract.dart';
 import 'package:traelyx/core/maps/offline_route_map.dart';
 import 'package:traelyx/core/theme/traelyx_theme.dart';
+import 'package:traelyx/features/cloud_commentary/presentation/cloud_replay_control.dart';
 import 'package:traelyx/features/event_corrections/presentation/event_correction_panel.dart';
 import 'package:traelyx/features/trip_analysis/local_analysis_panel.dart';
 import 'package:traelyx/features/trips/application/replay_clock_controller.dart';
@@ -907,6 +908,23 @@ class _ReplayWorkspaceState extends State<_ReplayWorkspace>
               onToggleEvidence: activeCommentary == null
                   ? null
                   : () => _toggleCommentaryEvidence(activeCommentary),
+            ),
+            ExpansionTile(
+              key: const ValueKey('cloud-replay-options'),
+              title: const Text('Optional cloud wording'),
+              children: [
+                CloudReplayControl(
+                  plan: _commentaryPlan,
+                  pause: _pausePlayback,
+                  onApply: (plan) => setState(() => _commentaryPlan = plan),
+                  onBuiltin: () => setState(
+                    () => _commentaryPlan = ProceduralCommentaryPlan.build(
+                      timeline: widget.timeline,
+                      tone: _commentaryTone,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: TraelyxSpacing.md),
             _Panel(

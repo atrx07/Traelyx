@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "bootstrap",
+  "status": "groq_reviewed_wording_v1",
   "policy": {
     "hardcode_permanent_model_ids": false,
     "default_fallback_engine": "procedural",
@@ -33,7 +33,19 @@
       "secure_storage_required": true,
       "model_discovery": true,
       "network_required": true,
-      "model_policy": "Select from models available to the user's account; maintain recommendation separately from permanent code constants."
+      "model_policy": "Select from models available to the user's account; maintain recommendation separately from permanent code constants.",
+      "recommendation": {
+        "version": 1,
+        "minimum_context": 4096,
+        "text_model_patterns": [
+          "^llama-.*8b",
+          "^llama-",
+          "^meta-llama/",
+          "^qwen/",
+          "^openai/gpt-oss-"
+        ]
+      },
+      "implemented_contract": "reviewed_wording_choices_v1"
     },
     {
       "id": "openai_compatible_custom",

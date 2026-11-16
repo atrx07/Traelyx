@@ -72,6 +72,19 @@ class YouScreen extends ConsumerWidget {
               const SizedBox(height: TraelyxSpacing.md),
               Card(
                 child: ListTile(
+                  key: const ValueKey('open-commentary-settings'),
+                  leading: const Icon(Icons.chat_bubble_outline),
+                  title: const Text('Commentary engine'),
+                  subtitle: const Text(
+                    'Built-in narrator and optional Groq cloud settings.',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.go(TraelyxRoutes.youCommentary),
+                ),
+              ),
+              const SizedBox(height: TraelyxSpacing.md),
+              Card(
+                child: ListTile(
                   key: const ValueKey('open-data-export'),
                   contentPadding: const EdgeInsets.all(TraelyxSpacing.md),
                   leading: Icon(Icons.storage_rounded, color: colors.positive),

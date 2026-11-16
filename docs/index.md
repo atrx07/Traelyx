@@ -27,6 +27,8 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 - `technical/DATA_MODEL.md` — local/cloud entities and ownership.
 - `technical/SYNC_SPEC.md` — local/cloud sync boundaries.
 - `technical/PROVIDER_ARCHITECTURE.md` — dynamic commentary provider/model abstraction.
+- `reference/CLOUD_COMMENTARY_V1.md` — optional Groq setup, secure keys, minimized
+  request review and provider-selected reviewed wording (M7.10).
 - `technical/MAP_ARCHITECTURE.md` — map rendering/tile abstraction and privacy.
 - `technical/ANDROID_TRACKING.md` — native service requirements.
 - `technical/STORAGE_SPEC.md` — raw telemetry retention/chunking/storage management.

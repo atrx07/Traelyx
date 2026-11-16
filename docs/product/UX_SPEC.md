@@ -289,6 +289,14 @@ Engine
 
 Advanced cloud view may expose provider/model/temperature/max tokens/timeout/fallback, but sensible automatic behavior should be default.
 
+M7.10 adds You > Commentary engine: explicit secure key save/removal, default-off
+Groq permission, parked connection/model refresh and automatic/discovered/custom
+model selection. No HTTP occurs merely by opening settings. Replay's optional
+cloud section starts collapsed and requires parked confirmation, exact dossier
+review and Send once. Display only provider-selected reviewed tone lines; retain
+the built-in narrator on failure. Leaving the app resets parked state and cancels
+pending requests. See `../reference/CLOUD_COMMENTARY_V1.md`.
+
 ## 17. Accessibility
 
 - Support reduced motion.

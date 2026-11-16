@@ -3,9 +3,9 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.9 complete; await M7.10 authorization; prior acceptance carried forward
+**Current gate:** M7.10 BYO cloud commentary authorized; prior acceptance carried forward
 **Started:** 2026-11-11
-**Last updated:** 2026-11-15
+**Last updated:** 2026-11-16
 
 ## Context budget / references
 
@@ -14,10 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-M7.9 is complete for local post-drive notes, separately consented categorical
-export and a private quarantine-only receiver. Original detections/scores and
-prior model/physical acceptance remain unchanged. The appended boundaries
-supersede earlier scope. Await authorization before M7.10.
+Current authorized work: M7.10, continued by the maintainer on 2026-11-16.
+Deliver optional Groq BYO-key commentary with secure credentials, dynamic model
+selection, explicit minimized request review and procedural fallback. Stop before
+M7.11. All prior model/physical acceptance remains open/deferred.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -927,3 +927,99 @@ background/battery and all prior model gates remain open/deferred.
 
 Commit/push/verify this evidence/status closure, report M7.9, and stop before
 M7.10. No subsequent substep implementation or preparation is authorized.
+
+
+## M7.10 boundary - authorized 2026-11-16
+
+### Goal / user-visible result
+
+Optional Groq setup under You, with secure local key save/removal, default-off
+cloud permission, explicit connection/model refresh, automatic/discovered/custom
+model selection and normalized bounded failures. Post-drive replay offers an
+explicit send review of categories/continuity/tone and reviewed wording choices.
+The provider chooses approved lines for existing selected replay moments; no
+unrestricted model prose, new measurements, scoring or safety decisions enter UI.
+This deliberately constrained v1 does not claim free-form narration quality.
+
+### Scope / components / privacy
+
+Use the existing secure-storage package in a separate no-backup namespace and
+Dart HTTP behind a replaceable interface; no new package, runtime or backend.
+Only fixed HTTPS Groq endpoints; deny redirects, bound response/input sizes,
+timeouts and attempts, cancel/discard obsolete requests, and never log provider
+bodies/credentials. Do not discover/send on screen open, app start or recording.
+No raw telemetry, routes, IDs, times, speed, scores, personal labels or account
+identity enters the dossier. Groq receives authentication plus network metadata;
+its account policies govern costs/retention. No no-retention promise is made.
+
+A bundled versioned recommendation registry uses model-family/capability hints,
+not a permanent model ID. Discovered capability remains provisional; unsupported
+requests fall back without automatic retries or extra model/provider sends.
+Keys never enter Drift, cloud sync, state snapshots or logs. Per-request review
+and recorder idle/parked guards are required; revocation/key changes invalidate
+pending responses. Session-only choices are discarded on tone/source changes.
+No database migration, background sensor change, Guardian or ML promotion.
+
+### Checks / acceptance
+
+- [x] Versioned dossier/approved-output/provider contracts and registry.
+- [x] Secure credential/configuration lifecycle and bounded Groq transport.
+- [x] Settings navigation, model discovery and reviewed replay integration.
+- [x] Privacy/injection, malformed/error/budget/cancellation/revocation tests;
+  preserve procedural timing, evidence and core offline operation.
+- [ ] Format/analyze/full tests, generated/schema equality, builds/lint,
+  repository/privacy checks and suitable isolated UI QA; full source CI.
+- [ ] Record aggregate evidence, synchronize status/README, commit/push/verify
+  and stop before M7.11.
+
+### Risks / acceptance limits
+
+No real user key is requested for tests; mocked contracts and synthetic transport
+fixtures establish implementation behavior, not live account/model availability,
+quality, pricing or quota. Real API calls require user configuration and request
+consent in the app. Existing Pixel emulator/phone data must be preserved during
+QA. Physical driving/vehicle/OEM/background/battery acceptance is not claimed.
+
+API/privacy references checked 2026-11-16: Groq official API reference, model list,
+and Your Data pages. ADR-0042 and CLOUD_COMMENTARY_V1.md will own the contract.
+
+
+### Local validation / source freeze - 2026-11-16
+
+All 535 Flutter tests (32 new cloud/domain/transport/storage/widget checks),
+506 app-native tests and 105 Python/tool tests pass. Format/analysis, exact
+regeneration/schema equality and repository/privacy checks pass; schema4 and
+all prior snapshots remain unchanged. Normal main debug/release-validation APKs
+build and both package IDs are verified as the production ID. Release validation
+is65,203,571 bytes (62.18MiB); no new package, SDK or model runtime. App lint has
+zero errors/seven warnings in untouched code. The documented temporary host path
+normalization was restored byte-for-byte. No tests/gates were weakened; navigation
+checks now scroll to actual controls as the settings list grows.
+
+The existing Pixel_10 was visibly cold-booted with saved data retained, launcher
+hidden, and personal ADB authorization completed by the maintainer. A separate
+`io.github.atrx07.traelyx.m710probe` package used generated events, real native
+recorder-idle status, real secure storage and initially a mocked provider. It
+verified default-off permission, masked input, key save/cold persistence, explicit
+catalog refresh, exact dossier review, one-shot selection, reset parked state and
+key removal. The synthetic key was absent from raw preferences plaintext; only
+the synthetic encrypted preferences were inspected, then the host copy removed.
+The plugin's shared wrapped-key/IV preferences were observed and added to all
+backup exclusions alongside the separate credential namespace.
+
+The maintainer then entered a real key locally (never in chat), enabled permission
+and personally ran discovery: four candidate text models. They personally reviewed
+and sent the two generated braking categories once to `qwen/qwen3.8-27b`. The
+returned choice passed the strict contract and the UI selected reviewed wording.
+No real route/trip, measurement, private ID or time was sent. This is live API
+plumbing evidence, not free-form quality, global model availability or sensor-model
+acceptance. No paid upgrade/billing change was performed by the agent.
+
+The temporary key was removed through the app, permission off/No key saved were
+observed, and the QA package and its exact temporary UI files were removed.
+Production package version/update metadata match the pre-check values; its APK,
+private storage, accounts and recorder were not operated on. Existing Pixel stays
+open; no physical phone or user ADB server was modified. Remaining model/vehicle/
+OEM/background/battery gates are unchanged. Full clean-source CI and aggregate
+closure evidence remain; M7.10 is still in progress until those pass and persist.
+Stop before M7.11.

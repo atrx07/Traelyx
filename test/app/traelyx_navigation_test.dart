@@ -194,8 +194,11 @@ void main() {
     addTearDown(router.dispose);
 
     await _pumpApp(tester, router);
-    await tester.ensureVisible(find.byKey(const ValueKey('open-diagnostics')));
-    await tester.drag(find.byType(ListView).first, const Offset(0, -160));
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('open-diagnostics')),
+      160,
+      scrollable: find.byType(Scrollable).last,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('open-diagnostics')));
     await tester.pumpAndSettle();
@@ -213,7 +216,11 @@ void main() {
     await tester.tap(find.byTooltip('Back to You'));
     await tester.pumpAndSettle();
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
-    await tester.drag(find.byType(ListView).first, const Offset(0, 300));
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('destination-You')),
+      -160,
+      scrollable: find.byType(Scrollable).last,
+    );
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
   });
@@ -225,6 +232,12 @@ void main() {
     addTearDown(router.dispose);
 
     await _pumpApp(tester, router);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('open-data-export')),
+      160,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('open-data-export')));
     await tester.pumpAndSettle();
 
@@ -241,6 +254,12 @@ void main() {
     await tester.tap(find.byTooltip('Back to You'));
     await tester.pumpAndSettle();
     expect(router.routeInformationProvider.value.uri.path, TraelyxRoutes.you);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('destination-You')),
+      -160,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('destination-You')), findsOneWidget);
   });
 

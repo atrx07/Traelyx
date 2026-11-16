@@ -88,6 +88,12 @@ Example shape:
 
 No precise GPS location is required for normal commentary.
 
+M7.10 uses the narrower versioned dossier in
+[`CLOUD_COMMENTARY_V1.md`](../reference/CLOUD_COMMENTARY_V1.md): categories,
+first/repeated context, tone and reviewed wording choices only. The example
+above is illustrative future context, not the implemented wire contract; no
+measurements or confidence percentages are transmitted by version1.
+
 ## 4. Privacy
 
 Default cloud request excludes:

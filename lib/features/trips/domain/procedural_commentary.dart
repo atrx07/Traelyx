@@ -106,6 +106,58 @@ class ProceduralCommentaryPlan {
     return null;
   }
 
+  /// Reviewed wording only. Cloud output may select an index, never supply text.
+  List<String> choicesFor(CommentaryMoment moment) {
+    if (!moments.contains(moment)) throw StateError('Unknown narrator moment.');
+    final kind = _kindFor(moment.eventType);
+    if (kind == null) throw StateError('Unsupported narrator event.');
+    return List.unmodifiable(
+      _templatesFor(
+        tone: tone,
+        kind: kind,
+        repeated: moment.contextOrdinal > 1,
+      ),
+    );
+  }
+
+  ProceduralCommentaryPlan withChoices(List<int> choices) {
+    if (choices.length != moments.length) {
+      throw const FormatException('Invalid commentary choices.');
+    }
+    final selected = <CommentaryMoment>[];
+    for (var index = 0; index < moments.length; index++) {
+      final moment = moments[index];
+      final options = choicesFor(moment);
+      final choice = choices[index];
+      if (choice < 0 || choice >= options.length) {
+        throw const FormatException('Invalid commentary choice.');
+      }
+      selected.add(
+        CommentaryMoment(
+          eventIndex: moment.eventIndex,
+          eventType: moment.eventType,
+          eventLabel: moment.eventLabel,
+          text: options[choice],
+          anchorTime: moment.anchorTime,
+          visibleFrom: moment.visibleFrom,
+          visibleUntil: moment.visibleUntil,
+          interestingness: moment.interestingness,
+          contextOrdinal: moment.contextOrdinal,
+          variantIndex: choice,
+        ),
+      );
+    }
+    return ProceduralCommentaryPlan._(
+      tone: tone,
+      seed: seed,
+      moments: List.unmodifiable(selected),
+      supportedEventCount: supportedEventCount,
+      unsupportedEventCount: unsupportedEventCount,
+      cooldownSuppressedCount: cooldownSuppressedCount,
+      limitSuppressedCount: limitSuppressedCount,
+    );
+  }
+
   static ProceduralCommentaryPlan build({
     required ReplayTimeline timeline,
     required CommentaryTone tone,

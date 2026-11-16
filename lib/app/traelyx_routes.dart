@@ -12,6 +12,7 @@ abstract final class TraelyxRoutes {
   static const youMetadata = '/you/account/profile';
   static const youDataExport = '/you/data-export';
   static const youDiagnostics = '/you/diagnostics';
+  static const youCommentary = '/you/commentary';
 
   static String tripResult(String tripId) =>
       '$trips/${Uri.encodeComponent(tripId)}';

@@ -97,6 +97,15 @@ leave a code on the system clipboard until the user clears it.
 
 BYO cloud commentary sends only the sanitized event dossier required to generate text by default. The app should present a clear "sent / not sent" explanation.
 
+M7.10 defaults to built-in narration with cloud permission off. Keys stay in a
+separate secure no-backup namespace; saving/replacing one resets permission.
+Each trip separately reviews categorical context and approved wording choices
+before a one-use Groq send. No raw sensors, routes, measurements, private IDs or
+times are included. Authentication and network metadata reach Groq; account costs
+and retention policies apply, and sent requests cannot be recalled. No startup,
+background or automatic retry sends. See
+[`CLOUD_COMMENTARY_V1.md`](../reference/CLOUD_COMMENTARY_V1.md).
+
 ## 8. ML contribution
 
 If users opt in to improve detection:

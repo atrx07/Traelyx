@@ -90,3 +90,14 @@ Treat downloadable local inference as another provider implementation:
 ## 9. Provider tests
 
 Use mocked HTTP fixtures for contract/error behavior. Never place real API keys in CI fixtures.
+
+## 10. M7.10 implementation
+
+The optional Groq adapter implements explicit catalog/connection checks and
+reviewed-wording generation behind provider/HTTP interfaces. Keys use a separate
+secure no-backup namespace. The bundled registry supplies model-family hints;
+automatic/discovered/custom selection never relies on a permanent model ID.
+Catalog hints do not establish live compatibility or quality. Unknown/refused/
+malformed output falls back without retry. See
+[`CLOUD_COMMENTARY_V1.md`](../reference/CLOUD_COMMENTARY_V1.md) and ADR-0042 for
+the minimized dossier, approved-output contract, consent and cancellation limits.

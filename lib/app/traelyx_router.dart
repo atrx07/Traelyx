@@ -5,6 +5,7 @@ import 'package:traelyx/features/account/domain/account_callback.dart';
 import 'package:traelyx/features/account/presentation/account_screen.dart';
 import 'package:traelyx/features/account_metadata/presentation/metadata_screen.dart';
 import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
+import 'package:traelyx/features/cloud_commentary/presentation/cloud_commentary_screen.dart';
 import 'package:traelyx/features/data_management/presentation/data_export_screen.dart';
 import 'package:traelyx/features/diagnostics/presentation/diagnostics_screen.dart';
 import 'package:traelyx/features/drive_dna/presentation/drive_dna_screen.dart';
@@ -117,6 +118,10 @@ GoRouter createTraelyxRouter({String initialLocation = TraelyxRoutes.root}) {
                         builder: (context, state) => const SummarySyncScreen(),
                       ),
                     ],
+                  ),
+                  GoRoute(
+                    path: 'commentary',
+                    builder: (context, state) => const CloudCommentaryScreen(),
                   ),
                   GoRoute(
                     path: 'data-export',

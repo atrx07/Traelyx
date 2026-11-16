@@ -12,13 +12,14 @@ On 2026-11-14 the maintainer authorized M7.5 foundation development while model
 acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
 also complete. M7.8's subsequently authorized embedding experiment is complete;
-M7.9's local correction/export pipeline is complete; M7.10 and later remain gated.
+M7.9's local correction/export pipeline is complete. M7.10 is authorized on
+2026-11-16; M7.11 and later remain gated.
 
 For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
 setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
 preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
-## P0 — Await M7.10 authorization; keep acceptance visible
+## P0 — Finish M7.10 source CI/closure; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -61,7 +62,12 @@ v1/2/3 evidence/queues; corrections never rewrite detections/scores. No new
 provider/dependency, uploader or model promotion. Categorical reports remain
 unverified and blocked from training; aligned features/grouping/source quality
 and consent provenance need separately governed work before training use.
-Await M7.10 authorization; no next-step implementation/preparation is authorized.
+M7.10's bounded Groq reviewed-wording path is implemented. All535 Flutter/506
+native/105 Python tests, builds/lint/schema checks and isolated Pixel QA pass.
+The maintainer's local key setup and personally approved live synthetic request
+worked with qwen/qwen3.8-27b. Temporary QA key/app removed; production app untouched.
+Finish clean-source CI/aggregate evidence and stop before M7.11. Sensor-model
+acceptance and physical/vehicle gates remain deferred.
 
 ## Deferred acceptance — revisit before enabling any model
 
