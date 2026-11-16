@@ -52,6 +52,22 @@ disk. It does **not** wipe the app, accounts or Play Store state. Do not add
 copy when the AVD is already running. `-WindowStyle Hidden` applies to the
 Windows launcher; this command does not use the emulator's `-no-window` option.
 
+### Window behavior and personal ADB approval
+
+Maintainer preference clarified on 2026-11-16: show the **emulator GUI**, but
+keep launcher/helper terminal windows hidden. Use the direct `Start-Process`
+pattern above; do not open a visible PowerShell/cmd wrapper for background
+launching. Explain that the saved Pixel is opening before starting it. Do not
+use `-no-window` when the maintainer needs to unlock Android or approve ADB.
+
+Start the visible emulator first, then allow the maintainer to accept Android's
+**Allow USB debugging?** prompt. If ADB reports `unauthorized`, pause device
+operations and wait for that approval; continue unrelated host work only when
+the current task is still authorized. Do not work around the prompt by changing
+debugging keys, disabling authentication, or repeatedly starting alternate ADB
+servers. Do not restart the user's existing ADB server merely for an unauthorized
+device. Once the maintainer approves, rediscover the serial and verify readiness.
+
 Wait for Android startup and inspect readiness with the discovered serial:
 
 ```powershell
