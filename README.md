@@ -68,6 +68,16 @@ This bounded v1 does not establish free-form narration quality or close any
 sensor-model/vehicle gate. See [contract](docs/reference/CLOUD_COMMENTARY_V1.md)
 and [aggregate evidence](docs/reference/cloud-commentary-v1-result.json).
 
+M7.11 completes the local-provider architecture: reviewed manifests/admission,
+verified private artifact storage and explicit status/removal. The production
+catalog is empty; no model weights, inference SDK or real download transport is
+activated. All 592 Flutter/509 native/105 Python tests, generated-only Pixel QA,
+builds/lint/schema checks and [four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43886630798)
+pass. Crypto 3.0.7 is now direct; no resolved package or database version changed.
+See [contract](docs/reference/LOCAL_COMMENTARY_V1.md) and
+[aggregate evidence](docs/reference/local-commentary-v1-result.json). Physical
+performance/quality and earlier model/vehicle acceptance remain open.
+
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |
@@ -79,7 +89,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | M7.11 architecture authorized/in progress; acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
+| M7 | ML & Advanced Commentary | M7.11 architecture complete; prior model acceptance carried forward | 🔵 Active | ~2–3 weeks plus data collection | — |
 | M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
 | M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
 | M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
@@ -90,7 +100,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M7.8 |  | DriveDNA generated embedding; value gate unmet, dimensions retained | ✅ Complete | Done | 2026-11-15 |
 | M7.9 |  | Local post-drive corrections and consented categorical export | ✅ Complete | Done | 2026-11-15 |
 | M7.10 |  | BYO Groq reviewed-wording commentary | ✅ Complete | Done | 2026-11-16 |
-| M7.11 |  | Local-provider architecture; runtime/model activation gated | 🟡 In progress | Optional; performance-gated | — |
+| M7.11 |  | Local-provider architecture; runtime/model activation gated | ✅ Complete | Done | 2026-11-16 |
 | M8 | Hardening & Public Release | Release candidate to v0.1.0 | ⚪ Pending | ~1–1.5 weeks | — |
 
 ## Development

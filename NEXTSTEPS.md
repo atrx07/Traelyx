@@ -13,13 +13,13 @@ acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
 also complete. M7.8's subsequently authorized embedding experiment is complete;
 M7.9's local correction/export pipeline and M7.10's reviewed-wording Groq path
-are complete. M7.11 architecture is authorized on 2026-11-16; M8 remains gated.
+are complete. M7.11 architecture is complete on 2026-11-16; M8 remains gated.
 
 For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
 setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
 preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
-## P0 — Implement M7.11 architecture; keep acceptance visible
+## P0 — Choose next work; keep model acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -71,9 +71,15 @@ app untouched. Evidence:
 `docs/reference/cloud-commentary-v1-result.json`. No migration, new package or
 sensor-model promotion; original offline narration remains available. Broader
 free-form generation/quality requires separate evaluated output governance.
-M7.11 architecture and local validation pass; finish source CI and evidence closure. Actual model/runtime
-activation stays gated on accepted quality/device performance. Stop before M8;
-M7 exit and detector-model/physical/vehicle acceptance remain open.
+M7.11 architecture is complete. All 592 Flutter/509 native/105 Python tests,
+existing Pixel generated-only separate-package QA, builds/lint/schema checks and
+four source CI jobs 43886630798 (`06d0108`) pass. Evidence:
+`docs/reference/local-commentary-v1-result.json`. No accepted local runtime/model,
+real model transport or neural generation is activated. Crypto 3.0.7 is direct with
+no new resolved package; no migration or detector promotion. QA package removed,
+main app untouched. Await maintainer direction; do not begin M8. Revisit the
+separately deferred model acceptance before enabling any inference. M7 exit and
+M6.8 physical/vehicle/OEM acceptance remain open.
 
 ## Deferred acceptance — revisit before enabling any model
 

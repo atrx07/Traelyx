@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.11 local-provider architecture authorized/in progress; sensor-model acceptance open**
+**M7 active — M7.11 local-provider architecture complete; sensor-model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -15,7 +15,7 @@ On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
 M7.6–M7.8's isolated experiments and M7.9's local correction/export pipeline
 are complete, along with M7.10's bounded reviewed-wording cloud path (2026-11-16).
-M7.11 architecture is authorized; real model activation remains performance-gated. M6.8 stays open.
+M7.11 architecture is complete; real model activation remains performance-gated. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
@@ -31,13 +31,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
-- M7.11 architecture implemented; local gates pass, source CI still required:
-  shared reviewed-wording validator, strict empty production catalog/admission,
-  real no-backup artifact management and explicit status/removal. All592 Flutter/
-  509 native/105 Python tests pass; analysis/format/schema checks/builds pass.
-  Existing Pixel generated-only separate-package QA passes and is cleaned up;
-  production app untouched. No runtime, weights, download transport or neural
-  model activation. See `docs/reference/local-commentary-v1-result.json`.
+- M7.11 architecture complete (2026-11-16): shared reviewed-wording contract,
+  strict manifests/admission, verified no-backup artifact management and explicit
+  status/removal. All 592 Flutter/509 native/105 Python tests, Pixel generated-only
+  QA, builds/lint/schema checks and four source CI jobs 43886630798 (`06d0108`) pass.
+  Evidence: `docs/reference/local-commentary-v1-result.json`. Production catalog
+  empty; no runtime, weights, download transport or neural activation. Crypto 3.0.7
+  is now direct, with no new resolved package or migration. QA app removed;
+  production app untouched. Earlier model/physical/vehicle gates remain open.
 
 - M7.10 complete (2026-11-16): optional Groq BYO-key settings, secure/no-backup
   storage, dynamic models and exact categorical request review with strictly
@@ -1080,7 +1081,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.11 architecture local gates passed; commit/push and full source CI closure remain.
+**Current step:** M7.11 architecture is complete; awaiting maintainer direction before further roadmap work.
 Actual local neural runtime/download activation remains conditional on accepted
 quality/device evidence. Preserve Groq and built-in narration. Stop before M8;
 M7 and prior sensor-model/physical/vehicle acceptance are not complete.

@@ -95,6 +95,23 @@
     "M7.4/M7.5 and M6.8/vehicle/OEM/model acceptance remain open; no M7 milestone exit or M8 activation."
   ],
   "ci": {
-    "status": "pending source commit/run; required before completion"
-  }
+    "status": "success",
+    "source_commit": "06d01083c08046e97cd586ae53a6ce8512d6642b",
+    "run_id": 43886630798,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43886630798",
+    "jobs": {
+      "validate": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "cloud-schema": "success"
+    },
+    "coverage": [
+      "Linux generated-source/schema equality",
+      "format/analysis/full Flutter tests",
+      "native tests and debug/release APK builds",
+      "isolated CPU ML experiments/mobile benchmark build and lint",
+      "cloud schema/RLS and Guardian regressions"
+    ]
+  },
+  "scope_acceptance": "M7.11 architecture complete; optional model/runtime activation remains deferred"
 }

@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.11 local-provider architecture authorized; model/runtime activation performance-gated
+**Current gate:** M7.11 architecture complete; awaiting maintainer direction; model/runtime activation performance-gated
 **Started:** 2026-11-11
 **Last updated:** 2026-11-16
 
@@ -1109,9 +1109,9 @@ promotion is introduced. Target-device performance remains unverified.
   missing/incompatible/unaccepted states fail closed before expensive work.
 - [x] Settings/status integration, real managed byte reporting, accessible UI;
   generated-only isolated Pixel filesystem/capability QA where available.
-- [ ] Format/analyze/full Flutter/native/Python regression gates, schema/source
+- [x] Format/analyze/full Flutter/native/Python regression gates, schema/source
   equality, builds/lint/privacy and source CI.
-- [ ] Document the architecture scope and deferred optional model activation,
+- [x] Document the architecture scope and deferred optional model activation,
   synchronize status/evidence/README, commit/push/verify and stop before M8.
 
 ### Risks / limits
@@ -1130,7 +1130,7 @@ and manifests, exact runtime/device/source admission, single-use size/license an
 wording reviews, real bounded no-backup artifact staging/verification/removal,
 exclusive runtime leases and truthful settings/Data & Export accounting. Production
 catalog remains empty; no accepted runtime/source or neural inference is claimed.
-Crypto3.0.7 changed only from transitive to exact direct; schema4 is unchanged.
+Crypto 3.0.7 changed only from transitive to exact direct; schema4 is unchanged.
 
 The existing authorized Pixel_10/API37/x86_64/16KiB-page AVD was used with separate
 `io.github.atrx07.traelyx.m711probe`, generated137-byte weights and a fake selector.
@@ -1162,3 +1162,19 @@ cleanup observed0B, uninstalled only the QA package and removed exact temporary
 UI files. Main version/update metadata is unchanged; existing Pixel left open.
 Commit/push the bounded source, await all four source CI jobs, then persist
 aggregate evidence/status closure and stop before M8.
+
+### Source CI / architecture closure - 2026-11-16
+
+Source `06d01083c08046e97cd586ae53a6ce8512d6642b` is pushed and all four jobs in
+CI 43886630798 pass: validate, eventnet-cpu, guardian-dispatch and cloud-schema.
+Linux regeneration/schema equality, format/analysis/full Flutter/native tests,
+normal debug/release APKs, isolated ML/mobile benchmark and cloud/Guardian
+regressions pass. Aggregate evidence: `docs/reference/local-commentary-v1-result.json`.
+
+M7.11 is complete for the roadmap's architecture scope; optional runtime/model
+activation remains deferred pending physical performance and wording-quality
+acceptance. The empty catalog and unavailable source/runtime remain intentional.
+No LLM inference, production weight download, recorder/scoring/Guardian change,
+migration or detector promotion is claimed. Model/vehicle/M6.8 gates remain open;
+M7 is not complete and M8 is not activated. Commit/push/verify this evidence closure,
+report the scoped result and stop for maintainer direction.
