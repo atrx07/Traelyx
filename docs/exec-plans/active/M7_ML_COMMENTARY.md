@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.10 BYO cloud commentary authorized; prior acceptance carried forward
+**Current gate:** M7.10 reviewed-wording cloud complete; await M7.11 authorization; prior acceptance carried forward
 **Started:** 2026-11-11
 **Last updated:** 2026-11-16
 
@@ -14,10 +14,10 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-Current authorized work: M7.10, continued by the maintainer on 2026-11-16.
-Deliver optional Groq BYO-key commentary with secure credentials, dynamic model
-selection, explicit minimized request review and procedural fallback. Stop before
-M7.11. All prior model/physical acceptance remains open/deferred.
+M7.10 is complete for optional Groq BYO-key settings, dynamic model discovery,
+secure credentials and explicitly reviewed categorical requests that select
+approved local wording. Offline narration and all detector/scoring/physical
+acceptance remain unchanged. Await authorization before M7.11.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -967,14 +967,14 @@ No database migration, background sensor change, Guardian or ML promotion.
 - [x] Settings navigation, model discovery and reviewed replay integration.
 - [x] Privacy/injection, malformed/error/budget/cancellation/revocation tests;
   preserve procedural timing, evidence and core offline operation.
-- [ ] Format/analyze/full tests, generated/schema equality, builds/lint,
+- [x] Format/analyze/full tests, generated/schema equality, builds/lint,
   repository/privacy checks and suitable isolated UI QA; full source CI.
-- [ ] Record aggregate evidence, synchronize status/README, commit/push/verify
+- [x] Record aggregate evidence, synchronize status/README, commit/push/verify
   and stop before M7.11.
 
 ### Risks / acceptance limits
 
-No real user key is requested for tests; mocked contracts and synthetic transport
+Automated tests require no real user key; mocked contracts and synthetic transport
 fixtures establish implementation behavior, not live account/model availability,
 quality, pricing or quota. Real API calls require user configuration and request
 consent in the app. Existing Pixel emulator/phone data must be preserved during
@@ -1023,3 +1023,26 @@ open; no physical phone or user ADB server was modified. Remaining model/vehicle
 OEM/background/battery gates are unchanged. Full clean-source CI and aggregate
 closure evidence remain; M7.10 is still in progress until those pass and persist.
 Stop before M7.11.
+
+
+### Source CI / closure - 2026-11-16
+
+Clean source `437331871314f540a445a5c90b017750f0ed8c96` passes all four jobs in
+[CI 43835667477](https://github.com/atrx07/Traelyx/actions/runs/43835667477),
+including Linux source/schema generation, format/analysis/full Flutter/native
+checks, normal app debug/release builds, artifacts, isolated ML/mobile tooling
+and cloud/Guardian regressions. Aggregate evidence is
+`docs/reference/cloud-commentary-v1-result.json`.
+
+M7.10 is complete for the explicit reviewed-wording contract. The Pixel's live
+Groq discovery and one personally approved synthetic request succeeded; neither
+this nor deterministic catalog safety establishes unrestricted narration quality
+or better narration than procedural copy. No migration, new package/runtime,
+backend, scoring/Guardian change or sensor-model promotion. Groq is an optional
+new BYO provider with disclosed account costs/retention; core operation stays
+local and free. Production app data was not accessed or replaced. Temporary
+QA key/app/files were removed; the existing Pixel remains open. Prior detector
+model acceptance and physical/vehicle/OEM/background/battery gates stay open.
+
+Commit/push/verify this evidence/status closure, report M7.10 and stop before
+M7.11. No next-step implementation or preparation is authorized.

@@ -4,7 +4,7 @@
 
 ## Current phase
 
-**M7 active — M7.10 BYO cloud commentary authorized/in progress; model acceptance open**
+**M7 active — M7.10 complete; awaiting M7.11 authorization; sensor-model acceptance open**
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -14,7 +14,8 @@ See `docs/exec-plans/active/M7_ML_COMMENTARY.md`.
 On 2026-11-14 the maintainer authorized continued M7.5 foundation development
 with model acceptance deferred. Production model integration remains gated;
 M7.6–M7.8's isolated experiments and M7.9's local correction/export pipeline
-are complete. M7.10 is now authorized (2026-11-16); stop before M7.11. M6.8 stays open.
+are complete, along with M7.10's bounded reviewed-wording cloud path (2026-11-16).
+Await M7.11 authorization. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
@@ -30,13 +31,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
-- M7.10 in progress (2026-11-16): optional Groq BYO-key settings, secure/no-backup
-  storage, dynamic model selection, exact categorical request review and strictly
-  provider-selected reviewed tone lines with offline fallback. All535 Flutter/
-  506 native/105 Python tests, builds/lint/schema checks pass. Existing Pixel
-  separate-package QA and personally approved live Groq discovery/generation pass;
-  temporary key/app removed, production app untouched. Full source CI and aggregate
-  closure remain. No migration, new package or sensor-model promotion.
+- M7.10 complete (2026-11-16): optional Groq BYO-key settings, secure/no-backup
+  storage, dynamic models and exact categorical request review with strictly
+  selected local wording and offline fallback. All 535 Flutter/506 native/105
+  Python tests, builds/lint/schema checks and four source CI jobs 43835667477
+  (`4373318`) pass. Existing Pixel separate-package and personally approved live
+  Groq checks pass; temporary key/app removed and production app untouched.
+  Evidence: `docs/reference/cloud-commentary-v1-result.json`. No migration/new
+  package or detector-model promotion. Free-form quality remains unvalidated.
 
 - M7.9 complete (2026-11-15): source-bound local corrections, additive schema4
   with v1/2/3 preservation, parked/idle guards, default-off per-note permission,
@@ -1070,6 +1072,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.10 implementation and local/live synthetic QA pass. Finish
-full source CI and evidence/status closure, then stop before M7.11. Sensor-model
-acceptance and physical/vehicle/OEM/background/battery gates remain open/deferred.
+**Current step:** M7.10 is complete for optional reviewed-wording Groq commentary.
+Local checks, live synthetic Pixel QA and all four source CI jobs pass. Await
+M7.11 authorization. Detector-model and physical/vehicle/OEM/background/battery
+acceptance remains open/deferred; core offline narration is retained.
