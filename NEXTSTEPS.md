@@ -33,9 +33,12 @@ proposal only. Subsequent public qualification confirms the licensed Harvard DB
 lacks driver/trip grouping and subsecond timing; Zenodo interval data has only one
 driver and sparse labelled negatives. See
 `docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md`. All 131 local Python tests
-pass; source CI pending. The maintainer can manually install/export on a Redmi
-Note 9 / Android 10 and will try the prepared stationary check; new trip recording
-is unavailable this week and the Redmi remains a fallback for field work.
+and all four source CI jobs 43911237347 (`da80f6a`, attempt 3) pass. The maintainer
+can manually install/export on a Redmi
+Note 9 / Android 10; its supplied stationary export verifies 92 chunks, all motion
+samples at accuracy 3 without recorded flags, and zero GNSS fixes. Raw data is
+preserved/QA-excluded; no event/normal-driving labels inferred. New trip recording
+is unavailable this week and Redmi remains a fallback for field work.
 Continue public-source qualification. Existing v1 rejection/results/gates
 remain frozen; no model promotion, M8 activation or invented labels.
 

@@ -144,10 +144,12 @@ reviewed for alternatives; these are leads, not admitted datasets:
   Potential external pilot, but a single driver cannot alone supply independent
   train/validation/test driver groups. Frame, quality and annotation suitability
   still need verification under a frozen protocol.
-- [Original driverBehaviorDataset repository](https://github.com/umi001/driverBehaviorDataset):
+- [Earlier reviewed driverBehaviorDataset fork](https://github.com/umi001/driverBehaviorDataset):
   timestamped event intervals and smartphone streams from two drivers/four trips
   are documented. No explicit license was found in the repository page reviewed;
   do not equate public GitHub access with permission for model distribution.
+  The later qualification follows the primary paper to the original `jair-jr`
+  repository; its dataset licensing also remains unestablished.
 - [DriverSVT 7385340](https://zenodo.org/records/7385340): official API metadata
   declares CC-BY-4.0 and the record describes 633 drivers. Its published description
   includes neural-derived driver-state attributes; those are not verified Traelyx

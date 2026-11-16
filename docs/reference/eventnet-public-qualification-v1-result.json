@@ -1,6 +1,95 @@
 {
+  "additional_metadata_leads": [
+    {
+      "annotation_limitations": [
+        "manual passenger labels only in some aggressive sessions",
+        "normal sessions unannotated; absence does not imply no aggressive events",
+        "approximate timing, date corrections and reaction-time shifts",
+        "higher uncertainty for acceleration labels"
+      ],
+      "license": "CC-BY-NC-4.0",
+      "production_admitted": false,
+      "publisher_document_pins": {
+        "labeling_notes.md": {
+          "bytes": 10590,
+          "file_id": "49692e66-1f20-4194-81fa-882f190b7346",
+          "sha256": "c4a44803f9903affe761d296eefe04e26a85b10815d3290244a17348ded84a1f"
+        },
+        "quality_report.md": {
+          "bytes": 16200,
+          "file_id": "206646fd-79a4-4d03-9c6a-1f73693ee8df",
+          "sha256": "cc0fc284d117361358ffecf2205e650727604b0d6d7126a2d101248febccf111"
+        }
+      },
+      "source": "https://doi.org/10.17632/p5376m6xfc.1",
+      "telemetry_archive_bytes": 5052927416,
+      "telemetry_archive_downloaded": false,
+      "unresolved": [
+        "intended-distribution license review",
+        "feature and grouping compatibility",
+        "independent ordinary-driving negative exposure"
+      ]
+    },
+    {
+      "data_license": "not established",
+      "metadata_only": true,
+      "production_admitted": false,
+      "raw_data_downloaded": false,
+      "reported_drivers": 3,
+      "reported_rate_hz": 2,
+      "source": "https://github.com/Schuster-j/maneuverRecognition"
+    },
+    {
+      "data_license": "not established",
+      "earlier_reviewed_fork": "https://github.com/umi001/driverBehaviorDataset",
+      "metadata_only": true,
+      "primary_paper": "https://doi.org/10.1371/journal.pone.0174959",
+      "production_admitted": false,
+      "raw_data_downloaded": false,
+      "source": "https://github.com/jair-jr/driverBehaviorDataset"
+    }
+  ],
   "ci": {
-    "status": "pending"
+    "attempt": 3,
+    "coverage": [
+      "generated public-source and private-decoder/intake regressions",
+      "Flutter formatting/analysis/tests",
+      "native Kotlin tests and debug/release-validation app builds",
+      "isolated CPU/mobile experiments and standalone benchmark APK verification",
+      "Guardian Edge and cloud schema/RLS"
+    ],
+    "failed_attempts": [
+      {
+        "attempt": 1,
+        "cause": "NDK 28.2.13676358 download was not a ZIP archive",
+        "job": "validate",
+        "step": "Build debug APK"
+      },
+      {
+        "attempt": 2,
+        "cause": "Official immutable asset API HTTP 403 before app tests",
+        "job": "validate",
+        "step": "Precache checksum-verified SQLite for Linux and Android"
+      }
+    ],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 43911237347,
+    "same_source_and_checks_on_retry": true,
+    "source_commit": "da80f6af025930997ebc40746d3d1841331902da",
+    "source_git_blob_sha256": {
+      ".github/workflows/ci.yml": "aac7c1656917235b390d69addaafbe6c3c44fe66fafa8458a8ea07d1100cfcf4",
+      "ml/qualify_eventnet_sources.py": "f65532d972d56c89b32cf142edc8c889f5ddf74270c7bc254e3087ac2851e9dd",
+      "tests/tool/test_qualify_eventnet_sources.py": "033ad548030c1ce4de08d0c861a7497e98b59f8f34297296f23f2541f7d47bb2",
+      "tool/inspect_ml_recordings.py": "8877953ecfad2f3b974f0ebc8ab5278cd67e7247e10cd5ea13bb44ef9c9b014d",
+      "tool/inspect_tripdebug.py": "53a52dada5ae192b738e11658e23221eec70d12d619d3285a7cdfed38bedcea0"
+    },
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43911237347"
   },
   "compatibility": {
     "app_or_recorder_behavior_change": false,
@@ -50,11 +139,60 @@
     },
     "target_sdk": 36
   },
-  "manual_phone_result": "pending maintainer stationary check; no trip collection available this week; Redmi is fallback for field work",
+  "manual_phone_result": {
+    "archive_verified": true,
+    "archived_motion_span_seconds": 91.59022,
+    "chunks": 92,
+    "date": "2026-11-16",
+    "device_identity": "Maintainer-reported Redmi Note 9 / Android 10; no ADB identity/installed-APK digest attestation",
+    "evaluation_admitted": false,
+    "flagged_samples": {
+      "accelerometer": 0,
+      "gnss": 0,
+      "gyroscope": 0
+    },
+    "full_bias_or_vehicle_calibration_accepted": false,
+    "further_drives": "unavailable this week; Redmi fallback only",
+    "gps_cold_start_hypothesis": "maintainer suggestion; not verified by archive",
+    "gps_failure_cause": "not established",
+    "imu_accuracy_status_counts": {
+      "accelerometer": {
+        "-1": 0,
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 9305
+      },
+      "gyroscope": {
+        "-1": 0,
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 9300
+      }
+    },
+    "install_record_save_export": "maintainer_reported_success",
+    "maximum_channel_coverage_gap_seconds": {
+      "accelerometer": 0.014067,
+      "gnss": 91.59022,
+      "gyroscope": 0.054067
+    },
+    "private_copy_verified": true,
+    "qa_excluded": true,
+    "samples": {
+      "accelerometer": 9305,
+      "gnss": 0,
+      "gyroscope": 9300
+    },
+    "source_preserved": true,
+    "training_admitted": false
+  },
+  "partition_scope": "No split assigned. Inspected raw samples are qualification-exposed; additional uninspected streams/groups require a new frozen protocol before feature inspection/evaluation. Metadata review alone does not make those streams permanently ineligible.",
   "privacy": {
-    "device_operated": false,
+    "agent_device_control_used": false,
     "model_training_or_predictions": false,
-    "private_phone_recordings_read": false,
+    "private_phone_data_handling": "Explicitly supplied stationary export only; copied/hash-verified locally, original preserved, added to ignored QA exclusion ledger; no raw hash/identifier/vector/time committed",
+    "private_phone_recordings_read": true,
     "raw_sources_ignored_local_only": true,
     "raw_telemetry_uploaded": false
   },

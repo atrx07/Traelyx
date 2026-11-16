@@ -10,9 +10,11 @@ work. Historical EventNet v1 weights, splits, rejection and thresholds are intac
 ## Protocol and boundaries
 
 Before opening source data, qualification was limited to pinned licensed source
-documentation, schemas and development inputs. All inspected inputs are
-qualification/development-only; they cannot later be described as a fresh locked
-evaluation partition. No model is trained, selected, quantized or evaluated here.
+documentation, schemas and development inputs. Inspected raw samples are
+qualification-exposed and must not later be described as unexamined test data.
+Metadata/label review does not automatically exclude additional uninspected
+motion streams or groups from a future frozen protocol. Qualification assigns
+no training/evaluation split. No model is trained, selected, quantized or evaluated here.
 
 `ml/qualify_eventnet_sources.py` uses the standard library only, has no networking
 and accepts two explicit source profiles. Verify file length and SHA-256 before
@@ -30,9 +32,11 @@ offset and label/target identity. The release's Portuguese non-aggressive spelli
 and trailing whitespace are explicit aliases; no maneuver-to-Traelyx mapping is
 inferred. Reported sync offsets are not verified cross-stream alignment.
 
-Successful CLI exit means qualification completed. Every output still has
-training, production evaluation, fresh locked evaluation and model predictions
-disabled. Unknown metrics/exposure stay unavailable; they are never zero.
+Successful CLI exit means qualification completed. Every output still declines
+current training, production evaluation and fresh locked evaluation admission,
+and computes no model predictions. A later experiment must explicitly govern
+eligible sources/groups and disclose inspection before assigning roles; these
+outputs grant no automatic admission. Unknown metrics/exposure stay unavailable.
 
 ## Pinned-source findings — 2026-11-16
 
@@ -52,7 +56,7 @@ The Zenodo metadata/license/version were rechecked against its official API and
 latest-version link. Only the three small label files were downloaded. Class
 names remain publisher labels, including lane changes; they are not silently
 converted into strong-corner or severe-event truth. Unlabelled trip time remains
-unlabelled. Two trips lack some maneuver classes, so trip splitting would also
+unlabelled. One trip lacks some maneuver classes, so trip splitting would also
 need class-coverage checks even if it provided independent drivers.
 
 Attribution: Goh, Vik Tor; Jamal Mohd Lokman, Eilham Hakimie; Yap, Timothy Tzen Vun;
@@ -73,7 +77,10 @@ python -W error::ResourceWarning -m unittest tests.tool.test_qualify_eventnet_so
 All 131 local Python tests pass, including 11 new generated-data regressions for
 numeric/time/label integrity, explicit UTF-8 aliases, bounds, schema/SQL-object
 rejection, pinned source preservation, output privacy and false admission.
-Both real pinned-source qualification commands pass. CI is pending. See
+Both real pinned-source qualification commands pass. All four
+[source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43911237347) pass for
+`da80f6a` on attempt 3. Earlier attempts stopped at an invalid NDK download and
+SQLite asset API HTTP 403; source, versions, checksums and checks were unchanged. See
 [aggregate evidence](eventnet-public-qualification-v1-result.json).
 
 ## Next acceptance work
@@ -83,8 +90,32 @@ remain in [recording intake v1](EVENTNET_RECORDING_INTAKE_V1.md); this is not an
 exhaustive search or proof that no suitable public source exists.
 
 The maintainer confirmed a Redmi Note 9 / Android 10 can install an APK and export
-manually without ADB. The [stationary phone check](M7_MANUAL_PHONE_QUALITY_CHECK.md)
-can establish source sensor status/timing availability on that device. It cannot
-provide driving-event truth, driver diversity or sustained battery acceptance.
-Further field collection remains a separate decision; no drive is requested by
-this unit. M7.4/M7.5 remain open and M8 stays inactive.
+manually without ADB, and subsequently supplied a valid stationary export. The
+[stationary phone check](M7_MANUAL_PHONE_QUALITY_CHECK.md) verifies 92 chunks,
+9,305 accelerometer and 9,300 gyro samples, all status 3 without recorded flags;
+GNSS is absent. Original and ignored private copy match. This establishes this
+session's motion status and record/export path, not driving-event truth, GPS
+recovery, driver diversity or sustained battery acceptance. Further trips are
+unavailable this week; Redmi remains a fallback. M7.4/M7.5 remain open and M8
+stays inactive.
+
+## Additional metadata leads
+
+- [Q-Motion V1](https://doi.org/10.17632/p5376m6xfc.1): official DOI metadata
+  records CC-BY-NC-4.0. Publisher-checksummed annotation/quality documents were read
+  without downloading the 5.05 GB telemetry ZIP. Passenger labels cover perceived
+  aggressive maneuvers with approximate timing; normal sessions were not manually
+  annotated, and missed aggressive events are possible. Unlabelled intervals
+  cannot become verified negatives. License/distribution, feature/group and
+  independent-negative acceptance remain unresolved. The anonymous file-list API
+  works despite the page's failing author-profile lookup; no gated terms accepted.
+- [Schuster maneuverRecognition](https://github.com/Schuster-j/maneuverRecognition):
+  its README describes three drivers, manual dashcam maneuver labels and 2 Hz
+  smartphone streams. Explicit data licensing was not established; no raw data
+  downloaded. Maneuver type does not automatically establish strong-event truth.
+- The original [Ferreira dataset repository](https://github.com/jair-jr/driverBehaviorDataset)
+  is linked by its primary PLOS paper; the earlier reviewed `umi001` repository
+  is a fork. Neither reviewed page establishes an explicit dataset license.
+  Paper access/copyright alone is not recorded as a grant for repository data.
+
+These remain metadata/documentation leads, not production training admissions.

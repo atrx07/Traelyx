@@ -35,10 +35,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   CC-BY Zenodo interval files inspected locally; neither admitted to production
   training/evaluation. Harvard lacks driver/trip groups and subsecond timestamps;
   Zenodo has one driver and 129.037 seconds of labelled non-aggressive exposure.
-  All 131 local Python tests pass; source CI pending. Ordinary debug APK built
+  All 131 local Python tests and all four source CI jobs
+  43911237347 (`da80f6a`, attempt 3) pass. Ordinary debug APK built
   and signature/package/API/arm64-engine checked for optional Redmi Note 9 / Android
-  10 manual stationary QA; physical install/export is pending. No drive collection
-  available this week; public sources remain primary. See
+  10 manual stationary QA. Supplied export verifies 92 chunks / 91.590 seconds,
+  9,305 acceleration + 9,300 gyro samples, all status 3 with zero recorded flags;
+  no GNSS fixes. Original/private copy preserved and QA-excluded. GPS cause,
+  calibration and model acceptance remain open. No trip collection is available
+  this week; public sources remain primary. See
   `docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md`.
 
 - M7.4/M7.5 follow-up intake (2026-11-16): all 11,857 original Tecno chunks match
@@ -1108,7 +1112,7 @@ Earlier duplicate attempts below are superseded by this completed live proof.
 
 ## Current step
 
-**Current step:** M7.4/M7.5 acceptance follow-up before M8. Old Tecno recording intake is diagnostic-only; public-source qualification is next because no available phone provides accepted new sensor/event evidence. See `docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`.
+**Current step:** M7.4/M7.5 acceptance follow-up before M8. Public source qualification and independent driving-event evidence remain dependencies. Redmi manual stationary recording/export passes with high reported IMU accuracy but no GNSS; no new trips are available this week. See `docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`.
 Actual local neural runtime/download activation remains conditional on accepted
 quality/device evidence. Preserve Groq and built-in narration. Stop before M8;
 M7 and prior sensor-model/physical/vehicle acceptance are not complete.

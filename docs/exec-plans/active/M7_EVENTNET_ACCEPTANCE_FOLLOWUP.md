@@ -34,8 +34,10 @@ On 2026-11-16 the maintainer authorized continued acceptance work and explicitly
 required M7 closure before M8. The next bounded unit is public-source
 qualification. It may inspect small licensed source documentation, schemas and
 bounded development samples after pinning publisher metadata/checksums. Any
-reviewed source/sample is development/qualification-only and is excluded from
-future claims of fresh locked evaluation. This is not a model experiment: no
+inspected raw sample is disclosed as qualification-exposed, not unexamined test
+evidence. Metadata/label review does not assign a future split or open additional
+uninspected motion streams/groups; those need a new frozen protocol before
+feature inspection or model evaluation. This is not a model experiment: no
 training, model selection or held-out predictions occur in qualification.
 
 - Inventory authorized physical Tecno and existing recorder artifacts read-only.
@@ -105,11 +107,15 @@ freezing any new model experiment.
 - [x] All 131 local Python tests pass, including 11 new source-qualification tests.
 - [x] Build ordinary unconfigured debug APK; verify APK signature, package,
   minSDK 24 and arm64 Flutter/SQLite libraries for Redmi Note 9 / Android 10.
-- [ ] Full source CI and atomic result closure.
-- [ ] Maintainer manual stationary install/record/save/private export result.
+- [x] Full source CI: all four jobs 43911237347 pass for `da80f6a` on attempt 3;
+  preserve source/blob hashes, failed-download history and aggregate result in the
+  bounded atomic evidence closure. M7.4/M7.5 remain open.
+- [x] Maintainer manual stationary record/save/private export result: 92 chunks,
+  91.590 seconds, high reported IMU accuracy without flags, no GNSS fixes. Preserve
+  original/private copy and exclude the stationary QA recording from model data.
 
 The maintainer confirmed manual installation/export is possible without ADB and
-will try the stationary check, but cannot collect trips this week. Public data
+completed the stationary check, but cannot collect trips this week. Public data
 remains primary; Redmi is the last resort for later field evidence. No drive or
 additional device interaction is authorized by the stationary instructions.
 See [public-source qualification](../../reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md)
