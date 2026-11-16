@@ -85,6 +85,9 @@ preserves old phone evidence but admits no training/evaluation data. All 120 loc
 Python tests and [four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43904210026)
 pass for the intake tool. Formal M7 exit,
 M8 activation and public release remain open.
+Further [public-source qualification](docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md)
+records concrete label/group/timing limits; optional manual Redmi stationary QA
+is pending. No new production model is accepted.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 

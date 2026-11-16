@@ -31,6 +31,16 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 public-source qualification (2026-11-16): pinned CC0 Harvard sensor DB and
+  CC-BY Zenodo interval files inspected locally; neither admitted to production
+  training/evaluation. Harvard lacks driver/trip groups and subsecond timestamps;
+  Zenodo has one driver and 129.037 seconds of labelled non-aggressive exposure.
+  All 131 local Python tests pass; source CI pending. Ordinary debug APK built
+  and signature/package/API/arm64-engine checked for optional Redmi Note 9 / Android
+  10 manual stationary QA; physical install/export is pending. No drive collection
+  available this week; public sources remain primary. See
+  `docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md`.
+
 - M7.4/M7.5 follow-up intake (2026-11-16): all 11,857 original Tecno chunks match
   the existing local backup; all 11,865 phone chunk hashes are unchanged after
   read-only inspection. Six original recordings (129.21 archived minutes) retain

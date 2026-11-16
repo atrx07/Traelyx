@@ -29,7 +29,14 @@ no model data. All 120 local Python tests and all four source CI jobs
 43904210026 (`02f2a9f`) pass. Qualify public
 event-interval data next: the maintainer reports permanent Tecno damage and no
 available second ADB phone. Confirmed-g desk readings are a provisional diagnostic
-proposal only. Existing v1 rejection/results/gates
+proposal only. Subsequent public qualification confirms the licensed Harvard DB
+lacks driver/trip grouping and subsecond timing; Zenodo interval data has only one
+driver and sparse labelled negatives. See
+`docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md`. All 131 local Python tests
+pass; source CI pending. The maintainer can manually install/export on a Redmi
+Note 9 / Android 10 and will try the prepared stationary check; new trip recording
+is unavailable this week and the Redmi remains a fallback for field work.
+Continue public-source qualification. Existing v1 rejection/results/gates
 remain frozen; no model promotion, M8 activation or invented labels.
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit

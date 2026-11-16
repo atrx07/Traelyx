@@ -169,3 +169,7 @@ reviewed for alternatives; these are leads, not admitted datasets:
 No claim is made that this small source review exhausts all possible datasets.
 Data eligibility, rather than another run on the old test set, is the current
 dependency. M8 and production model activation remain inactive.
+
+Subsequent bounded [public-source qualification](EVENTNET_PUBLIC_QUALIFICATION_V1.md)
+inspects pinned licensed development inputs and records concrete label/timing/group
+limits. That follow-up is separate from the earlier metadata-only review above.

@@ -30,6 +30,14 @@ was approved. Public-source qualification is the primary next route.
 
 ## Current bounded scope
 
+On 2026-11-16 the maintainer authorized continued acceptance work and explicitly
+required M7 closure before M8. The next bounded unit is public-source
+qualification. It may inspect small licensed source documentation, schemas and
+bounded development samples after pinning publisher metadata/checksums. Any
+reviewed source/sample is development/qualification-only and is excluded from
+future claims of fresh locked evaluation. This is not a model experiment: no
+training, model selection or held-out predictions occur in qualification.
+
 - Inventory authorized physical Tecno and existing recorder artifacts read-only.
 - Preserve original recorder files, exports, accounts, pairing and accidental-trip
   exclusion ledger. Check idle state before any snapshot; never force-stop or
@@ -43,9 +51,11 @@ was approved. Public-source qualification is the primary next route.
   evidence, not a fresh held-out test set. Approximate rider notes are weak labels.
 - Build/test a reusable bounded privacy-safe recording/acceptance intake tool if
   existing inspection lacks needed quality/split/annotation checks.
-- Review primary upstream public-dataset metadata only for additional eligible
-  data. Do not accept gated research terms, contact anyone, download large datasets
-  or inspect a new held-out partition before freezing its governed protocol.
+- Review primary upstream public-dataset metadata and the bounded licensed
+  qualification inputs described above. Do not accept gated research terms,
+  contact anyone, download large datasets or inspect a new held-out partition
+  before freezing its governed protocol. Keep precise public telemetry ignored
+  locally as well; commit only attribution, hashes and aggregate findings.
 
 ## Next dependencies
 
@@ -85,3 +95,30 @@ All four source CI jobs 43904210026 pass for `02f2a9f`; pushed source matches
 `origin/main`. This bounded intake does not close M7.4 or M7.5. Next qualify
 public event-interval data, licensing and production-feature compatibility before
 freezing any new model experiment.
+
+## Public-source qualification and manual-phone fallback
+
+- [x] Pin official release/license metadata and bounded development inputs before
+  schema/label inspection; no held-out model predictions or training.
+- [x] Implement offline bounded public qualification, privacy/failure regressions
+  and raw-source preservation checks. Both real pinned-source commands pass.
+- [x] All 131 local Python tests pass, including 11 new source-qualification tests.
+- [x] Build ordinary unconfigured debug APK; verify APK signature, package,
+  minSDK 24 and arm64 Flutter/SQLite libraries for Redmi Note 9 / Android 10.
+- [ ] Full source CI and atomic result closure.
+- [ ] Maintainer manual stationary install/record/save/private export result.
+
+The maintainer confirmed manual installation/export is possible without ADB and
+will try the stationary check, but cannot collect trips this week. Public data
+remains primary; Redmi is the last resort for later field evidence. No drive or
+additional device interaction is authorized by the stationary instructions.
+See [public-source qualification](../../reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md)
+and [manual procedure](../../reference/M7_MANUAL_PHONE_QUALITY_CHECK.md).
+
+The inspected Harvard DB lacks driver/trip grouping, measured subsecond timing,
+quality and independently verified interval truth. The inspected Zenodo labels
+cover 169 intervals from one driver and only 129.037 seconds of explicitly
+non-aggressive intervals. Neither source closes feature/label/split acceptance.
+Do not infer normal labels for unlabelled time, fabricate timestamps or claim a
+random window split provides independent drivers. Further public-source metadata
+research may continue while CI/manual results are pending. M8 remains inactive.

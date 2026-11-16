@@ -81,3 +81,6 @@ For the authorized M7.4/M7.5 acceptance follow-up, read
 [recording intake v1](reference/EVENTNET_RECORDING_INTAKE_V1.md) and
 [the active plan](exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md) before
 accessing old private phone evidence. Intake does not grant model promotion.
+Public-data follow-up uses [public-source qualification v1](reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md).
+The optional [manual stationary phone check](reference/M7_MANUAL_PHONE_QUALITY_CHECK.md)
+does not require ADB or authorize a drive.

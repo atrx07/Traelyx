@@ -1,0 +1,222 @@
+{
+  "ci": {
+    "status": "pending"
+  },
+  "compatibility": {
+    "app_or_recorder_behavior_change": false,
+    "database_migration": false,
+    "historical_model_or_score_change": false,
+    "new_dependency": false
+  },
+  "date": "2026-11-16",
+  "evidence_version": "eventnet-public-qualification-v1",
+  "local_validation": {
+    "apk_signature_package_minimum_sdk_arm64_engine": "verified",
+    "both_pinned_source_commands": "passed",
+    "failures": 0,
+    "new_qualification_tests": 11,
+    "ordinary_debug_apk_build": "passed",
+    "python_tests": 131,
+    "skips": 0
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "manual_phone_apk": {
+    "app_source_commit": "39b6a80bbdda26e7e7866b83b7911f593611cc54",
+    "artifact": "Traelyx-M7-RedmiNote9-Android10.apk",
+    "build": "debug",
+    "bytes": 168418150,
+    "configuration": "no account/provider defines supplied",
+    "entrypoint": "lib/main.dart",
+    "flutter_engine_abis": [
+      "arm64-v8a"
+    ],
+    "minimum_sdk": 24,
+    "no_device_touched": true,
+    "package": "io.github.atrx07.traelyx",
+    "packaged_library_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "sha256": "a96dce6f3fca358024d8b8ea5dee0aa07bc4f72b629b8cbe0862ca4c427d1e89",
+    "signature_verified": "APK v2",
+    "target_device": {
+      "android": 10,
+      "api": 29,
+      "installation_validated": false,
+      "model": "Redmi Note 9"
+    },
+    "target_sdk": 36
+  },
+  "manual_phone_result": "pending maintainer stationary check; no trip collection available this week; Redmi is fallback for field work",
+  "privacy": {
+    "device_operated": false,
+    "model_training_or_predictions": false,
+    "private_phone_recordings_read": false,
+    "raw_sources_ignored_local_only": true,
+    "raw_telemetry_uploaded": false
+  },
+  "scope": "Bounded public development-source qualification; no new model experiment",
+  "source_pins": {
+    "harvard_database": {
+      "bytes": 11571200,
+      "file_id": 4986758,
+      "publisher_md5": "e8a4d0c052f84647e8be426219b261b4",
+      "sha256": "bb0c592c1899d1a74c9ff100c75cbb5ffb50033a70284276cf51139ec81c76d9"
+    },
+    "official_metadata_snapshots": {
+      "m7-source-harvard-f5jzhf.json": {
+        "bytes": 5248,
+        "sha256": "0b8e38fbb231f611b401582d42bfbdd2ebf5736916a6facac38004f8065b25e7"
+      },
+      "m7-source-zenodo-6570972-latest.json": {
+        "bytes": 6655,
+        "sha256": "56fc02916219eb0facf914d78b392d3d61222407979f48eb2f8c2e769e6628c6"
+      }
+    },
+    "zenodo_label_files": {
+      "Labeled_events_1.csv": {
+        "bytes": 4616,
+        "sha256": "07f3adec8af07278ce1c948be4ea2f94058d2972419791cd15237aa1f0a6c120"
+      },
+      "Labeled_events_2.csv": {
+        "bytes": 2444,
+        "sha256": "c571d85471dc23fcbef51c301e322cc03ac2ada3894c5f65af3986fb80c1a6b7"
+      },
+      "Labeled_events_3.csv": {
+        "bytes": 4022,
+        "sha256": "c593f405303849e9d0e68616e128bd6f06be5bee37e9682e2b0d718852fef0c4"
+      }
+    }
+  },
+  "source_results": [
+    {
+      "blocking_evidence": [
+        "driver_trip_grouping_missing",
+        "subsecond_timing_unavailable",
+        "feature_units_frame_quality_unverified",
+        "independent_interval_truth_unverified",
+        "ordinary_negative_exposure_unverified",
+        "unseen_grouped_evaluation_missing"
+      ],
+      "disposition": "development_qualification_only",
+      "findings": {
+        "activity_row_counts": {
+          "Accelerate": 14036,
+          "Aggressive Accelerate": 10897,
+          "Aggressive Brake": 10447,
+          "Aggressive Left": 14511,
+          "Aggressive Right": 13886,
+          "Brake": 18631,
+          "Idling": 9321,
+          "Left": 18626,
+          "Right": 18157
+        },
+        "adjacent_backward_timestamp_pairs": 0,
+        "adjacent_equal_timestamp_pairs": 125780,
+        "columns": [
+          "TIME",
+          "ACCEL_X",
+          "ACCEL_Y",
+          "ACCEL_Z",
+          "GYRO_X",
+          "GYRO_Y",
+          "GYRO_Z",
+          "CURRENT_SPEED",
+          "ACTIVITY"
+        ],
+        "driver_or_trip_column_present": false,
+        "rows": 128512,
+        "sensor_accuracy_or_gnss_accuracy_column_present": false,
+        "timestamp_resolution_seconds": 1,
+        "verified_ordinary_driving_exposure_seconds": null
+      },
+      "fresh_locked_evaluation_eligible": false,
+      "license": "CC0-1.0",
+      "model_predictions_computed": false,
+      "production_evaluation_admitted": false,
+      "qualification_version": "eventnet-public-qualification-v1",
+      "source": "https://doi.org/10.7910/DVN/F5JZHF",
+      "training_admitted": false
+    },
+    {
+      "blocking_evidence": [
+        "single_driver_no_independent_train_validation_test_groups",
+        "feature_stream_units_frame_quality_sync_unverified",
+        "normal_exposure_not_continuously_reviewed",
+        "road_impact_phone_movement_truth_missing",
+        "unseen_grouped_evaluation_missing"
+      ],
+      "disposition": "development_qualification_only",
+      "findings": {
+        "annotated_nonaggressive_seconds": 129.037,
+        "class_counts": {
+          "aggressive acceleration": 21,
+          "aggressive braking": 22,
+          "aggressive lane change to the left": 23,
+          "aggressive lane change to the right": 29,
+          "aggressive left-turn": 23,
+          "aggressive right-turn": 25,
+          "non-aggressive event": 26
+        },
+        "intervals": 169,
+        "publisher_driver_count": 1,
+        "streams_inspected": false,
+        "trips": [
+          {
+            "annotated_nonaggressive_seconds": 69.084,
+            "class_counts": {
+              "aggressive acceleration": 9,
+              "aggressive braking": 15,
+              "aggressive lane change to the left": 3,
+              "aggressive lane change to the right": 5,
+              "aggressive left-turn": 18,
+              "aggressive right-turn": 11,
+              "non-aggressive event": 12
+            },
+            "explicit_spelling_aliases": 0,
+            "intervals": 73,
+            "minimum_interval_seconds": 1.617
+          },
+          {
+            "annotated_nonaggressive_seconds": 17.632,
+            "class_counts": {
+              "aggressive acceleration": 6,
+              "aggressive braking": 7,
+              "aggressive lane change to the left": 4,
+              "aggressive lane change to the right": 6,
+              "aggressive left-turn": 5,
+              "aggressive right-turn": 6,
+              "non-aggressive event": 4
+            },
+            "explicit_spelling_aliases": 7,
+            "intervals": 38,
+            "minimum_interval_seconds": 1.338
+          },
+          {
+            "annotated_nonaggressive_seconds": 42.321,
+            "class_counts": {
+              "aggressive acceleration": 6,
+              "aggressive lane change to the left": 16,
+              "aggressive lane change to the right": 18,
+              "aggressive right-turn": 8,
+              "non-aggressive event": 10
+            },
+            "explicit_spelling_aliases": 0,
+            "intervals": 58,
+            "minimum_interval_seconds": 2.543
+          }
+        ]
+      },
+      "fresh_locked_evaluation_eligible": false,
+      "license": "CC-BY-4.0",
+      "model_predictions_computed": false,
+      "production_evaluation_admitted": false,
+      "qualification_version": "eventnet-public-qualification-v1",
+      "source": "https://zenodo.org/records/6570972",
+      "training_admitted": false
+    }
+  ]
+}
