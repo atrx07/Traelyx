@@ -59,6 +59,12 @@ Use this page to route to the smallest relevant source of truth. Do not read eve
 
 - [issues/README.md](issues/README.md) — symptom-based index of significant product failures, root causes, fixes, recovery evidence, and remaining limits. Consult only relevant records when debugging; not normal startup context.
 
+## Android QA tooling
+
+For Android emulator/ADB operation and interrupted Pixel QA sessions, see
+[the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
+when that tooling or device setup is relevant.
+
 ## Machine-readable references
 
 `reference/` contains YAML/JSON contracts suitable for validation, tests, generators, and tooling. Treat them as contracts and keep them synchronized with prose specs.
