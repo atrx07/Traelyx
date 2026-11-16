@@ -72,3 +72,7 @@ when that tooling or device setup is relevant.
 `reference/` contains YAML/JSON contracts suitable for validation, tests, generators, and tooling. Treat them as contracts and keep them synchronized with prose specs.
 
 `reference/KNOWN_TOOLING_ISSUES.md` is the exception: it is an optional, failure-triggered operational reference for recurring local toolchain issues. Do not load it as normal startup context.
+
+For M7.11 local narrator artifact/provider work only, read
+[local commentary v1](reference/LOCAL_COMMENTARY_V1.md), the empty bundled catalog
+and its separate manifest schema. Runtime/model activation is still gated.

@@ -297,6 +297,16 @@ review and Send once. Display only provider-selected reviewed tone lines; retain
 the built-in narrator on failure. Leaving the app resets parked state and cancels
 pending requests. See `../reference/CLOUD_COMMENTARY_V1.md`.
 
+### M7.11 local model controls
+
+You > Commentary engine > Local AI truthfully reports unavailable runtime/model
+activation. Explicit refresh shows measured model files and accepted catalog state;
+opening settings does no local model action. Any owned installed/incomplete files
+can be removed after parked confirmation and a final review dialog. File presence
+is not reported as inference acceptance. Data & Export shows real model bytes
+and links to these controls. No automatic model download or replay engine switch
+is enabled. See [local commentary v1](../reference/LOCAL_COMMENTARY_V1.md).
+
 ## 17. Accessibility
 
 - Support reduced motion.

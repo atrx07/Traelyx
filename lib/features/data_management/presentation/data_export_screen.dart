@@ -57,6 +57,10 @@ class _DataExportScreenState extends ConsumerState<DataExportScreen> {
                 const _SectionHeading('STORAGE BREAKDOWN'),
                 const SizedBox(height: TraelyxSpacing.sm),
                 _StorageBreakdown(report: diagnostics),
+                TextButton(
+                  onPressed: () => context.push(TraelyxRoutes.youCommentary),
+                  child: const Text('Manage local model files'),
+                ),
                 const SizedBox(height: TraelyxSpacing.xl),
                 const _SectionHeading('RAW RETENTION'),
                 const SizedBox(height: TraelyxSpacing.sm),

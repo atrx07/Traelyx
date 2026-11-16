@@ -40,6 +40,7 @@ dependencies:
   supabase_flutter: 2.17.2
   flutter_secure_storage: 10.0.0
   app_links: 7.2.1
+  crypto: 3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,7 @@ dev_dependencies:
 flutter:
   assets:
     - docs/reference/provider-registry.json
+    - docs/reference/local-commentary-catalog-v1.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

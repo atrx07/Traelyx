@@ -1,0 +1,100 @@
+{
+  "evidence_version": 1,
+  "date": "2026-11-16",
+  "scope": "M7.11 local commentary architecture; optional runtime/model activation deferred",
+  "contract": "docs/reference/LOCAL_COMMENTARY_V1.md",
+  "decision": "docs/decisions/ADR-0043-local-narrator-admission-and-artifact-boundary.md",
+  "production": {
+    "accepted_catalog_entries": 0,
+    "runtime_available": false,
+    "artifact_source_available": false,
+    "neural_inference_activated": false,
+    "automatic_download": false,
+    "replay_engine_switched": false,
+    "builtin_remains_active": true
+  },
+  "local_validation": {
+    "flutter_tests": 592,
+    "local_commentary_tests": 57,
+    "cloud_commentary_tests_preserved": 32,
+    "android_tests": 509,
+    "python_tests": 105,
+    "test_failures": 0,
+    "test_skips": 0,
+    "format": "pass",
+    "analysis": "no issues",
+    "repository_privacy_validation": "pass",
+    "generated_sources_and_schemas": "unchanged; schema4 and historical snapshots preserved",
+    "android_lint": {
+      "errors": 0,
+      "existing_warnings": 7,
+      "new_warnings": 1,
+      "new_advisory": "UsableSpace: conservative actual filesystem space; no cache eviction requested",
+      "suppressions_added": 0
+    },
+    "normal_apks": {
+      "debug": {
+        "bytes": 168418440,
+        "sha256": "11fb447c6278210cb002a15723fd8f1d9933b37b71027198d8f7662e6a6a5421"
+      },
+      "release": {
+        "bytes": 65400562,
+        "sha256": "0d8e545a14a530208cce8174b132364a41212839cc4ea2fb8fe06219cb83a3f0"
+      }
+    },
+    "normal_package_id": "io.github.atrx07.traelyx",
+    "qa_markers_absent_from_normal_executables": true,
+    "bundled_weights_absent": true,
+    "catalog_empty_in_both_apks": true,
+    "release_growth_from_m710_bytes": 196991
+  },
+  "emulator_qa": {
+    "existing_avd": "Pixel_10",
+    "android_api": 37,
+    "abi": "x86_64",
+    "page_size_bytes": 16384,
+    "adb_previously_authorized_by_maintainer": true,
+    "qa_package": "io.github.atrx07.traelyx.m711probe",
+    "firebase_disabled": true,
+    "generated_weights_bytes": 137,
+    "selector": "fake fixture; no neural inference",
+    "installed_bytes_with_receipt": 541,
+    "bytes_with_partial": 544,
+    "confirmed_removal_bytes": 0,
+    "native_dart_byte_counts_equal": true,
+    "active_hash_cancellation_and_file_close": "pass",
+    "checksum_publication_and_reopen": "pass",
+    "corruption_refused_and_preserved": "pass",
+    "qa_process_restart_preserves_inventory": "pass",
+    "background_resets_parked": "pass",
+    "cancelled_removal_preserves_files": "pass",
+    "confirmed_removal": "pass",
+    "qa_package_uninstalled": true,
+    "owned_device_ui_files_removed": true,
+    "production_package_version_update_metadata_unchanged": true,
+    "production_private_data_accessed_by_probe": false,
+    "production_account_state_revalidated": false,
+    "physical_phone_modified": false,
+    "pixel_left_running": true
+  },
+  "impact": {
+    "direct_dependency": "crypto 3.0.7, previously transitive; exact version unchanged",
+    "new_resolved_packages": [],
+    "new_runtime_or_backend": false,
+    "migrations": [],
+    "schema_version": 4,
+    "recorder_sampling_or_lifecycle_changed": false,
+    "historical_results_changed": false,
+    "detector_model_promoted": false,
+    "network_or_credentials_needed_for_local_path": false
+  },
+  "limits": [
+    "Generated files and fake selector validate architecture, not neural model quality/performance.",
+    "No public model download transport, tokenizer or runtime binding is shipped.",
+    "Physical API/ABI/page-size compatibility, memory, latency, cancellation, thermal/battery and wording-quality acceptance remain required before adoption.",
+    "M7.4/M7.5 and M6.8/vehicle/OEM/model acceptance remain open; no M7 milestone exit or M8 activation."
+  ],
+  "ci": {
+    "status": "pending source commit/run; required before completion"
+  }
+}

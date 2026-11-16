@@ -36,6 +36,7 @@ import io.github.atrx07.traelyx.recorder.tripDebugExportFailureMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import io.github.atrx07.traelyx.intelligence.LocalTripAnalysis
+import io.github.atrx07.traelyx.intelligence.LocalCommentaryPlatform
 import io.github.atrx07.traelyx.guardian.AndroidGuardianActivationRuntime
 import io.github.atrx07.traelyx.guardian.GuardianActivationBridge
 import io.github.atrx07.traelyx.guardian.AndroidGuardianRecipientRuntime
@@ -65,6 +66,20 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LocalCommentaryPlatform.CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method != "device") result.notImplemented()
+                else dataManagementExecutor.execute {
+                    val outcome = runCatching { LocalCommentaryPlatform.device(applicationContext) }
+                    runOnUiThread {
+                        if (!isDestroyed) outcome.fold(
+                            onSuccess = { result.success(it) },
+                            onFailure = { result.error("local_model_storage", "Local model storage is unavailable.", null) },
+                        )
+                    }
+                }
+            }
 
         correctionExporter?.close()
         val correctionChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CorrectionContributionExporter.CHANNEL)

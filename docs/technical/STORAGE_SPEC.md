@@ -118,3 +118,13 @@ or cleaner is added. See `../reference/EVENT_CORRECTION_V1.md`.
 ## 9. Corruption
 
 A corrupt chunk should not make all history unreadable. Isolate affected trip/chunk and expose diagnostic status.
+
+## 10. M7.11 local narrator artifacts
+
+The local model category now measures the bounded app-private no-backup narrator
+namespace, including receipts and incomplete staging. Data & Export links to
+Commentary engine for explicit refresh and parked, confirmed removal. No weights
+ship in the current empty catalog. Unreadable/unowned contents fail closed, not
+as invented zero bytes. This does not share trip, Auth, Guardian or core sensor
+model storage and adds no database migration. See
+[local commentary v1](../reference/LOCAL_COMMENTARY_V1.md) for the file contract.

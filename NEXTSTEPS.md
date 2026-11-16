@@ -13,13 +13,13 @@ acceptance stays deferred. M7.6 was subsequently continued for its isolated
 IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
 also complete. M7.8's subsequently authorized embedding experiment is complete;
 M7.9's local correction/export pipeline and M7.10's reviewed-wording Groq path
-are complete. M7.11 and later remain gated.
+are complete. M7.11 architecture is authorized on 2026-11-16; M8 remains gated.
 
 For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
 setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
 preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
-## P0 — Await M7.11 authorization; keep acceptance visible
+## P0 — Implement M7.11 architecture; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
 boundary, production inference disabled, immutable bounded generated-only
@@ -71,8 +71,9 @@ app untouched. Evidence:
 `docs/reference/cloud-commentary-v1-result.json`. No migration, new package or
 sensor-model promotion; original offline narration remains available. Broader
 free-form generation/quality requires separate evaluated output governance.
-Await M7.11 authorization; no next-step work is prepared. Detector-model and
-physical/vehicle acceptance remains deferred.
+M7.11 architecture and local validation pass; finish source CI and evidence closure. Actual model/runtime
+activation stays gated on accepted quality/device performance. Stop before M8;
+M7 exit and detector-model/physical/vehicle acceptance remain open.
 
 ## Deferred acceptance — revisit before enabling any model
 

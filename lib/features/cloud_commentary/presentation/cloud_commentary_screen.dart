@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:traelyx/features/cloud_commentary/application/cloud_commentary_service.dart';
 import 'package:traelyx/features/cloud_commentary/domain/cloud_commentary.dart';
+import 'package:traelyx/features/local_commentary/presentation/local_commentary_card.dart';
 
 class CloudCommentaryScreen extends ConsumerStatefulWidget {
   const CloudCommentaryScreen({super.key});
@@ -354,6 +355,8 @@ class _CloudCommentaryScreenState extends ConsumerState<CloudCommentaryScreen>
                     child: const Text('Cancel pending request'),
                   ),
                 ],
+                const SizedBox(height: 20),
+                const LocalCommentaryCard(),
               ],
             ),
           ),

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "groq_reviewed_wording_v1",
+  "status": "reviewed_cloud_and_gated_local_architecture_v1",
   "policy": {
     "hardcode_permanent_model_ids": false,
     "default_fallback_engine": "procedural",
@@ -21,9 +21,12 @@
       "kind": "local_downloadable",
       "enabled_by_default": false,
       "requires_key": false,
-      "model_discovery": true,
+      "model_discovery": false,
       "network_required_after_download": false,
-      "notes": "Model/runtime registry selected through benchmarked manifests; model is not bundled into APK by default."
+      "notes": "Architecture only. Bundled catalog is empty; runtime and artifact source unavailable. No weights or automatic download. Activation requires reviewed physical-device and wording-quality acceptance.",
+      "implemented_contract": "local_artifact_and_reviewed_wording_architecture_v1",
+      "catalog": "docs/reference/local-commentary-catalog-v1.json",
+      "runtime_available": false
     },
     {
       "id": "groq",

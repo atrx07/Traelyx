@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import java.io.File
+import io.github.atrx07.traelyx.intelligence.LocalCommentaryStorage
 
 class DiagnosticsSnapshotCollector(
     private val context: Context,
@@ -50,9 +51,10 @@ class DiagnosticsSnapshotCollector(
             "appBytes" to appBytes,
             "databaseBytes" to databaseBytes,
             "rawTelemetryBytes" to rawTelemetryBytes,
-            // The current offline-canvas map and local-model placeholder store no files.
+            // The offline-canvas map stores no files. Local model accounting
+            // includes partial downloads and receipts, without hashing weights.
             "mapCacheBytes" to 0L,
-            "localModelBytes" to 0L,
+            "localModelBytes" to LocalCommentaryStorage.bytes(LocalCommentaryStorage.root(context.noBackupFilesDir)),
         )
     }
 }

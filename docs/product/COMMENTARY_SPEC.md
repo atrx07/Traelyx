@@ -211,3 +211,12 @@ M5.7 ships commentary version 1 as bundled deterministic presentation logic only
 Only ten explicitly allowlisted persisted event types are eligible. Unknown types fail closed and their values are never echoed. Version 1 ranks candidates using event-type interestingness and category novelty, applies a ten-second spacing cooldown, uses a sixty-second recent-category window for repetition context, and displays at most six moments. Seeded variation may change copy but not event selection. Severity, control quality, confidence, or personal-baseline deviation may inform a future version only when those values are authoritatively persisted and governed; M5.7 never infers or fabricates them.
 
 Visibility and reveal progress derive from the existing replay clock. A moment may draw on the route only when the persisted event midpoint resolves to a verified marker; otherwise it remains timeline-only. Bubble/evidence taps pause playback and reveal only the persisted event label and recorder-relative time range. Commentary never alters events, integrity, scores, safety transitions, or historical evidence, and it never exposes coordinates, trip identifiers, raw telemetry, paths, or provider metadata in copy, semantics, or logs.
+
+## M7.11 implemented local-provider boundary
+
+The local provider now has a shared reviewed-wording contract, strict bundled
+manifest/catalog admission, real app-private artifact storage and explicit removal.
+Production has no accepted model/runtime/source, so built-in narration stays active.
+Optional real download/runtime/replay activation remains performance-gated;
+generated-byte/fake-selector tests are architecture evidence only. See
+[local commentary v1](../reference/LOCAL_COMMENTARY_V1.md).

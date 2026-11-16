@@ -101,3 +101,13 @@ Catalog hints do not establish live compatibility or quality. Unknown/refused/
 malformed output falls back without retry. See
 [`CLOUD_COMMENTARY_V1.md`](../reference/CLOUD_COMMENTARY_V1.md) and ADR-0042 for
 the minimized dossier, approved-output contract, consent and cancellation limits.
+
+## 11. M7.11 local architecture
+
+The shared pure reviewed-wording contract now serves both cloud and local ports.
+The credential-based interface remains cloud-specific; local runtime/source ports
+have no key or cloud fallback. Local artifact staging, verification, admission and
+explicit removal are implemented, while the production catalog is empty and
+runtime/source unavailable. Optional model activation remains performance-gated.
+See [local commentary v1](../reference/LOCAL_COMMENTARY_V1.md) for the authoritative
+limits, no-backup lifecycle and future adoption gates.

@@ -33,3 +33,5 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0036-isolated-mobile-ml-runtime.md`
 - `ADR-0037-gated-event-model-evidence.md`
 - `ADR-0038-generated-integrity-comparison.md`
+
+- [ADR-0043: Local narrator admission and artifact boundary](ADR-0043-local-narrator-admission-and-artifact-boundary.md) — functional local architecture; optional runtime/model activation gated.

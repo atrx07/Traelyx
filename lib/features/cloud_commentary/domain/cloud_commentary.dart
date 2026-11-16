@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:traelyx/features/commentary/domain/reviewed_commentary_input.dart';
 import 'package:traelyx/features/trips/domain/procedural_commentary.dart';
 
 enum CloudFailure {
@@ -68,49 +69,24 @@ String cloudFailureMessage(Object error) {
 }
 
 class CommentaryDossier {
-  CommentaryDossier._(this.plan, this.payload);
+  CommentaryDossier._(this._input);
   factory CommentaryDossier.fromPlan(ProceduralCommentaryPlan plan) {
-    if (plan.moments.isEmpty ||
-        plan.moments.length > 6 ||
-        plan.tone == CommentaryTone.silent) {
-      throw const CloudException(CloudFailure.noMoments);
-    }
-    final payload = Map<String, Object?>.unmodifiable({
-      'dossierVersion': 1,
-      'wordingVersion': 1,
-      'tone': plan.tone.name,
-      'evidence': 'persisted_categories_only_quality_not_assessed_by_narrator',
-      'moments': List<Map<String, Object?>>.unmodifiable([
-        for (final moment in plan.moments)
-          Map<String, Object?>.unmodifiable({
-            'category': moment.eventLabel,
-            'context': moment.contextOrdinal > 1 ? 'repeated' : 'first',
-            'wordingChoices': plan.choicesFor(moment),
-          }),
-      ]),
-    });
-    if (utf8.encode(jsonEncode(payload)).length > 8192) {
-      throw const CloudException(CloudFailure.malformed);
-    }
-    return CommentaryDossier._(plan, payload);
-  }
-  final ProceduralCommentaryPlan plan;
-  final Map<String, Object?> payload;
-  String get reviewedJson =>
-      const JsonEncoder.withIndent('  ').convert(payload);
-  ProceduralCommentaryPlan apply(Object? value) {
-    if (value is! Map || value.length != 1 || !value.containsKey('choices')) {
-      throw const CloudException(CloudFailure.malformed);
-    }
-    final choices = value['choices'];
-    if (choices is! List ||
-        choices.length != plan.moments.length ||
-        choices.any((v) => v is! int)) {
-      throw const CloudException(CloudFailure.malformed);
-    }
     try {
-      return plan.withChoices(choices.cast<int>());
-    } catch (_) {
+      return CommentaryDossier._(ReviewedCommentaryInput.fromPlan(plan));
+    } on CommentaryContractException catch (error) {
+      throw CloudException(
+        error.noMoments ? CloudFailure.noMoments : CloudFailure.malformed,
+      );
+    }
+  }
+  final ReviewedCommentaryInput _input;
+  ProceduralCommentaryPlan get plan => _input.plan;
+  Map<String, Object?> get payload => _input.payload;
+  String get reviewedJson => _input.reviewedJson;
+  ProceduralCommentaryPlan apply(Object? value) {
+    try {
+      return _input.apply(value);
+    } on CommentaryContractException {
       throw const CloudException(CloudFailure.malformed);
     }
   }

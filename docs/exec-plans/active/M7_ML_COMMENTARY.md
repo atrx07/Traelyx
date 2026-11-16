@@ -3,7 +3,7 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.10 reviewed-wording cloud complete; await M7.11 authorization; prior acceptance carried forward
+**Current gate:** M7.11 local-provider architecture authorized; model/runtime activation performance-gated
 **Started:** 2026-11-11
 **Last updated:** 2026-11-16
 
@@ -14,10 +14,13 @@ requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
 
-M7.10 is complete for optional Groq BYO-key settings, dynamic model discovery,
-secure credentials and explicitly reviewed categorical requests that select
-approved local wording. Offline narration and all detector/scoring/physical
-acceptance remain unchanged. Await authorization before M7.11.
+Current authorized work: M7.11, continued by the maintainer on 2026-11-16.
+Deliver the local commentary provider architecture: shared reviewed-wording
+contract, versioned trusted manifests, capability/admission gates, cancellable
+verified app-private artifact management and explicit local-model status/removal.
+Real model/runtime adoption and network download activation are optional under
+the roadmap's performance clause and remain gated pending accepted evidence.
+Stop before M8; do not mark M7 complete while earlier acceptance remains open.
 
 M7.1 delivers a reproducible, local-only dataset registry and import command
 for reviewed public data and a generated project fixture corpus. No model is
@@ -1046,3 +1049,116 @@ model acceptance and physical/vehicle/OEM/background/battery gates stay open.
 
 Commit/push/verify this evidence/status closure, report M7.10 and stop before
 M7.11. No next-step implementation or preparation is authorized.
+
+
+## M7.11 boundary - authorized 2026-11-16
+
+### Goal / user-visible result
+
+Implement the local-provider architecture named by the roadmap. You > Commentary
+engine reports the real local runtime/catalog/install state, with honest unavailable
+reasons and measured managed bytes. The active built-in narrator and optional
+Groq path remain unchanged. No model is silently bundled/downloaded or advertised
+as usable. Real local neural generation is not claimed without accepted assets.
+
+### Scope / decision / conditional download gate
+
+There is no accepted local narrator artifact/runtime or target-device quality,
+memory, cancellation, latency and battery evidence in this repo. LiteRT-LM and
+llama.cpp have Android paths; this is feasibility, not Traelyx acceptance. The
+upstream SmolLM2-135M-Instruct card is Apache-2.0 but supplies no Traelyx wording
+quality or target-device benchmark. No runtime/model is rejected as inherently
+unsuitable, and none is promoted merely from upstream claims. The optional real
+weight download/runtime binding stays deferred under the explicit M7.11 clause.
+
+Build functional typed manifest/runtime/source/store ports and a real local artifact
+repository using generated fixture streams. Require immutable SHA-256/bytes,
+license/source references and reviewed device evidence, compatible input/output
+versions, runtime/version/ABI/API capability and explicit size/disk admission.
+Do not accept remote manifests, executable downloads or custom user URLs. Production
+catalog is empty and runtime/source adapters fail closed; no large transfer occurs.
+Only a future reviewed, bundled catalog/runtime binding can activate installation.
+
+Extract the existing reviewed-wording payload/output validator into a shared pure
+contract, retaining the Groq API/wire/error behavior through its adapter. Local
+inference receives this minimized contract, no credential or raw telemetry.
+Use cancellable bounded filesystem verification, app-private no-backup storage,
+staging/atomic publication, exact size/hash checks, before-use revalidation and
+safe removal. Preserve artifacts on integrity errors until explicit removal.
+No score, safety, Guardian, recorder sampling or historical-result change.
+
+### Dependency / privacy / compatibility
+
+Declare the already-locked crypto3.0.7 as a direct dependency for reviewed streaming
+SHA-256 instead of inventing cryptography or relying on another package's transitive
+API. Dart-project BSD-3-Clause license inspected locally; no new resolved package,
+version/native binary, model SDK or paid service. No minimum Android SDK change.
+Use a small native metadata bridge for the existing app-private no-backup root and
+actual device API/ABIs/storage capacity; do not expose private paths in UI/logs.
+Model bytes/receipts have a separate namespace and never share recorder/Auth data.
+No account/API key, model network source, upload, database migration or core ML
+promotion is introduced. Target-device performance remains unverified.
+
+### Checks / acceptance
+
+- [x] Shared contract preserves Groq behavior and procedural timing/safety.
+- [x] Strict local manifest/catalog/capability and review/admission contracts.
+- [x] Real bounded artifact staging, verification, cancellation/reopen/removal;
+  tests for corruption, truncation/oversize, stale reviews and path boundaries.
+- [x] Offline provider/runtime/source ports with no credential/cloud fallback;
+  missing/incompatible/unaccepted states fail closed before expensive work.
+- [x] Settings/status integration, real managed byte reporting, accessible UI;
+  generated-only isolated Pixel filesystem/capability QA where available.
+- [ ] Format/analyze/full Flutter/native/Python regression gates, schema/source
+  equality, builds/lint/privacy and source CI.
+- [ ] Document the architecture scope and deferred optional model activation,
+  synchronize status/evidence/README, commit/push/verify and stop before M8.
+
+### Risks / limits
+
+Tests with generated bytes and fake runtime outputs validate architecture and
+storage behavior, not neural inference or performance. A download port is not an
+accepted public model distribution pipeline. Future runtime/model adoption needs
+pinned reproducible source/licenses/artifacts, dependency review, physical-device
+memory/latency/cancellation/battery checks and reviewed-wording quality evaluation.
+No M7 milestone exit or earlier sensor-model/vehicle/OEM gate is waived.
+
+### Local verification checkpoint - 2026-11-16
+
+Implemented shared reviewed-wording validation, strict release-reviewed catalog
+and manifests, exact runtime/device/source admission, single-use size/license and
+wording reviews, real bounded no-backup artifact staging/verification/removal,
+exclusive runtime leases and truthful settings/Data & Export accounting. Production
+catalog remains empty; no accepted runtime/source or neural inference is claimed.
+Crypto3.0.7 changed only from transitive to exact direct; schema4 is unchanged.
+
+The existing authorized Pixel_10/API37/x86_64/16KiB-page AVD was used with separate
+`io.github.atrx07.traelyx.m711probe`, generated137-byte weights and a fake selector.
+Native metadata, active hash cancellation/file close, checksum publication,
+reopen, selection, corruption refusal and native/Dart bytes equality pass (541B
+installed;544B including partial). Cold QA process restart preserves544B; background
+resets parked confirmation. Cancelling removal preserves files; confirmed removal
+reports0B. No main app/private trips/keys/accounts were accessed by the probe.
+
+Two initial checks caught and fixed implementation defects: Android's trusted
+no-backup parent alias must be canonicalized before namespace link checks; and
+isolate exit alone can leave Windows native file finalizers pending. Hashing now
+reads bounded chunks in its worker, explicitly closes the file before acknowledging
+cancellation/completion and waits for exit. Regression immediately deletes the
+cancelled8MiB fixture on Windows; Pixel cancellation also passes. No tests weakened,
+SDK/cache cleared, permission bypassed or extra warning suppressed.
+
+Local full Flutter592/592 and Python105/105 pass. Native509/509 pass with no skips;
+app lint has0errors,7existing warnings and1new conservative usable-space advisory.
+No system cache eviction is requested for model admission. Format/analysis,
+normal debug/release app identity/size and final persistence/CI closure are checked
+before completion. Source CI remains required; do not start M8.
+
+Final local gates: formatting and analysis have no issues; generated source/schema
+checks produce no changes; normal main-app debug168,418,440B and release65,400,562B
+build and identity checks pass, with no QA executable markers or bundled weights.
+Release growth from M7.10 is196,991B (~0.19MiB), with no runtime SDK. Pixel final
+cleanup observed0B, uninstalled only the QA package and removed exact temporary
+UI files. Main version/update metadata is unchanged; existing Pixel left open.
+Commit/push the bounded source, await all four source CI jobs, then persist
+aggregate evidence/status closure and stop before M8.
