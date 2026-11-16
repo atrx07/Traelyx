@@ -82,6 +82,15 @@ data. Runtime failures print no source path or exception details. The default
 admission fields are always false: this tool does not verify consent for training,
 mounting, labels, driver identity or a held-out experimental protocol.
 
+## Validation
+
+All 120 local Python tests pass, including 18 focused decoder/intake tests. All
+four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43904210026) pass
+for `02f2a9f`, including Flutter/native regressions, debug/release builds, generated
+ML/mobile checks, privacy/contracts and cloud/Guardian checks. Source Git-blob
+hashes are retained in the aggregate result. No dependency, database migration,
+recorder sampling, production model or historical scoring behavior changed.
+
 ## What is needed next
 
 1. **Qualify a public source and its sensor/frame pipeline.** The maintainer

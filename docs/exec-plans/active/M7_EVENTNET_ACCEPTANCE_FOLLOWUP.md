@@ -62,8 +62,8 @@ wire a model into the app before its own review and acceptance.
 - [x] Read-only preservation/QA exclusion checks and aggregate data assessment.
 - [x] Meaningful intake regressions for format, timing, sensor quality, evidence
   provenance, labels/splits and privacy boundaries as applicable.
-- [ ] Required format/static/regression/contract checks and bounded source CI.
-- [ ] Persist scoped result, remaining concrete acceptance needs and next action;
+- [x] Required format/static/regression/contract checks and bounded source CI.
+- [x] Persist scoped result, remaining concrete acceptance needs and next action;
   commit/push/verify without claiming M7.4 or M7.5 complete prematurely.
 
 ## Known constraints
@@ -81,6 +81,7 @@ All 120 Python tests pass locally, including 18 focused decoder/intake tests.
 The backup matches all 11,857 original phone chunks; before/after hashes of all
 11,865 phone chunks are identical. Six original recordings remain diagnostic
 only. See [intake contract and aggregate result](../../reference/EVENTNET_RECORDING_INTAKE_V1.md).
-Source CI and persistence are pending. This bounded intake does not close M7.4
-or M7.5. Next qualify public event-interval data, licensing and production-feature
-compatibility before freezing any new model experiment.
+All four source CI jobs 43904210026 pass for `02f2a9f`; pushed source matches
+`origin/main`. This bounded intake does not close M7.4 or M7.5. Next qualify
+public event-interval data, licensing and production-feature compatibility before
+freezing any new model experiment.

@@ -36,7 +36,8 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   read-only inspection. Six original recordings (129.21 archived minutes) retain
   unreliable accelerometer status throughout and lack accepted event/frame
   evidence. No training/evaluation data admitted. All 120 local Python tests pass,
-  including 18 decoder/intake tests; source CI pending. Maintainer-confirmed g
+  including 18 decoder/intake tests; all four source CI jobs 43904210026
+  (`02f2a9f`) pass. Maintainer-confirmed g
   desk readings support only a provisional calibration proposal, not a waiver.
   Public-source qualification is next; M8 remains inactive. See
   `docs/reference/EVENTNET_RECORDING_INTAKE_V1.md`.

@@ -21,7 +21,29 @@
     "unit_confirmed": "g"
   },
   "ci": {
-    "status": "pending"
+    "coverage": [
+      "Flutter format/analysis/tests and debug/release builds",
+      "native Kotlin regressions",
+      "18 decoder/intake tests and repository privacy/contracts",
+      "isolated CPU/mobile experiment tests and benchmark APK verification",
+      "Guardian Edge tests and cloud schema/RLS"
+    ],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 43904210026,
+    "source_commit": "02f2a9ff1e7acb29d40d165796c171e9597b0859",
+    "source_git_blob_sha256": {
+      ".github/workflows/ci.yml": "c2657612a89d63169ff7c5181b7eff3ba4bce5a974ef3d97b0e76ab232d52c3c",
+      "tests/tool/test_inspect_ml_recordings.py": "3e995b79ae18dc2300dd6ec9d95f8f2c88e554d7dd2ac11dc0c34692f1f28e1e",
+      "tool/inspect_ml_recordings.py": "8877953ecfad2f3b974f0ebc8ab5278cd67e7247e10cd5ea13bb44ef9c9b014d",
+      "tool/inspect_tripdebug.py": "53a52dada5ae192b738e11658e23221eec70d12d619d3285a7cdfed38bedcea0"
+    },
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/43904210026"
   },
   "date": "2026-11-16",
   "device_preservation": {

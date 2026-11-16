@@ -81,7 +81,9 @@ performance/quality and earlier model/vehicle acceptance remain open.
 The [M7 exit audit](docs/reference/M7_EXIT_AUDIT_2026-11-16.md) recommends M8
 hardening with unaccepted ML disabled. The maintainer subsequently chose to tackle
 M7.4/M7.5 acceptance first. [Recording intake](docs/reference/EVENTNET_RECORDING_INTAKE_V1.md)
-preserves old phone evidence but admits no training/evaluation data. Formal M7 exit,
+preserves old phone evidence but admits no training/evaluation data. All 120 local
+Python tests and [four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43904210026)
+pass for the intake tool. Formal M7 exit,
 M8 activation and public release remain open.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.

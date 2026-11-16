@@ -25,7 +25,8 @@ The maintainer chose to tackle M7.4/M7.5 before M8 (2026-11-16), superseding the
 conditional M8-hardening recommendation. Active follow-up:
 `docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`. Read-only old-recording
 intake preserves all original chunks and the accidental-trip exclusion, but admits
-no model data. All 120 local Python tests pass; source CI pending. Qualify public
+no model data. All 120 local Python tests and all four source CI jobs
+43904210026 (`02f2a9f`) pass. Qualify public
 event-interval data next: the maintainer reports permanent Tecno damage and no
 available second ADB phone. Confirmed-g desk readings are a provisional diagnostic
 proposal only. Existing v1 rejection/results/gates
