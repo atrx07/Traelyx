@@ -18,6 +18,16 @@ are complete. Await M7.10 authorization. M6.8 stays open.
 
 **Reliability repair (2026-09-27):** The reported long-trip save/startup crash was Android heap exhaustion during whole-trip catalog decoding on the main thread. Streaming metadata verification and a native worker fix that path. A data-preserving update recovered the real 45m27.075s trip into history: all 4,290 chunks match the pre-fix private backup byte-for-byte, with no corruption or ordering flags; cold relaunch passes. A two-million-sample regression passes under a 96 MiB heap, targeted Flutter tests pass (28), and analysis is clean. No schema migration, sampling change or upload occurred. A fresh long drive with the repaired build remains untested.
 
+## Test-device setup
+
+Maintainer clarification (2026-11-16): M6 used the existing Android Studio
+Pixel 10 Pro emulator and the physical Tecno Pova 5 Pro through ADB. Earlier
+records call the emulator `Pixel_10`; verify its current AVD name and device
+serial before targeting it. Reuse this setup for suitable authorized QA and
+preserve its accounts, pairing and app data. A separate fresh AVD is appropriate
+when test isolation is needed. M7.9 used the temporary generated-data-only
+`TraelyxM79` AVD, now shut down; it did not replace or modify that existing setup.
+
 ## Working
 
 - M7.9 complete (2026-11-15): source-bound local corrections, additive schema4

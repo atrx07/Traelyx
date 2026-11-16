@@ -14,6 +14,10 @@ IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
 also complete. M7.8's subsequently authorized embedding experiment is complete;
 M7.9's local correction/export pipeline is complete; M7.10 and later remain gated.
 
+For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
+setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
+preserve existing data. M7.9's temporary isolated AVD is a separate test device.
+
 ## P0 — Await M7.10 authorization; keep acceptance visible
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit
