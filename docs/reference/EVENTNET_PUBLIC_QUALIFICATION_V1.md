@@ -117,5 +117,15 @@ stays inactive.
   is linked by its primary PLOS paper; the earlier reviewed `umi001` repository
   is a fork. Neither reviewed page establishes an explicit dataset license.
   Paper access/copyright alone is not recorded as a grant for repository data.
+- [VTTI 100-Car Data, V2.1](https://dataverse.vtti.vt.edu/dataset.xhtml?persistentId=doi:10.15787/VTT1/CEU6RB)
+  was checked at the original publisher on 2026-11-17. It identifies CC0 and
+  vehicle instrumentation collected at 1–10 Hz. Public baseline video-reduction,
+  eyeglance and timestamp files are listed, alongside crash/near-crash metadata.
+  The full study's 43,000 hours are not established public high-rate phone IMU
+  negative exposure. Baseline sensor availability, event-label mapping and source
+  quality/grouping remain unverified; no sensor file was downloaded. The API
+  metadata export was unavailable during this check, so no complete file inventory
+  or checksum-qualified intake is claimed. This lead cannot presently satisfy
+  the proposed native 100 Hz input or false-severe-per-hour evaluation contract.
 
 These remain metadata/documentation leads, not production training admissions.

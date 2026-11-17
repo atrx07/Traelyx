@@ -74,6 +74,16 @@ publisher defect: scaling/calibration and rounding may contribute, and that caus
 was not established. No matrix was corrected or applied. Native frame equivalence
 cannot be asserted from matching column names.
 
+The pinned publisher quality report also reports weak vehicle-IMU/phone-IMU
+acceleration agreement: mean correlations of 0.220 forward, 0.243 left and 0.009
+up across 80 sessions; upward gyro agreement is higher at 0.727. These are
+publisher-reported results, not a signal comparison performed by this audit.
+Both sensors reportedly pass the source's static gravity check. Different mounts,
+filtering or alignment may contribute; no cause or hardware fault is established.
+No matched native-M3 preprocessing comparison has been run. Vehicle instruments
+therefore cannot simply be asserted to supply missing independent maneuver or
+negative truth for the phone stream.
+
 Raw-unit scale configuration, source quality equivalence and the exact native
 preprocessing adapter remain unverified. Reusing preprocessed columns would not
 establish that the training and serving signals have identical meaning. The
@@ -85,8 +95,11 @@ that an adapter would need to satisfy; no adapter is implemented by this audit.
 Eleven generated-data regressions cover source pin/path integrity, private output,
 explicit pairs with edited/contiguous bounds, overlapping classes, incomplete
 groups, shared source recordings, malformed metadata and passive matrix checks.
-The real pinned metadata command and all 142 local Python tests pass. Source CI is pending
-in [the aggregate result](qmotion-metadata-qualification-v1-result.json).
+The real pinned metadata command and all 142 local Python tests pass. All four
+[source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44028381119) pass
+for `fbaa36d` on attempt 1, including native tests and debug/release-validation
+app builds. Source Git-blob hashes and results are preserved in
+[the aggregate result](qmotion-metadata-qualification-v1-result.json).
 
 Q-Motion remains a research lead with useful manual positive labels, not an
 accepted production corpus. Independent negatives, source/native equivalence,

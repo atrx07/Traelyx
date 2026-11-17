@@ -43,8 +43,13 @@ Further qualification (2026-11-17) quantifies Q-Motion's five groups / 294 manua
 intervals, but independent negatives and native feature equivalence remain open.
 See `docs/reference/QMOTION_METADATA_QUALIFICATION_V1.md` and the proposed native
 100 Hz input contract. No source-data candidate is trained or split assigned.
-All 142 local Python tests pass; source CI pending. Continue source admission
-before freezing a model experiment. Existing v1 rejection/results/gates
+All 142 local Python tests and all four source CI jobs 44028381119
+(`fbaa36d`, attempt 1) pass. The VTTI 100-Car publisher lists baseline metadata
+but reports 1–10 Hz vehicle instrumentation; compatible normal-driving sensor
+exposure remains unverified. The next acceptance dependency is independently
+reviewed ordinary-driving exposure with usable feature timing/quality and
+independent evaluation groups. Continue source admission before freezing a
+model experiment. Existing v1 rejection/results/gates
 remain frozen; no model promotion, M8 activation or invented labels.
 
 The authorized M7.5 foundation is implemented and validated: provider/local audit

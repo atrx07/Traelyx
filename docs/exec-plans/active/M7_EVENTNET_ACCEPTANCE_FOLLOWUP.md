@@ -146,7 +146,9 @@ not automatically assign a test role. Keep all inspected inputs disclosed.
   labels, forced normal labels and rules-generated labels.
 - [x] Implement bounded metadata qualification and eleven generated regressions;
   all 142 local Python tests, pinned-source run and repository validation pass.
-- [ ] Full source CI, aggregate evidence closure, commit/push/remote alignment.
+- [x] Full source CI: all four jobs 44028381119 pass for `fbaa36d` on attempt 1;
+  preserve source/blob hashes in the atomic aggregate evidence closure and
+  commit/push/verify remote alignment before reporting this unit complete.
 
 No training, quantizer search, production model activation, release of NC-derived
 weights, new dependency, contact with authors or large download is authorized by
@@ -161,3 +163,13 @@ native orthonormal-frame contract. The input proposal targets existing 100 Hz M3
 derived acceleration/yaw (`[1,4,600]`), with no extractor/model wired. See
 `QMOTION_METADATA_QUALIFICATION_V1.md` and `EVENTNET_NATIVE_INPUT_PROPOSAL_V1.md` in
 `docs/reference/`. No class set, split, architecture or quantizer is selected.
+
+The pinned quality report also describes weak cross-IMU acceleration agreement;
+this is publisher-reported evidence, not a matched native-preprocessing test.
+A bounded follow-up at VTTI's original 100-Car Data V2.1 page confirms CC0,
+baseline metadata and reported 1–10 Hz vehicle instrumentation. Public compatible
+sensor negatives and a complete pinned inventory were not established; no sensor
+file was downloaded. See the public-source reference and aggregate evidence.
+The remaining acceptance dependency is suitable independently reviewed driving
+exposure with usable timing/quality and independent evaluation groups. Devices
+alone cannot supply these labels. M7.4/M7.5 remain open and M8 remains inactive.

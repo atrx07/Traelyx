@@ -1,6 +1,31 @@
 {
   "ci": {
-    "status": "pending"
+    "attempt": 1,
+    "coverage": [
+      "generated source qualification and private intake regressions",
+      "Flutter formatting/analysis/tests",
+      "native Kotlin tests and debug/release-validation app builds",
+      "isolated CPU/mobile experiments and benchmark APK verification",
+      "Guardian Edge and cloud schema/RLS"
+    ],
+    "failed_attempts": [],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 44028381119,
+    "source_commit": "fbaa36dfb320a624c7a9696c566dfaca981c5bc2",
+    "source_git_blob_sha256": {
+      ".github/workflows/ci.yml": "9eeb816f96aab9b157875b65e3ea8dbb30be8812d66d924cc300b82db9abf519",
+      "docs/reference/eventnet-native-input-proposal-v1.json": "8b0735792b3dbf6309e86b2886908b950891ad553125480bda05c303d626f880",
+      "ml/qmotion_qualification.py": "f1c40f065f1ab865060722a0ab74799723155de5ec1c226fbb25d52d69fab83d",
+      "ml/qualification/qmotion-v1.json": "d2cc340af19503c10bcb3118840f9bdcc4318f8c47dffa05d17fb4dafdf39fd7",
+      "tests/tool/test_qmotion_qualification.py": "7a699511bf7ee059c17443e511549feb4ac4c6153b7116d43aa3d25742c0288b"
+    },
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44028381119"
   },
   "compatibility": {
     "database_or_telemetry_schema_change": false,
@@ -10,6 +35,27 @@
   },
   "date": "2026-11-17",
   "evidence_version": "qmotion-metadata-qualification-v1",
+  "followup_metadata_review": {
+    "api_metadata_export_available_during_check": false,
+    "compatible_independent_sensor_negatives_verified": false,
+    "complete_file_inventory_verified": false,
+    "does_not_establish_public_phone_imu_exposure_from_full_study_hours": true,
+    "license": "CC0-1.0",
+    "public_baseline_metadata_listed": [
+      "video reduction",
+      "eyeglance",
+      "timestamp"
+    ],
+    "reported_vehicle_sensor_rate_range_hz": [
+      1,
+      10
+    ],
+    "review_scope": "original publisher page and file descriptions only",
+    "source": "https://dataverse.vtti.vt.edu/dataset.xhtml?persistentId=doi:10.15787/VTT1/CEU6RB",
+    "source_files_downloaded": false,
+    "training_or_evaluation_admitted": false,
+    "version": "2.1"
+  },
   "local_validation": {
     "failures": 0,
     "native_proposal_cadence_shape_consistency": "passed",
@@ -49,6 +95,20 @@
     "status": "proposed_no_extractor_or_model_wired",
     "tensor_value_bytes": 9600,
     "training_experiment_frozen": false
+  },
+  "publisher_document_review": {
+    "cause_of_low_agreement_established": false,
+    "independently_recomputed_on_sensor_streams": false,
+    "native_preprocessing_comparison_performed": false,
+    "reported_both_imus_pass_static_gravity_check": true,
+    "reported_imu_comparison_sessions": 80,
+    "reported_mean_cross_imu_correlation": {
+      "acceleration_forward": 0.22,
+      "acceleration_left": 0.243,
+      "acceleration_up": 0.009,
+      "gyroscope_up": 0.727
+    },
+    "source": "quality_report.md pinned in ml/qualification/qmotion-v1.json"
   },
   "qualification": {
     "blocking_evidence": [

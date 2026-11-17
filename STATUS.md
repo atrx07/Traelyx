@@ -37,7 +37,8 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   phone times and source transform/preprocessing differences block direct model
   admission. Native input proposal uses existing M3 100 Hz acceleration/yaw,
   `[1,4,600]`; no extractor, split, model or quantizer is selected/wired. All 142
-  local Python tests and pinned metadata checks pass; source CI pending. No sensor
+  local Python tests, pinned metadata checks and all four source CI jobs
+  44028381119 (`fbaa36d`, attempt 1) pass. No sensor
   archive, private phone data or device used. See
   `docs/reference/QMOTION_METADATA_QUALIFICATION_V1.md`.
 
