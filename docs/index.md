@@ -93,3 +93,7 @@ it grants no source or model production admission.
 The subsequent [v2 input-quality proposal](reference/EVENTNET_INPUT_QUALITY_V2.md)
 preserves interpolation/current/history/native-LIMITED metadata while retaining
 the strict v1 entry point. Both remain unwired development APIs.
+For the external research report's Ferreira lead, use the
+[primary-source review](reference/FERREIRA_SOURCE_REVIEW_V1.md): author permission
+and units are documented, but missing videos/original frames and unresolved driver
+assignment prevent treating it as the current acceptance corpus.

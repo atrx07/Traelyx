@@ -254,3 +254,30 @@ offsets now construct a v2 window with 600 current/history/native-LIMITED masks;
 v1 still rejects the same input. Earlier unreliable evidence remains rejected,
 and history-only interpolation stays visible when current samples become exact.
 The native 50 ms bracket boundary is tested without claiming field precision.
+
+## Ferreira primary-source follow-up — 2026-11-17
+
+The maintainer authorized investigating the research report's strongest technical
+lead, then resumed this interrupted run. Review publisher statements, the paper,
+collection/preprocessing source text and small trip metadata only. No sensor CSV,
+new model experiment, held-out feature inspection, author contact or device access.
+
+- [x] Check public author replies for permission, original frames and video access.
+- [x] Trace units, target timestamps and Earth-frame conversion in primary sources;
+  inspect all four published trip metadata schemas and the R loading path for
+  driver assignment without inferring drivers from dates or trip IDs.
+- [x] Persist corrected findings/provenance, update the source/priority references,
+  validate documentation contracts, inspect diff, commit/push/verify.
+
+Affirmative author permission with attribution exists; the paper specifies units.
+The author reports no longer having videos and retaining neither original
+device-frame samples nor rotation matrices. Published trip metadata and reviewed
+loader do not establish driver assignment. Earth coordinates cannot silently
+become vehicle coordinates. Stop planning a fresh normal-driving video annotation
+pass from this source unless new footage is actually located. No source/model
+admission or M7 completion follows. Only documentation/provenance checks apply;
+unchanged runtime/native/model suites need not be rerun for this review.
+
+Repository validation, source/metadata consistency and whitespace checks pass.
+Persist this documentation-only unit atomically and verify remote alignment before
+reporting it complete. Source/model admission remains false.

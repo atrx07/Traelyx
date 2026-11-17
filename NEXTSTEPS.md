@@ -21,6 +21,15 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The Ferreira follow-up now resolves affirmative author permission evidence and
+intended units, but confirms that the author no longer has the videos and did not
+retain device-frame originals or matrices. Driver assignment is not in the four
+published metadata files or reviewed loader. See
+`docs/reference/FERREIRA_SOURCE_REVIEW_V1.md`. Stop treating this source as a ready
+route to re-annotate normal driving or supply the native feature contract. New
+primary evidence or a separately governed compatible source with reviewed normal
+exposure and independent evaluation groups is needed. No new drive is requested.
+
 While the maintainer's external research agent qualifies data, a separate native
 v2 development policy now handles only explained bounded interpolation with
 mandatory current/history/native-LIMITED sidecar metadata. All 528 native tests
@@ -28,8 +37,9 @@ pass, along with lint/debug build, repository validation and all four source CI
 jobs 44042014141 (`e8ad83e`, attempt 1).
 V1 stays strict, M3 confidence is unchanged,
 and no model/source is admitted. See `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`.
-Next review the research findings against source units/frame/gravity/quality and
-independent labels/groups before freezing any experiment; preserve inspected
+The Ferreira primary-source review is now recorded; continue
+source qualification against frame/gravity/quality and independent labels/groups
+before freezing any experiment; preserve inspected
 development roles. A phone is unnecessary until a candidate needs device evidence.
 
 The subsequently authorized feature/real-stream feasibility unit implements an

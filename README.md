@@ -114,6 +114,12 @@ Lint/debug build, repository validation and
 pass. No new source-based model candidate is trained/promoted, and no production
 inference, device use, schema or dependency is added.
 
+The [Ferreira primary-source review](docs/reference/FERREIRA_SOURCE_REVIEW_V1.md)
+finds author permission with attribution and documented units, correcting the
+external research report. Videos and original device-frame values/matrices were
+not retained per the author; driver assignment remains unresolved. No data/model
+admission or M7 completion follows. This review changes documentation only.
+
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |

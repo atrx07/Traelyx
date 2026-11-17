@@ -108,15 +108,23 @@ stays inactive.
   annotated, and missed aggressive events are possible. Unlabelled intervals
   cannot become verified negatives. License/distribution, feature/group and
   independent-negative acceptance remain unresolved. The anonymous file-list API
-  works despite the page's failing author-profile lookup; no gated terms accepted.
+  worked during the pinned audit despite the page's failing author-profile lookup.
+  A later report-review check on 2026-11-17 returned HTTP 403 for that public
+  document listing and a pinned document URL. Availability is unresolved; neither
+  a withdrawal cause nor invalidation of the earlier verified bytes follows.
+  No gated terms were accepted.
 - [Schuster maneuverRecognition](https://github.com/Schuster-j/maneuverRecognition):
   its README describes three drivers, manual dashcam maneuver labels and 2 Hz
   smartphone streams. Explicit data licensing was not established; no raw data
   downloaded. Maneuver type does not automatically establish strong-event truth.
 - The original [Ferreira dataset repository](https://github.com/jair-jr/driverBehaviorDataset)
   is linked by its primary PLOS paper; the earlier reviewed `umi001` repository
-  is a fork. Neither reviewed page establishes an explicit dataset license.
-  Paper access/copyright alone is not recorded as a grant for repository data.
+  is a fork. The [primary-source follow-up](FERREIRA_SOURCE_REVIEW_V1.md) now records
+  explicit author permission with attribution in issue 1 and intended SI units in
+  the paper. Do not repeat the earlier inference that no permission evidence exists.
+  The author reports loss of the videos and retention of only Earth-transformed
+  readings without the original vectors/matrices. Driver assignment and native
+  feature/quality/normal-exposure acceptance remain unresolved; no source admitted.
 - [VTTI 100-Car Data, V2.1](https://dataverse.vtti.vt.edu/dataset.xhtml?persistentId=doi:10.15787/VTT1/CEU6RB)
   was checked at the original publisher on 2026-11-17. It identifies CC0 and
   vehicle instrumentation collected at 1–10 Hz. Public baseline video-reduction,

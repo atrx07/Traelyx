@@ -31,6 +31,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 Ferreira primary-source review (2026-11-17): author permission with paper/
+  dataset attribution and intended SI units are established in primary sources.
+  The author reports no longer having the videos and not retaining original
+  device-frame samples/rotation matrices. Four metadata schemas and the reviewed
+  loader do not establish driver assignment. Source remains diagnostic, with no
+  native feature/model admission. No waveform, device, author contact, training
+  or product-code change. See `docs/reference/FERREIRA_SOURCE_REVIEW_V1.md`.
+
 - M7 input-quality development v2 (2026-11-17): a separate extractor admits only
   explained bounded native IMU interpolation and returns mandatory copied quality
   masks, accuracy, brackets/lookahead and calibration interpolation counts. Native
