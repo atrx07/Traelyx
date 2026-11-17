@@ -80,7 +80,9 @@ Add at least two `fit` and two distinct `check` anchors in chronological sequenc
 ```
 
 This row is illustrative only. Read actual frame PTS/time-base information, not
-`frame_index / nominal_fps`. Bracket the token transition between the last prior
+`frame_index / nominal_fps`. Convert rational PTS to nanoseconds with outward
+rounding (lower bound down, upper bound up) and preserve its original time base
+in the review evidence. Bracket the token transition between the last prior
 frame and first frame that unambiguously shows the new token; account for any
 ambiguous/partial frame. The host uses integer nanoseconds. It does not decode,
 OCR or hash-open a video, verify its provenance or judge a human's observations.

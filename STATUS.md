@@ -35,8 +35,9 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   native boot-clock draw journals, explicit local export and exact host fit/check
   audit implemented. All 11 focused / 29 pilot+archive Python tests, generated Java
   checks, build/lint and packaged boundary pass. Authorized Pixel smoke verifies
-  capture/stop/pause/reopen/preservation and byte-identical local export. Source CI
-  awaits publication. Physical optical timing, recorder binding and strong-event
+  capture/stop/pause/reopen/preservation and byte-identical local export. All four
+  source CI jobs 44077691270 (`52bd0ea`) pass. Physical optical timing, recorder
+  binding and strong-event
   truth remain unverified; no physical phone, recorder/model/score/Guardian change.
   See `docs/reference/EVENTNET_SYNC_PILOT_V1.md` and `sync-pilot-v1-result.json`.
 

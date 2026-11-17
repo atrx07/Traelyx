@@ -64,8 +64,9 @@
   },
   "privacy_compatibility": {
     "core_recorder_changed": false,
-    "model_training_or_predictions": false,
+    "existing_generated_only_ci_experiments_rerun": true,
     "new_external_runtime_dependency": false,
+    "new_source_candidate_training_or_predictions": false,
     "private_recordings_accessed": false,
     "reference_video_or_sensor_files_opened": false,
     "schema_migration": false,
@@ -129,8 +130,31 @@
     }
   ],
   "source_ci": {
-    "run_id": null,
-    "source_commit": null,
-    "status": "pending"
+    "jobs": [
+      {
+        "conclusion": "success",
+        "id": 134019849824,
+        "name": "eventnet-cpu"
+      },
+      {
+        "conclusion": "success",
+        "id": 134019850159,
+        "name": "validate"
+      },
+      {
+        "conclusion": "success",
+        "id": 134019850240,
+        "name": "guardian-dispatch"
+      },
+      {
+        "conclusion": "success",
+        "id": 134019850348,
+        "name": "cloud-schema"
+      }
+    ],
+    "run_id": 44077691270,
+    "source_commit": "52bd0ea0fb3aa007f4cfcb222030a95b43cc245e",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44077691270"
   }
 }

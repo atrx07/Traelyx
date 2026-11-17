@@ -371,7 +371,7 @@ binding, reference provenance and physical strength as unresolved evidence.
 - [x] Add meaningful host/CLI/privacy regressions and CI build/lint/APK checks;
   validate an authorized existing emulator if available, leaving physical phones
   for later optical/reference verification.
-- [ ] Document exact limits, synchronize evidence/status, run appropriate checks,
+- [x] Document exact limits, synchronize evidence/status, run appropriate checks,
   inspect diff, commit/push and verify source CI before reporting completion.
 
 No new external dependency/runtime: reuse existing AGP/SDK/Java versions and
@@ -387,5 +387,10 @@ prior-journal preservation and byte-identical local export, including the final
 local-only picker build. A transient system-process dialog was handled with Wait;
 no reset or attribution to the pilot is claimed. Physical phones and the main app
 were untouched. Private journals/mappings remain ignored; aggregate source pins
-and evidence are `docs/reference/sync-pilot-v1-result.json`. Source CI is pending
-publication; the final persistence/check item remains open until that gate passes.
+and evidence are `docs/reference/sync-pilot-v1-result.json`. All four source CI
+jobs 44077691270 pass for `52bd0ea`, including new pilot cross-language/build/lint/
+packaged checks and full app/native/debug/release regressions. Existing generated
+CI model experiments rerun; no real-source candidate is trained. The evidence-only
+closure preserves every pinned source blob and adds explicit outward rounding of
+reference PTS bounds. Persist/verify the final evidence without rerunning unchanged
+runtime suites or describing physical timing/model acceptance as achieved.

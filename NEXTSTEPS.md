@@ -23,7 +23,8 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 The parked sync pilot now has implemented software tooling:
 `docs/reference/EVENTNET_SYNC_PILOT_V1.md`. Host/generated checks and authorized
-Pixel capture/lifecycle/local export smoke pass; source CI is pending publication.
+Pixel capture/lifecycle/local export smoke and all four source CI jobs 44077691270
+(`52bd0ea`) pass.
 No phone is needed for these software checks. The next evidence gate needs a
 parked physical handset/reference to establish optical/capture uncertainty and
 same-handset/boot/recorder binding. The tools never infer those from small clock

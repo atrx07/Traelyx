@@ -131,8 +131,9 @@ M7 remains open; the collection packet initiates no new drive.
 
 The [parked sync pilot](docs/reference/EVENTNET_SYNC_PILOT_V1.md) now implements a
 separate permission-free marker APK and exact host clock checker. Local tests,
-build/lint and Pixel software capture/export smoke pass; source CI awaits
-publication. Physical synchronization, recorder binding and model acceptance
+build/lint, Pixel software capture/export smoke and all four
+[source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44077691270) pass
+for `52bd0ea`. Physical synchronization, recorder binding and model acceptance
 remain unverified. The main recorder, scores and Guardian are unchanged.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
