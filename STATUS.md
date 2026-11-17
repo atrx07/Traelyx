@@ -31,6 +31,18 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 feature feasibility (2026-11-17): an unwired native development extractor now
+  produces copied `[1,4,600]` windows from supported M3 derived/confidence frames,
+  with context/provenance/gap/configuration checks. All 519 native and 150 Python
+  tests pass. A checksum-pinned 34.31 MB Zenodo trip-2 probe measures about 400 Hz,
+  no gaps over 5.001 ms and 641 timing-supported six-second windows. Already
+  gravity-removed acceleration, unverified native frame/quality/synchronization
+  and one-driver labels prevent native model admission. No public tensor, model,
+  production caller, phone/emulator operation or new dependency. Lint/debug build
+  pass; source CI pending. A realistic offset-sensor regression also shows the
+  strict proposal rejects native interpolation; feature-quality policy needs
+  explicit review. See `docs/reference/EVENTNET_FEATURE_FEASIBILITY_V1.md`.
+
 - M7 source/input qualification (2026-11-17): 22 pinned Q-Motion metadata files
   establish 81 sessions, five groups and 294 manual driving intervals. Independent
   negatives remain absent; class coverage, edited annotation overlaps, reconstructed

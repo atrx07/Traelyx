@@ -1,0 +1,149 @@
+{
+  "ci": {
+    "status": "pending"
+  },
+  "compatibility": {
+    "database_or_raw_schema_change": false,
+    "historical_model_or_result_change": false,
+    "new_dependency": false,
+    "sampling_or_recorder_change": false,
+    "scoring_or_guardian_change": false
+  },
+  "date": "2026-11-17",
+  "evidence_version": "eventnet-feature-feasibility-v1",
+  "local_validation": {
+    "failures": 0,
+    "focused_native_tests": 10,
+    "local_properties_restored_byte_for_byte": true,
+    "native_lint_and_debug_build": "passed",
+    "native_tests": 519,
+    "new_python_tests": 8,
+    "original_source_size_sha256_preservation": "passed",
+    "python_tests": 150,
+    "real_source_command": "passed",
+    "repository_contracts": "passed",
+    "skips": 0,
+    "strict_asynchronous_native_rejection_regression": "passed"
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "native_extractor": {
+    "driving_or_source_admission": false,
+    "model_or_runtime_wired": false,
+    "production_audit_disabled": true,
+    "schema": "eventnet-native-derived-imu-proposal-v1",
+    "shape": [
+      1,
+      4,
+      600
+    ],
+    "status": "implemented_unwired_development_only",
+    "strict_policy_limitation": "clean_asynchronous_native_IMU_requires_interpolation_marked_limited_and_is_rejected_feature_quality_policy_review_required"
+  },
+  "pre_inspection_protocol_sha256": "a03655471887f18677a69c4b818c489aa5438d921e7ce2a9a72b79088772632d",
+  "privacy": {
+    "aggregate_and_public_source_pins_only": true,
+    "device_operations": [],
+    "private_phone_data_accessed": false,
+    "raw_source_bytes_committed": false,
+    "uploads": false
+  },
+  "real_source_probe": {
+    "license": "CC-BY-4.0",
+    "native_tensor_created_from_public_data": false,
+    "normal_labels_inferred": false,
+    "probe_version": "zenodo-stream-feasibility-v1",
+    "production_admitted": false,
+    "publisher_notebook": {
+      "executed": false,
+      "label_provenance": "driver_audio_start_stop_notes_later_annotated",
+      "linear_acceleration_gravity_algorithm_established": false,
+      "plot_mapping_applied": false,
+      "plot_mapping_determinant": -1,
+      "plot_mapping_is_native_right_handed_rotation": false,
+      "publisher_plot_axis_mapping": [
+        "device_y",
+        "negative_device_x",
+        "negative_device_z"
+      ],
+      "raw_accelerometer_and_stationary_reference_present": false,
+      "reported_mount": "dashboard_landscape_no_phone_operation",
+      "reviewed_as_source_text": true
+    },
+    "role": "qualification_exposed_development_only",
+    "source": "https://doi.org/10.5281/zenodo.6570972",
+    "source_bytes_changed": false,
+    "streams": {
+      "acceleration": {
+        "android_accuracy_or_flags_present": false,
+        "clock_order": "strictly_increasing_after_explicit_nearest_nanosecond_rounding",
+        "duration_seconds": 646.895241346,
+        "gaps_over_native_50ms": 0,
+        "maximum_gap_seconds": 0.005001,
+        "maximum_timestamp_rounding_error_nanos": 0.0,
+        "median_gap_seconds": 0.0024975,
+        "minimum_gap_seconds": 9.62e-05,
+        "observed_mean_rate_hz": 400.3275699805104,
+        "p99_gap_seconds": 0.0025012,
+        "samples": 258971
+      },
+      "gyroscope": {
+        "android_accuracy_or_flags_present": false,
+        "clock_order": "strictly_increasing_after_explicit_nearest_nanosecond_rounding",
+        "duration_seconds": 646.900237269,
+        "gaps_over_native_50ms": 0,
+        "maximum_gap_seconds": 0.005001,
+        "maximum_timestamp_rounding_error_nanos": 0.0,
+        "median_gap_seconds": 0.0024975,
+        "minimum_gap_seconds": 9.62e-05,
+        "observed_mean_rate_hz": 400.3275699716769,
+        "p99_gap_seconds": 0.0025012,
+        "samples": 258973
+      }
+    },
+    "timing_and_labels": {
+      "common_stream_duration_seconds": 646.895241346,
+      "fully_label_contained_timing_windows_by_publisher_target": {
+        "2": 3,
+        "5": 2,
+        "6": 3
+      },
+      "grid_origin": "common_stream_start_development_probe_only",
+      "label_clock_alignment_independently_verified": false,
+      "label_intervals_outside_common_span": 0,
+      "label_intervals_shorter_than_six_seconds": 33,
+      "label_summary": {
+        "annotated_nonaggressive_seconds": 17.632,
+        "class_counts": {
+          "aggressive acceleration": 6,
+          "aggressive braking": 7,
+          "aggressive lane change to the left": 4,
+          "aggressive lane change to the right": 6,
+          "aggressive left-turn": 5,
+          "aggressive right-turn": 6,
+          "non-aggressive event": 4
+        },
+        "explicit_spelling_aliases": 7,
+        "intervals": 38,
+        "minimum_interval_seconds": 1.338
+      },
+      "label_time_policy": "direct_source_seconds_as_publisher_notebook_no_timesync_shift_applied",
+      "maximum_diagnostic_bracket_lookahead_seconds": 0.004994546,
+      "native_admitted_windows": 0,
+      "native_eligibility": "not_assessed_missing_source_semantics",
+      "native_rejection": "source_semantics_and_quality_unverified_not_a_native_raw_IMU_input",
+      "reused_grid_target_exact_observations": {
+        "acceleration": 0,
+        "gyroscope": 0
+      },
+      "six_second_one_second_hop_candidates": 641,
+      "time_rounding": "nearest_nanosecond_half_even_diagnostic_only_source_bytes_unchanged",
+      "timing_only_supported_windows": 641,
+      "unverified_initial_clock_offset_seconds": 0.002500923,
+      "windows_crossing_oversized_gap": 0
+    },
+    "training_or_predictions": false
+  },
+  "source_profile": "ml/qualification/zenodo-stream-feasibility-v1.json"
+}

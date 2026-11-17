@@ -2,7 +2,7 @@
   "proposal_version": 1,
   "feature_schema": "eventnet-native-derived-imu-proposal-v1",
   "status": "proposed",
-  "implementation_status": "no_extractor_or_model_wired",
+  "implementation_status": "unwired_native_development_extractor_no_public_adapter_or_model",
   "production_approved": false,
   "source_contracts": {
     "analysis_timeline_version": 1,

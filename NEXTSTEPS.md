@@ -21,6 +21,18 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The subsequently authorized feature/real-stream feasibility unit implements an
+unwired native extractor and measures actual Zenodo trip-2 signals. All 519 native
+and 150 Python tests, lint and debug build pass; source CI pending. Timing supports 100 Hz
+probing, but preprocessed linear acceleration cannot silently replace native raw
+accelerometer processing; frame, quality, clock/label semantics and independent
+evaluation exposure remain unresolved. See
+`docs/reference/EVENTNET_FEATURE_FEASIBILITY_V1.md`. No source is admitted or model
+trained. First resolve the demonstrated strict-input-policy rejection of clean
+asynchronous/interpolated native IMU without changing M3 confidence or hiding
+uncertainty. Resolve the source contracts before choosing a new experiment; keep
+the real phone for later candidate benchmarks. The emulator remains unused.
+
 The maintainer chose to tackle M7.4/M7.5 before M8 (2026-11-16), superseding the
 conditional M8-hardening recommendation. Active follow-up:
 `docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`. Read-only old-recording

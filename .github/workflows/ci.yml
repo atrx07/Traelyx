@@ -253,7 +253,7 @@ jobs:
         run: |
           python -m compileall -q ml tests/tool/test_ml_datasets.py
           python ml/datasets.py validate
-          python -W error::ResourceWarning -m unittest tests.tool.test_ml_datasets tests.tool.test_contributions tests.tool.test_qualify_eventnet_sources tests.tool.test_qmotion_qualification
+          python -W error::ResourceWarning -m unittest tests.tool.test_ml_datasets tests.tool.test_contributions tests.tool.test_qualify_eventnet_sources tests.tool.test_qmotion_qualification tests.tool.test_stream_feasibility
 
       - name: Validate repository contracts and secrets
         run: dart run tool/validate_repository.dart

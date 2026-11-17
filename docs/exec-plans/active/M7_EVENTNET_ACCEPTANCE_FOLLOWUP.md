@@ -173,3 +173,46 @@ file was downloaded. See the public-source reference and aggregate evidence.
 The remaining acceptance dependency is suitable independently reviewed driving
 exposure with usable timing/quality and independent evaluation groups. Devices
 alone cannot supply these labels. M7.4/M7.5 remain open and M8 remains inactive.
+
+## Authorized feature and real-stream feasibility unit — 2026-11-17
+
+The maintainer authorized the proposed provisional extractor and small public
+development-recording check. No phone/emulator access is needed. This extends
+the earlier metadata-only scope; it is not a training experiment or promotion.
+
+Before opening sensor content, designate Zenodo 6570972 v1 trip 2 acceleration
+and gyro streams as qualification-exposed development inputs. All three label
+files were already inspected. Other motion streams remain unopened. Record
+publisher sizes/MD5 and protocol in `ml/qualification/zenodo-stream-feasibility-v1.json`
+before retrieval; verify complete bytes and add SHA-256 before parsing. Inspect
+the publisher notebook as source text only, never execute it. Maximum download
+budget is 35 MB for these three fixed files; preserve originals locally.
+
+- [x] Implement an unwired provisional native extractor over synchronized M3
+  derived/confidence frames: fixed defaults, channel order, complete supported
+  window, stable context, provenance and finite float32; preserve quality decisions.
+- [x] Test generated pipeline-to-tensor values, boundaries, quality/context/gap
+  rejection, immutability and unsupported configuration without a model/runtime.
+- [x] Inspect pinned trip-2 streams and notebook for measured timing, units/frame,
+  synchronization, label coverage and feasibility. Emit aggregates only; do not
+  synthesize Android accuracy, calibration, vehicle frame or negative labels.
+- [ ] Run appropriate native/Python regressions, builds and full source CI;
+  update evidence/status, commit/push/verify and report compatibility disposition.
+
+The extractor stays outside production callers. No schema, acquisition, sampling,
+score, Guardian, dependency or historical model changes; no training, predictions,
+large corpus download or new drive. A public preprocessed linear-acceleration
+stream cannot silently stand in for native raw accelerometer preprocessing.
+Passing software tests or a developmental compatibility check does not close
+the independent-normal, grouped evaluation, mobile or M7.5 integration gates.
+
+All ten focused native extractor tests, 519 full native tests and 150 Python
+tests, Android lint and debug build pass. Real streams have approximately 400 Hz timing with no gaps above
+5.001 ms; 641 development windows have timing support. Frame/gravity/quality and
+independent label-clock alignment remain unverified, so no native public tensor
+or model is created. The 33 short event intervals require an explicit future
+window-label policy, not silent exclusion or inferred normal background. Original
+source/protocol hashes are preserved; the publisher notebook was never executed.
+Clean asynchronous native IMU is also rejected by the proposal's strict eligibility
+policy in a realistic regression. Establish an explicit feature-quality policy
+before a general-use contract; do not rewrite native confidence to hide interpolation.

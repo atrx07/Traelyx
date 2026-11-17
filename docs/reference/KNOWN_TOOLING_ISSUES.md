@@ -164,9 +164,10 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   flutter.sdk=C\:\\Users\\atrx07\\develop\\flutter
   ```
 
-  Run the intended lint task. If Gradle reports a stale `UP-TO-DATE` result after the normalization, force that lint task to rerun once with `--rerun-tasks`. Restore the exact pre-lint bytes afterward if the surrounding workflow expects Flutter's generated state.
+  Run the intended lint task. If Gradle reuses a stale failing report after normalization, rerun the app analysis and report explicitly: `:app:lintAnalyzeDebug --rerun :app:lintReportDebug --rerun :app:lintDebug`. This forces those tasks rather than all dependencies. Restore the exact pre-lint bytes afterward if the surrounding workflow expects Flutter's generated state.
   Keep Flutter commands sequential with this temporary lint normalization: a concurrent Flutter command can rewrite the file and undo the escaping while lint is running. A sequential rerun passed on 2026-10-05 after this race reproduced.
 - **Verification:** Gradle demonstrably rereads the normalized file, the intended lint task passes, and `android/local.properties` ends in the intended machine-local state.
+- **Revalidated 2026-11-17:** Plain retry reused `lintReportDebug UP-TO-DATE` and the old path errors. The scoped analysis/report rerun passed lint and the debug build; the original ignored file was restored byte-for-byte. No source or lint gate was changed.
 - **Do not:** Commit the ignored file, weaken lint, change application source to mask the parser failure, or repeatedly force unrelated tasks.
 - **Last validated / notes:** Validated on 2026-08-11 during the M2.7 Android validation. Treat other lint failures according to their own evidence.
 

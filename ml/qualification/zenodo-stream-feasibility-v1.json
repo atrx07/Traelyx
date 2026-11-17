@@ -1,0 +1,51 @@
+{
+  "protocol_version": "zenodo-stream-feasibility-v1",
+  "source": "https://doi.org/10.5281/zenodo.6570972",
+  "source_version": "v1",
+  "license": "CC-BY-4.0",
+  "role_declared_before_sensor_inspection": "qualification_exposed_development_only",
+  "held_out_evaluation": false,
+  "training_or_predictions": false,
+  "production_admission": false,
+  "download_budget_bytes": 35000000,
+  "files": [
+    {
+      "name": "Linear_Acceleration_2.csv",
+      "bytes": 15409244,
+      "md5": "0da0764a9c515a572bd8862fccc702af",
+      "role": "development_linear_acceleration",
+      "sha256": "2fe100c7c2a67c288d6cfa4dc28fc91225513f3b6ea1c38c16ebc6a5aa8476d6"
+    },
+    {
+      "name": "Gyroscope_2.csv",
+      "bytes": 15680557,
+      "md5": "4d89e89793faa72d9d31533e80ea0200",
+      "role": "development_gyroscope",
+      "sha256": "66148d87f17e2afce9799abe5044997e99873d599fd166118ea697384ca680a2"
+    },
+    {
+      "name": "Events_Extract_and_Visualization.ipynb",
+      "bytes": 3218828,
+      "md5": "d9200fa2fa90a1914a908acea6ecf2da",
+      "role": "publisher_source_text_never_execute",
+      "sha256": "fa3ae65f3543c89d7e945bd3763fb9cb7f6d82fd7c252231521239e93f33afd8"
+    }
+  ],
+  "checks_before_parsing": [
+    "complete_size",
+    "publisher_md5",
+    "sha256_snapshot"
+  ],
+  "feasibility_checks": [
+    "timestamp_semantics",
+    "cadence_gaps",
+    "units",
+    "gravity_semantics",
+    "vehicle_frame",
+    "sensor_pair_sync",
+    "label_coverage"
+  ],
+  "missing_semantics_policy": "report_unknown_and_reject_native_admission_no_fabricated_status_or_frame",
+  "other_sensor_streams": "remain_unopened",
+  "private_output_policy": "source_bytes_times_vectors_identifiers_ignored_local_aggregate_only"
+}

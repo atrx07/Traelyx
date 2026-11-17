@@ -3,8 +3,10 @@
 ## When to read
 
 Read when qualifying the next EventNet corpus or implementing its feature
-adapter. This is a proposed target, not an implemented extractor, frozen model
-experiment or production approval. [Machine-readable proposal](eventnet-native-input-proposal-v1.json).
+adapter. The numerical target remains proposed. An unwired native development
+extractor now implements its window/quality checks; no public-source adapter,
+frozen model experiment or production approval exists.
+[Machine-readable proposal](eventnet-native-input-proposal-v1.json).
 Existing v1 weights, source-space inputs, splits, numerical rejection and results
 remain reproducible. M7.4/M7.5 remain open; M8 stays inactive.
 
@@ -83,3 +85,25 @@ The Q-Motion metadata audit identifies several of these missing prerequisites;
 see [source qualification](QMOTION_METADATA_QUALIFICATION_V1.md). No train/validation/
 test roles, class set, fitted statistics, learned weights or runtime dependency
 are created here.
+
+## Development implementation
+
+`ProvisionalEventFeatureExtractor.extract` consumes the existing synchronized
+native derived/confidence timeline with exact default configurations. It produces
+one immutable copied tensor or a typed rejection; it has no production caller,
+model runtime, fitting, network or storage side effect. It requires one resolved
+calibration/mount context across the window, checks per-channel provenance,
+preserves source bounds/lookahead and rejects incomplete, limited or overflowing
+inputs. Its context hash binds calibration values/flags and mount basis. Repeated
+calls replay the native timeline from its beginning to retain filter history;
+this development API is not a benchmarked streaming inference scheduler.
+
+A numeric window does not admit a driving context or source artifact. A future
+experiment/runtime must additionally bind the source manifest/hash, independently
+establish context/labels, and meet all model/mobile gates. Generated native
+pipeline tests establish tensor values and rejection behavior. The
+[real-stream feasibility probe](EVENTNET_FEATURE_FEASIBILITY_V1.md) measures
+source timing but does not manufacture native inputs from preprocessed data.
+The strict resolved/eligible policy also rejects clean asynchronous native IMU
+that needs interpolation. That is a demonstrated proposal limitation, not a
+sensor failure; a general-use feature-quality policy remains to be established.

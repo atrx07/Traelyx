@@ -87,4 +87,6 @@ does not require ADB or authorize a drive.
 For the next corpus/feature decision, read the bounded
 [Q-Motion metadata audit](reference/QMOTION_METADATA_QUALIFICATION_V1.md) and
 [native input proposal](reference/EVENTNET_NATIVE_INPUT_PROPOSAL_V1.md).
-The proposal is not an implemented extractor or production approval.
+The target remains proposed. The [feature feasibility slice](reference/EVENTNET_FEATURE_FEASIBILITY_V1.md)
+adds an unwired native development extractor and one public stream probe;
+it grants no source or model production admission.
