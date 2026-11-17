@@ -29,6 +29,9 @@ distribution: M8.10 release/publication, store submission and external APK
 distribution need new explicit authorization and applicable acceptance gates.
 See [current handoff ledger](../reference/M7_HANDOFF_V1.md) and
 [wrap-up plan](active/M7_WRAPUP_HANDOFF.md). No milestone scope is erased.
+The bounded wrap-up is validated by all four source CI jobs 44090880412
+(`1bb6bdf`); M8 is now the active development milestone. M8.1 implementation has
+not started. M7 remains deferred acceptance, not complete.
 
 ---
 

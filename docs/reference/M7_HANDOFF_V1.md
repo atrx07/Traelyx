@@ -16,7 +16,8 @@ acceptance and M7.5 real hybrid integration are deferred/open. Production sensor
 inference stays disabled; deterministic rules/scores remain authoritative. The
 local neural narrator remains unavailable and the built-in narrator remains.
 
-M8.1 is the next authorized development substep after this bounded wrap-up. The
+The bounded wrap-up passes all four source CI jobs 44090880412 for `1bb6bdf`.
+M8 is activated for hardening; M8.1 is authorized next, implementation not started. The
 normal explicit gate between later numbered substeps remains. **Stop before main
 distribution:** M8.10 publication, release/tag/assets, store submission, public
 download links and external APK distribution are unauthorized. Prior private

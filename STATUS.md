@@ -4,14 +4,15 @@
 
 ## Current phase
 
-**M7 wrap-up active — M8 hardening authorized next; acceptance and distribution held**
+**M8 active — hardening authorized; M7 acceptance deferred and distribution held**
 
 Current maintainer decision (2026-11-17): wrap feasible M7 engineering, define a
 future ordinary Tecno/Redmi diagnostic trip, then proceed to M8 hardening and stop
 before main distribution. This supersedes the earlier acceptance-before-M8 order.
 M7 is not formally complete: M7.4/M7.5 and M6.8 acceptance carry forward;
 unaccepted sensor inference stays disabled and local neural narration unavailable.
-M8.1 is the next authorized substep after wrap-up validation/persistence. Later
+The bounded M7 engineering wrap-up passes local and full source CI. M8.1 is
+authorized next; its implementation has not started. Later
 substeps retain normal approval gates; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
@@ -45,8 +46,10 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   host tests pass, including 13 new privacy/mutation/quality regressions. Future
   ordinary single/dual-phone diagnostic procedure and distribution-hold ledger
   defined. Repository validation passes. No device, new real-source experiment,
-  sensor correction, runtime or app change. Source CI and final handoff
-  persistence remain pending.
+  sensor correction, runtime or app change. All four source CI jobs 44090880412
+  pass for `1bb6bdf`, including app/native/debug/release validation and the existing
+  generated experiments. M8 hardening is activated with M7.4/M7.5 acceptance
+  deferred; distribution remains held. Evidence: `docs/reference/m7-wrapup-v1-result.json`.
 
 - M7 Tecno parked software pilot (2026-11-17): API34 capture, stop/pause/reopen,
   retained journals and local export verified through ADB without a camera.

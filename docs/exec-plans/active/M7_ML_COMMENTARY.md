@@ -1,9 +1,9 @@
 # Execution Plan — M7 ML & Advanced Commentary
 
-**Status:** Active
+**Status:** Active acceptance record; engineering wrap-up complete
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** 2026-11-17 wrap-up/handoff authorized; M7.4/M7.5 deferred acceptance; M8 hardening allowed, distribution held
+**Current gate:** 2026-11-17 wrap-up validated; M7.4/M7.5 deferred acceptance; M8 hardening active, distribution held
 **Started:** 2026-11-11
 **Last updated:** 2026-11-17
 

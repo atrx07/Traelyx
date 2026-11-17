@@ -5,9 +5,10 @@
 ## Current gate
 
 The maintainer authorized M7 wrap-up followed by M8 hardening on 2026-11-17,
-superseding the earlier acceptance-before-M8 sequencing preference. The current
-bounded unit is `docs/exec-plans/active/M7_WRAPUP_HANDOFF.md`. M8.1 is authorized
-next after its validation/commit; later numbered steps retain their approval gate.
+superseding the earlier acceptance-before-M8 sequencing preference. The bounded
+wrap-up is complete: `docs/exec-plans/active/M7_WRAPUP_HANDOFF.md`. M8 is the
+current development milestone; M8.1 is authorized next, implementation not started.
+Later numbered steps retain their approval gate.
 **Stop before main distribution.** M8.10 publication/release assets, store
 submission and external APK distribution are not authorized. The release hold is
 recorded in `docs/reference/release-checklist.yaml`.
@@ -18,15 +19,18 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — Finish wrap-up, then M8.1 hardening
+## P0 — M8.1 Android hardening
 
-1. Validate/persist the pinned exported-file quality intake and future routine-trip
-   procedure; see `docs/reference/M7_HANDOFF_V1.md` and `m7-wrapup-v1-result.json`.
-2. After wrap-up, begin the authorized M8.1 Android torture matrix. Preserve main
+Pinned exported-file quality intake and the future routine-trip procedure pass
+42 affected host tests, module smoke, repository checks and all four source CI
+jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
+`m7-wrapup-v1-result.json`.
+
+1. Begin the authorized M8.1 Android torture matrix. Preserve main
    app/accounts/recordings and scope device operations before mutation. Use the
    existing Pixel/Tecno setup; verify serial/AVD identity and read the emulator
-   runbook when relevant. No device operation is needed for the wrap-up itself.
-3. Keep the distribution hold and deferred acceptance ledger visible through M8.
+   runbook when relevant. No device operation occurred during the wrap-up.
+2. Keep the distribution hold and deferred acceptance ledger visible through M8.
    Passing software/build tests never waives physical or scientific gates.
 
 ## Deferred M7 acceptance / future ordinary trip

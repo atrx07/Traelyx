@@ -4,10 +4,12 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
-The maintainer authorized M7 engineering wrap-up followed by M8 hardening on
-2026-11-17. M7.4/M7.5 and M6.8 acceptance remain open/deferred, production sensor
+M8 hardening is active after the maintainer-authorized M7 engineering wrap-up
+on 2026-11-17. M7.4/M7.5 and M6.8 acceptance remain open/deferred, production sensor
 inference stays disabled, and **main distribution is held**. M8.1 is authorized
-next after wrap-up validation. See the [current handoff ledger](docs/reference/M7_HANDOFF_V1.md)
+next, with implementation not started. Wrap-up passes 42 affected host tests and
+all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
+`1bb6bdf`. See the [current handoff ledger](docs/reference/M7_HANDOFF_V1.md)
 and [future ordinary Tecno/Redmi trip](docs/reference/M7_FUTURE_ROUTINE_TRIP_V1.md).
 This supersedes earlier sequencing statements in the dated evidence below.
 
@@ -162,19 +164,18 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | Bounded wrap-up active; M7.4/M7.5 acceptance carried forward; M8 hardening authorized next | 🔵 Active | Data/resource dependent | — |
-| M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
-| M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
-| M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
-| M7.4 |  | V1 int8 rejected; recording/data qualification active | ⛔ Blocked | Re-plan required | 2026-11-14 (partial) |
-| M7.5 |  | Foundation validated; real-model integration gated | 🟡 In progress | ~1–2 days plus acceptance | 2026-11-14 (partial) |
-| M7.6 |  | IntegrityNet generated experiment vs native rules | ✅ Complete | Done | 2026-11-15 |
-| M7.7 |  | ContextNet generated experiment; no added value, rules retained | ✅ Complete | Done | 2026-11-15 |
-| M7.8 |  | DriveDNA generated embedding; value gate unmet, dimensions retained | ✅ Complete | Done | 2026-11-15 |
-| M7.9 |  | Local post-drive corrections and consented categorical export | ✅ Complete | Done | 2026-11-15 |
-| M7.10 |  | BYO Groq reviewed-wording commentary | ✅ Complete | Done | 2026-11-16 |
-| M7.11 |  | Local-provider architecture; runtime/model activation gated | ✅ Complete | Done | 2026-11-16 |
-| M8 | Hardening & Public Release | Release candidate to v0.1.0 | ⚪ Pending | ~1–1.5 weeks | — |
+| M7 | ML & Advanced Commentary | Engineering wrapped; M7.4/M7.5 acceptance deferred; unaccepted inference disabled | ⏸ Deferred | Data/resource dependent | 2026-11-17 (partial) |
+| M8 | Hardening & Public Release | Hardening activated; main distribution held | 🔵 Active | ~1–1.5 weeks plus carried acceptance | 2026-11-17 (activation only) |
+| M8.1 |  | Android torture matrix; authorized, implementation not started | ⚪ Pending | — | — |
+| M8.2 |  | Battery/performance baseline | ⚪ Pending | — | — |
+| M8.3 |  | Privacy/security audit | ⚪ Pending | — | — |
+| M8.4 |  | Database upgrade rehearsal | ⚪ Pending | — | — |
+| M8.5 |  | Failure UX pass | ⚪ Pending | — | — |
+| M8.6 |  | Maintainer-controlled release keystore setup/backup | ⚪ Pending | — | — |
+| M8.7 |  | Signed APK build | ⚪ Pending | — | — |
+| M8.8 |  | Clean install test | ⚪ Pending | — | — |
+| M8.9 |  | Upgrade install test | ⚪ Pending | — | — |
+| M8.10 |  | GitHub Release / main distribution explicitly held | ⏸ Deferred | New authorization required | — |
 
 ## Development
 

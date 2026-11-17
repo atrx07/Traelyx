@@ -15,6 +15,9 @@ M7.4/M7.5 open and production inference disabled. See `M7_WRAPUP_HANDOFF.md`,
 the [handoff ledger](../../reference/M7_HANDOFF_V1.md) and
 [future ordinary-trip diagnostic](../../reference/M7_FUTURE_ROUTINE_TRIP_V1.md).
 Historical statements that M8 is inactive describe their earlier checkpoints.
+The wrap-up source `1bb6bdf` now passes all four CI jobs 44090880412. M8 is
+activated for hardening; new routine-trip collection and M7.4/M7.5 acceptance
+remain deferred. No model is promoted by the handoff.
 
 The maintainer explicitly chose to tackle M7.4 acceptance and M7.5 real-model
 integration before M8. Preserve the frozen rejected v1 artifact, data splits,

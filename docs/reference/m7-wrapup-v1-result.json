@@ -14,10 +14,12 @@
     "new_regressions": 13,
     "host_tests_passed": true,
     "repository_validation": "passed",
-    "source_ci": "pending",
+    "source_ci": "all_four_source_jobs_passed",
     "no_device_operations": true,
     "module_cli_generated_smoke": "passed",
-    "no_new_real_source_training_or_reopened_test_predictions": true
+    "no_new_real_source_training_or_reopened_test_predictions": true,
+    "legacy_full_generated_output_comparison": "passed",
+    "new_guide_local_links": "passed"
   },
   "production_boundary_review": {
     "sensor_inference_disabled": true,
@@ -88,8 +90,37 @@
     }
   ],
   "source_ci": {
-    "run_id": null,
-    "source_commit": null,
-    "status": "pending"
+    "run_id": 44090880412,
+    "source_commit": "1bb6bdf4ba7da4ffefc8cf61bab990ccdd9bfd71",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44090880412",
+    "jobs": [
+      {
+        "id": 134065345564,
+        "name": "eventnet-cpu",
+        "conclusion": "success"
+      },
+      {
+        "id": 134065345920,
+        "name": "validate",
+        "conclusion": "success"
+      },
+      {
+        "id": 134065346116,
+        "name": "cloud-schema",
+        "conclusion": "success"
+      },
+      {
+        "id": 134065346544,
+        "name": "guardian-dispatch",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "development_state": {
+    "current_milestone": "M8",
+    "m7_acceptance_deferred": true,
+    "m8_1_implementation_started": false,
+    "distribution_hold_active": true
   }
 }

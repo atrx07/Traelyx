@@ -1,6 +1,6 @@
 # Execution Plan — M7 bounded wrap-up and M8 handoff
 
-**Status:** Active
+**Status:** Complete (bounded engineering wrap-up; formal M7 acceptance deferred)
 **Owner:** agent/maintainer
 **Milestone:** M7; authorized sequencing handoff to M8
 **Started:** 2026-11-17
@@ -53,7 +53,7 @@ supplies labels, training consent, clock alignment or model admission.
   handoff, failure preservation and eventual model-acceptance boundary.
 - [x] Record current gate ledger, distribution hold and M8.1 authorization;
   verify production inference and local runtime remain disabled/unavailable.
-- [ ] Run affected host regressions, repository/privacy and diff checks; source
+- [x] Run affected host regressions, repository/privacy and diff checks; source
   CI; commit/push/verify atomic work and record final source evidence.
 
 ## Acceptance / risks
@@ -69,3 +69,20 @@ Metric gates and real device/model efficiency remain unresolved until supported.
 Baseline: clean `a19eba2`; repaired pilot source `68d91d6` passes all four CI jobs
 44085930694. Previous exit audit supports conditional hardening with unaccepted
 inference disabled. This unit has no dependency on a connected phone/emulator.
+
+Completed: source `1bb6bdf4ba7da4ffefc8cf61bab990ccdd9bfd71` passes all four
+[CI jobs 44090880412](https://github.com/atrx07/Traelyx/actions/runs/44090880412),
+including the full application/native suites, both main APK builds, pilot/ML
+tooling and existing generated experiments. All 42 affected local host tests
+(13 new), actual module CLI smoke, full legacy-output comparison against the
+retained baseline, repository/privacy checks and new local reference links pass.
+The mutation test initially exposed buffered stale reads in the new implementation;
+the finalized reader uses one unbuffered descriptor and rejects that mutation.
+
+No private export or device was accessed; no sensor correction, app/runtime,
+schema, score, provider or real-source model experiment changed. The final
+evidence-only closure preserves every source pin and records the successful run;
+unchanged runtime suites are not rerun. Commit/push/verify the synchronized
+closure. M8 is activated, M8.1 is authorized but implementation has not started,
+and later substeps keep normal approval gates. Main distribution remains held.
+Formal M7 acceptance and all carried-forward physical/model gates stay open.
