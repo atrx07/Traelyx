@@ -196,7 +196,8 @@ budget is 35 MB for these three fixed files; preserve originals locally.
 - [x] Inspect pinned trip-2 streams and notebook for measured timing, units/frame,
   synchronization, label coverage and feasibility. Emit aggregates only; do not
   synthesize Android accuracy, calibration, vehicle frame or negative labels.
-- [ ] Run appropriate native/Python regressions, builds and full source CI;
+- [x] Run appropriate native/Python regressions and builds; all four source CI
+  jobs 44035810697 pass for `e2b1445` on attempt 1. Preserve source/blob hashes,
   update evidence/status, commit/push/verify and report compatibility disposition.
 
 The extractor stays outside production callers. No schema, acquisition, sampling,
@@ -207,9 +208,9 @@ Passing software tests or a developmental compatibility check does not close
 the independent-normal, grouped evaluation, mobile or M7.5 integration gates.
 
 All ten focused native extractor tests, 519 full native tests and 150 Python
-tests, Android lint and debug build pass. Real streams have approximately 400 Hz timing with no gaps above
-5.001 ms; 641 development windows have timing support. Frame/gravity/quality and
-independent label-clock alignment remain unverified, so no native public tensor
+tests, Android lint and debug build pass. Real streams have approximately 400 Hz
+timing with no gaps above 5.001 ms; 641 development windows have timing support.
+Frame/gravity/quality and independent label-clock alignment remain unverified, so no native public tensor
 or model is created. The 33 short event intervals require an explicit future
 window-label policy, not silent exclusion or inferred normal background. Original
 source/protocol hashes are preserved; the publisher notebook was never executed.

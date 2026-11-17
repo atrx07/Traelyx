@@ -23,7 +23,8 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 The subsequently authorized feature/real-stream feasibility unit implements an
 unwired native extractor and measures actual Zenodo trip-2 signals. All 519 native
-and 150 Python tests, lint and debug build pass; source CI pending. Timing supports 100 Hz
+and 150 Python tests, lint, debug build and all four source CI jobs 44035810697
+(`e2b1445`, attempt 1) pass. Timing supports 100 Hz
 probing, but preprocessed linear acceleration cannot silently replace native raw
 accelerometer processing; frame, quality, clock/label semantics and independent
 evaluation exposure remain unresolved. See

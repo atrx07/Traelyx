@@ -39,8 +39,9 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   gravity-removed acceleration, unverified native frame/quality/synchronization
   and one-driver labels prevent native model admission. No public tensor, model,
   production caller, phone/emulator operation or new dependency. Lint/debug build
-  pass; source CI pending. A realistic offset-sensor regression also shows the
-  strict proposal rejects native interpolation; feature-quality policy needs
+  and all four source CI jobs 44035810697 (`e2b1445`, attempt 1) pass. A realistic
+  offset-sensor regression also shows the strict proposal rejects native
+  interpolation; feature-quality policy needs
   explicit review. See `docs/reference/EVENTNET_FEATURE_FEASIBILITY_V1.md`.
 
 - M7 source/input qualification (2026-11-17): 22 pinned Q-Motion metadata files

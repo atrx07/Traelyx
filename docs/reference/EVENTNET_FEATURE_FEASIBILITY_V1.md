@@ -121,7 +121,10 @@ python -W error::ResourceWarning -m unittest tests.tool.test_stream_feasibility
 ```
 
 The real pinned probe, eight generated Python tests and ten native focused
-tests pass. Full regression/build/CI status is recorded in the aggregate evidence.
+tests pass, along with all 150 Python/519 native tests, Android lint and the debug
+build. All four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44035810697)
+pass for `e2b1445` on attempt 1, including full app tests and debug/release-validation
+builds. Git-blob hashes and results are recorded in the aggregate evidence.
 No new dependency, schema/migration, recorder sampling change, score behavior,
 private-data access or device operation. No physical benchmark was run; it becomes
 useful after an accepted host candidate exists. Further data/native-equivalence

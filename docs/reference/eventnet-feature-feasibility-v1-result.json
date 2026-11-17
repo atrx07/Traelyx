@@ -1,6 +1,34 @@
 {
   "ci": {
-    "status": "pending"
+    "attempt": 1,
+    "coverage": [
+      "Flutter generated/schema/format/analysis/tests",
+      "generated source qualification and private intake regressions",
+      "full native Kotlin tests and debug/release-validation app builds",
+      "isolated CPU/mobile experiments and standalone benchmark APK checks",
+      "native-to-CPU integrity comparison",
+      "Guardian Edge and cloud schema/RLS"
+    ],
+    "failed_attempts": [],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 44035810697,
+    "source_commit": "e2b1445ffc486c718e64866ce85a3bf12742f9c5",
+    "source_git_blob_sha256": {
+      ".github/workflows/ci.yml": "5ec8849b60ead1f95ea31643feae5aeda73fd33dfb190210c41d16dbf51b8136",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/ProvisionalEventFeatures.kt": "d5e6911df5838a08f0a4b6e6bcbcbcd025609064ae956f7b07ffd98016abb8a0",
+      "android/app/src/test/kotlin/io/github/atrx07/traelyx/telemetry/ProvisionalEventFeaturesTest.kt": "5d53d6225bdfd11b2f7eb3a2220f5beb6ed069d458a6b7818d1c7736536f7231",
+      "docs/reference/eventnet-native-input-proposal-v1.json": "ea1d8af80724cfcac964ebd64b5d0c2708b2cd3b7c7c722aeff911af2dc0c3da",
+      "ml/qualification/zenodo-stream-feasibility-v1.json": "270493500b6f17831e9c72aff6caad3179952915d4e09f3008f109d40218961c",
+      "ml/stream_feasibility.py": "d5396e5e064f33fca9aa2bf6e97fc4d62d63f9475426a8500c0c21f618277bec",
+      "tests/tool/test_stream_feasibility.py": "74aa4265f3baa52b21b15813700383a6f103572c8788f1c894109ed93fec5446"
+    },
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44035810697"
   },
   "compatibility": {
     "database_or_raw_schema_change": false,
