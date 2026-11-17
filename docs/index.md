@@ -84,3 +84,7 @@ accessing old private phone evidence. Intake does not grant model promotion.
 Public-data follow-up uses [public-source qualification v1](reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md).
 The optional [manual stationary phone check](reference/M7_MANUAL_PHONE_QUALITY_CHECK.md)
 does not require ADB or authorize a drive.
+For the next corpus/feature decision, read the bounded
+[Q-Motion metadata audit](reference/QMOTION_METADATA_QUALIFICATION_V1.md) and
+[native input proposal](reference/EVENTNET_NATIVE_INPUT_PROPOSAL_V1.md).
+The proposal is not an implemented extractor or production approval.

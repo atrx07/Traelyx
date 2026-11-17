@@ -4,7 +4,7 @@
 **Owner:** agent/maintainer
 **Milestone:** M7
 **Started:** 2026-11-16
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-17
 
 ## Goal / authorization
 
@@ -128,3 +128,36 @@ non-aggressive intervals. Neither source closes feature/label/split acceptance.
 Do not infer normal labels for unlabelled time, fabricate timestamps or claim a
 random window split provides independent drivers. Further public-source metadata
 research may continue while CI/manual results are pending. M8 remains inactive.
+
+## 2026-11-17 bounded source/feature-contract qualification
+
+The maintainer authorized continued host work and made the existing emulator
+available if useful. No device is required for this unit. Read the remaining two
+small Q-Motion methodology/processing documents, session/rotation metadata and
+manual-event annotation metadata (publisher size/SHA-256 verified, aggregate
+output only). No telemetry ZIP, feature stream or model predictions are opened.
+Inspect driver/class coverage before proposing any split; metadata review does
+not automatically assign a test role. Keep all inspected inputs disclosed.
+
+- [x] Verify remaining document and session/annotation pins; quantify grouped
+  independent-label coverage and preprocessing mismatches.
+- [x] Record a native-derived feature-contract proposal and source-admission
+  conditions, separating measured timestamps, reconstructed timing, independent
+  labels, forced normal labels and rules-generated labels.
+- [x] Implement bounded metadata qualification and eleven generated regressions;
+  all 142 local Python tests, pinned-source run and repository validation pass.
+- [ ] Full source CI, aggregate evidence closure, commit/push/remote alignment.
+
+No training, quantizer search, production model activation, release of NC-derived
+weights, new dependency, contact with authors or large download is authorized by
+this qualification unit. The old v1 rejection and required acceptance metrics
+remain intact; the experiment can only be frozen after its data gates are met.
+
+Results: 81 sessions / five driver groups, 13 annotation logs / 294 manual driving
+intervals; group 4 has no zig-zag label. Baseline/unlabelled time is not verified
+negative exposure. Edited manual intervals overlap and are not safe to convert
+silently into a single-label target. Stored frame matrices do not all meet the
+native orthonormal-frame contract. The input proposal targets existing 100 Hz M3
+derived acceleration/yaw (`[1,4,600]`), with no extractor/model wired. See
+`QMOTION_METADATA_QUALIFICATION_V1.md` and `EVENTNET_NATIVE_INPUT_PROPOSAL_V1.md` in
+`docs/reference/`. No class set, split, architecture or quantizer is selected.

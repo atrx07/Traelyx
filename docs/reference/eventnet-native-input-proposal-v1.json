@@ -1,0 +1,38 @@
+{
+  "proposal_version": 1,
+  "feature_schema": "eventnet-native-derived-imu-proposal-v1",
+  "status": "proposed",
+  "implementation_status": "no_extractor_or_model_wired",
+  "production_approved": false,
+  "source_contracts": {
+    "analysis_timeline_version": 1,
+    "derived_telemetry_version": 1,
+    "telemetry_confidence_version": 1
+  },
+  "frame": "vehicle_forward_left_up",
+  "channels": [
+    {"name": "acceleration_forward", "unit": "m/s2"},
+    {"name": "acceleration_left", "unit": "m/s2"},
+    {"name": "acceleration_up", "unit": "m/s2"},
+    {"name": "yaw_rate_up", "unit": "rad/s"}
+  ],
+  "dtype": "float32",
+  "layout": "batch_channel_time",
+  "shape": [1, 4, 600],
+  "cadence_nanos": 10000000,
+  "window_nanos": 6000000000,
+  "window_convention": "start_exclusive_end_inclusive",
+  "first_sample": "start_exclusive_plus_cadence",
+  "proposed_hop_nanos": 1000000000,
+  "preprocessing": "native_M3_derived_defaults_no_second_gravity_or_bias_removal",
+  "required_metric_eligibility": ["VEHICLE_ACCELERATION", "YAW_RATE"],
+  "driving_context_admission": "separate_explicit_policy_not_inferred_from_IMU_only",
+  "missing_or_limited_policy": "reject_complete_window_no_zero_fill_clipping_or_flag_rewrite",
+  "normalizer": "future_train_partition_fit_only_versioned_in_model_manifest",
+  "labels": "not_frozen_pending_governed_mapping_and_independent_negative_exposure",
+  "split": "not_assigned",
+  "model_architecture": "not_selected",
+  "quantization": "not_selected",
+  "training_authorized_by_this_proposal": false,
+  "supersedes_historical_v1": false
+}

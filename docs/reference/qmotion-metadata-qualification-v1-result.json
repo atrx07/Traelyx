@@ -1,0 +1,206 @@
+{
+  "ci": {
+    "status": "pending"
+  },
+  "compatibility": {
+    "database_or_telemetry_schema_change": false,
+    "historical_models_or_results_changed": false,
+    "new_dependency": false,
+    "recorder_or_scoring_behavior_change": false
+  },
+  "date": "2026-11-17",
+  "evidence_version": "qmotion-metadata-qualification-v1",
+  "local_validation": {
+    "failures": 0,
+    "native_proposal_cadence_shape_consistency": "passed",
+    "new_metadata_tests": 11,
+    "python_tests": 142,
+    "real_pinned_metadata_command": "passed",
+    "repository_json_yaml_secret_check": "passed",
+    "skips": 0
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "native_reference_git_blob_sha256": {
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/DerivedTelemetryModels.kt": "01dd49552b38e9f1ff330452055d22c80ea034f74a8eb1580353eb620e444b54",
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/RawTelemetryProcessing.kt": "0896fc4c4e6829b1f081c4abbeac15d60d1b13b72177f2154bd9dff33c14f1a6",
+    "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/TelemetryConfidenceModels.kt": "1448037ba5d083fc2c58beed61a6b7d4e766cb1c543eb8354498d36de2dd60bf"
+  },
+  "privacy": {
+    "devices_used": [],
+    "metadata_source_bytes_redistributed": false,
+    "model_source_training_or_predictions": false,
+    "private_phone_data_accessed": false,
+    "raw_sensor_streams_loaded": false,
+    "uploads": false
+  },
+  "proposal": {
+    "accepted": false,
+    "cadence_nanos": 10000000,
+    "first_to_last_sample_span_nanos": 5990000000,
+    "path": "docs/reference/eventnet-native-input-proposal-v1.json",
+    "shape": [
+      1,
+      4,
+      600
+    ],
+    "split_assigned": false,
+    "status": "proposed_no_extractor_or_model_wired",
+    "tensor_value_bytes": 9600,
+    "training_experiment_frozen": false
+  },
+  "qualification": {
+    "blocking_evidence": [
+      "independent_normal_exposure_missing",
+      "native_preprocessing_equivalence_unverified",
+      "source_quality_and_units_adapter_unverified",
+      "approximate_annotation_and_reconstructed_time",
+      "class_mapping_and_grouped_protocol_not_frozen",
+      "nc_intended_distribution_not_approved"
+    ],
+    "documented_phone_timing": "within_second_reconstructed_sample_times",
+    "grouped_label_coverage": {
+      "annotation_array_adjacent_reverse_pairs": 22,
+      "annotation_files": 13,
+      "auxiliary_only_annotation_files": 1,
+      "driver_groups": 5,
+      "groups": [
+        {
+          "annotation_files": 1,
+          "group": 1,
+          "manual_interval_counts": {
+            "acceleration": 23,
+            "braking": 30,
+            "bump": 2,
+            "curve": 7,
+            "zig-zag": 19
+          },
+          "missing_manual_classes": [],
+          "recording_control_seconds": 1075.681,
+          "scenario_counts": {
+            "intended_aggressive": 1,
+            "intended_baseline": 3
+          },
+          "sessions": 4
+        },
+        {
+          "annotation_files": 8,
+          "group": 2,
+          "manual_interval_counts": {
+            "acceleration": 30,
+            "braking": 73,
+            "bump": 21,
+            "curve": 12,
+            "zig-zag": 14
+          },
+          "missing_manual_classes": [],
+          "recording_control_seconds": 5029.111,
+          "scenario_counts": {
+            "intended_aggressive": 11,
+            "intended_baseline": 9,
+            "tire_pressure": 10
+          },
+          "sessions": 30
+        },
+        {
+          "annotation_files": 1,
+          "group": 3,
+          "manual_interval_counts": {
+            "acceleration": 4,
+            "braking": 13,
+            "bump": 1,
+            "curve": 3,
+            "zig-zag": 4
+          },
+          "missing_manual_classes": [],
+          "recording_control_seconds": 1014.739,
+          "scenario_counts": {
+            "intended_aggressive": 1,
+            "intended_baseline": 4,
+            "tire_pressure": 6
+          },
+          "sessions": 11
+        },
+        {
+          "annotation_files": 1,
+          "group": 4,
+          "manual_interval_counts": {
+            "acceleration": 2,
+            "braking": 7,
+            "bump": 1,
+            "curve": 2,
+            "zig-zag": 0
+          },
+          "missing_manual_classes": [
+            "zig-zag"
+          ],
+          "recording_control_seconds": 474.411,
+          "scenario_counts": {
+            "intended_aggressive": 2,
+            "intended_baseline": 6
+          },
+          "sessions": 8
+        },
+        {
+          "annotation_files": 2,
+          "group": 5,
+          "manual_interval_counts": {
+            "acceleration": 5,
+            "braking": 13,
+            "bump": 4,
+            "curve": 3,
+            "zig-zag": 1
+          },
+          "missing_manual_classes": [],
+          "recording_control_seconds": 796.326,
+          "scenario_counts": {
+            "intended_aggressive": 4,
+            "intended_baseline": 10,
+            "tire_pressure": 14
+          },
+          "sessions": 28
+        }
+      ],
+      "manual_events_outside_recording_control_bounds": 0,
+      "manual_interval_counts": {
+        "acceleration": 64,
+        "braking": 136,
+        "bump": 29,
+        "curve": 27,
+        "zig-zag": 38
+      },
+      "overlapping_different_manual_class_pairs": 21,
+      "overlapping_same_manual_class_pairs": 1,
+      "reverse_pair_interpretation": "annotation serialization order, not sensor clock rollback",
+      "sessions": 81,
+      "sessions_missing_smartphone_source": 1,
+      "smartphone_sources_shared_across_drivers": 0,
+      "verified_normal_driving_seconds": null
+    },
+    "license": "CC-BY-NC-4.0",
+    "metadata_bytes": 150280,
+    "model_feature_contract_accepted": false,
+    "model_training_or_predictions": false,
+    "pinned_metadata_files": 22,
+    "processed_normal_labels": "assigned_from_session_or_annotation_absence_not_verified_negatives",
+    "processed_rule_labels": "not_independent_ground_truth",
+    "production_evaluation_admitted": false,
+    "qualification_version": "qmotion-metadata-qualification-v1",
+    "rotation_metadata": {
+      "correction_applied": false,
+      "determinant_range": [
+        0.921796,
+        1.00362
+      ],
+      "ignored_spreadsheet_padding_rows": 5,
+      "maximum_gram_matrix_error": 0.0783,
+      "native_frame_equivalence_accepted": false,
+      "rows": 8
+    },
+    "sensor_streams_loaded": false,
+    "source": "https://doi.org/10.17632/p5376m6xfc.1",
+    "split_assigned": false,
+    "training_admitted": false
+  }
+}

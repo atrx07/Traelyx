@@ -31,6 +31,16 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 source/input qualification (2026-11-17): 22 pinned Q-Motion metadata files
+  establish 81 sessions, five groups and 294 manual driving intervals. Independent
+  negatives remain absent; class coverage, edited annotation overlaps, reconstructed
+  phone times and source transform/preprocessing differences block direct model
+  admission. Native input proposal uses existing M3 100 Hz acceleration/yaw,
+  `[1,4,600]`; no extractor, split, model or quantizer is selected/wired. All 142
+  local Python tests and pinned metadata checks pass; source CI pending. No sensor
+  archive, private phone data or device used. See
+  `docs/reference/QMOTION_METADATA_QUALIFICATION_V1.md`.
+
 - M7 public-source qualification (2026-11-16): pinned CC0 Harvard sensor DB and
   CC-BY Zenodo interval files inspected locally; neither admitted to production
   training/evaluation. Harvard lacks driver/trip groups and subsecond timestamps;

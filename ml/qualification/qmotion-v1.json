@@ -1,0 +1,173 @@
+{
+  "expected_annotation_files": 13,
+  "expected_driver_groups": 5,
+  "expected_sessions": 81,
+  "files": [
+    {
+      "bytes": 22351,
+      "path": "qmotion-data_processing.md",
+      "role": "document",
+      "sha256": "a8b7df62dd16f4d6b5843be2dbec10cfd444f1dfa437ff5ce13a87e96dae3131"
+    },
+    {
+      "bytes": 10590,
+      "path": "qmotion-labeling_notes.md",
+      "role": "document",
+      "sha256": "c4a44803f9903affe761d296eefe04e26a85b10815d3290244a17348ded84a1f"
+    },
+    {
+      "bytes": 26810,
+      "path": "qmotion-methodology.md",
+      "role": "document",
+      "sha256": "bb2a3a6a6862aab20eb51c69df990ffd01b5c7db7ec297234e45bebaf75ff137"
+    },
+    {
+      "bytes": 16200,
+      "path": "qmotion-quality_report.md",
+      "role": "document",
+      "sha256": "cc0fc284d117361358ffecf2205e650727604b0d6d7126a2d101248febccf111"
+    },
+    {
+      "bytes": 859,
+      "collection_date": "2024-07-30",
+      "path": "qmotion-DataCollection_2024-07-30_AMI_guidelines.csv",
+      "role": "guideline",
+      "sha256": "0d882a2a99abd5e6a57feef9999c0912797e9ffed3b1a3b1cc869aa863c73f09"
+    },
+    {
+      "bytes": 759,
+      "collection_date": "2025-03-06",
+      "path": "qmotion-DataCollection_2025-03-06_AMI_guidelines.csv",
+      "role": "guideline",
+      "sha256": "6c148c8255cab6519b06549cbf91429ac3d8f2ede1a97be0cdab7e696efb9cb0"
+    },
+    {
+      "bytes": 993,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-DataCollection_2025-05-14_AMI_guidelines.csv",
+      "role": "guideline",
+      "sha256": "9089809dbb86a4cd13f7af32a8b05833769086c7abfd2b5f3500297f25a9b3be"
+    },
+    {
+      "bytes": 1247,
+      "collection_date": "2025-07-02",
+      "path": "qmotion-DataCollection_2025-07-02_AMI_guidelines.csv",
+      "role": "guideline",
+      "sha256": "9a60ba87b6b28e9dab7fb8ddfc6757aee21d534dcd06c9aa6b349a122e2a1d7a"
+    },
+    {
+      "bytes": 841,
+      "path": "qmotion-Rotation_matrices.csv",
+      "role": "rotation",
+      "sha256": "f931b8fe4c7f9c5e2fc627ab3a5eb2e51bed9204635758328945f6da739e8fb2"
+    },
+    {
+      "bytes": 16069,
+      "collection_date": "2024-07-30",
+      "path": "qmotion-annotations/ce7e33d4-ac3a-4a9b-8c86-d2a099ad7954.json",
+      "role": "annotation",
+      "session": "ami_db_2",
+      "sha256": "2a557f82acabc215f6a8a427bfee45584d7bec9cb59fff7a03fe37ad7b446d4b"
+    },
+    {
+      "bytes": 6023,
+      "collection_date": "2024-07-30",
+      "path": "qmotion-annotations/d8806a4e-9d45-44ce-aefc-db53e1e94293.json",
+      "role": "annotation",
+      "session": "ami_db_4",
+      "sha256": "f4b580cacf00a6a9d961299379f09c1b99e55acc9d8a43540cbbfd5a3cf02d6c"
+    },
+    {
+      "bytes": 5006,
+      "collection_date": "2024-07-30",
+      "path": "qmotion-annotations/ff91d08b-1bab-452d-903d-18d4f40df607.json",
+      "role": "annotation",
+      "session": "ami_db_6",
+      "sha256": "e925891ce4bda7dee40b868b9caedbe95323eaf0a13873afdff7fb7eb2fee44c"
+    },
+    {
+      "bytes": 2507,
+      "collection_date": "2025-03-06",
+      "path": "qmotion-annotations/f8a845ba-1784-42f2-80dc-b0d41039aed7.json",
+      "role": "annotation",
+      "session": "ami_db_4",
+      "sha256": "c248d97a84e60d19ea1bc35efec2aeef185c72708ab9278fa11f853fb4910558"
+    },
+    {
+      "bytes": 3653,
+      "collection_date": "2025-03-06",
+      "path": "qmotion-annotations/701247b0-0ce8-463e-9dc5-6e57c55a35af.json",
+      "role": "annotation",
+      "session": "ami_db_5",
+      "sha256": "abfc234fbaf9bde1db29fce510117f5dae20e25294ab1858dc74bfc32eb96874"
+    },
+    {
+      "bytes": 3261,
+      "collection_date": "2025-03-06",
+      "path": "qmotion-annotations/47c19f64-e694-499d-82f6-1005ae28fe1a.json",
+      "role": "annotation",
+      "session": "ami_db_6",
+      "sha256": "6a01224d1dd9ee70d94ac9eb07ff735cc9a6253741a6bcfac1cd44a24366c9d7"
+    },
+    {
+      "bytes": 5808,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-annotations/5d8ff00b-c9c9-4333-92b8-373e8a70e58f.json",
+      "role": "annotation",
+      "session": "ami_db_10",
+      "sha256": "0a5d980518b2cc87dc730ee7e703e9b310aa8b44855a4c64adb0e891d9544b70"
+    },
+    {
+      "bytes": 4972,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-annotations/ffefa828-1773-492f-9e60-f2f353a52b8e.json",
+      "role": "annotation",
+      "session": "ami_db_4",
+      "sha256": "c4bdd3e486dfc9d0a0b43d5e04e55706e7c1c5ae1d8e8399e5d4475856b41f3e"
+    },
+    {
+      "bytes": 4763,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-annotations/e34a96fc-535c-4f1e-a478-abc2f8a389e7.json",
+      "role": "annotation",
+      "session": "ami_db_6",
+      "sha256": "c93cd74f5cfb7eb4f4c538992d3857c6fd94a1838b77fb0dbb24a21dbc929a1d"
+    },
+    {
+      "bytes": 5686,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-annotations/7a5b23f7-5b57-47e7-8262-55929435c23e.json",
+      "role": "annotation",
+      "session": "ami_db_7",
+      "sha256": "cd4b9f952c59136de04dcb61563d24d0ce9024a8e9663f37e59ce421b0fd1eb0"
+    },
+    {
+      "bytes": 6090,
+      "collection_date": "2025-05-14",
+      "path": "qmotion-annotations/9df92cd8-0f51-459b-8857-fa8e5ac63c09.json",
+      "role": "annotation",
+      "session": "ami_db_8",
+      "sha256": "7823b378c20ccc4320356b1a67297766bd7a1faa86422aa7b67133fe5a9b5d94"
+    },
+    {
+      "bytes": 2137,
+      "collection_date": "2025-07-02",
+      "path": "qmotion-annotations/38b50f58-90a6-4673-b417-44654f4cf711.json",
+      "role": "annotation",
+      "session": "ami_db_4",
+      "sha256": "e0832a62ad16eda8977f75daa4ca65f4b0c6fadfb35d83759c7854bdf2839337"
+    },
+    {
+      "bytes": 3655,
+      "collection_date": "2025-07-02",
+      "path": "qmotion-annotations/a9cab946-2aff-4cd1-8794-a6fe9f84f58d.json",
+      "role": "annotation",
+      "session": "ami_db_6",
+      "sha256": "972bb751ccc8f3e84a13127123fa504b46bceb6f3ce5475a7c9c26a7a7008f5f"
+    }
+  ],
+  "license": "CC-BY-NC-4.0",
+  "profile_version": 1,
+  "purpose": "Metadata qualification only; no automatic training/evaluation or distribution approval",
+  "source": "https://doi.org/10.17632/p5376m6xfc.1"
+}
