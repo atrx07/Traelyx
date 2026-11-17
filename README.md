@@ -139,7 +139,8 @@ remain unverified. The main recorder, scores and Guardian are unchanged.
 The [Tecno software follow-up](docs/reference/sync-pilot-tecno-v1-result.json)
 passes API34 marker/local-export checks using ADB inspection. Pilot v1.0.1 fixes an
 inactive-pause selection reset; physical cancel/retry and Android lifecycle
-regressions pass, with new source CI pending. It adds no camera feature or IMU/
+regressions and all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44085930694)
+pass for `68d91d6`. It adds no camera feature or IMU/
 model acceptance and does not alter the main app.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.

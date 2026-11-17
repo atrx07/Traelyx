@@ -1,6 +1,6 @@
 # Isolated sync pilot export selection reset
 
-**Status:** Device repair verified; source CI pending. Applies only to the separate
+**Status:** Device repair and full source CI verified. Applies only to the separate
 `io.github.atrx07.traelyx.syncpilot` development package, not Traelyx trip export.
 
 ## Symptom and cause
@@ -20,8 +20,10 @@ two-run cancel/retry case.
 
 Refresh history only when actually finalizing an active run. Inactive pause now
 retains the selected row. APK version code 2 / `sync-pilot-v1.0.1` identifies the
-repair; journal schema stays v1. The source fix commit and final results are
-recorded in `../reference/sync-pilot-tecno-v1-result.json` once verified.
+repair; journal schema stays v1. Source fix `68d91d6` passes all four jobs in
+[source CI 44085930694](https://github.com/atrx07/Traelyx/actions/runs/44085930694).
+Final source pins and results are recorded in
+[`sync-pilot-tecno-v1-result.json`](../reference/sync-pilot-tecno-v1-result.json).
 
 Regression: retain A and B, select A, cancel the picker (including any keyboard
 dismissal), check that A stays selected, re-export and verify the filename and
@@ -33,6 +35,10 @@ with a nondefault selection and two exclusively created synthetic files. It pass
 on API34 and removes its fixtures; actual picker cancel/retry, byte equality and
 the prior completed journal's upgrade preservation also pass. No JUnit/Robolectric
 or other new dependency is added.
+
+All 29 affected host tests, pilot and instrumentation APK builds, Android lint and
+packaged privacy/runtime checks pass. CI compiles/lints the instrumentation APK;
+the device regression was executed on the Tecno, not in CI.
 
 ## Privacy and limits
 

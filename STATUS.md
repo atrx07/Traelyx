@@ -36,7 +36,8 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   A two-run cancellation check found a pilot-only selection reset; v1.0.1 repairs
   it, with physical picker/byte checks and a platform-only Android lifecycle
   regression passing. All 29 affected host tests, both pilot/test APK builds,
-  lint and packaged boundary pass; new source CI awaits publication. No main-app,
+  lint and packaged boundary pass; all four source CI jobs 44085930694 (`68d91d6`)
+  pass. No main-app,
   old recording, sensor/bias, optical timing or model acceptance change. Evidence:
   `docs/reference/sync-pilot-tecno-v1-result.json` and the linked issue record.
 

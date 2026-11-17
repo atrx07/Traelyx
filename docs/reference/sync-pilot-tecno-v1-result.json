@@ -19,7 +19,7 @@
     "new_test_dependencies": [],
     "python_pilot_and_archive_tests": 29,
     "runtime_artifacts": [],
-    "source_ci": "pending_source_publication"
+    "source_ci": "all_four_source_jobs_passed"
   },
   "checks": {
     "android_pause_selection_instrumentation_pass": true,
@@ -70,6 +70,7 @@
   "issue": {
     "cause": "inactive_pause_refreshed_selected_journal_to_last_captured_run",
     "fix": "refresh_only_on_active_finalization",
+    "fix_commit": "68d91d6e730a642bd5295046003214cbfc83ed6a",
     "journal_schema_changed": false,
     "record": "../issues/2026-11-17_sync-pilot-export-selection.md",
     "source_loss_observed": false,
@@ -121,8 +122,15 @@
     }
   ],
   "source_ci": {
-    "run_id": null,
-    "source_commit": null,
-    "status": "pending"
+    "run_id": 44085930694,
+    "source_commit": "68d91d6e730a642bd5295046003214cbfc83ed6a",
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44085930694",
+    "jobs": [
+      {"id": 134048227760, "name": "eventnet-cpu", "conclusion": "success"},
+      {"id": 134048227764, "name": "guardian-dispatch", "conclusion": "success"},
+      {"id": 134048227874, "name": "validate", "conclusion": "success"},
+      {"id": 134048228023, "name": "cloud-schema", "conclusion": "success"}
+    ]
   }
 }

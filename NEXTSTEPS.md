@@ -24,7 +24,8 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 The authorized Tecno now passes the parked marker software path using ADB screen/
 UI inspection, including local export and the repaired two-run cancellation case.
 See `docs/reference/sync-pilot-tecno-v1-result.json`. The pilot-only v1.0.1 repair
-has physical/host/build checks; new source CI is pending. Screen mirroring remains
+has passing physical/host/build checks and all four source CI jobs 44085930694
+(`68d91d6`). Screen mirroring remains
 software evidence; no independent reference was supplied and no optical clock fit,
 recorder binding, sensor quality or driving-model admission follows. Capture of
 actual journeys remains deferred. Neither a camera feature nor sensor correction

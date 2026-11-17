@@ -412,7 +412,7 @@ separate dependency; do not synthesize camera observations from draw timestamps.
   local export against retained source bytes on the Tecno.
 - [x] Run the strict journal/diagnostic reader without manufacturing independent
   reference observations, and record measured limits plus remaining resources.
-- [ ] Validate aggregate evidence/references, update status, inspect exact diff,
+- [x] Validate aggregate evidence/references, update status, inspect exact diff,
   commit/push and verify without claiming optical/model/IMU acceptance.
 
 This unit adds device evidence only. Rerun runtime/build suites only if a product
@@ -432,10 +432,14 @@ passes on the Tecno and removes its unsupported synthetic fixtures, retaining
 existing journals. CI now builds that test APK; no new JUnit/Robolectric/library
 dependency or main-app instrumentation is introduced. All 29 affected host tests,
 build/lint and packaged boundary pass. The original completed journal survives
-the data-preserving pilot update unchanged. Source CI awaits publication.
+the data-preserving pilot update unchanged. All four source CI jobs 44085930694
+pass for repair `68d91d6`, including full app/native/debug/release checks and
+pilot/test APK build/lint. The instrumentation regression ran on the Tecno;
+CI compiles/lints its APK without executing a device test.
 
 No external reference was supplied and no optical fit was attempted. ADB screen
 inspection proves software behavior only. Main recorder service was absent at
 pre/post snapshots; no trip, camera/mic/sensor, old archive/account or emulator
-operation occurred. Record only aggregate evidence; the final persistence item
-remains open until repaired source CI is verified.
+operation occurred. The aggregate evidence closure preserves all pinned source
+blobs and records the verified source CI. No unchanged runtime suite is rerun
+for this documentation-only closure. M7.4/M7.5 remain open and M8 stays inactive.
