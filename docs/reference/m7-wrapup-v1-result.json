@@ -1,0 +1,95 @@
+{
+  "version": "m7-wrapup-v1",
+  "date": "2026-11-17",
+  "baseline_commit": "a19eba2b44a206b55a4239e15754319c5cfced4d",
+  "scope": "host_quality_intake_future_diagnostic_trip_and_sequencing_handoff",
+  "authorization": {
+    "m8_hardening": true,
+    "next_substep": "M8.1",
+    "later_substeps_require_normal_approval": true,
+    "distribution": false
+  },
+  "validation": {
+    "affected_host_tests": 42,
+    "new_regressions": 13,
+    "host_tests_passed": true,
+    "repository_validation": "passed",
+    "source_ci": "pending",
+    "no_device_operations": true,
+    "module_cli_generated_smoke": "passed",
+    "no_new_real_source_training_or_reopened_test_predictions": true
+  },
+  "production_boundary_review": {
+    "sensor_inference_disabled": true,
+    "local_runtime_unavailable": true,
+    "local_model_source_unavailable": true,
+    "bindings_modified": false
+  },
+  "compatibility": {
+    "new_dependency": false,
+    "archive_or_database_migration": false,
+    "legacy_inspector_output_changed": false,
+    "sensor_or_recorder_behavior_changed": false,
+    "prior_model_results_changed": false
+  },
+  "privacy": {
+    "raw_export_accessed": false,
+    "device_identifiers_committed": false,
+    "new_intake_emits_paths_ids_hashes_vectors_or_raw_times": false,
+    "network_or_upload_added": false
+  },
+  "acceptance": {
+    "m7_formally_complete": false,
+    "m7_4_accepted": false,
+    "m7_5_real_integration_complete": false,
+    "m6_8_acceptance_complete": false,
+    "model_promoted": false,
+    "future_trip_collected": false,
+    "distribution_authorized": false
+  },
+  "references": {
+    "ledger": "M7_HANDOFF_V1.md",
+    "future_trip": "M7_FUTURE_ROUTINE_TRIP_V1.md",
+    "release_hold": "release-checklist.yaml",
+    "plan": "../exec-plans/active/M7_WRAPUP_HANDOFF.md"
+  },
+  "source_blob_pins": [
+    {
+      "path": "tool/inspect_tripdebug.py",
+      "git_blob_sha": "193734cd8806cf650b0b2af853a95d3e0013df2d"
+    },
+    {
+      "path": "tool/inspect_ml_recordings.py",
+      "git_blob_sha": "58ee3ff423e54ae30ba9f6b3d9173774eebbcb3f"
+    },
+    {
+      "path": "tool/inspect_field_recording.py",
+      "git_blob_sha": "8890a5d5f0069d4b76ee80c8d37180fa0dd1ce8c"
+    },
+    {
+      "path": "tests/tool/test_inspect_field_recording.py",
+      "git_blob_sha": "4ede76cc1ad140ea09cadaee8888438ca5195da1"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "git_blob_sha": "144844428671008e38518cf787429b794c6a1f06"
+    },
+    {
+      "path": "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/HybridEventEvidence.kt",
+      "git_blob_sha": "ea43d20263e1f12020263c4659791dbfeb304b57"
+    },
+    {
+      "path": "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/LocalTripAnalysis.kt",
+      "git_blob_sha": "fecd8af711f5925a629483c66de413e2ae5bf50b"
+    },
+    {
+      "path": "lib/features/local_commentary/application/local_commentary_providers.dart",
+      "git_blob_sha": "7199bbfcdb8646ff0cc04a3d180b5896bf834d5e"
+    }
+  ],
+  "source_ci": {
+    "run_id": null,
+    "source_commit": null,
+    "status": "pending"
+  }
+}

@@ -4,7 +4,16 @@
 
 ## Current phase
 
-**M7 active — M7.11 local-provider architecture complete; sensor-model acceptance open**
+**M7 wrap-up active — M8 hardening authorized next; acceptance and distribution held**
+
+Current maintainer decision (2026-11-17): wrap feasible M7 engineering, define a
+future ordinary Tecno/Redmi diagnostic trip, then proceed to M8 hardening and stop
+before main distribution. This supersedes the earlier acceptance-before-M8 order.
+M7 is not formally complete: M7.4/M7.5 and M6.8 acceptance carry forward;
+unaccepted sensor inference stays disabled and local neural narration unavailable.
+M8.1 is the next authorized substep after wrap-up validation/persistence. Later
+substeps retain normal approval gates; publication/distribution is unauthorized.
+See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
 proceed while M6.8 physical active-driver, recovery, performance and mounted/
@@ -30,6 +39,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 `TraelyxM79` AVD, now shut down; it did not replace or modify that existing setup.
 
 ## Working
+
+- M7 wrap-up (2026-11-17): pinned, read-only aggregate sensor-quality intake for
+  normal `.tripdebug` exports; legacy inspector output preserved. All 42 affected
+  host tests pass, including 13 new privacy/mutation/quality regressions. Future
+  ordinary single/dual-phone diagnostic procedure and distribution-hold ledger
+  defined. Repository validation passes. No device, new real-source experiment,
+  sensor correction, runtime or app change. Source CI and final handoff
+  persistence remain pending.
 
 - M7 Tecno parked software pilot (2026-11-17): API34 capture, stop/pause/reopen,
   retained journals and local export verified through ADB without a camera.

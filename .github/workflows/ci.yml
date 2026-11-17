@@ -256,8 +256,8 @@ jobs:
 
       - name: Test trip-debug inspector
         run: |
-          python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_sync_pilot.py
-          python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_sync_pilot
+          python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/inspect_field_recording.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_inspect_field_recording.py tests/tool/test_sync_pilot.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_inspect_field_recording tests.tool.test_sync_pilot
 
       - name: Validate offline ML dataset registry and imports
         run: |

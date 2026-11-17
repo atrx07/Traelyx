@@ -4,247 +4,57 @@
 
 ## Current gate
 
-M7 is the current development milestone. The maintainer authorized M7.1, then explicitly continued M7.2
-on 2026-11-11, carrying M6.8 acceptance forward without waiving its gates.
-M6.1–M6.7 remain complete; M6.8 physical active-driver/recovery/performance and
-mounted/vehicle/OEM work remains open, with vehicle work explicitly deferred.
-On 2026-11-14 the maintainer authorized M7.5 foundation development while model
-acceptance stays deferred. M7.6 was subsequently continued for its isolated
-IntegrityNet experiment. M7.7's subsequently authorized ContextNet experiment is
-also complete. M7.8's subsequently authorized embedding experiment is complete;
-M7.9's local correction/export pipeline and M7.10's reviewed-wording Groq path
-are complete. M7.11 architecture is complete on 2026-11-16; M8 remains gated.
+The maintainer authorized M7 wrap-up followed by M8 hardening on 2026-11-17,
+superseding the earlier acceptance-before-M8 sequencing preference. The current
+bounded unit is `docs/exec-plans/active/M7_WRAPUP_HANDOFF.md`. M8.1 is authorized
+next after its validation/commit; later numbered steps retain their approval gate.
+**Stop before main distribution.** M8.10 publication/release assets, store
+submission and external APK distribution are not authorized. The release hold is
+recorded in `docs/reference/release-checklist.yaml`.
 
-For authorized device QA, use the existing Pixel 10 Pro emulator and Tecno phone
-setup documented in `STATUS.md#test-device-setup`; verify AVD/serial identity and
-preserve existing data. M7.9's temporary isolated AVD is a separate test device.
+M7 is not formally complete. M7.4's v1 int8 rejection and M7.5's partial real-model
+integration remain open/deferred, with all unaccepted production inference
+disabled. The local neural narrator remains unavailable. M6.8 active-driver,
+recovery, performance, vehicle and OEM acceptance carries forward; no live
+Guardian operation is authorized by this handoff.
 
-## P0 — Resolve model acceptance before M8
+## P0 — Finish wrap-up, then M8.1 hardening
 
-The authorized Tecno now passes the parked marker software path using ADB screen/
-UI inspection, including local export and the repaired two-run cancellation case.
-See `docs/reference/sync-pilot-tecno-v1-result.json`. The pilot-only v1.0.1 repair
-has passing physical/host/build checks and all four source CI jobs 44085930694
-(`68d91d6`). Screen mirroring remains
-software evidence; no independent reference was supplied and no optical clock fit,
-recorder binding, sensor quality or driving-model admission follows. Capture of
-actual journeys remains deferred. Neither a camera feature nor sensor correction
-was added to Traelyx.
+1. Validate/persist the pinned exported-file quality intake and future routine-trip
+   procedure; see `docs/reference/M7_HANDOFF_V1.md` and `m7-wrapup-v1-result.json`.
+2. After wrap-up, begin the authorized M8.1 Android torture matrix. Preserve main
+   app/accounts/recordings and scope device operations before mutation. Use the
+   existing Pixel/Tecno setup; verify serial/AVD identity and read the emulator
+   runbook when relevant. No device operation is needed for the wrap-up itself.
+3. Keep the distribution hold and deferred acceptance ledger visible through M8.
+   Passing software/build tests never waives physical or scientific gates.
 
-The parked sync pilot now has implemented software tooling:
-`docs/reference/EVENTNET_SYNC_PILOT_V1.md`. Host/generated checks and authorized
-Pixel capture/lifecycle/local export smoke and all four source CI jobs 44077691270
-(`52bd0ea`) pass.
-No phone is needed for these software checks. The next evidence gate needs a
-parked physical handset/reference to establish optical/capture uncertainty and
-same-handset/boot/recorder binding. The tools never infer those from small clock
-residuals. No driving session, source/model admission or promotion follows.
+## Deferred M7 acceptance / future ordinary trip
 
-The collection/review protocol and empty private-work packet are now prepared:
-`docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md`. Capture remains deferred;
-no participants, real split assignments or frozen experiment are created. The
-next practical evidence step is a separately arranged parked pilot proving sensor/
-export and independent synchronization/strength-reference feasibility, followed
-by routine recording only when resources are available. Independent drivers and
-human reviewers are still unconfirmed. Numeric metric/exposure/device gates must
-be justified and frozen before test access; the packet does not waive them.
+Follow `docs/reference/M7_FUTURE_ROUTINE_TRIP_V1.md` when the maintainer is ready.
+One phone is sufficient; both mounted phones can supply per-device diagnostics.
+No camera or staged maneuvers are required. Export each available private
+`.tripdebug`, preserve its bytes and provide private build/mount/power/warning
+notes. The new pinned aggregate inspector reports integrity and sensor quality;
+it cannot establish event truth, calibration or cross-device clock alignment.
 
-The bounded review of 15 remaining report leads establishes no complete acceptance
-corpus; see `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`. Stop repeating
-the same shortlist or fitting against weak labels. Use the prepared collection/
-independent-annotation and locked-evaluation protocol; actual recording can wait
-until suitable capture/reference evidence and distinct driver groups are available.
-A governed public reannotation alternative still needs permission, driver mapping and native
-feature/quality evidence. No new drive is requested and no model experiment is
-frozen. Kaggle metadata corrects two report licence gaps without resolving the
-two-Hz input and label limitations. M7.4/M7.5 remain open; M8 stays inactive.
-
-The Ferreira follow-up now resolves affirmative author permission evidence and
-intended units, but confirms that the author no longer has the videos and did not
-retain device-frame originals or matrices. Driver assignment is not in the four
-published metadata files or reviewed loader. See
-`docs/reference/FERREIRA_SOURCE_REVIEW_V1.md`. Stop treating this source as a ready
-route to re-annotate normal driving or supply the native feature contract. New
-primary evidence or a separately governed compatible source with reviewed normal
-exposure and independent evaluation groups is needed. No new drive is requested.
-
-A separate native v2 development policy now handles only explained bounded
-interpolation with mandatory current/history/native-LIMITED sidecar metadata.
-All 528 native tests
-pass, along with lint/debug build, repository validation and all four source CI
-jobs 44042014141 (`e8ad83e`, attempt 1).
-V1 stays strict, M3 confidence is unchanged,
-and no model/source is admitted. See `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`.
-The Ferreira and remaining-source reviews are now recorded. New primary evidence
-must resolve frame/gravity/quality and independent labels/groups before freezing
-an experiment; preserve inspected development roles. A phone is unnecessary until
-collection or candidate device evidence is actually scheduled.
-
-The subsequently authorized feature/real-stream feasibility unit implements an
-unwired native extractor and measures actual Zenodo trip-2 signals. All 519 native
-and 150 Python tests, lint, debug build and all four source CI jobs 44035810697
-(`e2b1445`, attempt 1) pass. Timing supports 100 Hz
-probing, but preprocessed linear acceleration cannot silently replace native raw
-accelerometer processing; frame, quality, clock/label semantics and independent
-evaluation exposure remain unresolved. See
-`docs/reference/EVENTNET_FEATURE_FEASIBILITY_V1.md`. No source is admitted or model
-trained. The subsequent v2 proposal addresses the demonstrated asynchronous-input
-rejection for development while preserving M3 confidence and uncertainty.
-Resolve the source contracts before choosing a new experiment; keep
-the real phone for later candidate benchmarks. The emulator remains unused.
-
-The maintainer chose to tackle M7.4/M7.5 before M8 (2026-11-16), superseding the
-conditional M8-hardening recommendation. Active follow-up:
-`docs/exec-plans/active/M7_EVENTNET_ACCEPTANCE_FOLLOWUP.md`. Read-only old-recording
-intake preserves all original chunks and the accidental-trip exclusion, but admits
-no model data. All 120 local Python tests and all four source CI jobs
-43904210026 (`02f2a9f`) pass. Qualify public
-event-interval data next: the maintainer reports permanent Tecno damage and no
-available second ADB phone. Confirmed-g desk readings are a provisional diagnostic
-proposal only. Subsequent public qualification confirms the licensed Harvard DB
-lacks driver/trip grouping and subsecond timing; Zenodo interval data has only one
-driver and sparse labelled negatives. See
-`docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md`. All 131 local Python tests
-and all four source CI jobs 43911237347 (`da80f6a`, attempt 3) pass. The maintainer
-can manually install/export on a Redmi
-Note 9 / Android 10; its supplied stationary export verifies 92 chunks, all motion
-samples at accuracy 3 without recorded flags, and zero GNSS fixes. Raw data is
-preserved/QA-excluded; no event/normal-driving labels inferred. New trip recording
-is unavailable this week and Redmi remains a fallback for field work.
-Further qualification (2026-11-17) quantifies Q-Motion's five groups / 294 manual
-intervals, but independent negatives and native feature equivalence remain open.
-See `docs/reference/QMOTION_METADATA_QUALIFICATION_V1.md` and the proposed native
-100 Hz input contract. No source-data candidate is trained or split assigned.
-All 142 local Python tests and all four source CI jobs 44028381119
-(`fbaa36d`, attempt 1) pass. The VTTI 100-Car publisher lists baseline metadata
-but reports 1–10 Hz vehicle instrumentation; compatible normal-driving sensor
-exposure remains unverified. The next acceptance dependency is independently
-reviewed ordinary-driving exposure with usable feature timing/quality and
-independent evaluation groups. Continue source admission before freezing a
-model experiment. Existing v1 rejection/results/gates
-remain frozen; no model promotion, M8 activation or invented labels.
-
-The authorized M7.5 foundation is implemented and validated: provider/local audit
-boundary, production inference disabled, immutable bounded generated-only
-evidence, rejection/quality/identity/failure/budget/cancellation checks, and
-preserved deterministic rules/scores. Local persistence/legacy compatibility and
-public projection privacy pass. All 501 app-native tests plus dependency suites,
-19 targeted Flutter tests, full analysis, debug build, app lint and full source
-CI 43615278473 (`3046201`, all four jobs including release) pass. Evidence:
-`docs/reference/hybrid-event-evidence-v1-result.json`. Full M7.5 hybrid model
-integration stays pending acceptance below. M7.6's bounded generated comparison
-is complete: 6/6 numeric injections detected vs native 4/6, both zero flags on
-16 known clean fixtures. All 74 Python/502 app-native tests, clean-source repeats
-and full CI 43689186048 (`4e0fe9a`, four jobs) pass. Evidence is
-`docs/reference/integritynet-generated-v1-result.json`. Synthetic signal is not
-production acceptance; rules and disabled inference remain unchanged.
-
-M7.7's generated comparison is complete with no validated added value: selective
-validation F1/coverage 0.6/0.6 vs experimental temporal rules' 1.0/1.0, with four
-open cases labelled by GRU where rules abstain. Both abstain on unavailable
-quality; test predictions remain uncomputed after the failed value gate. All 86
-local Python tests, clean-source repeats and full CI 43692438655 (`657f6bc`, all
-four jobs) pass. Evidence: `docs/reference/contextnet-generated-v1-result.json`.
-No app/narrator change or model promotion.
-
-M7.8's generated embedding experiment is complete: both methods retrieve 80/80
-programs and detect 40/40 changed validation pairs; stable-pair false flags are
-2/40 for embedding vs5/40 for summary distances. The frozen material-value gate
-still fails, and test predictions remain uncomputed. All 99 local Python tests,
-clean-source repeats and full CI 43716929988 (`ac2e1ee`, four jobs) pass. Evidence:
-`docs/reference/drivedna-generated-v1-result.json`. Preserve the synthetic signal
-without post-result tuning or promotion. Existing dimensions and production
-inference stay unchanged.
-
-M7.9 is complete for source-bound local corrections, default-off per-note consent,
-reviewed categorical document export and private quarantine receipt. All 503
-Flutter/506 native/105 Python tests, offline generated emulator QA, builds/lint,
-schema checks and full CI 43727767552 (`46acca3`, four jobs) pass. Evidence:
-`docs/reference/event-correction-v1-result.json`. Additive schema4 preserves
-v1/2/3 evidence/queues; corrections never rewrite detections/scores. No new
-provider/dependency, uploader or model promotion. Categorical reports remain
-unverified and blocked from training; aligned features/grouping/source quality
-and consent provenance need separately governed work before training use.
-M7.10 is complete for its bounded Groq reviewed-wording contract. All 535 Flutter/
-506 native/105 Python tests, builds/lint/schema checks and full CI 43835667477
-(`4373318`, four jobs) pass. The existing Pixel's separate-package QA and the
-maintainer's local key setup/personally approved live synthetic request passed
-with qwen/qwen3.8-27b. Temporary key/QA app/device UI files removed; production
-app untouched. Evidence:
-`docs/reference/cloud-commentary-v1-result.json`. No migration, new package or
-sensor-model promotion; original offline narration remains available. Broader
-free-form generation/quality requires separate evaluated output governance.
-M7.11 architecture is complete. All 592 Flutter/509 native/105 Python tests,
-existing Pixel generated-only separate-package QA, builds/lint/schema checks and
-four source CI jobs 43886630798 (`06d0108`) pass. Evidence:
-`docs/reference/local-commentary-v1-result.json`. No accepted local runtime/model,
-real model transport or neural generation is activated. Crypto 3.0.7 is direct with
-no new resolved package; no migration or detector promotion. QA package removed,
-main app untouched. Await maintainer direction; do not begin M8. Revisit the
-separately deferred model acceptance before enabling any inference. M7 exit and
-M6.8 physical/vehicle/OEM acceptance remain open.
-
-## Deferred acceptance — revisit before enabling any model
-
-M7.1–M7.3 are complete at the explicitly bounded experimental level. M7.3's
-53 Python tests, frozen-source audit/repeat and full source CI 43607386501
-(`5e8d2ff`, all four jobs) pass. T=1.1457625347025238 improves NLL/Brier, while
-ECE regresses; F1/decisions/weights remain unchanged and the class-prior baseline
-still has better probability scores. Keep the disclosed data reuse, tiny support,
-source-quality limits and production eligibility false. False severe events/hour
-remain unavailable and production safety acceptance remains blocked on suitable
-normal/severe truth. See `docs/reference/EVENTNET_CALIBRATION_V1.md` and its
-aggregate JSON evidence. M6.8 physical/vehicle gates are still open/deferred.
-M7.4 tooling, clean-source repeats, three physical generated-input benchmarks and
-package cleanup are recorded in `docs/reference/eventnet-mobile-v1-result.json`.
-All 63 local Python tests and standalone build/lint/privacy checks pass; corrected
-full CI 43611844686 (`140e671`, all four jobs) passes. The prescribed int8 export
-fails probability drift
-(0.0509469 >0.05), despite unchanged F1. It is larger than float32 and shows no
-consistent warm speed advantage. Retain the rejection and frozen protocol;
-do not tune against observed test results or relax the gate. M7.4 acceptance
-remains blocked. Any EventNet acceptance/export follow-up needs a versioned,
-explicitly scoped protocol and suitable unseen evaluation evidence; no such
-follow-up has begun.
-The maintainer accepted carrying this work forward, not deleting it. The active
-M7 plan retains the unchecked acceptance list: unseen evaluation data, verified
-feature units/frame/timing and label mapping, normal/severe truth/calibration,
-accepted export, runtime/size efficiency, sustained battery/physical validation,
-explicit promotion and rollback. Production promotion, real-model integration
-and numerical waiver remain unauthorized. No EventNet acceptance follow-up has begun.
-
-IntegrityNet acceptance is also deferred: its generated-only result must be
-compared with strengthened deterministic consistency alternatives and suitable
-unseen legitimate/inconsistent data. Shared templates and 16 known clean cases
-do not establish field FPR. Preserve native platform signals/corruption checks,
-review threshold sensitivity, and complete real feature/runtime/battery/device
-validation before any model adoption. The new experiment does not waive any
-EventNet, M7.5 integration or M6.8 physical/vehicle gate.
-
-ContextNet adoption is also deferred: the fixed M7.7 generated candidate fails
-its validation value gate and leaves test predictions uncomputed. Keep the
-negative result and rules. Any future candidate needs a separately authorized,
-versioned protocol with suitable unseen context labels, overlap/open-set and
-quality semantics, accepted feature extraction, calibrated outputs and physical
-runtime/battery evidence. Do not tune against this observed validation result or
-claim the shared generated templates establish field accuracy.
-
-DriveDNA embedding adoption is also deferred. M7.8's fixed candidate shows fewer
-generated stable-pair false flags (2/40 vs5/40) while tying program retrieval and
-controlled changed detection, so its prespecified material-value gate fails and
-test predictions stay uncomputed. Preserve that signal without changing the gate
-after results. Any future work needs a separately authorized/versioned protocol,
-suitable unseen style/deviation evidence, accepted extraction, comparable cohorts,
-coordinate-space compatibility and physical/runtime/uncertainty validation.
-Existing explainable dimensions and historical profiles remain authoritative.
-
-The urgent long-trip crash repair is verified on the phone: the 45m27s recording is recovered, all 4,290 raw chunks are unchanged, and cold startup succeeds. Private recovery backups remain local and ignored. That repair does not close M6.8 acceptance; the current sequencing exception above governs development.
+Treat a paired journey as one diagnostic session, never two independent drivers
+or an untouched evaluation set. Preserve Tecno unreliable status and raw bias;
+do not apply a fixed offset or infer good quality from Redmi status 3. Training
+requires separate consent, source/native-feature admission, independent labels,
+driver groups and frozen evaluation. Do not repeat the exhausted public shortlist
+or tune against old observed test results. Before model promotion, satisfy the
+retained calibration, false-severe/hour, subgroup, parity, efficiency and real
+runtime/integration gates. Full details and prior source CI remain in the M7
+acceptance follow-up, main M7 plan and handoff ledger.
 
 ## M6.8 carried-forward acceptance and prior evidence
 
-The following evidence predates M7.1 authorization unless stated otherwise;
-older prohibitions on starting M7 are superseded only for M7.1–M7.2 by the current
-sequencing exception. Existing live-operation boundaries remain in force.
+The dated evidence below retains historical instructions; the current sequencing
+decision above governs M7/M8. Existing live-operation review gates still apply.
+
+The following evidence predates the current authorization unless stated
+otherwise. Existing live-operation boundaries remain in force.
 
 Desk-safe active-driver recovery review passed and is closed (2026-11-11):
 three missing cross-component tests added, existing process-restart checks

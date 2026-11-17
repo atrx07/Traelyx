@@ -7,6 +7,8 @@ import argparse
 import hashlib
 import json
 import math
+import os
+import stat
 import re
 import struct
 import sys
@@ -328,109 +330,170 @@ def _coverage_gaps(
 
 def inspect_archive(path: Path) -> dict[str, object]:
     archive_size = path.stat().st_size
+    _check_archive_size(archive_size)
+    with zipfile.ZipFile(path, "r") as archive:
+        return _inspect_archive(archive, archive_size)
+
+
+def inspect_pinned_archive(path: Path, expected_sha256: str) -> dict[str, object]:
+    """Verify and quality-summarize one descriptor without exposing its identity.
+
+    Hash before and after parsing. Never extract, repair or reinterpret evidence.
+    A pathname replacement does not redirect this reader to a different file.
+    """
+    if not isinstance(expected_sha256, str) or not SHA256_RE.fullmatch(expected_sha256):
+        raise TripDebugInvalid("archive_digest_format_invalid")
+    # Avoid buffered stale bytes masking an in-place change during the final hash.
+    with path.open("rb", buffering=0) as stream:
+        before = os.fstat(stream.fileno())
+        if not stat.S_ISREG(before.st_mode):
+            raise TripDebugInvalid("archive_not_regular_file")
+        _check_archive_size(before.st_size)
+        if hashlib.file_digest(stream, "sha256").hexdigest() != expected_sha256:
+            raise TripDebugInvalid("archive_digest_mismatch")
+        stream.seek(0)
+        with zipfile.ZipFile(stream, "r") as archive:
+            result = _inspect_archive(archive, before.st_size, include_quality=True)
+        after = os.fstat(stream.fileno())
+        if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
+            raise TripDebugInvalid("archive_source_changed")
+        stream.seek(0)
+        if hashlib.file_digest(stream, "sha256").hexdigest() != expected_sha256:
+            raise TripDebugInvalid("archive_source_changed")
+    # The legacy structural reader includes the private trip UUID. This new
+    # diagnostic entry point deliberately projects only aggregate quality fields.
+    return {
+        "version": "field-recording-intake-v1",
+        "archive_integrity_verified": True,
+        "input_sha256_verified": True,
+        "source_contains_precise_location": True,
+        "quality": result["quality"],
+        "independent_labels_verified": False,
+        "cross_device_alignment_verified": False,
+        "sensor_calibration_verified": False,
+        "training_consent_verified": False,
+        "training_admitted": False,
+        "evaluation_admitted": False,
+    }
+
+
+def _check_archive_size(archive_size: int) -> None:
     if archive_size <= 0 or archive_size > MAX_ARCHIVE_BYTES:
         raise TripDebugInvalid("archive_size_invalid")
-    with zipfile.ZipFile(path, "r") as archive:
-        infos = archive.infolist()
-        if not infos or len(infos) > MAX_CHUNKS + 1:
-            raise TripDebugInvalid("archive_entry_count_invalid")
-        if len({info.filename for info in infos}) != len(infos):
-            raise TripDebugInvalid("archive_duplicate_entry")
-        if infos[0].filename != "manifest.txt" or infos[0].is_dir():
-            raise TripDebugInvalid("manifest_not_first")
-        if infos[0].file_size > MAX_MANIFEST_BYTES:
-            raise TripDebugInvalid("manifest_size_invalid")
-        manifest = parse_manifest(archive.read(infos[0]))
-        expected_names = ["manifest.txt", *[chunk.entry for chunk in manifest.chunks]]
-        if [info.filename for info in infos] != expected_names:
-            raise TripDebugInvalid("archive_entry_order_invalid")
-        if any(info.compress_type != zipfile.ZIP_STORED for info in infos):
-            raise TripDebugInvalid("archive_compression_invalid")
 
-        totals = [0, 0, 0]
-        first_chunk_start: int | None = None
-        previous_end: int | None = None
-        max_chunk_gap = 0
-        first_by_channel: dict[int, int] = {}
-        last_by_channel: dict[int, int] = {}
-        max_gap_by_channel = {1: 0, 2: 0, 3: 0}
-        for descriptor, info in zip(manifest.chunks, infos[1:]):
-            if info.file_size != descriptor.byte_length or info.file_size > MAX_CHUNK_BYTES:
-                raise TripDebugInvalid("archive_chunk_size_invalid")
-            data = archive.read(info)
-            if hashlib.sha256(data).hexdigest() != descriptor.sha256:
-                raise TripDebugInvalid("archive_chunk_sha_invalid")
-            decoded = decode_chunk(data)
-            if (
-                decoded["trip_id"] != manifest.trip_id
-                or decoded["sequence"] != descriptor.sequence
-                or decoded["encoding_version"] != manifest.chunk_encoding_version
-                or decoded["telemetry_version"] != manifest.telemetry_schema_version
-            ):
-                raise TripDebugInvalid("archive_chunk_metadata_invalid")
-            start = int(decoded["start"])
-            end = int(decoded["end"])
-            if first_chunk_start is None:
-                first_chunk_start = start
-            if previous_end is not None:
-                if start < previous_end:
-                    raise TripDebugInvalid("archive_chunk_order_invalid")
-                max_chunk_gap = max(max_chunk_gap, start - previous_end)
-            previous_end = end
-            counts = decoded["counts"]
-            assert isinstance(counts, list)
-            totals = [left + right for left, right in zip(totals, counts)]
-            elapsed_by_channel = decoded["elapsed_by_channel"]
-            assert isinstance(elapsed_by_channel, dict)
-            for channel, samples in elapsed_by_channel.items():
-                for elapsed in samples:
-                    first_by_channel.setdefault(channel, elapsed)
-                    previous = last_by_channel.get(channel)
-                    if previous is not None:
-                        if elapsed < previous:
-                            raise TripDebugInvalid("archive_channel_order_invalid")
-                        max_gap_by_channel[channel] = max(
-                            max_gap_by_channel[channel], elapsed - previous
-                        )
-                    last_by_channel[channel] = elapsed
-        expected_totals = [
-            manifest.sample_counts["gnss"],
-            manifest.sample_counts["accelerometer"],
-            manifest.sample_counts["gyroscope"],
-        ]
+
+def _inspect_archive(
+    archive: zipfile.ZipFile, archive_size: int, *, include_quality: bool = False,
+) -> dict[str, object]:
+    _check_archive_size(archive_size)
+    infos = archive.infolist()
+    if not infos or len(infos) > MAX_CHUNKS + 1:
+        raise TripDebugInvalid("archive_entry_count_invalid")
+    if len({info.filename for info in infos}) != len(infos):
+        raise TripDebugInvalid("archive_duplicate_entry")
+    if infos[0].filename != "manifest.txt" or infos[0].is_dir():
+        raise TripDebugInvalid("manifest_not_first")
+    if infos[0].file_size > MAX_MANIFEST_BYTES:
+        raise TripDebugInvalid("manifest_size_invalid")
+    manifest = parse_manifest(archive.read(infos[0]))
+    expected_names = ["manifest.txt", *[chunk.entry for chunk in manifest.chunks]]
+    if [info.filename for info in infos] != expected_names:
+        raise TripDebugInvalid("archive_entry_order_invalid")
+    if any(info.compress_type != zipfile.ZIP_STORED for info in infos):
+        raise TripDebugInvalid("archive_compression_invalid")
+
+    quality_chunks = {}
+    totals = [0, 0, 0]
+    first_chunk_start: int | None = None
+    previous_end: int | None = None
+    max_chunk_gap = 0
+    first_by_channel: dict[int, int] = {}
+    last_by_channel: dict[int, int] = {}
+    max_gap_by_channel = {1: 0, 2: 0, 3: 0}
+    for descriptor, info in zip(manifest.chunks, infos[1:]):
+        if info.file_size != descriptor.byte_length or info.file_size > MAX_CHUNK_BYTES:
+            raise TripDebugInvalid("archive_chunk_size_invalid")
+        data = archive.read(info)
+        if hashlib.sha256(data).hexdigest() != descriptor.sha256:
+            raise TripDebugInvalid("archive_chunk_sha_invalid")
+        decoded = decode_chunk(data, include_quality=include_quality)
+        if include_quality:
+            from .inspect_ml_recordings import compact
+            quality_chunks[descriptor.sequence] = compact(decoded)
         if (
-            first_chunk_start != manifest.start_elapsed_nanos
-            or previous_end != manifest.end_elapsed_nanos
+            decoded["trip_id"] != manifest.trip_id
+            or decoded["sequence"] != descriptor.sequence
+            or decoded["encoding_version"] != manifest.chunk_encoding_version
+            or decoded["telemetry_version"] != manifest.telemetry_schema_version
         ):
-            raise TripDebugInvalid("archive_manifest_bounds_invalid")
-        if totals != expected_totals:
-            raise TripDebugInvalid("archive_sample_count_invalid")
-        duration = manifest.end_elapsed_nanos - manifest.start_elapsed_nanos
-        max_gap_by_channel = _coverage_gaps(
-            manifest.start_elapsed_nanos,
-            manifest.end_elapsed_nanos,
-            first_by_channel,
-            last_by_channel,
-            max_gap_by_channel,
-        )
-        return {
-            "format": "traelyx.tripdebug",
-            "archive_version": ARCHIVE_VERSION,
-            "privacy_class": "precise_private",
-            "contains_precise_location": True,
-            "trip_id": manifest.trip_id,
-            "archive_byte_length": archive_size,
-            "chunk_count": manifest.chunk_count,
-            "duration_nanos": duration,
-            "sample_counts": manifest.sample_counts,
-            "max_gap_nanos": {
-                "chunks": max_chunk_gap,
-                "gnss": max_gap_by_channel[1],
-                "accelerometer": max_gap_by_channel[2],
-                "gyroscope": max_gap_by_channel[3],
-            },
-            "verified": True,
-        }
+            raise TripDebugInvalid("archive_chunk_metadata_invalid")
+        start = int(decoded["start"])
+        end = int(decoded["end"])
+        if first_chunk_start is None:
+            first_chunk_start = start
+        if previous_end is not None:
+            if start < previous_end:
+                raise TripDebugInvalid("archive_chunk_order_invalid")
+            max_chunk_gap = max(max_chunk_gap, start - previous_end)
+        previous_end = end
+        counts = decoded["counts"]
+        assert isinstance(counts, list)
+        totals = [left + right for left, right in zip(totals, counts)]
+        elapsed_by_channel = decoded["elapsed_by_channel"]
+        assert isinstance(elapsed_by_channel, dict)
+        for channel, samples in elapsed_by_channel.items():
+            for elapsed in samples:
+                first_by_channel.setdefault(channel, elapsed)
+                previous = last_by_channel.get(channel)
+                if previous is not None:
+                    if elapsed < previous:
+                        raise TripDebugInvalid("archive_channel_order_invalid")
+                    max_gap_by_channel[channel] = max(
+                        max_gap_by_channel[channel], elapsed - previous
+                    )
+                last_by_channel[channel] = elapsed
+    expected_totals = [
+        manifest.sample_counts["gnss"],
+        manifest.sample_counts["accelerometer"],
+        manifest.sample_counts["gyroscope"],
+    ]
+    if (
+        first_chunk_start != manifest.start_elapsed_nanos
+        or previous_end != manifest.end_elapsed_nanos
+    ):
+        raise TripDebugInvalid("archive_manifest_bounds_invalid")
+    if totals != expected_totals:
+        raise TripDebugInvalid("archive_sample_count_invalid")
+    duration = manifest.end_elapsed_nanos - manifest.start_elapsed_nanos
+    max_gap_by_channel = _coverage_gaps(
+        manifest.start_elapsed_nanos,
+        manifest.end_elapsed_nanos,
+        first_by_channel,
+        last_by_channel,
+        max_gap_by_channel,
+    )
+    result = {
+        "format": "traelyx.tripdebug",
+        "archive_version": ARCHIVE_VERSION,
+        "privacy_class": "precise_private",
+        "contains_precise_location": True,
+        "trip_id": manifest.trip_id,
+        "archive_byte_length": archive_size,
+        "chunk_count": manifest.chunk_count,
+        "duration_nanos": duration,
+        "sample_counts": manifest.sample_counts,
+        "max_gap_nanos": {
+            "chunks": max_chunk_gap,
+            "gnss": max_gap_by_channel[1],
+            "accelerometer": max_gap_by_channel[2],
+            "gyroscope": max_gap_by_channel[3],
+        },
+        "verified": True,
+    }
+    if include_quality:
+        from .inspect_ml_recordings import summarize
+        result["quality"] = summarize(quality_chunks)
+    return result
 
 
 def main() -> int:

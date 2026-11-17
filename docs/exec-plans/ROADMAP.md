@@ -21,6 +21,15 @@ the explicit 2026-11-14 continuation then authorizes M7.3. Each later substep
 retains the explicit approval gate.
 See `active/M7_ML_COMMENTARY.md` and the retained M6 plan.
 
+**2026-11-17 handoff authorization:** wrap feasible M7 engineering, then proceed
+to M8 hardening with M7.4/M7.5 and M6.8 acceptance carried forward. M7 is not
+formally complete and no unaccepted inference may activate. M8.1 is authorized
+next; later numbered substeps retain normal approval gates. Stop before main
+distribution: M8.10 release/publication, store submission and external APK
+distribution need new explicit authorization and applicable acceptance gates.
+See [current handoff ledger](../reference/M7_HANDOFF_V1.md) and
+[wrap-up plan](active/M7_WRAPUP_HANDOFF.md). No milestone scope is erased.
+
 ---
 
 # M0 — Project Bootstrap
@@ -330,6 +339,11 @@ Prior signed version with trips/settings → new APK.
 
 ### M8.10 GitHub Release
 APK(s), checksums, release notes, known issues, model/scoring changes.
+
+**Held by maintainer (2026-11-17):** no release/tag/assets, public download links,
+store submission or main distribution during the authorized hardening work.
+See `../reference/release-checklist.yaml`; a release-validation APK is not
+distribution authorization.
 
 **Exit:** strangers can install v0.1.0 from GitHub and use it without developer assistance.
 

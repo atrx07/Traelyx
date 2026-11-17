@@ -1,5 +1,16 @@
 schema_version: 1
 release_type: github_signed_android_apk
+distribution_hold:
+  active: true
+  authorized_action: internal_hardening_only
+  decision_date: '2026-11-17'
+  evidence: M7_HANDOFF_V1.md
+  requires_new_explicit_publication_authorization: true
+  carried_forward_gates:
+    - M7.4_mobile_model_acceptance
+    - M7.5_real_hybrid_integration
+    - M6.8_physical_guardian_and_vehicle_acceptance
+    - applicable_M8_release_acceptance
 checks:
   source:
     - clean_worktree_or_documented_state

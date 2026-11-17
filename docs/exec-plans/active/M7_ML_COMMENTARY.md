@@ -3,9 +3,9 @@
 **Status:** Active
 **Owner:** agent/maintainer
 **Milestone:** M7
-**Current gate:** M7.4/M7.5 acceptance follow-up authorized before M8; old-recording intake diagnostic-only
+**Current gate:** 2026-11-17 wrap-up/handoff authorized; M7.4/M7.5 deferred acceptance; M8 hardening allowed, distribution held
 **Started:** 2026-11-11
-**Last updated:** 2026-11-16
+**Last updated:** 2026-11-17
 
 ## Context budget / references
 
@@ -13,6 +13,12 @@ Read `ml/AGENTS.md`, roadmap M7.1, dataset governance, ML split/provenance
 requirements, the dataset registry schema, and affected tooling/tests only.
 
 ## Goal / user-visible result
+
+Current sequencing supersedes the earlier order below: the maintainer authorized
+bounded wrap-up followed by M8 hardening, stopping before main distribution.
+See `M7_WRAPUP_HANDOFF.md` and `../../reference/M7_HANDOFF_V1.md`. Formal M7
+completion, model promotion and carried-forward M6.8 gates remain unresolved.
+The future ordinary Tecno/Redmi trip is diagnostic, not accepted ground truth.
 
 Current authorized work: resolve M7.4 acceptance and then M7.5 real integration,
 per the maintainer's decision after the M7 audit. The active bounded follow-up is

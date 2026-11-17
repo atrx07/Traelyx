@@ -51,3 +51,11 @@ while decoding, and unfinished/trailing compressed streams are rejected. No
 archive/schema/encoding version, valid sample interpretation or source bytes change.
 See [recording intake v1](EVENTNET_RECORDING_INTAKE_V1.md); successful structural
 verification never implies event-label, mounting, driver-split or model acceptance.
+
+For future manually exported field diagnostics, use
+`python -m tool.inspect_field_recording <private-file.tripdebug> --expected-sha256 <local-hash>`.
+This separate entry point verifies the same read-only descriptor before/after
+parsing and returns aggregate sensor quality without the legacy report's trip UUID.
+No raw timestamps, paths, input hashes or vectors are emitted. Integrity, quality
+counts and gap evidence do not prove calibration, event truth or model admission.
+The original structural inspector API/CLI and archive format remain unchanged.

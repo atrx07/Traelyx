@@ -1,12 +1,20 @@
 # Execution Plan — M7.4/M7.5 model acceptance follow-up
 
-**Status:** Active
+**Status:** Active acceptance record; new collection deferred
 **Owner:** agent/maintainer
 **Milestone:** M7
 **Started:** 2026-11-16
 **Last updated:** 2026-11-17
 
 ## Goal / authorization
+
+**Current sequencing (2026-11-17):** the maintainer now authorizes wrapping
+feasible M7 work and moving to M8 hardening, with main distribution explicitly
+held. This supersedes the earlier acceptance-before-M8 preference below. Keep
+M7.4/M7.5 open and production inference disabled. See `M7_WRAPUP_HANDOFF.md`,
+the [handoff ledger](../../reference/M7_HANDOFF_V1.md) and
+[future ordinary-trip diagnostic](../../reference/M7_FUTURE_ROUTINE_TRIP_V1.md).
+Historical statements that M8 is inactive describe their earlier checkpoints.
 
 The maintainer explicitly chose to tackle M7.4 acceptance and M7.5 real-model
 integration before M8. Preserve the frozen rejected v1 artifact, data splits,

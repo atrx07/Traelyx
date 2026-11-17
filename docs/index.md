@@ -110,3 +110,9 @@ Physical presentation/reference and recorder binding remain unverified.
 Its [Tecno software follow-up](reference/sync-pilot-tecno-v1-result.json) records
 API34 device checks and the v1.0.1 export-selection repair. ADB screen inspection
 does not establish optical alignment or change the old recordings' exclusion.
+
+For the current sequencing decision, use the [M7 handoff ledger](reference/M7_HANDOFF_V1.md).
+M7 acceptance stays open while M8 hardening is authorized; distribution is held.
+The [future ordinary Tecno/Redmi trip](reference/M7_FUTURE_ROUTINE_TRIP_V1.md)
+defines diagnostic collection/private export and pinned quality intake, without
+requiring a camera or treating one paired journey as model ground truth.

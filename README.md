@@ -4,6 +4,13 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 ## Current state
 
+The maintainer authorized M7 engineering wrap-up followed by M8 hardening on
+2026-11-17. M7.4/M7.5 and M6.8 acceptance remain open/deferred, production sensor
+inference stays disabled, and **main distribution is held**. M8.1 is authorized
+next after wrap-up validation. See the [current handoff ledger](docs/reference/M7_HANDOFF_V1.md)
+and [future ordinary Tecno/Redmi trip](docs/reference/M7_FUTURE_ROUTINE_TRIP_V1.md).
+This supersedes earlier sequencing statements in the dated evidence below.
+
 M7.1 dataset registry/import is complete under an explicit development-order
 exception. M6.8 remains incomplete: physical active-driver, recovery, performance
 and mounted/vehicle/OEM acceptance carries forward; vehicle work stays deferred.
@@ -83,8 +90,9 @@ hardening with unaccepted ML disabled. The maintainer subsequently chose to tack
 M7.4/M7.5 acceptance first. [Recording intake](docs/reference/EVENTNET_RECORDING_INTAKE_V1.md)
 preserves old phone evidence but admits no training/evaluation data. All 120 local
 Python tests and [four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/43904210026)
-pass for the intake tool. Formal M7 exit,
-M8 activation and public release remain open.
+pass for the intake tool. M8 hardening is now authorized by the handoff above;
+formal M7 completion and
+public release remain open.
 Further [public-source qualification](docs/reference/EVENTNET_PUBLIC_QUALIFICATION_V1.md)
 records concrete label/group/timing limits. Manual Redmi stationary export
 verifies high reported IMU accuracy but no GNSS fixes. All 131 local Python tests
@@ -154,7 +162,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M4 | Deterministic Intelligence v1 | Events, integrity, scoring, Drive DNA, lifecycle, and explanation data | ✅ Complete | Done | 2026-08-23 |
 | M5 | Experience & Replay | Ready/Drive, history/results, Drive DNA, offline route replay, commentary, accessibility, and local data controls | ✅ Complete | Done | 2026-09-23 |
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
-| M7 | ML & Advanced Commentary | M7.4/M7.5 acceptance follow-up active; M8 inactive | 🔵 Active | ~2–3 weeks plus data collection | — |
+| M7 | ML & Advanced Commentary | Bounded wrap-up active; M7.4/M7.5 acceptance carried forward; M8 hardening authorized next | 🔵 Active | Data/resource dependent | — |
 | M7.1 |  | Dataset registry/import | ✅ Complete | Done | 2026-11-11 |
 | M7.2 |  | EventNet baseline | ✅ Complete | Done | 2026-11-14 |
 | M7.3 |  | Calibration and error analysis | ✅ Complete | Done | 2026-11-14 |
