@@ -1,0 +1,324 @@
+{
+  "review_version": "eventnet-remaining-source-triage-v1",
+  "date": "2026-11-17",
+  "scope": "15 report leads; primary documentation/schema/permission triage, not waveform qualification or experiment",
+  "candidates": [
+    {
+      "id": "schuster",
+      "name": "Schuster maneuverRecognition",
+      "sources": [
+        "https://github.com/Schuster-j/maneuverRecognition",
+        "https://arxiv.org/html/2506.23147v1"
+      ],
+      "inputs": "Published capture interval 500 ms (2 Hz); exceeds native development 50 ms interpolation bracket ceiling. Device-to-native preprocessing equivalence unverified.",
+      "labels": "Dashcam manual maneuver classes and continuous_driving documented; no independently validated severe-event or normal-exposure protocol established.",
+      "groups": "Three persons, three vehicles, shared route documented; driver/vehicle confounding remains.",
+      "permission": "Dataset permission not established in reviewed README/paper or bounded license issue search; no claim that permission cannot exist.",
+      "stop_reason": "native_timing_incompatible",
+      "role": "low_rate_maneuver_research_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "uah",
+      "name": "UAH-DriveSet",
+      "sources": [
+        "http://www.robesafe.uah.es/personal/eduardo.romera/uah-driveset/"
+      ],
+      "inputs": "Publisher describes smartphone accelerometers/GPS/camera and DriveSafe processing; raw gyro/native contract not established by page. Report's detailed delivered-rate claims not reverified here.",
+      "labels": "Performed trip behavior and app-generated maneuver scoring documented; independent interval event/normal truth not established.",
+      "groups": "Six drivers and vehicles documented; mapping not inspected.",
+      "permission": "Custom non-commercial terms; abstract models allowed subject to restrictions; raw/modified dataset redistribution forbidden; no terms accepted.",
+      "stop_reason": "no_complete_input_and_independent_label_contract",
+      "role": "restricted_research_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "hdd",
+      "name": "Honda HDD",
+      "sources": [
+        "https://usa.honda-ri.com/hdd"
+      ],
+      "inputs": "Instrumented vehicle, camera/GPS/CAN shown; native phone feature equivalence not established.",
+      "labels": "Behavior examples documented; event/normal acceptance protocol not established by inspected publisher page.",
+      "groups": "Driver identity mapping not established.",
+      "permission": "Non-commercial; publisher requires university affiliation/email to request download. No request submitted.",
+      "stop_reason": "access_requires_external_request_and_contract_unverified",
+      "role": "annotation_method_reference_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "brain4cars",
+      "name": "Brain4Cars",
+      "sources": [
+        "https://github.com/asheshjain399/ICCV2015_Brain4Cars",
+        "https://arxiv.org/html/1601.00740"
+      ],
+      "inputs": "Paper's released modalities are inside/outside video, GPS and speed; compatible accel/gyro contract not established.",
+      "labels": "Manual lane-change/turn starts and sampled straight-driving events documented; straight class is affirmative evidence, not native severe-event/normal exposure qualification.",
+      "groups": "Participant data described; release grouping not verified without download.",
+      "permission": "Repository license explicitly covers code and dataset for educational/non-commercial purposes.",
+      "stop_reason": "compatible_imu_input_not_established",
+      "role": "annotation_method_reference_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "kitti",
+      "name": "KITTI Raw",
+      "sources": [
+        "https://www.cvlibs.net/datasets/kitti/raw_data.php"
+      ],
+      "inputs": "Vehicle GPS/IMU and calibration documented, with synchronized 10 Hz representation; raw unsynchronized variant exists. No inference that original IMU is limited to 10 Hz.",
+      "labels": "Published annotations describe object tracklets; independent maneuver/severe-event and normal-driving exposure contract not established.",
+      "groups": "Driver mapping not established.",
+      "permission": "Intended-use dataset terms not requalified; download page requires login. No login or terms accepted.",
+      "stop_reason": "event_normal_labels_and_driver_groups_unverified",
+      "role": "sensor_method_reference_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "comma2k19",
+      "name": "comma2k19",
+      "sources": [
+        "https://github.com/commaai/comma2k19"
+      ],
+      "inputs": "Phone-like EON IMU, boot-time arrays, forward-right-down basis and Android gyro bias outputs documented; native preprocessing/quality equivalence not verified.",
+      "labels": "Video, CAN and pose data documented; independent maneuver/normal interval annotations not established. CAN thresholds would create weak labels.",
+      "groups": "Two vehicles/dongle groupings documented; device/route identifiers do not establish distinct drivers.",
+      "permission": "MIT file defines software/documentation scope; no explicit recording/data grant established by reviewed README/license. No categorical claim data use is forbidden.",
+      "stop_reason": "independent_labels_driver_mapping_and_data_permission_unresolved",
+      "role": "possible_future_governed_annotation_lead_not_admitted",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "kaist",
+      "name": "KAIST Complex Urban",
+      "sources": [
+        "https://sites.google.com/view/complex-urban-dataset",
+        "https://sites.google.com/view/complex-urban-dataset/format"
+      ],
+      "inputs": "ROS timestamps/calibration documented; early sequences only quaternion/Euler, later versions include gyro/acceleration; cannot treat all sequences as equivalent.",
+      "labels": "Navigation/sensor formats and algorithmic pose baseline documented; independent maneuver and normal-exposure labels not established.",
+      "groups": "Driver mapping not established.",
+      "permission": "Publisher states CC BY-NC-SA 4.0.",
+      "stop_reason": "independent_labels_and_groups_unverified",
+      "role": "restricted_sensor_method_reference_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "ford",
+      "name": "Ford Multi-AV Seasonal",
+      "sources": [
+        "https://registry.opendata.aws/ford-multi-av-seasonal/"
+      ],
+      "inputs": "Vehicle Applanix IMU, calibration and ROS bags documented; phone/native quality equivalence unverified.",
+      "labels": "Mapping/pose ground truth documented; independent maneuver/normal truth not established.",
+      "groups": "Multiple manually driven vehicles documented; vehicle count is not driver assignment.",
+      "permission": "Ford-managed registry states non-commercial academic use, CC BY-NC-SA 4.0.",
+      "stop_reason": "independent_labels_and_groups_unverified",
+      "role": "restricted_sensor_method_reference_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "drive360",
+      "name": "Drive360 / ICCV 2019 challenge",
+      "sources": [
+        "https://www.aicrowd.com/challenges/iccv-2019-learning-to-drive-challenge",
+        "https://arxiv.org/html/1803.10158v2"
+      ],
+      "inputs": "Paper records 200 Hz GoPro IMU acquisition; published challenge input list is camera/maps and 10 Hz CAN targets. Released native-compatible IMU not established; do not equate collection with release.",
+      "labels": "Future steering/speed targets and intersection study annotations are not independent EventNet event/normal truth.",
+      "groups": "Route/chapter split documented; driver mapping unverified.",
+      "permission": "Challenge credentials/resources and intended-use grant not established; no access terms accepted.",
+      "stop_reason": "released_imu_and_event_normal_contract_unverified",
+      "role": "not_current_imu_corpus",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "vsensedrive",
+      "name": "V-SenseDrive-PK",
+      "sources": [
+        "https://link.springer.com/article/10.1007/s44196-026-01657-6",
+        "https://arxiv.org/html/2509.18187v1"
+      ],
+      "inputs": "Newer accepted article documents 10 Hz IMU, 1 Hz GPS and 166 ms median video alignment residual; not native feature equivalence.",
+      "labels": "Authors explicitly identify released rule labels as speed bands; enacted session labels are separate. No independent interval maneuver/normal truth established.",
+      "groups": "Article reports four drivers/vehicles; released rule labels D1-D3. Mapping not inspected.",
+      "permission": "Article license is not a separate dataset permission grant; raw logs/video/code described as on request. No request submitted.",
+      "stop_reason": "rule_speed_labels_not_independent_maneuver_truth",
+      "role": "label_leakage_and_alignment_method_reference",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "wawage",
+      "name": "Wawage / Deshpande Mendeley v2",
+      "sources": [
+        "https://data.mendeley.com/datasets/9vr83n7z5j/2"
+      ],
+      "inputs": "Publisher specifies accel m/s2, gyro degrees/s, nominal default 50 Hz and raw per-trip recordings; native frame/gravity/quality equivalence unverified.",
+      "labels": "Page names behavior categories but does not establish independent event/normal annotation protocol. Report's stronger claim that files lack labels not independently rechecked here.",
+      "groups": "Page reports three drivers/cars; driver-to-file mapping unverified.",
+      "permission": "Dataset page states CC BY 4.0.",
+      "stop_reason": "independent_labels_frame_quality_and_group_mapping_unverified",
+      "role": "possible_diagnostic_raw_data_not_admitted",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "kaggle_large",
+      "name": "Kaggle Large-Scale Driver Behavior Sensor Dataset v1",
+      "sources": [
+        "https://www.kaggle.com/datasets/shakilofficial0/large-scale-driver-behavior-sensor-dataset/versions/1",
+        "https://www.kaggle.com/api/v1/datasets/view/shakilofficial0/large-scale-driver-behavior-sensor-dataset"
+      ],
+      "inputs": "Official description states 2 samples/s, removed gravity and relative session time. Native timing/preprocessing incompatible or unverified; 1970-derived date alone is not clock corruption.",
+      "labels": "Preassigned style classes; independent annotation provenance not established.",
+      "groups": "Description states fully anonymized identity; no recoverable driver grouping established.",
+      "permission": "Official API licenseName is CC BY-NC-SA 4.0, correcting report's unknown-license claim.",
+      "stop_reason": "native_timing_incompatible",
+      "role": "restricted_low_rate_style_research_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "kaggle_popescu",
+      "name": "Kaggle Popescu / Cojocaru Driving Behavior v2",
+      "sources": [
+        "https://www.kaggle.com/datasets/outofskills/driving-behavior/versions/2",
+        "https://www.kaggle.com/api/v1/datasets/view/outofskills/driving-behavior",
+        "https://rochi.utcluj.ro/articole/10/RoCHI2022-Cojocaru-I-1.pdf"
+      ],
+      "inputs": "Publisher description/paper specify 2 samples/s and removed gravity; native timing/preprocessing contract not satisfied.",
+      "labels": "Paper describes separate enacted slow/normal/aggressive rides, not independent maneuver or reviewed normal intervals.",
+      "groups": "Independent driver grouping not established by paper/description.",
+      "permission": "Official API licenseName is Attribution 4.0 International (CC BY 4.0), correcting report's unknown-license claim.",
+      "stop_reason": "native_timing_incompatible",
+      "role": "licensed_low_rate_style_research_only",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "nazirkar",
+      "name": "Nazirkar Mendeley v1",
+      "sources": [
+        "https://data.mendeley.com/datasets/5stn873wft/1"
+      ],
+      "inputs": "Dashboard phone and acceleration/gyro columns documented; units/rate/gravity/frame/clock semantics not established.",
+      "labels": "Merged-file normal/aggressive 0/1 labels documented; independent assignment procedure/normal intervals not established.",
+      "groups": "Two source files do not establish two drivers; grouping unverified.",
+      "permission": "Dataset page states CC BY 4.0.",
+      "stop_reason": "independent_labels_input_contract_and_groups_unverified",
+      "role": "licensed_style_data_not_admitted",
+      "acceptance_corpus_admitted": false
+    },
+    {
+      "id": "zod",
+      "name": "Zenseact Open Dataset",
+      "sources": [
+        "https://zod.zenseact.com/"
+      ],
+      "inputs": "Publisher documents 100 Hz GNSS/IMU, 50 Hz consumer vehicle IMU, timestamps and controls; native phone preprocessing/quality equivalence unverified.",
+      "labels": "Object/lane/road/sign/surface annotations listed; independent EventNet event/normal intervals not established.",
+      "groups": "Fleet and drive subsets documented; driver assignment not established.",
+      "permission": "Publisher explicitly states CC BY-SA 4.0 for commercial and non-commercial use; downstream obligations still require review.",
+      "stop_reason": "event_normal_labels_driver_mapping_and_native_equivalence_unverified",
+      "role": "possible_future_governed_annotation_lead_not_admitted",
+      "acceptance_corpus_admitted": false
+    }
+  ],
+  "github_document_pins": [
+    {
+      "repository": "Schuster-j/maneuverRecognition",
+      "path": "README.md",
+      "git_blob_sha": "e177352e099285608c1402d496ebeb502ab1ede5",
+      "url": "https://github.com/Schuster-j/maneuverRecognition/blob/main/README.md"
+    },
+    {
+      "repository": "commaai/comma2k19",
+      "path": "README.md",
+      "git_blob_sha": "38ee17c12b250b05615df69660ef5c6a2c4bf5d9",
+      "url": "https://github.com/commaai/comma2k19/blob/master/README.md"
+    },
+    {
+      "repository": "asheshjain399/ICCV2015_Brain4Cars",
+      "path": "README.md",
+      "git_blob_sha": "6d0c959a7c6cc2c90be295ffda5d98ba8e454c78",
+      "url": "https://github.com/asheshjain399/ICCV2015_Brain4Cars/blob/master/README.md"
+    },
+    {
+      "repository": "commaai/comma2k19",
+      "path": "LICENSE",
+      "git_blob_sha": "b8fd9e299c97ad0eaf1e4b1464558fc24324b342",
+      "url": "https://github.com/commaai/comma2k19/blob/master/LICENSE"
+    },
+    {
+      "repository": "asheshjain399/ICCV2015_Brain4Cars",
+      "path": "LICENSE",
+      "git_blob_sha": "0039895e0ffc0a2b0f7f4f4aec9e6ae55599edcc",
+      "url": "https://github.com/asheshjain399/ICCV2015_Brain4Cars/blob/master/LICENSE"
+    }
+  ],
+  "official_http_document_pins": [
+    {
+      "id": "uah_page",
+      "url": "http://www.robesafe.uah.es/personal/eduardo.romera/uah-driveset/",
+      "http_status": 200,
+      "bytes": 21653,
+      "sha256": "2a3de374ae33c465ba6ed24b21b86d58b3fa5e9f2621efb9da21236193b59767"
+    },
+    {
+      "id": "kaggle_large",
+      "url": "https://www.kaggle.com/api/v1/datasets/view/shakilofficial0/large-scale-driver-behavior-sensor-dataset",
+      "http_status": 200,
+      "bytes": 15517,
+      "sha256": "13f852cdf5e1a6c032fa7630eccee22e745becd487627a6cc9d009e361da18a4",
+      "dataset_id": 9023585,
+      "current_version": 1,
+      "license_name": "CC BY-NC-SA 4.0",
+      "reported_dataset_bytes_not_downloaded": 946804003
+    },
+    {
+      "id": "kaggle_popescu",
+      "url": "https://www.kaggle.com/api/v1/datasets/view/outofskills/driving-behavior",
+      "http_status": 200,
+      "bytes": 8885,
+      "sha256": "94ff5a0872cbf77913a8ea5cef06e807a318c02f861c441c8158258645ccfd29",
+      "dataset_id": 2238282,
+      "current_version": 2,
+      "license_name": "Attribution 4.0 International (CC BY 4.0)",
+      "reported_dataset_bytes_not_downloaded": 566638
+    }
+  ],
+  "evidence_limits": [
+    "Web/publisher documents are dated review observations; Git blobs and three bounded HTTP bodies have additional content pins.",
+    "README previews contain illustrative data rows; those previews were visible during documentation review, not a newly downloaded motion corpus. Disclose qualification exposure in any future protocol.",
+    "No new archive/video/sensor-file retrieval, data split, waveform measurement, model fitting or predictions.",
+    "Failed web UAH retrieval followed by successful direct public HTTP page; Kaggle rendered pages empty, official API metadata succeeded with explicit review user agent; one follow-up without that header returned 404.",
+    "Wawage paper retrieval blocked; use only affirmative dataset metadata and unknown annotation status, not report-only claims about all released file contents.",
+    "Baseline Ferreira, Zenodo, Harvard, Q-Motion and VTTI qualification reused; other report exclusions not exhaustively re-audited.",
+    "No dataset claim means no qualifying corpus was established by this bounded review, not that no suitable corpus can exist."
+  ],
+  "decision": {
+    "candidate_selected": null,
+    "qualifying_corpora": 0,
+    "stop_unbounded_same_report_search": true,
+    "training_authorized_by_this_review": false,
+    "priority": "Obtain independently annotated driving/normal exposure with compatible sensors/quality and independent driver groups; prepare collection/annotation protocol before new recording or any governed public reannotation.",
+    "composite_unrelated_sources_cannot_supply_joint_acceptance": true,
+    "m7_4_complete": false,
+    "m7_5_complete": false,
+    "m8_active": false
+  },
+  "privacy_and_compatibility": {
+    "author_contacted": false,
+    "terms_accepted": false,
+    "device_operations": [],
+    "private_telemetry_accessed": false,
+    "source_recording_or_archive_downloads": false,
+    "training_or_prediction": false,
+    "product_or_model_changes": false,
+    "dependencies_or_migrations": false
+  },
+  "validation": {
+    "repository_contracts": "passed",
+    "provenance_consistency": "passed",
+    "git_diff_check": "passed",
+    "runtime_tests": "not_rerun_documentation_only"
+  }
+}

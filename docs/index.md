@@ -97,3 +97,6 @@ For the external research report's Ferreira lead, use the
 [primary-source review](reference/FERREIRA_SOURCE_REVIEW_V1.md): author permission
 and units are documented, but missing videos/original frames and unresolved driver
 assignment prevent treating it as the current acceptance corpus.
+The bounded [remaining-source triage](reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md)
+records 15 other leads, corrected Kaggle permissions and the missing evidence
+needed before a new experiment. No candidate is admitted.

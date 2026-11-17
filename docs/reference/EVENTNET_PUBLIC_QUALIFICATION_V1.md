@@ -117,6 +117,10 @@ stays inactive.
   its README describes three drivers, manual dashcam maneuver labels and 2 Hz
   smartphone streams. Explicit data licensing was not established; no raw data
   downloaded. Maneuver type does not automatically establish strong-event truth.
+  The subsequent [15-lead triage](EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md) confirms
+  the 500 ms capture interval from its paper and documents the other candidates'
+  decisive gaps, including two corrected Kaggle permission statements. No corpus
+  meets all current acceptance prerequisites in the reviewed evidence.
 - The original [Ferreira dataset repository](https://github.com/jair-jr/driverBehaviorDataset)
   is linked by its primary PLOS paper; the earlier reviewed `umi001` repository
   is a fork. The [primary-source follow-up](FERREIRA_SOURCE_REVIEW_V1.md) now records

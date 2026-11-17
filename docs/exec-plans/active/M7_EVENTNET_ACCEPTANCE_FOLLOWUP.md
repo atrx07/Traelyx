@@ -281,3 +281,39 @@ unchanged runtime/native/model suites need not be rerun for this review.
 Repository validation, source/metadata consistency and whitespace checks pass.
 Persist this documentation-only unit atomically and verify remote alignment before
 reporting it complete. Source/model admission remains false.
+
+## Remaining research candidates — 2026-11-17
+
+The maintainer authorized one bounded pass over the remaining external-report
+candidates to decide whether any can support a governed acceptance experiment.
+Inspect primary documentation, permissions and schemas only. Stop at a decisive
+documented incompatibility; do not download archives or motion streams, assign
+splits, train, contact authors or operate devices. Reuse earlier qualification
+for baseline sources rather than repeating their investigations.
+
+- [x] Enumerate remaining report candidates and verify their strongest relevant
+  claims in publisher documentation or source repositories.
+- [x] Record compatible inputs/timing/frame, independent event/normal labels,
+  evaluation groups, permission and unresolved evidence distinctly.
+- [x] Select a qualifying lead or state the concrete missing evidence; validate
+  references/contracts, synchronize status, commit/push and verify.
+
+This is source triage, not model acceptance. Documentation/provenance checks apply;
+runtime/native/model tests are unnecessary without implementation changes.
+
+Fifteen leads establish no complete acceptance corpus. Official Kaggle metadata
+resolves Popescu v2 as CC BY 4.0 and Large-Scale v1 as CC BY-NC-SA 4.0; two-Hz
+inputs and label limitations still preclude native acceptance. The newer accepted
+V-SenseDrive article explicitly identifies released speed-rule labels. Preserve
+positive partial evidence (including Brain4Cars straight annotations) without
+inventing matched IMU/driver/normal truth. See
+`docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`.
+
+Repository validation, all 15 decision/non-admission assertions, documentation
+links, five Git blob pins and three captured HTTP metadata pins (including both
+Kaggle versions/licences) pass, as does whitespace validation. No archive, model,
+device, private telemetry, code, dependency or migration change. Stop the repeated
+same-report search; the next dependency is a concrete collection/independent
+annotation and locked-evaluation protocol before any new recording or governed
+public reannotation. No such protocol or model experiment is implemented here.
+Persist this bounded review and verify the remote before reporting completion.

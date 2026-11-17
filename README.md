@@ -120,6 +120,12 @@ external research report. Videos and original device-frame values/matrices were
 not retained per the author; driver assignment remains unresolved. No data/model
 admission or M7 completion follows. This review changes documentation only.
 
+The [remaining-source triage](docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md)
+reviews 15 other report leads and establishes no complete acceptance corpus.
+Kaggle permission metadata corrects two report gaps; native inputs, independent
+event/normal labels and driver groups still prevent a new acceptance experiment.
+An explicit collection/annotation protocol is the next dependency. M7 remains open.
+
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 
 | ID | Milestone | Step | Status | ETA | Last validated |

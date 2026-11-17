@@ -31,6 +31,14 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 remaining-source triage (2026-11-17): 15 report leads reviewed against primary
+  documentation/permission/schema evidence; none establishes the full native
+  input, independent event/normal truth and driver-group contract. Official Kaggle
+  metadata resolves Popescu CC BY 4.0 and Large-Scale CC BY-NC-SA 4.0; their two-Hz
+  and label gaps remain. No archive, model, device or product-code change. Next is
+  an explicit evidence-collection/annotation protocol, not more same-report
+  searching. See `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`.
+
 - M7 Ferreira primary-source review (2026-11-17): author permission with paper/
   dataset attribution and intended SI units are established in primary sources.
   The author reports no longer having the videos and not retaining original

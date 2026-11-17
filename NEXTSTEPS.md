@@ -21,6 +21,16 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The bounded review of 15 remaining report leads establishes no complete acceptance
+corpus; see `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`. Stop repeating
+the same shortlist or fitting against weak labels. Prepare a concrete collection/
+independent-annotation and locked-evaluation protocol next; actual recording can
+wait until a healthy phone and distinct driver groups are available. A governed
+public reannotation alternative still needs permission, driver mapping and native
+feature/quality evidence. No new drive is requested and no model experiment is
+frozen. Kaggle metadata corrects two report licence gaps without resolving the
+two-Hz input and label limitations. M7.4/M7.5 remain open; M8 stays inactive.
+
 The Ferreira follow-up now resolves affirmative author permission evidence and
 intended units, but confirms that the author no longer has the videos and did not
 retain device-frame originals or matrices. Driver assignment is not in the four
@@ -30,17 +40,17 @@ route to re-annotate normal driving or supply the native feature contract. New
 primary evidence or a separately governed compatible source with reviewed normal
 exposure and independent evaluation groups is needed. No new drive is requested.
 
-While the maintainer's external research agent qualifies data, a separate native
-v2 development policy now handles only explained bounded interpolation with
-mandatory current/history/native-LIMITED sidecar metadata. All 528 native tests
+A separate native v2 development policy now handles only explained bounded
+interpolation with mandatory current/history/native-LIMITED sidecar metadata.
+All 528 native tests
 pass, along with lint/debug build, repository validation and all four source CI
 jobs 44042014141 (`e8ad83e`, attempt 1).
 V1 stays strict, M3 confidence is unchanged,
 and no model/source is admitted. See `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`.
-The Ferreira primary-source review is now recorded; continue
-source qualification against frame/gravity/quality and independent labels/groups
-before freezing any experiment; preserve inspected
-development roles. A phone is unnecessary until a candidate needs device evidence.
+The Ferreira and remaining-source reviews are now recorded. New primary evidence
+must resolve frame/gravity/quality and independent labels/groups before freezing
+an experiment; preserve inspected development roles. A phone is unnecessary until
+collection or candidate device evidence is actually scheduled.
 
 The subsequently authorized feature/real-stream feasibility unit implements an
 unwired native extractor and measures actual Zenodo trip-2 signals. All 519 native
