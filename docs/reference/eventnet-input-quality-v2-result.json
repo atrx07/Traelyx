@@ -1,6 +1,41 @@
 {
   "ci": {
-    "status": "pending"
+    "attempt": 1,
+    "coverage": [
+      "Flutter generated/schema/format/analysis/tests",
+      "offline dataset/source qualification and intake regressions",
+      "full native tests including unchanged strict v1 and new v2 feature policy cases",
+      "debug/release-validation app builds and artifact gates",
+      "existing generated-model CPU/mobile regressions and standalone benchmark checks",
+      "native-to-CPU integrity comparison",
+      "Guardian Edge and cloud schema/RLS"
+    ],
+    "existing_generated_model_regression_experiments_run": true,
+    "failed_attempts": [],
+    "jobs": {
+      "cloud-schema": "success",
+      "eventnet-cpu": "success",
+      "guardian-dispatch": "success",
+      "validate": "success"
+    },
+    "run_id": 44042014141,
+    "source_commit": "e8ad83e0616b9be91bb160d018d4df0cdc2e8fd5",
+    "source_git_blob_sha256": {
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/intelligence/HybridEventEvidence.kt": "d9e410bcc2b43790afeeaf1825589164bb66b22a01e16f39d625fac7ae3e40e6",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/DerivedTelemetryModels.kt": "01dd49552b38e9f1ff330452055d22c80ea034f74a8eb1580353eb620e444b54",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/DerivedTelemetryPipeline.kt": "8f7599aa2df86c7b6fdf21d15cfd76400b2ea2eba2189fa1a39143d4d53185d8",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/ImuStationaryCalibration.kt": "dfd588f478317d3b1139e1aad0be177b0ea87e0b46e0bb360c0b4380a142ee4a",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/OrientationFrameTransform.kt": "fc55cde7362784218eedf070f7f8ba698d1524bd9e30553bb7a9e70affa03a2c",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/ProvisionalEventFeatures.kt": "81b8dfe851d75d04cef57f086bcba46283b36b7f554a0350ff03cd5241384051",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/ProvisionalEventInputQuality.kt": "6f34c9fa814b63bf1aff461e56e817d69f788a854c1d614552682ec7240a2bea",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/RawTelemetryProcessing.kt": "0896fc4c4e6829b1f081c4abbeac15d60d1b13b72177f2154bd9dff33c14f1a6",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/TelemetryConfidenceModels.kt": "1448037ba5d083fc2c58beed61a6b7d4e766cb1c543eb8354498d36de2dd60bf",
+      "android/app/src/main/kotlin/io/github/atrx07/traelyx/telemetry/TelemetryConfidencePipeline.kt": "5fa3e0e375bb1be76a29510ae36e556e7680be14b5d9fb41f46414425a5e7ebf",
+      "android/app/src/test/kotlin/io/github/atrx07/traelyx/telemetry/ProvisionalEventFeaturesTest.kt": "cf2d06df525f1c9289e6dc365de1343363159f859426d79a214e750a1e3ffe41",
+      "docs/reference/eventnet-native-input-proposal-v2.json": "06deb6cf86b5e077d2bb990af555cf4525f5c1392e7fd1f7d98892e9ab48729c"
+    },
+    "status": "success",
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44042014141"
   },
   "compatibility": {
     "database_or_raw_schema_change": false,
@@ -50,6 +85,7 @@
   "m7_4_complete": false,
   "m7_5_complete": false,
   "m8_active": false,
+  "new_source_model_training_or_predictions": false,
   "privacy": {
     "dataset_access": false,
     "device_operations": [],
@@ -75,6 +111,5 @@
     600
   ],
   "source_or_model_admitted": false,
-  "status": "proposed_unwired_development_only",
-  "training_or_predictions": false
+  "status": "proposed_unwired_development_only"
 }

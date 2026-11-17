@@ -24,7 +24,8 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 While the maintainer's external research agent qualifies data, a separate native
 v2 development policy now handles only explained bounded interpolation with
 mandatory current/history/native-LIMITED sidecar metadata. All 528 native tests
-pass, along with lint/debug build and repository validation; source CI pending.
+pass, along with lint/debug build, repository validation and all four source CI
+jobs 44042014141 (`e8ad83e`, attempt 1).
 V1 stays strict, M3 confidence is unchanged,
 and no model/source is admitted. See `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`.
 Next review the research findings against source units/frame/gravity/quality and

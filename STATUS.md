@@ -36,7 +36,8 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
   masks, accuracy, brackets/lookahead and calibration interpolation counts. Native
   confidence/eligibility and the strict v1 extractor remain unchanged. All 528
   native tests pass, including the original ten and nine new feature regressions.
-  Lint/debug build and repository validation pass; source CI pending. No device, dataset, source admission, training,
+  Lint/debug build, repository validation and all four source CI jobs 44042014141
+  (`e8ad83e`, attempt 1) pass. No device, dataset, source admission, new source-model training,
   model/runtime, dependency, migration or scoring/Guardian change. See
   `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`; model acceptance remains open.
 

@@ -239,11 +239,12 @@ default 50 ms bracket bound as a development ceiling, not a precision guarantee.
   eligibility per channel/target, source accuracy and bracket/lookahead bounds.
 - [x] Test exact/offset/history-only inputs, gaps, unreliable or flagged sources,
   unsupported context/components, forged provenance and metadata immutability.
-- [ ] Run full native tests, lint/build, repository validation and exact-source CI;
+- [x] Run full native tests, lint/build and repository validation; all four source
+  CI jobs 44042014141 pass for `e8ad83e` on attempt 1. Preserve source/blob hashes,
   synchronize evidence/status, commit/push/verify and report remaining gates.
 
-No phone/emulator, dataset retrieval, private archive access, model training,
-prediction, runtime/provider dependency, schema migration or production caller.
+No phone/emulator, dataset retrieval, private archive access, new source-model
+training/prediction, runtime/provider dependency, schema migration or production caller.
 The external research agent owns source discovery; review its findings separately
 after this bounded implementation is persisted. Formal M7.4/M7.5 remain open.
 

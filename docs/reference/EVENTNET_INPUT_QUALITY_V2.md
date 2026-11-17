@@ -5,7 +5,7 @@
 This bounded M7 follow-up proceeds while the maintainer's research agent qualifies
 datasets. It implements a separate **unwired development** feature contract,
 `eventnet-native-derived-imu-proposal-v2`. It authorizes no source admission,
-training, model prediction, runtime/provider dependency or production promotion.
+new source-model training/prediction, runtime/provider dependency or production promotion.
 M7.4/M7.5 remain open; M8 remains inactive. No device or dataset is accessed.
 See [machine contract](eventnet-native-input-proposal-v2.json) and
 [aggregate validation](eventnet-input-quality-v2-result.json).
@@ -121,7 +121,12 @@ path, compare numeric outputs and verify native evidence is unchanged:
 - Calibration faults, context changes, unsupported configuration and invalid
   bounds remain rejected. Native calibration interpolation counts are preserved.
 
-Full native, lint/build and CI results are recorded in the aggregate evidence.
+All 528 native tests, Android lint, the debug build and repository validation pass.
+All four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44042014141)
+pass for `e8ad83e` on attempt 1, including full app tests and debug/release-validation
+builds. Source Git-blob hashes are preserved in the aggregate evidence. Existing
+generated-model regression experiments run in CI; no new source-data experiment
+or held-out model prediction is made by this unit.
 No new dependency, migration, recorder sampling, scoring/Guardian effect, private
 data access or upload. Physical performance and field accuracy remain untested;
 neither the emulator nor the physical phones are needed for this development unit.

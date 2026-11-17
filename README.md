@@ -109,7 +109,9 @@ No production inference or device operation is enabled.
 The separate [v2 input-quality proposal](docs/reference/EVENTNET_INPUT_QUALITY_V2.md)
 constructs development windows with bounded interpolation and mandatory quality
 metadata. All 528 native tests pass; strict v1 and M3 confidence remain unchanged.
-Lint/debug build and repository validation pass; source CI pending. No model is trained/promoted, and no production
+Lint/debug build, repository validation and
+[four source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44042014141)
+pass. No new source-based model candidate is trained/promoted, and no production
 inference, device use, schema or dependency is added.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
