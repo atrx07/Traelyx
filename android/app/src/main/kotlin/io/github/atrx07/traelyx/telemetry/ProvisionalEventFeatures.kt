@@ -30,10 +30,16 @@ sealed interface ProvisionalFeatureResult {
         val latestSourceElapsedNanos: Long,
         val maximumSourceLookaheadNanos: Long,
         values: FloatArray,
+        val schema: String = PROVISIONAL_EVENT_FEATURE_SCHEMA,
+        val inputQuality: ProvisionalEventInputQuality? = null,
     ) : ProvisionalFeatureResult {
-        val schema: String = PROVISIONAL_EVENT_FEATURE_SCHEMA
         val configuration: String = "native-M3-defaults-v1"
         private val tensor = values.copyOf()
+
+        init {
+            require((schema == PROVISIONAL_EVENT_FEATURE_SCHEMA && inputQuality == null) ||
+                (schema == PROVISIONAL_EVENT_FEATURE_SCHEMA_V2 && inputQuality != null))
+        }
 
         /** NCT [1,4,600]: forward/left/up m/s², then upward yaw rad/s. */
         fun copyTensor(): FloatArray = tensor.copyOf()
@@ -43,6 +49,14 @@ sealed interface ProvisionalFeatureResult {
 /** Unwired development extractor. Reuses native preprocessing; never re-filters or fills gaps. */
 object ProvisionalEventFeatureExtractor {
     fun extract(timeline: TelemetryConfidenceTimeline, startExclusiveNanos: Long): ProvisionalFeatureResult {
+        return extractWithPolicy(timeline, startExclusiveNanos, ProvisionalFeaturePolicy.STRICT_V1)
+    }
+
+    internal fun extractWithPolicy(
+        timeline: TelemetryConfidenceTimeline,
+        startExclusiveNanos: Long,
+        policy: ProvisionalFeaturePolicy,
+    ): ProvisionalFeatureResult {
         if (startExclusiveNanos < 0L || startExclusiveNanos > Long.MAX_VALUE - PROVISIONAL_EVENT_WINDOW_NANOS) {
             return rejected(ProvisionalFeatureRejection.INVALID_BOUNDS)
         }
@@ -52,15 +66,16 @@ object ProvisionalEventFeatureExtractor {
             return rejected(ProvisionalFeatureRejection.UNSUPPORTED_CONFIGURATION)
         }
         return extractFrames(
-            timeline.synchronizedFrames(), derived.motionContexts, startExclusiveNanos,
+            timeline.synchronizedFrames(), derived.motionContexts, startExclusiveNanos, policy,
         )
     }
 
-    /** Internal seam for generated failure fixtures; production callers use the timeline entry point. */
+    /** Internal seam for generated failure fixtures; other callers use the timeline entry point. */
     internal fun extractFrames(
         frames: Sequence<ConfidenceTelemetryFramePair>,
         contexts: DerivedMotionContextTimeline,
         startExclusiveNanos: Long,
+        policy: ProvisionalFeaturePolicy = ProvisionalFeaturePolicy.STRICT_V1,
     ): ProvisionalFeatureResult {
         if (startExclusiveNanos < 0L || startExclusiveNanos > Long.MAX_VALUE - PROVISIONAL_EVENT_WINDOW_NANOS) {
             return rejected(ProvisionalFeatureRejection.INVALID_BOUNDS)
@@ -83,11 +98,19 @@ object ProvisionalEventFeatureExtractor {
             return rejected(ProvisionalFeatureRejection.CALIBRATION_OR_MOUNT_UNRESOLVED)
         }
         val values = FloatArray(4 * PROVISIONAL_EVENT_SAMPLES)
+        val qualityCollector = if (policy == ProvisionalFeaturePolicy.INTERPOLATION_V2) ProvisionalInputQualityCollector() else null
+        val schema = if (qualityCollector == null) PROVISIONAL_EVENT_FEATURE_SCHEMA else PROVISIONAL_EVENT_FEATURE_SCHEMA_V2
+        if (qualityCollector != null &&
+            (calibration.accelerometerMinimumAccuracyStatus !in 1..3 || calibration.gyroscopeMinimumAccuracyStatus !in 1..3 ||
+                calibration.rawQualityFlags.isNotEmpty() || context.calibrationResult.evidence.any { it != ImuCalibrationEvidence.INTERPOLATED_INPUT })) {
+            return rejected(ProvisionalFeatureRejection.CALIBRATION_OR_MOUNT_UNRESOLVED)
+        }
         var count = 0
         var earliest = Long.MAX_VALUE
         var latest = 0L
         var lookahead = 0L
-        for ((frame, confidence) in frames) {
+        for (pair in frames) {
+            val (frame, confidence) = pair
             if (Thread.currentThread().isInterrupted) throw CancellationException()
             val target = frame.tripElapsedNanos
             if (target <= startExclusiveNanos) continue
@@ -97,8 +120,12 @@ object ProvisionalEventFeatureExtractor {
             }
             val acceleration = frame.vehicleAccelerationMetresPerSecondSquared as? DerivedVectorValue.Available
             val yaw = frame.yawRateRadiansPerSecond as? DerivedScalarValue.Available
-            if (acceleration == null || yaw == null ||
-                acceleration.quality != DerivedChannelQuality.RESOLVED || yaw.quality != DerivedChannelQuality.RESOLVED ||
+            if (acceleration == null || yaw == null) {
+                return rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED)
+            }
+            if (qualityCollector != null) {
+                if (!qualityCollector.accept(pair, count)) return rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED)
+            } else if (acceleration.quality != DerivedChannelQuality.RESOLVED || yaw.quality != DerivedChannelQuality.RESOLVED ||
                 confidence.eligibility.vehicleAcceleration.eligibility != TelemetryEligibility.ELIGIBLE ||
                 confidence.eligibility.yawRate.eligibility != TelemetryEligibility.ELIGIBLE) {
                 return rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED)
@@ -110,7 +137,14 @@ object ProvisionalEventFeatureExtractor {
                     provenance.mountAlignmentQuality != VehicleMountAlignmentQuality.RESOLVED ||
                     provenance.sourceStartTripElapsedNanos > target ||
                     provenance.sourceEndTripElapsedNanos < target ||
-                    provenance.imuQualityFlags.isNotEmpty()) {
+                    provenance.imuQualityFlags.isNotEmpty() ||
+                    (qualityCollector != null && (provenance.calibrationEvidence != context.calibrationResult.evidence ||
+                        provenance.mountAlignmentEvidence != mount.evidence ||
+                        confidence.components.calibration.sourceStartTripElapsedNanos != calibration.startTripElapsedNanos ||
+                        confidence.components.calibration.sourceEndTripElapsedNanos != calibration.endTripElapsedNanos ||
+                        confidence.components.calibration.state != ImuCalibrationState.CALIBRATED ||
+                        confidence.components.orientation.quality != VehicleMountAlignmentQuality.RESOLVED ||
+                        confidence.components.deviceMovement.mountQuality != VehicleMountAlignmentQuality.RESOLVED))) {
                     return rejected(ProvisionalFeatureRejection.PROVENANCE_MISMATCH)
                 }
                 earliest = minOf(earliest, provenance.sourceStartTripElapsedNanos)
@@ -131,14 +165,15 @@ object ProvisionalEventFeatureExtractor {
         // Defaults are pinned above. Bind the context and every calibration value/flag,
         // canonicalizing the only set; include mount basis rather than object identity.
         val identity = listOf(
-            PROVISIONAL_EVENT_FEATURE_SCHEMA, "native-M3-defaults-v1",
+            schema, "native-M3-defaults-v1",
             context.startTripElapsedNanos, context.endTripElapsedNanosExclusive,
             calibration.copy(rawQualityFlags = calibration.rawQualityFlags.sortedBy { it.name }.toSet()),
             mount.forwardDevice, mount.leftDevice, mount.upDevice,
         ).joinToString("|")
         val digest = MessageDigest.getInstance("SHA-256").digest(identity.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it.toInt() and 255) }
-        return ProvisionalFeatureResult.Window(startExclusiveNanos, end, digest, earliest, latest, lookahead, values)
+        return ProvisionalFeatureResult.Window(startExclusiveNanos, end, digest, earliest, latest, lookahead, values,
+            schema, qualityCollector?.snapshot(calibration))
     }
 
     private fun rejected(reason: ProvisionalFeatureRejection) = ProvisionalFeatureResult.Rejected(reason)

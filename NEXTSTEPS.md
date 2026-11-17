@@ -21,6 +21,16 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+While the maintainer's external research agent qualifies data, a separate native
+v2 development policy now handles only explained bounded interpolation with
+mandatory current/history/native-LIMITED sidecar metadata. All 528 native tests
+pass, along with lint/debug build and repository validation; source CI pending.
+V1 stays strict, M3 confidence is unchanged,
+and no model/source is admitted. See `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`.
+Next review the research findings against source units/frame/gravity/quality and
+independent labels/groups before freezing any experiment; preserve inspected
+development roles. A phone is unnecessary until a candidate needs device evidence.
+
 The subsequently authorized feature/real-stream feasibility unit implements an
 unwired native extractor and measures actual Zenodo trip-2 signals. All 519 native
 and 150 Python tests, lint, debug build and all four source CI jobs 44035810697
@@ -29,9 +39,9 @@ probing, but preprocessed linear acceleration cannot silently replace native raw
 accelerometer processing; frame, quality, clock/label semantics and independent
 evaluation exposure remain unresolved. See
 `docs/reference/EVENTNET_FEATURE_FEASIBILITY_V1.md`. No source is admitted or model
-trained. First resolve the demonstrated strict-input-policy rejection of clean
-asynchronous/interpolated native IMU without changing M3 confidence or hiding
-uncertainty. Resolve the source contracts before choosing a new experiment; keep
+trained. The subsequent v2 proposal addresses the demonstrated asynchronous-input
+rejection for development while preserving M3 confidence and uncertainty.
+Resolve the source contracts before choosing a new experiment; keep
 the real phone for later candidate benchmarks. The emulator remains unused.
 
 The maintainer chose to tackle M7.4/M7.5 before M8 (2026-11-16), superseding the

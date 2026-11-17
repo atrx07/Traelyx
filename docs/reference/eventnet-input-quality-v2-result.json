@@ -1,0 +1,80 @@
+{
+  "ci": {
+    "status": "pending"
+  },
+  "compatibility": {
+    "database_or_raw_schema_change": false,
+    "historical_model_weights_splits_results_or_thresholds_changed": false,
+    "native_M3_confidence_changed": false,
+    "new_dependency": false,
+    "production_hybrid_boundary_changed": false,
+    "recorder_sampling_change": false,
+    "scoring_or_guardian_change": false,
+    "strict_feature_v1_behavior_preserved": true
+  },
+  "date": "2026-11-17",
+  "evidence_version": "eventnet-input-quality-v2",
+  "feature_schema": "eventnet-native-derived-imu-proposal-v2",
+  "generated_fixture_assertions": {
+    "async_gyro_current_interpolated_targets": 600,
+    "async_gyro_history_interpolated_targets": 600,
+    "async_gyro_maximum_current_bracket_nanos": 10000000,
+    "async_gyro_maximum_current_lookahead_nanos": 1000000,
+    "async_gyro_native_LIMITED_targets": 600,
+    "async_gyro_offset_nanos": 1000000,
+    "exact_v1_v2_float_values": "identical",
+    "history_only_gyro_current_interpolated_targets": 0,
+    "history_only_gyro_history_interpolated_targets": 600,
+    "history_only_gyro_native_LIMITED_targets": 600,
+    "native_50000000ns_bracket_ceiling": "development_admitted_with_metadata",
+    "native_calibration_interpolation_counts": "preserved_without_state_change",
+    "one_missing_gyro_sample_current_interpolated_targets": 1,
+    "one_missing_gyro_sample_history_interpolated_targets": 301,
+    "one_missing_gyro_sample_maximum_current_bracket_nanos": 20000000,
+    "oversized_gap_unreliable_dropout_clock_and_unexplained_degradation": "rejected",
+    "sidecar_immutability_and_native_evidence_preservation": "passed"
+  },
+  "local_validation": {
+    "android_lint": "passed",
+    "debug_build": "passed",
+    "failures": 0,
+    "focused_feature_tests": 19,
+    "local_properties_restored_byte_for_byte": true,
+    "native_tests": 528,
+    "new_v2_tests": 9,
+    "original_v1_test_methods_git_normalized_text": "passed",
+    "repository_contracts": "passed",
+    "skips": 0,
+    "unchanged_v1_tests": 10
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "privacy": {
+    "dataset_access": false,
+    "device_operations": [],
+    "generated_fixtures_only": true,
+    "private_archive_access": false,
+    "telemetry_uploads": false
+  },
+  "quality_mask_shape": [
+    2,
+    600
+  ],
+  "quality_policy": "bounded-native-imu-interpolation-development-v1",
+  "remaining_gates": [
+    "public_source_feature_and_quality_equivalence",
+    "independent_driving_event_and_normal_truth",
+    "grouped_locked_evaluation",
+    "model_calibration_numerical_value_and_mobile_acceptance",
+    "production_integration_review"
+  ],
+  "shape": [
+    1,
+    4,
+    600
+  ],
+  "source_or_model_admitted": false,
+  "status": "proposed_unwired_development_only",
+  "training_or_predictions": false
+}

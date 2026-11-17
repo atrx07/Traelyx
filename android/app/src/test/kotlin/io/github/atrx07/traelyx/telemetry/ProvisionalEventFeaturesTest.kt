@@ -184,22 +184,194 @@ class ProvisionalEventFeaturesTest {
         assertFalse(Thread.currentThread().isInterrupted)
     }
 
+    @Test
+    fun `v2 accepts clean asynchronous input and retains native limited evidence without mutation`() {
+        val t = timeline(gyroscopeOffsetNanos = 1_000_000L)
+        val before = t.synchronizedFrames().toList()
+        rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED,
+            ProvisionalEventFeatureExtractor.extract(t, SECOND))
+        val window = ProvisionalInterpolatedEventFeatureExtractor.extract(t, SECOND) as ProvisionalFeatureResult.Window
+        val q = requireNotNull(window.inputQuality)
+        assertEquals(PROVISIONAL_EVENT_FEATURE_SCHEMA_V2, window.schema)
+        assertTrue(q.nativeMetricsLimited)
+        assertTrue(q.hasInterpolationEvidence)
+        assertEquals(0, q.count(0, FEATURE_CURRENT_INTERPOLATION))
+        assertEquals(600, q.count(1, FEATURE_CURRENT_INTERPOLATION))
+        assertEquals(600, q.count(1, FEATURE_HISTORY_INTERPOLATION))
+        assertEquals(600, q.count(1, FEATURE_NATIVE_METRIC_LIMITED))
+        assertEquals(STEP, q.copyMaximumCurrentBracketNanos()[1])
+        assertEquals(1_000_000L, q.copyMaximumCurrentLookaheadNanos()[1])
+        assertEquals(1_000_000L, window.maximumSourceLookaheadNanos)
+        assertEquals(before, t.synchronizedFrames().toList())
+        before.filter { it.derived.tripElapsedNanos > SECOND }.forEachIndexed { i, frame ->
+            val yaw = frame.derived.yawRateRadiansPerSecond as DerivedScalarValue.Available
+            assertEquals(yaw.value.toFloat(), window.copyTensor()[1800 + i], 0f)
+            assertEquals(TelemetryEligibility.LIMITED, frame.confidence.eligibility.yawRate.eligibility)
+        }
+    }
+
+    @Test
+    fun `v2 exact windows match v1 values with distinct schema identity and clean sidecar`() {
+        val t = timeline()
+        val v1 = ProvisionalEventFeatureExtractor.extract(t, SECOND) as ProvisionalFeatureResult.Window
+        val v2 = ProvisionalInterpolatedEventFeatureExtractor.extract(t, SECOND) as ProvisionalFeatureResult.Window
+        assertArrayEquals(v1.copyTensor(), v2.copyTensor(), 0f)
+        assertEquals(PROVISIONAL_EVENT_FEATURE_SCHEMA, v1.schema)
+        assertEquals(null, v1.inputQuality)
+        assertNotEquals(v1.contextSha256, v2.contextSha256)
+        val q = requireNotNull(v2.inputQuality)
+        assertFalse(q.nativeMetricsLimited)
+        assertFalse(q.hasInterpolationEvidence)
+        assertEquals(1200, q.copyMasks().size)
+        assertTrue(q.copyMasks().all { it.toInt() == 0 })
+    }
+
+    @Test
+    fun `v2 sidecar arrays cannot be changed through caller copies`() {
+        val window = ProvisionalInterpolatedEventFeatureExtractor.extract(timeline(gyroscopeOffsetNanos = 1_000_000L), SECOND)
+            as ProvisionalFeatureResult.Window
+        val q = requireNotNull(window.inputQuality)
+        q.copyMasks()[600] = 0
+        q.copyMinimumAccuracyStatus()[1] = -1
+        q.copyMaximumCurrentBracketNanos()[1] = Long.MAX_VALUE
+        q.copyMaximumCurrentLookaheadNanos()[1] = Long.MAX_VALUE
+        assertEquals(7, q.copyMasks()[600].toInt())
+        assertEquals(3, q.copyMinimumAccuracyStatus()[1])
+        assertEquals(STEP, q.copyMaximumCurrentBracketNanos()[1])
+        assertEquals(1_000_000L, q.copyMaximumCurrentLookaheadNanos()[1])
+    }
+
+    @Test
+    fun `v2 distinguishes historical interpolation from exact current samples`() {
+        val t = timeline(gyroscopeOffsetNanos = 1_000_000L, offsetUntilNanos = SECOND/2)
+        val frame = t.synchronizedFrames().first { it.derived.tripElapsedNanos > SECOND }
+        assertEquals(TelemetryConfidenceState.SUPPORTED, frame.confidence.components.gyroscope.assessment.state)
+        assertEquals(TelemetryEligibility.LIMITED, frame.confidence.eligibility.yawRate.eligibility)
+        val q = requireNotNull((ProvisionalInterpolatedEventFeatureExtractor.extract(t, SECOND)
+            as ProvisionalFeatureResult.Window).inputQuality)
+        assertEquals(0, q.count(1, FEATURE_CURRENT_INTERPOLATION))
+        assertEquals(600, q.count(1, FEATURE_HISTORY_INTERPOLATION))
+        assertEquals(600, q.count(1, FEATURE_NATIVE_METRIC_LIMITED))
+        assertEquals(0L, q.copyMaximumCurrentBracketNanos()[1])
+        assertTrue(q.nativeMetricsLimited)
+    }
+
+    @Test
+    fun `v2 retains bounded missing-sample interpolation but rejects oversized gap`() {
+        val t = timeline(gyroscopeMissingRange = 4*SECOND..4*SECOND)
+        val q = requireNotNull((ProvisionalInterpolatedEventFeatureExtractor.extract(t, SECOND)
+            as ProvisionalFeatureResult.Window).inputQuality)
+        assertEquals(1, q.count(1, FEATURE_CURRENT_INTERPOLATION))
+        assertEquals(301, q.count(1, FEATURE_HISTORY_INTERPOLATION))
+        assertEquals(301, q.count(1, FEATURE_NATIVE_METRIC_LIMITED))
+        assertEquals(2*STEP, q.copyMaximumCurrentBracketNanos()[1])
+        val ceiling = timeline(gyroscopeMissingRange = 4*SECOND..(4*SECOND+3*STEP))
+        val ceilingQuality = requireNotNull((ProvisionalInterpolatedEventFeatureExtractor.extract(ceiling, SECOND)
+            as ProvisionalFeatureResult.Window).inputQuality)
+        assertEquals(DEFAULT_MAX_IMU_INTERPOLATION_GAP_NANOS, ceilingQuality.copyMaximumCurrentBracketNanos()[1])
+        val gap = timeline(gyroscopeMissingRange = (4*SECOND-10*STEP)..(4*SECOND+10*STEP))
+        rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED,
+            ProvisionalInterpolatedEventFeatureExtractor.extract(gap, SECOND))
+    }
+
+    @Test
+    fun `v2 rejects unreliable history and current dropout clock or unreliable source`() {
+        for (flag in listOf(ImuQualityFlag.SENSOR_UNRELIABLE, ImuQualityFlag.CLOCK_DISCONTINUITY, ImuQualityFlag.IMU_DROPOUT)) {
+            rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED,
+                ProvisionalInterpolatedEventFeatureExtractor.extract(timeline(flagAt = 4*SECOND, sourceFlag = flag), SECOND))
+        }
+        rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED,
+            ProvisionalInterpolatedEventFeatureExtractor.extract(timeline(unreliableAt = SECOND/2), SECOND))
+    }
+
+    @Test
+    fun `v2 rejects forged limited reasons brackets evidence and accuracy`() {
+        val t = timeline(gyroscopeOffsetNanos = 1_000_000L)
+        val cases: List<(ConfidenceTelemetryFramePair) -> ConfidenceTelemetryFramePair> = listOf(
+            { p -> p.copy(confidence = p.confidence.copy(components = p.confidence.components.copy(
+                deviceMovement = p.confidence.components.deviceMovement.copy(assessment = TelemetryConfidenceAssessment(
+                    TelemetryConfidenceState.DEGRADED, setOf(TelemetryConfidenceReason.DEVICE_MOVEMENT_NOT_EVALUATED)))))) },
+            { p -> p.copy(confidence = p.confidence.copy(components = p.confidence.components.copy(
+                gyroscope = p.confidence.components.gyroscope.copy(assessment = TelemetryConfidenceAssessment(
+                    TelemetryConfidenceState.DEGRADED, setOf(TelemetryConfidenceReason.IMU_INTERPOLATED, TelemetryConfidenceReason.IMU_SENSOR_UNRELIABLE)))))) },
+            { p -> p.copy(confidence = p.confidence.copy(components = p.confidence.components.copy(
+                gyroscope = p.confidence.components.gyroscope.copy(upperTripElapsedNanos = p.derived.tripElapsedNanos + 100_000_000L,
+                    upperSourceTimestampNanos = 10*SECOND + p.derived.tripElapsedNanos + 100_000_000L)))) },
+            { p -> val yaw = p.derived.yawRateRadiansPerSecond as DerivedScalarValue.Available
+                p.copy(derived = p.derived.copy(yawRateRadiansPerSecond = yaw.copy(
+                    evidence = yaw.evidence + DerivedChannelEvidence.CALIBRATION_DEGRADED))) },
+            { p -> val yaw = p.derived.yawRateRadiansPerSecond as DerivedScalarValue.Available
+                p.copy(derived = p.derived.copy(yawRateRadiansPerSecond = yaw.copy(
+                    provenance = yaw.provenance.copy(minimumImuAccuracyStatus = 0)))) },
+            { p -> p.copy(confidence = p.confidence.copy(eligibility = p.confidence.eligibility.copy(
+                yawRate = p.confidence.eligibility.yawRate.copy(limitingComponents = setOf(TelemetryConfidenceComponentKind.CALIBRATION))))) },
+        )
+        for (change in cases) {
+            val frames = t.synchronizedFrames().map { if (it.derived.tripElapsedNanos == 4*SECOND) change(it) else it }
+            rejected(ProvisionalFeatureRejection.CHANNEL_UNAVAILABLE_OR_LIMITED,
+                ProvisionalEventFeatureExtractor.extractFrames(frames, t.sourceTimeline.motionContexts, SECOND,
+                    ProvisionalFeaturePolicy.INTERPOLATION_V2))
+        }
+    }
+
+    @Test
+    fun `v2 still rejects calibration faults context changes bad bounds and unsupported configs`() {
+        val t = timeline()
+        val segment = t.sourceTimeline.motionContexts.segments.single()
+        val calibration = requireNotNull(segment.calibrationResult.calibration)
+        val badCalibration = DerivedMotionContextTimeline(listOf(segment.copy(calibrationResult = segment.calibrationResult.copy(
+            calibration = calibration.copy(accelerometerMinimumAccuracyStatus = 0)))))
+        rejected(ProvisionalFeatureRejection.CALIBRATION_OR_MOUNT_UNRESOLVED,
+            ProvisionalEventFeatureExtractor.extractFrames(t.synchronizedFrames(), badCalibration, SECOND,
+                ProvisionalFeaturePolicy.INTERPOLATION_V2))
+        val changed = DerivedMotionContextTimeline(listOf(segment.copy(endTripElapsedNanosExclusive = 4*SECOND),
+            segment.copy(startTripElapsedNanos = 4*SECOND)))
+        rejected(ProvisionalFeatureRejection.CONTEXT_UNAVAILABLE_OR_CHANGED,
+            ProvisionalEventFeatureExtractor.extractFrames(t.synchronizedFrames(), changed, SECOND,
+                ProvisionalFeaturePolicy.INTERPOLATION_V2))
+        rejected(ProvisionalFeatureRejection.INVALID_BOUNDS, ProvisionalInterpolatedEventFeatureExtractor.extract(t, Long.MAX_VALUE))
+        val config = TelemetryConfidencePipeline.build(t.sourceTimeline, TelemetryConfidenceConfig(preferredGnssHorizontalAccuracyMetres = 10.0))
+        rejected(ProvisionalFeatureRejection.UNSUPPORTED_CONFIGURATION, ProvisionalInterpolatedEventFeatureExtractor.extract(config, SECOND))
+    }
+
+    @Test
+    fun `v2 exposes native calibration interpolation without changing calibration state`() {
+        val t = timeline(calibrationInterpolatedFrames = 1)
+        val q = requireNotNull((ProvisionalInterpolatedEventFeatureExtractor.extract(t, SECOND)
+            as ProvisionalFeatureResult.Window).inputQuality)
+        assertEquals(1, q.calibrationAccelerometerInterpolatedFrames)
+        assertEquals(1, q.calibrationGyroscopeInterpolatedFrames)
+        assertTrue(q.hasInterpolationEvidence)
+        assertFalse(q.nativeMetricsLimited)
+        assertEquals(ImuCalibrationState.CALIBRATED, t.sourceTimeline.motionContexts.segments.single().calibrationResult.state)
+    }
+
     private fun rejected(reason: ProvisionalFeatureRejection, result: ProvisionalFeatureResult) {
         assertEquals(reason, (result as ProvisionalFeatureResult.Rejected).reason)
     }
 
-    private fun timeline(unreliableAt: Long? = null, gyroscopeOffsetNanos: Long = 0L): TelemetryConfidenceTimeline {
+    private fun timeline(
+        unreliableAt: Long? = null,
+        gyroscopeOffsetNanos: Long = 0L,
+        offsetUntilNanos: Long = Long.MAX_VALUE,
+        gyroscopeMissingRange: LongRange? = null,
+        flagAt: Long? = null,
+        sourceFlag: ImuQualityFlag = ImuQualityFlag.SENSOR_UNRELIABLE,
+        calibrationInterpolatedFrames: Int = 0,
+    ): TelemetryConfidenceTimeline {
         val records = (0L..700L).flatMap { i ->
             val time = i * STEP
-            listOf(ImuSensorType.ACCELEROMETER, ImuSensorType.GYROSCOPE).map { sensor ->
-                val sampleTime = time + if (sensor == ImuSensorType.GYROSCOPE) gyroscopeOffsetNanos else 0L
+            listOf(ImuSensorType.ACCELEROMETER, ImuSensorType.GYROSCOPE).mapNotNull { sensor ->
+                if (sensor == ImuSensorType.GYROSCOPE && gyroscopeMissingRange != null && time in gyroscopeMissingRange) return@mapNotNull null
+                val sampleTime = time + if (sensor == ImuSensorType.GYROSCOPE && time < offsetUntilNanos) gyroscopeOffsetNanos else 0L
                 val value = if (sensor == ImuSensorType.ACCELEROMETER)
                     FrameVector3(1.0, 2.0, STANDARD_GRAVITY_METRES_PER_SECOND_SQUARED + 3.0)
                 else FrameVector3(0.0, 0.0, 0.4)
                 TelemetrySampleRecord.Imu(testImuSample(sensorType = sensor, tripElapsedNanos = sampleTime,
                     sourceTimestampNanos = 10 * SECOND + sampleTime).copy(x = value.x.toFloat(), y = value.y.toFloat(),
-                    z = value.z.toFloat(), accuracyStatus = if (time == unreliableAt) 0 else 3,
-                    qualityFlags = if (time == unreliableAt) setOf(ImuQualityFlag.SENSOR_UNRELIABLE) else emptySet()))
+                    z = value.z.toFloat(), accuracyStatus = if (time == unreliableAt || (time == flagAt && sourceFlag == ImuQualityFlag.SENSOR_UNRELIABLE)) 0 else 3,
+                    qualityFlags = if (time == unreliableAt) setOf(ImuQualityFlag.SENSOR_UNRELIABLE) else
+                        if (time == flagAt) setOf(sourceFlag) else emptySet()))
             }
         }
         val chunks = records.chunked(100).mapIndexed { index, group -> TelemetryChunkCodec.encode(
@@ -218,8 +390,10 @@ class ProvisionalEventFeaturesTest {
                 accelerometerAxisStandardDeviationMetresPerSecondSquared = CalibrationVector3(0.0, 0.0, 0.0),
                 gyroscopeAxisStandardDeviationRadiansPerSecond = CalibrationVector3(0.0, 0.0, 0.0),
                 accelerometerMinimumAccuracyStatus = 3, gyroscopeMinimumAccuracyStatus = 3,
-                accelerometerInterpolatedFrameCount = 0, gyroscopeInterpolatedFrameCount = 0, rawQualityFlags = emptySet()),
-            emptySet(), ImuCalibrationDiagnostics(2, 2, 2, 0, 0, 0, 0, 0, 0, 0),
+                accelerometerInterpolatedFrameCount = calibrationInterpolatedFrames,
+                gyroscopeInterpolatedFrameCount = calibrationInterpolatedFrames, rawQualityFlags = emptySet()),
+            if (calibrationInterpolatedFrames > 0) setOf(ImuCalibrationEvidence.INTERPOLATED_INPUT) else emptySet(),
+            ImuCalibrationDiagnostics(2, 2, 2, 0, 0, 0, 0, 0, 0, 0),
         )
         val mount = VehicleMountAlignmentResolution.Available(VehicleMountAlignment(
             quality = VehicleMountAlignmentQuality.RESOLVED, sourceCalibrationStartTripElapsedNanos = 0,

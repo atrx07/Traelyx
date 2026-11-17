@@ -31,6 +31,15 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 input-quality development v2 (2026-11-17): a separate extractor admits only
+  explained bounded native IMU interpolation and returns mandatory copied quality
+  masks, accuracy, brackets/lookahead and calibration interpolation counts. Native
+  confidence/eligibility and the strict v1 extractor remain unchanged. All 528
+  native tests pass, including the original ten and nine new feature regressions.
+  Lint/debug build and repository validation pass; source CI pending. No device, dataset, source admission, training,
+  model/runtime, dependency, migration or scoring/Guardian change. See
+  `docs/reference/EVENTNET_INPUT_QUALITY_V2.md`; model acceptance remains open.
+
 - M7 feature feasibility (2026-11-17): an unwired native development extractor now
   produces copied `[1,4,600]` windows from supported M3 derived/confidence frames,
   with context/provenance/gap/configuration checks. All 519 native and 150 Python

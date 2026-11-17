@@ -90,3 +90,6 @@ For the next corpus/feature decision, read the bounded
 The target remains proposed. The [feature feasibility slice](reference/EVENTNET_FEATURE_FEASIBILITY_V1.md)
 adds an unwired native development extractor and one public stream probe;
 it grants no source or model production admission.
+The subsequent [v2 input-quality proposal](reference/EVENTNET_INPUT_QUALITY_V2.md)
+preserves interpolation/current/history/native-LIMITED metadata while retaining
+the strict v1 entry point. Both remain unwired development APIs.

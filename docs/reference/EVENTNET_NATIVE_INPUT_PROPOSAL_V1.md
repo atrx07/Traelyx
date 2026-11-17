@@ -107,3 +107,7 @@ source timing but does not manufacture native inputs from preprocessed data.
 The strict resolved/eligible policy also rejects clean asynchronous native IMU
 that needs interpolation. That is a demonstrated proposal limitation, not a
 sensor failure; a general-use feature-quality policy remains to be established.
+
+The separate [v2 development policy](EVENTNET_INPUT_QUALITY_V2.md) now admits only
+explained bounded interpolation with a mandatory quality sidecar. V1 remains
+strict. V2 is not an accepted training or production model contract.

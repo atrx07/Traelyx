@@ -217,3 +217,39 @@ source/protocol hashes are preserved; the publisher notebook was never executed.
 Clean asynchronous native IMU is also rejected by the proposal's strict eligibility
 policy in a realistic regression. Establish an explicit feature-quality policy
 before a general-use contract; do not rewrite native confidence to hide interpolation.
+
+## Input-quality policy while independent research proceeds — 2026-11-17
+
+The maintainer asked for useful parallel work while their research agent searches
+for data. Implement a separate **development v2** extractor admitting only native
+bounded IMU interpolation, with mandatory copied quality metadata. Preserve v1's
+strict entry point, tests and rejection. M3 confidence/eligibility, production
+analysis, scores and Guardian do not change. This is a proposed feature policy,
+not an accepted model input/distribution/training protocol or promotion.
+
+Native derived quality is cumulative since filter reset: an earlier interpolation
+can keep a channel degraded even when the current raw alignment is exact. Validate
+both current confidence/brackets and accumulated derived evidence/provenance;
+never accept arbitrary LIMITED evidence or erase historical faults. Use the native
+default 50 ms bracket bound as a development ceiling, not a precision guarantee.
+
+- [x] Version the v2 input/quality-sidecar contract and implement the separate
+  factory with shared window packing, preserving v1 behavior.
+- [x] Retain current interpolation, historical interpolation and native limited
+  eligibility per channel/target, source accuracy and bracket/lookahead bounds.
+- [x] Test exact/offset/history-only inputs, gaps, unreliable or flagged sources,
+  unsupported context/components, forged provenance and metadata immutability.
+- [ ] Run full native tests, lint/build, repository validation and exact-source CI;
+  synchronize evidence/status, commit/push/verify and report remaining gates.
+
+No phone/emulator, dataset retrieval, private archive access, model training,
+prediction, runtime/provider dependency, schema migration or production caller.
+The external research agent owns source discovery; review its findings separately
+after this bounded implementation is persisted. Formal M7.4/M7.5 remain open.
+
+All 528 native tests pass (ten unchanged v1 feature tests plus nine new v2 tests),
+alongside Android lint, debug build and repository validation. Generated 1 ms gyro
+offsets now construct a v2 window with 600 current/history/native-LIMITED masks;
+v1 still rejects the same input. Earlier unreliable evidence remains rejected,
+and history-only interpolation stays visible when current samples become exact.
+The native 50 ms bracket boundary is tested without claiming field precision.
