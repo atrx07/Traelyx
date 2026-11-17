@@ -32,6 +32,21 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   package cache source, replace SQLite with a different system build, or loosen
   schema/test gates.
 
+## Direct Gradle command has no wrapper on a clean Flutter checkout
+
+- **Scope:** Android CI/QA commands before the first Flutter Android setup.
+- **Symptom:** `./gradlew: No such file or directory`; no Gradle compilation starts.
+- **Cause:** This repository ignores generated wrapper scripts/JAR and local SDK
+  setup. A warm development tree has them; a clean checkout does not.
+- **Fast safe fix:** Run `flutter build apk --debug --config-only` first, then the
+  intended explicit Gradle tasks/properties. Keep existing wrapper version/hash
+  and compiler/download verification. Do not commit generated wrapper material
+  or bypass artifact checks.
+- **Verification:** On 2026-11-18 a clean source archive lacked all three wrapper
+  files; configuration-only setup generated `gradlew`, `gradlew.bat` and the
+  wrapper JAR. M8 source CI 44167309120 exposed the ordering error before QA
+  compilation. Corrected full-source CI is recorded in the M8.1 execution plan.
+
 ## Gradle release URL caches HTTP 504 in CI
 
 - **Scope:** Gradle wrapper 9.1.0 `all` distribution on fresh GitHub runners.

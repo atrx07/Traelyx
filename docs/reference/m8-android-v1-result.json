@@ -255,7 +255,12 @@
     },
     "appLint": "passed; local.properties restored byte-for-byte",
     "repositoryContracts": "passed; JSON/YAML and secret scan",
-    "sourceCI": "pending source push"
+    "sourceCI": {
+      "firstSourceCommit": "274dc12b059444ebc11528c6ea87811a8b82b53b",
+      "firstRun": 44167309120,
+      "firstOutcome": "3 jobs passed; validate failed before QA compilation because ignored wrapper was absent",
+      "repair": "Flutter config-only bootstrap verified in a clean archive; full source rerun pending"
+    }
   },
   "unverified": [
     "deep suspend or long-duration OEM reliability",

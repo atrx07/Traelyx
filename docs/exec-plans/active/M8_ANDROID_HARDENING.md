@@ -97,6 +97,12 @@ short stationary checks. No release/tag/assets or external APK distribution.
   ordinary debug build/package isolation, 528 app-native tests plus 68 dependency
   tests, scoped app lint and repository contracts pass. Source CI remains pending.
   Ignored local.properties was restored byte-for-byte after scoped lint escaping.
+- First source CI 44167309120 (`274dc12`) passes cloud-schema, Guardian and
+  isolated ML/mobile jobs, but QA compilation cannot find the ignored Gradle
+  wrapper on the clean checkout. The workflow now invokes Flutter's supported
+  `--config-only` bootstrap before explicit Gradle QA compilation; gates remain
+  unchanged. A local environment-property experiment produced the ordinary APK
+  and was rejected by identity inspection; no such artifact was installed.
 
 ## Completion summary
 

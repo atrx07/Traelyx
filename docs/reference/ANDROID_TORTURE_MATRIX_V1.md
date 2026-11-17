@@ -76,11 +76,15 @@ Build from repository root, then copy both outputs into ignored `.dart_tool/`
 before any ordinary build overwrites them:
 
 ```powershell
+flutter build apk --debug --config-only
 .\android\gradlew.bat -p android -PtraelyxRecorderHardening=true -PtraelyxFirebaseEnabled=false :app:assembleDebug :app:assembleDebugAndroidTest
 # Check both application IDs using Android SDK apkanalyzer before installing.
 # Outputs: build/app/outputs/apk/debug/app-debug.apk
 #          build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 ```
+
+Flutter configuration must run first on a clean checkout: the wrapper
+and local SDK setup are generated/ignored, not committed. CI exercises that order.
 
 Install only those verified QA packages with explicit `adb -s $qaSerial install -r`.
 Grant coarse/fine location and notifications to the QA package only. No mock

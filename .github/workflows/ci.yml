@@ -318,8 +318,11 @@ jobs:
           printf 'TRAELYX_CI_COMPILER_MIRROR=%s\n' "$mirror" >> "$GITHUB_ENV"
 
       - name: Compile isolated recorder hardening checks
-        working-directory: android
-        run: ./gradlew -PtraelyxRecorderHardening=true -PtraelyxFirebaseEnabled=false :app:assembleDebug :app:assembleDebugAndroidTest
+        run: |
+          # Flutter creates the ignored wrapper/local SDK setup on a clean checkout.
+          flutter build apk --debug --config-only
+          cd android
+          ./gradlew -PtraelyxRecorderHardening=true -PtraelyxFirebaseEnabled=false :app:assembleDebug :app:assembleDebugAndroidTest
 
       - name: Verify hardening package isolation
         run: |
