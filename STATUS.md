@@ -31,13 +31,21 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 evidence protocol v1 (2026-11-17): parked preflight/capture, independent clock
+  and strength evidence, blinded human review, driver-role planning, exposure and
+  locked evaluation requirements now have an actionable guide and empty local
+  templates. Statistical exposure examples are planning only; metric gates,
+  reference instrumentation and contributor/reviewer resources remain unresolved.
+  No collection, source/model admission or device/code change. See
+  `docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md`.
+
 - M7 remaining-source triage (2026-11-17): 15 report leads reviewed against primary
   documentation/permission/schema evidence; none establishes the full native
   input, independent event/normal truth and driver-group contract. Official Kaggle
   metadata resolves Popescu CC BY 4.0 and Large-Scale CC BY-NC-SA 4.0; their two-Hz
-  and label gaps remain. No archive, model, device or product-code change. Next is
-  an explicit evidence-collection/annotation protocol, not more same-report
-  searching. See `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`.
+  and label gaps remain. No archive, model, device or product-code change. Its
+  collection/annotation dependency now has the protocol above; capture remains
+  deferred. See `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`.
 
 - M7 Ferreira primary-source review (2026-11-17): author permission with paper/
   dataset attribution and intended SI units are established in primary sources.

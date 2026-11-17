@@ -21,12 +21,21 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The collection/review protocol and empty private-work packet are now prepared:
+`docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md`. Capture remains deferred;
+no participants, real split assignments or frozen experiment are created. The
+next practical evidence step is a separately arranged parked pilot proving sensor/
+export and independent synchronization/strength-reference feasibility, followed
+by routine recording only when resources are available. Independent drivers and
+human reviewers are still unconfirmed. Numeric metric/exposure/device gates must
+be justified and frozen before test access; the packet does not waive them.
+
 The bounded review of 15 remaining report leads establishes no complete acceptance
 corpus; see `docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md`. Stop repeating
-the same shortlist or fitting against weak labels. Prepare a concrete collection/
-independent-annotation and locked-evaluation protocol next; actual recording can
-wait until a healthy phone and distinct driver groups are available. A governed
-public reannotation alternative still needs permission, driver mapping and native
+the same shortlist or fitting against weak labels. Use the prepared collection/
+independent-annotation and locked-evaluation protocol; actual recording can wait
+until suitable capture/reference evidence and distinct driver groups are available.
+A governed public reannotation alternative still needs permission, driver mapping and native
 feature/quality evidence. No new drive is requested and no model experiment is
 frozen. Kaggle metadata corrects two report licence gaps without resolving the
 two-Hz input and label limitations. M7.4/M7.5 remain open; M8 stays inactive.

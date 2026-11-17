@@ -1,0 +1,204 @@
+{
+  "packet_version": "eventnet-evidence-packet-v1",
+  "status": "planning_template_not_frozen",
+  "scope": "collection_annotation_and_evaluation_planning_only",
+  "initiates_capture": false,
+  "experiment_frozen": false,
+  "training_admitted": false,
+  "production_approved": false,
+  "references": {
+    "capture_export": "TRIPDEBUG_FORMAT.md",
+    "manual_qa": "M7_MANUAL_PHONE_QUALITY_CHECK.md",
+    "feature_proposal": "eventnet-native-input-proposal-v2.json",
+    "quality_policy": "EVENTNET_INPUT_QUALITY_V2.md",
+    "source_review": "EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md"
+  },
+  "planning_targets": {
+    "not_statistical_acceptance": true,
+    "driver_roles": {
+      "training": 2,
+      "selection": 1,
+      "calibration": 1,
+      "locked_evaluation": 2
+    },
+    "minimum_distinct_drivers": 6,
+    "independent_human_annotation_passes": 2,
+    "disagreements": "independent_third_adjudication_or_unknown",
+    "phone_reuse_across_drivers": "allowed_with_device_mount_strata_disclosed_not_device_held_out_claim",
+    "recording_dates_and_population": "not_scheduled"
+  },
+  "observation_vocabulary": [
+    "ordinary_driving_candidate",
+    "acceleration_maneuver",
+    "braking_maneuver",
+    "left_turn_or_curve",
+    "right_turn_or_curve",
+    "surface_transition",
+    "device_handling",
+    "unknown_or_unreviewable",
+    "stationary_excluded"
+  ],
+  "session_template": {
+    "session_alias": null,
+    "driver_group_alias": null,
+    "vehicle_group_alias": null,
+    "device_group_alias": null,
+    "mount_group_alias": null,
+    "route_group_alias": null,
+    "source_role": "unassigned",
+    "source_kind": null,
+    "source_permission_and_training_consent_record_ref": null,
+    "declared_population": null,
+    "collection_build_and_config_ref": null,
+    "previous_qualification_exposure_refs": [],
+    "private_artifacts": [],
+    "preflight": {
+      "stationary_quality_checked": false,
+      "gnss_and_driving_context_verified": false,
+      "stable_mount_and_calibration_verified": false,
+      "independent_reference_feasible": false,
+      "local_storage_and_export_verified": false
+    },
+    "synchronization": {
+      "reference_artifact_sha256": null,
+      "reference_time_unit": null,
+      "imu_time_unit": "nanoseconds_since_boot",
+      "mapping_method": null,
+      "mapping_parameters": null,
+      "fit_anchors": [],
+      "check_anchors": [],
+      "maximum_check_residual_ns": null,
+      "declared_uncertainty_ns": null,
+      "validated_interval_start_ns": null,
+      "validated_interval_end_ns": null,
+      "review_status": "unverified"
+    },
+    "native_quality_report_ref": null,
+    "independent_label_report_ref": null,
+    "integrity_and_finalization_report_ref": null,
+    "qa_or_training_exclusion_reasons": [],
+    "admitted": false
+  },
+  "artifact_entry_template": {
+    "kind": null,
+    "sha256": null,
+    "private_local_ref": null
+  },
+  "clock_anchor_template": {
+    "native_boot_time_ns": null,
+    "reference_time_value": null,
+    "method_ref": null,
+    "observation_uncertainty_ns": null
+  },
+  "reviewer_decision_template": {
+    "reviewer_alias": null,
+    "observation_labels": [],
+    "proposed_start_ns": null,
+    "proposed_end_ns": null,
+    "boundary_uncertainty_ns": null,
+    "strength_reference_and_rubric_ref": null,
+    "physical_strength_band": null,
+    "independently_reviewed": false
+  },
+  "annotation_packet_template": {
+    "session_manifest_sha256": null,
+    "label_instructions_version": null,
+    "independent_reference_review_ref": null,
+    "reviewer_aliases": [],
+    "segments": [],
+    "disagreement_log_ref": null,
+    "adjudication_ref": null,
+    "review_complete": false
+  },
+  "segment_template": {
+    "segment_alias": null,
+    "start_ns": null,
+    "end_ns": null,
+    "clock_uncertainty_ns": null,
+    "observation_labels": [],
+    "physical_strength_band": null,
+    "independent_strength_reference_ref": null,
+    "view_and_context_reviewable": false,
+    "driving_context_confirmed": false,
+    "reviewer_decisions": [],
+    "adjudication_status": "unresolved",
+    "unknown_reasons": [],
+    "target_label_mapping_ref": null,
+    "eligible_as_normal_truth": false,
+    "eligible_as_event_truth": false
+  },
+  "freeze_template": {
+    "protocol_revision": null,
+    "population_and_subgroup_scope": null,
+    "source_manifests_and_hashes": [],
+    "driver_split_manifest_sha256": null,
+    "duplicate_and_overlap_audit_ref": null,
+    "class_mapping_and_strength_rubric_ref": null,
+    "annotation_clock_acceptance_limit_ns": null,
+    "independent_positive_episode_minimum_by_class_and_driver": null,
+    "reviewed_negative_exposure_hours_by_driver": null,
+    "feature_implementation_and_equivalence_ref": null,
+    "quality_and_abstention_policy_ref": null,
+    "normalization_fit_role": "training_only",
+    "window_and_hop_contract_ref": null,
+    "window_label_overlap_and_unknown_policy_ref": null,
+    "event_merge_and_matching_policy_ref": null,
+    "event_iou_minimum": null,
+    "onset_matching_tolerance_ns": null,
+    "metrics_and_gates": {
+      "per_class_precision_recall_minima": null,
+      "macro_f1_and_baseline_value_margin": null,
+      "severe_pr_auc_policy": null,
+      "false_severe_rate_upper_limit_per_hour": null,
+      "confidence_method_and_assumptions": null,
+      "minimum_coverage_and_subgroup_limits": null,
+      "calibration_nll_brier_ece_limits": null,
+      "end_to_end_detection_latency_limits": null,
+      "numerical_export_parity_limits": null,
+      "size_cold_warm_cpu_memory_battery_limits": null
+    },
+    "model_architecture_and_search_budget_ref": null,
+    "temperature_and_threshold_fit_role": "calibration_only",
+    "quantizer_configuration_and_calibration_data_ref": null,
+    "target_devices_and_benchmark_plan_ref": null,
+    "locked_test_custodian_and_access_log_ref": null,
+    "held_out_opening_stop_rule": "one_final_frozen_candidate_no_test_guided_retry",
+    "review_signoff_ref": null,
+    "unresolved_items": [],
+    "frozen": false
+  },
+  "zero_false_event_planning": {
+    "observed_false_events_for_examples": 0,
+    "one_sided_confidence": 0.95,
+    "model_assumption": "homogeneous_Poisson_events_fixed_reviewed_eligible_exposure_not_overlapping_windows",
+    "upper_rate_per_hour_formula": "-ln(1-confidence)/reviewed_eligible_hours",
+    "examples": [
+      {
+        "reviewed_eligible_hours": 1,
+        "upper_rate_per_hour": 2.995732273553991
+      },
+      {
+        "reviewed_eligible_hours": 3,
+        "upper_rate_per_hour": 0.9985774245179969
+      },
+      {
+        "reviewed_eligible_hours": 10,
+        "upper_rate_per_hour": 0.2995732273553991
+      },
+      {
+        "reviewed_eligible_hours": 30,
+        "upper_rate_per_hour": 0.0998577424517997
+      }
+    ],
+    "adopted_rate_gate": null,
+    "measured_results": false,
+    "source": "https://www.itl.nist.gov/div898/handbook/apr/section4/apr451.htm"
+  },
+  "known_constraints": [
+    "No new drive scheduled; vehicle tests deferred.",
+    "Tecno old recordings and Redmi stationary export remain QA-excluded, not ordinary-driving truth.",
+    "No suitable public corpus admitted; earlier waveform/README/research exposure must be disclosed.",
+    "Sync marker capture, independent strength reference, contributor/reviewer availability and target population remain unverified.",
+    "Template completion is manual planning, not automated admission or authorization to train."
+  ]
+}

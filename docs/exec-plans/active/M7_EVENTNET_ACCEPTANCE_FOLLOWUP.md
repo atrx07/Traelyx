@@ -26,7 +26,8 @@ pairs suggest device-axis offsets (+0.005, +0.005, +0.04) g and reading gains
 (0.995, 0.995, 0.99). These are provisional diagnostics: tilt, rounding, residual
 cross-axis error and historical stability are not validated. No correction was
 applied to archived data, no quality flag was changed and no sensor exception
-was approved. Public-source qualification is the primary next route.
+was approved. Public-source qualification was the next route; the subsequent
+bounded review and protocol sections below record its disposition.
 
 ## Current bounded scope
 
@@ -317,3 +318,38 @@ same-report search; the next dependency is a concrete collection/independent
 annotation and locked-evaluation protocol before any new recording or governed
 public reannotation. No such protocol or model experiment is implemented here.
 Persist this bounded review and verify the remote before reporting completion.
+
+## Collection / annotation protocol preparation — 2026-11-17
+
+The maintainer authorized continuing with the next evidence protocol after the
+bounded source review. Prepare an actionable capture/review packet and empty local
+templates; do not collect, contact contributors, operate devices, select a source,
+assign real split roles or freeze a model experiment. Vehicle recording remains
+deferred. Refer to dataset/ML governance, native v2 quality and the existing private
+export/manual-phone procedure. Preserve all previous exclusions and model results.
+
+- [x] Define collection preflight, independent synchronization/reference evidence,
+  label review, severity limits and privacy/retention handling.
+- [x] Provide empty session/review and experiment-freeze templates; distinguish
+  planning targets, missing resources and actual admission evidence.
+- [x] Define grouping, reviewed exposure, event matching, uncertainty, evaluation
+  and device-efficiency prerequisites without claiming collected data or results.
+- [x] Check templates/references/statistical examples and repository contracts;
+  synchronize status, inspect exact diff, commit/push and verify.
+
+Documentation/templates only: no runtime, native or model test changes required.
+
+Prepared `EVENTNET_EVIDENCE_COLLECTION_V1.md` and the empty v1 packet. The initial
+six-driver role allocation is a revisable planning target, not a statistical
+sufficiency claim or actual group assignment. A single-driver diagnostic pilot
+can check feasibility. Human review, independent physical strength and clock
+evidence remain necessary; video-only maneuver labels do not establish strong
+event truth, and invalidated device movement remains an abstention/quality slice.
+
+Repository contracts/secret checks, template non-admission/empty-state and role
+counts, documentation links, and all four model-based Poisson planning examples
+pass; whitespace checks pass. No rate/performance gate is adopted by the examples.
+Numeric experiment gates remain mandatory open freeze fields until baseline
+feasibility justifies them before test access. No collected data, phone/emulator,
+new dependency, migration, scoring/model/runtime change or M7 completion. Persist
+the reviewed packet/status atomically and verify the remote before reporting.

@@ -124,7 +124,10 @@ The [remaining-source triage](docs/reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1
 reviews 15 other report leads and establishes no complete acceptance corpus.
 Kaggle permission metadata corrects two report gaps; native inputs, independent
 event/normal labels and driver groups still prevent a new acceptance experiment.
-An explicit collection/annotation protocol is the next dependency. M7 remains open.
+The [collection/review packet](docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md)
+now defines the next evidence procedure and empty templates. Actual collection,
+independent reference/review resources and experiment gates remain unresolved.
+M7 remains open; no new drive or device action is initiated.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 

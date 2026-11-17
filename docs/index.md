@@ -100,3 +100,7 @@ assignment prevent treating it as the current acceptance corpus.
 The bounded [remaining-source triage](reference/EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md)
 records 15 other leads, corrected Kaggle permissions and the missing evidence
 needed before a new experiment. No candidate is admitted.
+For the next evidence step, use the
+[collection/review protocol and empty packet](reference/EVENTNET_EVIDENCE_COLLECTION_V1.md).
+It prepares parked preflight, independent annotation and an evaluation freeze;
+it does not initiate collection, assign real groups or admit a model.

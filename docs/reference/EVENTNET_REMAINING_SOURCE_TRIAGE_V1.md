@@ -91,6 +91,10 @@ feature/model inspection. No new drive is requested by this review. The Redmi
 remains a later manual-export option when available; only its stationary QA is
 verified, not driving/GNSS performance.
 
+The subsequently prepared [v1 collection/review packet](EVENTNET_EVIDENCE_COLLECTION_V1.md)
+now specifies that procedure and empty templates. Collection and experiment
+activation remain deferred; unresolved resources and numeric gates are explicit.
+
 Public video-plus-IMU sources such as comma2k19 or ZOD could only become new
 annotation projects after resolving permission, driver mapping, feature/quality
 equivalence and review access. They are not selected or admitted now. Pairing
