@@ -12,7 +12,10 @@ before main distribution. This supersedes the earlier acceptance-before-M8 order
 M7 is not formally complete: M7.4/M7.5 and M6.8 acceptance carry forward;
 unaccepted sensor inference stays disabled and local neural narration unavailable.
 The bounded M7 engineering wrap-up passes local and full source CI. M8.1 is
-authorized next; its implementation has not started. Later
+in progress: isolated Pixel/Tecno matrices and process recovery pass; local
+validation passes (592 Flutter, 528 app-native and seven operator tests), source
+CI pending. No production recorder behavior changes; see
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. Later
 substeps retain normal approval gates; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 

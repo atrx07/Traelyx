@@ -1,0 +1,281 @@
+{
+  "contractVersion": 1,
+  "protocol": "ANDROID_TORTURE_MATRIX_V1.md",
+  "deviceChecksDate": "2026-11-17",
+  "validationUpdated": "2026-11-18",
+  "scope": "M8.1 bounded stationary recorder QA",
+  "ordinaryPackageReplaced": false,
+  "distributionAuthorized": false,
+  "sensorInferenceActivated": false,
+  "sourceSha256": {
+    "android/app/build.gradle.kts": "3d6dc679989afc7bc863a2daec891f0b4d573303264da160c4bd9483862d5971",
+    "android/app/src/hardening/AndroidManifest.xml": "772e6bcf3468a685cbbc6e438560ecb725bbf5f99d3de12f5b33d2a21db18293",
+    "android/app/src/hardening/kotlin/io/github/atrx07/traelyx/recorder/RecorderHardeningActivity.kt": "49a1630154488c5dfbb97e1615e2aae72ebca19c4cc9c08f668a71dfe416597c",
+    "android/app/src/androidTest/kotlin/io/github/atrx07/traelyx/recorder/RecorderHardeningInstrumentation.kt": "529eec1496feb425da3aaa14ba6b32ff43d651cd92d3a3534b48fa3c78bdad11",
+    "tool/recorder_hardening.mjs": "6606f5f64c580b11aeb90bccadc66f0183887b3f2226af4b4069c4aecffe79db",
+    "tests/tool/test_recorder_hardening.mjs": "285693244cc3a0c7718f99855fc79e8e98691eb3e1808c81f82eeaf303b370b4"
+  },
+  "devices": [
+    {
+      "platform": "Pixel_10 emulator API37",
+      "syntheticGnss": true,
+      "matrix": {
+        "contractVersion": 1,
+        "api": 37,
+        "phase": "matrix",
+        "rows": [
+          {
+            "case": "duplicate_start",
+            "status": "passed"
+          },
+          {
+            "case": "activity_recreation",
+            "status": "passed",
+            "verifiedChunks": 4,
+            "observedMillis": 4011
+          },
+          {
+            "case": "background",
+            "status": "passed",
+            "verifiedChunks": 8,
+            "observedMillis": 8029
+          },
+          {
+            "case": "screen_off",
+            "status": "passed",
+            "verifiedChunks": 10,
+            "observedMillis": 10042
+          },
+          {
+            "case": "provider_loss",
+            "status": "passed",
+            "verifiedChunks": 5,
+            "observedMillis": 5048
+          },
+          {
+            "case": "provider_fix_returned",
+            "status": "passed_synthetic_emulator"
+          },
+          {
+            "case": "offline_recording",
+            "status": "passed",
+            "verifiedChunks": 6,
+            "observedMillis": 6071
+          },
+          {
+            "case": "network_settings_restored",
+            "status": "passed"
+          },
+          {
+            "case": "battery_saver",
+            "status": "passed",
+            "verifiedChunks": 6,
+            "observedMillis": 6086
+          },
+          {
+            "case": "service_recreation",
+            "status": "passed",
+            "verifiedChunks": 2,
+            "observedMillis": 5723
+          },
+          {
+            "case": "finalization",
+            "status": "passed"
+          },
+          {
+            "case": "cleanup",
+            "status": "passed"
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "processPrepare": {
+        "contractVersion": 1,
+        "api": 37,
+        "phase": "prepare",
+        "rows": [
+          {
+            "case": "prepare_committed_prefix",
+            "status": "passed",
+            "verifiedChunks": 5,
+            "observedMillis": 5013
+          },
+          {
+            "case": "process_checkpoint",
+            "status": "passed",
+            "verifiedChunks": 7
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "processResume": {
+        "contractVersion": 1,
+        "api": 37,
+        "phase": "resume",
+        "rows": [
+          {
+            "case": "process_recovery",
+            "status": "passed",
+            "verifiedChunks": 3,
+            "observedMillis": 5017
+          },
+          {
+            "case": "prefix_and_finalization",
+            "status": "passed",
+            "verifiedChunks": 7
+          },
+          {
+            "case": "cleanup",
+            "status": "passed"
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "explicitQaForceStopAndPidAbsenceObserved": true
+    },
+    {
+      "platform": "Tecno LH8n physical API34 USB stationary",
+      "syntheticGnss": false,
+      "matrix": {
+        "contractVersion": 1,
+        "api": 34,
+        "phase": "matrix",
+        "rows": [
+          {
+            "case": "duplicate_start",
+            "status": "passed"
+          },
+          {
+            "case": "activity_recreation",
+            "status": "passed",
+            "verifiedChunks": 4,
+            "observedMillis": 4080
+          },
+          {
+            "case": "background",
+            "status": "passed",
+            "verifiedChunks": 8,
+            "observedMillis": 8074
+          },
+          {
+            "case": "screen_off",
+            "status": "passed",
+            "verifiedChunks": 10,
+            "observedMillis": 10096
+          },
+          {
+            "case": "provider_network_power_faults",
+            "status": "not_run_physical_settings_preserved"
+          },
+          {
+            "case": "service_recreation",
+            "status": "passed",
+            "verifiedChunks": 2,
+            "observedMillis": 5160
+          },
+          {
+            "case": "finalization",
+            "status": "passed"
+          },
+          {
+            "case": "cleanup",
+            "status": "passed"
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "processPrepare": {
+        "contractVersion": 1,
+        "api": 34,
+        "phase": "prepare",
+        "rows": [
+          {
+            "case": "prepare_committed_prefix",
+            "status": "passed",
+            "verifiedChunks": 5,
+            "observedMillis": 5075
+          },
+          {
+            "case": "process_checkpoint",
+            "status": "passed",
+            "verifiedChunks": 7
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "processResume": {
+        "contractVersion": 1,
+        "api": 34,
+        "phase": "resume",
+        "rows": [
+          {
+            "case": "process_recovery",
+            "status": "passed",
+            "verifiedChunks": 2,
+            "observedMillis": 5153
+          },
+          {
+            "case": "prefix_and_finalization",
+            "status": "passed",
+            "verifiedChunks": 7
+          },
+          {
+            "case": "cleanup",
+            "status": "passed"
+          }
+        ],
+        "passed": true,
+        "mainRecorderGuardianPreferencesPreserved": true
+      },
+      "explicitQaForceStopAndPidAbsenceObserved": true
+    }
+  ],
+  "validation": {
+    "dartFormat": "225 files, no changes",
+    "flutterAnalysis": "no issues",
+    "flutterTests": {
+      "passed": 592
+    },
+    "operatorTests": {
+      "passed": 7
+    },
+    "qaBuildAndInstrumentation": "passed",
+    "ordinaryDebugBuild": "passed; ordinary application ID and absence of QA activity verified",
+    "nativeTests": {
+      "appPassed": 528,
+      "dependencyPassed": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "appLint": "passed; local.properties restored byte-for-byte",
+    "repositoryContracts": "passed; JSON/YAML and secret scan",
+    "sourceCI": "pending source push"
+  },
+  "unverified": [
+    "deep suspend or long-duration OEM reliability",
+    "physical radio/GNSS loss and return",
+    "reboot or OS low-memory/thermal kill",
+    "physical low-storage/thermal behavior",
+    "secure-keyguard interaction",
+    "other Android versions and OEMs",
+    "physical mounted or vehicle evidence",
+    "battery efficiency and M8.2 performance",
+    "M6.8 live Guardian and M7.4/M7.5 acceptance",
+    "device interrupted-atomic-write outcome"
+  ],
+  "earlierAttempts": [
+    "QA activity reuse stalled startActivitySync; isolated QA process stopped, fixture-only cleanup passed, CLEAR_TASK repaired the test host.",
+    "Active catalog scan could include an in-progress .new file; committed-prefix verification replaced that test race without changing production storage.",
+    "Zero-coordinate emulator input did not produce bounded fix return; final nonzero constant synthetic input passed.",
+    "Initial process-resume verifier confused persisted active metadata with a live writer; corrected verifier reads the saved catalog while the writer is absent."
+  ],
+  "productionRecorderChanged": false,
+  "dependenciesAdded": false,
+  "schemaOrScoringMigration": false
+}

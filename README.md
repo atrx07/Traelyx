@@ -6,8 +6,11 @@ Traelyx is an open-source, local-first driving telemetry and driver intelligence
 
 M8 hardening is active after the maintainer-authorized M7 engineering wrap-up
 on 2026-11-17. M7.4/M7.5 and M6.8 acceptance remain open/deferred, production sensor
-inference stays disabled, and **main distribution is held**. M8.1 is authorized
-next, with implementation not started. Wrap-up passes 42 affected host tests and
+inference stays disabled, and **main distribution is held**. M8.1's bounded
+Pixel/Tecno matrices, process recovery and local validation pass; source CI is
+pending. See the
+[Android torture matrix](docs/exec-plans/active/M8_ANDROID_HARDENING.md).
+Wrap-up passes 42 affected host tests and
 all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
 `1bb6bdf`. See the [current handoff ledger](docs/reference/M7_HANDOFF_V1.md)
 and [future ordinary Tecno/Redmi trip](docs/reference/M7_FUTURE_ROUTINE_TRIP_V1.md).
@@ -166,7 +169,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M6 | Connected / Social Layer | M6.1–M6.7 complete; M6.8 acceptance carried forward, vehicle checks deferred | 🟡 In progress | Deferred acceptance | 2026-11-11 (partial) |
 | M7 | ML & Advanced Commentary | Engineering wrapped; M7.4/M7.5 acceptance deferred; unaccepted inference disabled | ⏸ Deferred | Data/resource dependent | 2026-11-17 (partial) |
 | M8 | Hardening & Public Release | Hardening activated; main distribution held | 🔵 Active | ~1–1.5 weeks plus carried acceptance | 2026-11-17 (activation only) |
-| M8.1 |  | Android torture matrix; authorized, implementation not started | ⚪ Pending | — | — |
+| M8.1 |  | Bounded Pixel/Tecno matrices pass; source CI pending | 🔵 Active | — | — |
 | M8.2 |  | Battery/performance baseline | ⚪ Pending | — | — |
 | M8.3 |  | Privacy/security audit | ⚪ Pending | — | — |
 | M8.4 |  | Database upgrade rehearsal | ⚪ Pending | — | — |

@@ -259,6 +259,9 @@ jobs:
           python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/inspect_field_recording.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_inspect_field_recording.py tests/tool/test_sync_pilot.py
           python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_inspect_field_recording tests.tool.test_sync_pilot
 
+      - name: Verify bounded recorder hardening operator
+        run: node --test tests/tool/test_recorder_hardening.mjs
+
       - name: Validate offline ML dataset registry and imports
         run: |
           python -m compileall -q ml tests/tool/test_ml_datasets.py
@@ -314,8 +317,25 @@ jobs:
           cp tool/ci/verified_compiler_mirror.init.gradle "$init_dir/traelyx-verified-compilers.gradle"
           printf 'TRAELYX_CI_COMPILER_MIRROR=%s\n' "$mirror" >> "$GITHUB_ENV"
 
+      - name: Compile isolated recorder hardening checks
+        working-directory: android
+        run: ./gradlew -PtraelyxRecorderHardening=true -PtraelyxFirebaseEnabled=false :app:assembleDebug :app:assembleDebugAndroidTest
+
+      - name: Verify hardening package isolation
+        run: |
+          analyzer="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
+          test "$("$analyzer" manifest application-id build/app/outputs/apk/debug/app-debug.apk)" = io.github.atrx07.traelyx.hardening
+          test "$("$analyzer" manifest application-id build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk)" = io.github.atrx07.traelyx.hardening.test
+
       - name: Build debug APK
         run: flutter build apk --debug
+
+      - name: Verify ordinary build identity restored
+        run: |
+          analyzer="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
+          test "$("$analyzer" manifest application-id build/app/outputs/flutter-apk/app-debug.apk)" = io.github.atrx07.traelyx
+          "$analyzer" manifest print build/app/outputs/flutter-apk/app-debug.apk > .dart_tool/ordinary-debug-manifest.xml
+          if grep -q RecorderHardeningActivity .dart_tool/ordinary-debug-manifest.xml; then exit 1; fi
 
       - name: Test native Kotlin
         working-directory: android
