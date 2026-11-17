@@ -1,6 +1,6 @@
 # Execution Plan — M8.1 Android torture matrix
 
-**Status:** Active
+**Status:** Complete
 **Owner:** agent/maintainer
 **Milestone:** M8.1
 **Started:** 2026-11-17
@@ -53,7 +53,7 @@ No sampling, batching or wake policy change without measured justification.
 - [x] Run matrix on Pixel and desk-safe physical cases on Tecno; fix regressions.
 - [x] Validate normal build, unit/regression suites, lint and repository contracts.
 - [x] Record matrix, unresolved limits and synchronize project status.
-- [ ] Inspect exact diff, commit/push atomically, check source CI and remote HEAD.
+- [x] Inspect exact diff, commit/push atomically, check source CI and remote HEAD.
 
 ## Tests / acceptance criteria
 
@@ -103,13 +103,20 @@ short stationary checks. No release/tag/assets or external APK distribution.
   `--config-only` bootstrap before explicit Gradle QA compilation; gates remain
   unchanged. A local environment-property experiment produced the ordinary APK
   and was rejected by identity inspection; no such artifact was installed.
+- Clean source-archive bootstrap and the corrected QA → ordinary build sequence
+  pass locally. Full source CI [44168836701](https://github.com/atrx07/Traelyx/actions/runs/44168836701)
+  for `63d4826` passes all four jobs, including QA/instrumentation compilation,
+  both package-isolation gates, native tests and debug/release-validation builds.
+  Source and repair commits are pushed; local HEAD/origin/main were verified equal.
 
 ## Completion summary
 
-Local implementation/validation passes. See
+M8.1 is complete at the bounded scope above. Local validation and all four source
+CI jobs pass. Implementation `274dc12` and bootstrap repair `63d4826` are preserved
+on main. See
 [`ANDROID_TORTURE_MATRIX_V1.md`](../../reference/ANDROID_TORTURE_MATRIX_V1.md) and
 [`m8-android-v1-result.json`](../../reference/m8-android-v1-result.json).
-M8.1 remains active until source CI and persistence gates pass. No new dependency,
+M8.2 awaits explicit user authorization. No new dependency,
 provider, production recorder behavior, sampling/wake policy, schema or scoring
 change. Short USB-connected checks do not establish secure keyguard/deep suspend,
 real GNSS obstruction, reboot, OS/OEM kills, thermal/storage/battery or vehicle

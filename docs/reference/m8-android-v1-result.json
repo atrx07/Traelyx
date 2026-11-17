@@ -259,7 +259,16 @@
       "firstSourceCommit": "274dc12b059444ebc11528c6ea87811a8b82b53b",
       "firstRun": 44167309120,
       "firstOutcome": "3 jobs passed; validate failed before QA compilation because ignored wrapper was absent",
-      "repair": "Flutter config-only bootstrap verified in a clean archive; full source rerun pending"
+      "repair": "Flutter config-only bootstrap verified in a clean archive; corrected full source CI passed",
+      "verifiedSourceCommit": "63d4826568d5abf6a33486318253dd31dfda559f",
+      "verifiedRun": 44168836701,
+      "verifiedRunUrl": "https://github.com/atrx07/Traelyx/actions/runs/44168836701",
+      "jobs": {
+        "validate": "success",
+        "cloud-schema": "success",
+        "guardian-dispatch": "success",
+        "eventnet-cpu": "success"
+      }
     }
   },
   "unverified": [
@@ -282,5 +291,6 @@
   ],
   "productionRecorderChanged": false,
   "dependenciesAdded": false,
-  "schemaOrScoringMigration": false
+  "schemaOrScoringMigration": false,
+  "status": "M8.1 complete at bounded stationary scope; later substeps require authorization"
 }

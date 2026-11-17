@@ -7,8 +7,8 @@
 The maintainer authorized M7 wrap-up followed by M8 hardening on 2026-11-17,
 superseding the earlier acceptance-before-M8 sequencing preference. The bounded
 wrap-up is complete: `docs/exec-plans/active/M7_WRAPUP_HANDOFF.md`. M8 is the
-current development milestone; M8.1 is in progress in
-`docs/exec-plans/active/M8_ANDROID_HARDENING.md`.
+current development milestone; M8.1 is complete at its bounded stationary scope in
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 awaits explicit authorization.
 Later numbered steps retain their approval gate.
 **Stop before main distribution.** M8.10 publication/release assets, store
 submission and external APK distribution are not authorized. The release hold is
@@ -20,19 +20,19 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — M8.1 Android hardening
+## P0 — Approval gate before M8.2
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Finish M8.1 source CI and persistence gates. Both bounded Pixel/Tecno matrices,
-   actual QA-process interruption/recovery, exact fixture cleanup and preservation
-   checks pass. Local formatting/analysis, 592 Flutter, 528 app-native plus 68
-   dependency and seven operator tests, app lint/build and repository checks pass.
-   See `docs/reference/ANDROID_TORTURE_MATRIX_V1.md`. Devices are disconnected on
-   2026-11-18; no new device work is needed to reuse the dated results.
+1. Await explicit user authorization for M8.2 battery/performance baseline. M8.1's
+   bounded Pixel/Tecno matrices, QA-process recovery, cleanup and preservation pass;
+   local checks and all four source CI jobs 44168836701 (`63d4826`) pass, including
+   package isolation and both app builds. See `docs/reference/ANDROID_TORTURE_MATRIX_V1.md`.
+   No next-substep implementation or benchmarks have started. Devices were
+   disconnected at the 2026-11-18 validation wrap-up; dated device evidence remains.
 2. Keep the distribution hold and deferred acceptance ledger visible through M8.
    Passing software/build tests never waives physical or scientific gates.
 

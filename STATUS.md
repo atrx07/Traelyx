@@ -11,11 +11,14 @@ future ordinary Tecno/Redmi diagnostic trip, then proceed to M8 hardening and st
 before main distribution. This supersedes the earlier acceptance-before-M8 order.
 M7 is not formally complete: M7.4/M7.5 and M6.8 acceptance carry forward;
 unaccepted sensor inference stays disabled and local neural narration unavailable.
-The bounded M7 engineering wrap-up passes local and full source CI. M8.1 is
-in progress: isolated Pixel/Tecno matrices and process recovery pass; local
-validation passes (592 Flutter, 528 app-native and seven operator tests), source
-CI pending. No production recorder behavior changes; see
-`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. Later
+M8.1's bounded Android matrix is complete (2026-11-18): isolated Pixel/Tecno
+stationary matrices, process recovery, fixture cleanup and preservation checks
+pass. Local validation passes (592 Flutter, 528 app-native plus 68 dependency and
+seven operator tests, lint/build/contracts). All four source CI jobs 44168836701
+pass for `63d4826`, including QA/ordinary package isolation and both app builds.
+No production recorder behavior, schema, dependency or wake/sampling changes.
+Physical deep-suspend/OEM/vehicle and battery gates remain unverified. See
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 awaits authorization; later
 substeps retain normal approval gates; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
