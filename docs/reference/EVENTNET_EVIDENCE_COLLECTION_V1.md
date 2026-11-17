@@ -74,9 +74,11 @@ correction, accuracy override or damaged-sensor exception is introduced.
    evidence. Waiting a fixed number of seconds does not prove GPS readiness.
    Preserve failed diagnostics; do not turn them into normal examples.
 3. Prove the independent reference and clock mapping on a diagnostic pilot before
-   reserving an evaluation recording. The current app has no newly implemented
-   video synchronization marker. A visible UI timer alone does not establish a
-   mapping to native monotonic timestamps. Missing instrumentation is a blocker.
+   reserving an evaluation recording. Recorder-aligned physical presentation times
+   remain unmeasured. The separate
+   [software-marker pilot/checker](EVENTNET_SYNC_PILOT_V1.md) now provides draw
+   journals and candidate clock checks; actual display/camera delay and recorder
+   binding remain unverified. A visible UI timer alone does not establish them.
 4. When separately arranged, record routine journeys with a fixed mount and an
    independently synchronized view/reference. Set up and stop while parked; the
    driver does not operate recording/review controls while moving. Capture

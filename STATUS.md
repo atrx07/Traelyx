@@ -31,6 +31,15 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 parked sync pilot v1 (2026-11-17): separate permission-free Java marker APK,
+  native boot-clock draw journals, explicit local export and exact host fit/check
+  audit implemented. All 11 focused / 29 pilot+archive Python tests, generated Java
+  checks, build/lint and packaged boundary pass. Authorized Pixel smoke verifies
+  capture/stop/pause/reopen/preservation and byte-identical local export. Source CI
+  awaits publication. Physical optical timing, recorder binding and strong-event
+  truth remain unverified; no physical phone, recorder/model/score/Guardian change.
+  See `docs/reference/EVENTNET_SYNC_PILOT_V1.md` and `sync-pilot-v1-result.json`.
+
 - M7 evidence protocol v1 (2026-11-17): parked preflight/capture, independent clock
   and strength evidence, blinded human review, driver-role planning, exposure and
   locked evaluation requirements now have an actionable guide and empty local

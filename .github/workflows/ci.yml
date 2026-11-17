@@ -72,6 +72,10 @@ jobs:
           mkdir -p .dart_tool/mobile-java-tests
           javac -d .dart_tool/mobile-java-tests ml/android-benchmark/src/main/java/io/github/atrx07/traelyx/mlbenchmark/BenchmarkMath.java tests/tool/MobileBenchmarkMathTest.java
           java -cp .dart_tool/mobile-java-tests MobileBenchmarkMathTest
+          mkdir -p .dart_tool/sync-pilot-java-tests
+          javac -d .dart_tool/sync-pilot-java-tests ml/android-sync-pilot/src/main/java/io/github/atrx07/traelyx/syncpilot/MarkerRun.java tests/tool/SyncMarkerRunTest.java
+          java -cp .dart_tool/sync-pilot-java-tests SyncMarkerRunTest .dart_tool/sync-pilot-generated-journal.json
+          python -c "import json; from pathlib import Path; from tool.check_sync_pilot import validate_journal; validate_journal(json.loads(Path('.dart_tool/sync-pilot-generated-journal.json').read_text()))"
       - name: Prepare verified runtime and Gradle for isolated APK
         run: |
           mkdir -p .dart_tool/m7-runtime-review
@@ -90,6 +94,12 @@ jobs:
           apk=ml/android-benchmark/build/outputs/apk/debug/TraelyxMlBenchmark-debug.apk
           "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest print "$apk" > .dart_tool/mobile-manifest.xml
           python -m ml.verify_mobile_apk "$apk" .dart_tool/mobile-manifest.xml
+      - name: Build lint and verify isolated synchronization pilot
+        run: |
+          "$TRAELYX_MOBILE_GRADLE" -p ml/android-sync-pilot assembleDebug lintDebug --no-daemon
+          apk=ml/android-sync-pilot/build/outputs/apk/debug/TraelyxSyncPilot-debug.apk
+          "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest print "$apk" > .dart_tool/sync-pilot-manifest.xml
+          python -m tool.verify_sync_pilot_apk "$apk" .dart_tool/sync-pilot-manifest.xml
 
   guardian-dispatch:
     runs-on: ubuntu-latest
@@ -246,8 +256,8 @@ jobs:
 
       - name: Test trip-debug inspector
         run: |
-          python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tests/tool/test_inspect_ml_recordings.py
-          python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings
+          python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_sync_pilot.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_sync_pilot
 
       - name: Validate offline ML dataset registry and imports
         run: |

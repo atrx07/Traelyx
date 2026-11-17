@@ -353,3 +353,39 @@ Numeric experiment gates remain mandatory open freeze fields until baseline
 feasibility justifies them before test access. No collected data, phone/emulator,
 new dependency, migration, scoring/model/runtime change or M7 completion. Persist
 the reviewed packet/status atomically and verify the remote before reporting.
+
+## Parked synchronization pilot tooling — 2026-11-17
+
+The maintainer authorized making the pilot executable. Implement a separate
+permission-free Android software-marker app and standard-library host clock
+checker, with generated tests. It must not modify the recorder/app, start a trip,
+read old recordings, contact anyone, or claim screen draw times are physical
+presentation times. Preserve unknown display/camera delay, same-boot/recording
+binding, reference provenance and physical strength as unresolved evidence.
+
+- [x] Build bounded persistent marker journals, explicit parked start/stop and
+  local SAF export in an isolated package; test pure journal invariants.
+- [x] Check pinned journals and reference observations using exact centered
+  affine arithmetic, disjoint fit/check anchors, bounded time support and explicit
+  uncertainty. Reject corruption, reset/order/range faults and silent precision.
+- [x] Add meaningful host/CLI/privacy regressions and CI build/lint/APK checks;
+  validate an authorized existing emulator if available, leaving physical phones
+  for later optical/reference verification.
+- [ ] Document exact limits, synchronize evidence/status, run appropriate checks,
+  inspect diff, commit/push and verify source CI before reporting completion.
+
+No new external dependency/runtime: reuse existing AGP/SDK/Java versions and
+Python standard library. The isolated package has no permissions, sensors,
+camera/microphone/network, service, receiver, account, score or Guardian access.
+Private marker journals/anchor mappings remain local; commit only generated tests
+and aggregate results. No migration, model experiment or M7 completion follows.
+
+All 11 focused Python / 29 pilot+archive-intake tests pass, alongside Java journal
+invariants, independent Python reading, build/lint and packaged permission/runtime
+checks. Pixel_10/API37 software smoke verifies explicit stop, pause, no restart,
+prior-journal preservation and byte-identical local export, including the final
+local-only picker build. A transient system-process dialog was handled with Wait;
+no reset or attribution to the pilot is claimed. Physical phones and the main app
+were untouched. Private journals/mappings remain ignored; aggregate source pins
+and evidence are `docs/reference/sync-pilot-v1-result.json`. Source CI is pending
+publication; the final persistence/check item remains open until that gate passes.

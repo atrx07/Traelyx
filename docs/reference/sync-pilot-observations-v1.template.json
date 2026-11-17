@@ -1,0 +1,16 @@
+{
+  "version": "traelyx.sync-observations.v1",
+  "journal_sha256": null,
+  "reference_sha256": null,
+  "reference_kind": "video_pts",
+  "native_start_ns": null,
+  "native_end_ns": null,
+  "maximum_error_ns": null,
+  "maximum_rate_error_ppm": null,
+  "presentation_delay_bound_ns": null,
+  "presentation_evidence_sha256": null,
+  "reference_latency_bound_ns": null,
+  "reference_latency_evidence_sha256": null,
+  "same_boot_evidence_sha256": null,
+  "anchors": []
+}

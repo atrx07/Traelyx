@@ -104,3 +104,6 @@ For the next evidence step, use the
 [collection/review protocol and empty packet](reference/EVENTNET_EVIDENCE_COLLECTION_V1.md).
 It prepares parked preflight, independent annotation and an evaluation freeze;
 it does not initiate collection, assign real groups or admit a model.
+The isolated [parked synchronization pilot](reference/EVENTNET_SYNC_PILOT_V1.md)
+implements software draw journals, local export and exact host clock checks.
+Physical presentation/reference and recorder binding remain unverified.

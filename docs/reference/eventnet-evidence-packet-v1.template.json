@@ -9,6 +9,7 @@
   "references": {
     "capture_export": "TRIPDEBUG_FORMAT.md",
     "manual_qa": "M7_MANUAL_PHONE_QUALITY_CHECK.md",
+    "software_clock_pilot": "EVENTNET_SYNC_PILOT_V1.md",
     "feature_proposal": "eventnet-native-input-proposal-v2.json",
     "quality_policy": "EVENTNET_INPUT_QUALITY_V2.md",
     "source_review": "EVENTNET_REMAINING_SOURCE_TRIAGE_V1.md"

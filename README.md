@@ -127,7 +127,13 @@ event/normal labels and driver groups still prevent a new acceptance experiment.
 The [collection/review packet](docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md)
 now defines the next evidence procedure and empty templates. Actual collection,
 independent reference/review resources and experiment gates remain unresolved.
-M7 remains open; no new drive or device action is initiated.
+M7 remains open; the collection packet initiates no new drive.
+
+The [parked sync pilot](docs/reference/EVENTNET_SYNC_PILOT_V1.md) now implements a
+separate permission-free marker APK and exact host clock checker. Local tests,
+build/lint and Pixel software capture/export smoke pass; source CI awaits
+publication. Physical synchronization, recorder binding and model acceptance
+remain unverified. The main recorder, scores and Guardian are unchanged.
 
 Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/exec-plans/ROADMAP.md), [project status](STATUS.md), [priority queue](NEXTSTEPS.md), and [active execution plans](docs/exec-plans/active/). A substep is marked complete only after its required validation gates pass. Completed and future milestones use one summary row; only the currently authorized active milestone expands all of its canonical substeps.
 

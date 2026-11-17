@@ -21,6 +21,14 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The parked sync pilot now has implemented software tooling:
+`docs/reference/EVENTNET_SYNC_PILOT_V1.md`. Host/generated checks and authorized
+Pixel capture/lifecycle/local export smoke pass; source CI is pending publication.
+No phone is needed for these software checks. The next evidence gate needs a
+parked physical handset/reference to establish optical/capture uncertainty and
+same-handset/boot/recorder binding. The tools never infer those from small clock
+residuals. No driving session, source/model admission or promotion follows.
+
 The collection/review protocol and empty private-work packet are now prepared:
 `docs/reference/EVENTNET_EVIDENCE_COLLECTION_V1.md`. Capture remains deferred;
 no participants, real split assignments or frozen experiment are created. The

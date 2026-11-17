@@ -1,0 +1,136 @@
+{
+  "clock_contract": {
+    "exact_centered_fraction_fit": true,
+    "extrapolation_allowed": false,
+    "generated_drift_case_ppm": 100,
+    "generated_unknown_delay_case": {
+      "declared_check_budget_satisfied": false,
+      "physical_alignment_verified": false,
+      "software_residual_ns": 0
+    },
+    "journal_bound": {
+      "maximum_input_bytes_each": 262144,
+      "maximum_journal_files": 64,
+      "maximum_markers": 64
+    },
+    "journal_measurement": "Canvas_draw_commands_only_not_photons",
+    "minimum_disjoint_check_anchors": 2,
+    "minimum_disjoint_fit_anchors": 2,
+    "native_clock": "elapsedRealtimeNanos",
+    "unknown_physical_delays_retained": true
+  },
+  "date": "2026-11-17",
+  "emulator": {
+    "all_prior_journals_preserved": true,
+    "api_level": 37,
+    "avd": "Pixel_10",
+    "final_build_cold_start_pass": true,
+    "final_build_local_saf_export_identical": true,
+    "final_build_user_stop_markers": 5,
+    "first_journal_preserved": true,
+    "first_launch_system_process_dialog": "Wait_selected_no_reset_or_cause_attribution",
+    "main_app_or_physical_phone_operations": false,
+    "pause_stop_pass": true,
+    "paused_stop_markers": 1,
+    "reopen_no_auto_restart": true,
+    "saf_export_byte_identical": true,
+    "scratch_export_cleanup": "only_new_test_export_and_named_UI_scratch_removed",
+    "user_stop_markers": 5,
+    "user_stop_pass": true
+  },
+  "local_checks": {
+    "android_lint": "passed_0_errors_1_existing_toolchain_version_warning",
+    "apk_build": "passed",
+    "failures": 0,
+    "focused_python_tests": 11,
+    "java_generated_journal_invariants": "passed",
+    "java_journal_independent_python_read": "passed",
+    "packaged_runtime_artifacts": [],
+    "pilot_and_archive_intake_tests": 29,
+    "python_compile": "passed",
+    "skipped": 0
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "packaged_boundary": {
+    "apk_bytes": 27919,
+    "apk_sha256": "5572402e03c58137a61cb57c3f63be94073c2206e6dd118392d45450edcf5ca1",
+    "package": "io.github.atrx07.traelyx.syncpilot",
+    "permissions": [],
+    "physical_timing_verified": false,
+    "production_recorder_modified": false,
+    "services_receivers_providers": []
+  },
+  "privacy_compatibility": {
+    "core_recorder_changed": false,
+    "model_training_or_predictions": false,
+    "new_external_runtime_dependency": false,
+    "private_recordings_accessed": false,
+    "reference_video_or_sensor_files_opened": false,
+    "schema_migration": false,
+    "scoring_or_guardian_changed": false,
+    "telemetry_upload": false
+  },
+  "remaining": [
+    "independent_display_and_reference_capture_uncertainty",
+    "same_handset_boot_and_recording_binding",
+    "between_anchor_drift_support",
+    "real_phone_GNSS_sensor_mount_and_background_quality",
+    "independent_event_strength_normal_exposure_labels_and_driver_groups",
+    "accepted_model_numerical_value_and_device_efficiency_gates"
+  ],
+  "review_version": "sync-pilot-v1",
+  "scope": "isolated_software_marker_and_host_clock_diagnostic",
+  "source_blob_pins": [
+    {
+      "git_blob_sha": "7be37e4a343840853cb65a53964839207165914c",
+      "path": "tool/check_sync_pilot.py"
+    },
+    {
+      "git_blob_sha": "178577ffa019800727c58da639fdb1a8e59f2cb2",
+      "path": "tool/verify_sync_pilot_apk.py"
+    },
+    {
+      "git_blob_sha": "c1195085aa531a6aa83d11de9acf1ff14a4894ce",
+      "path": "tests/tool/test_sync_pilot.py"
+    },
+    {
+      "git_blob_sha": "985a5e061998639752c8d70eaf7505f9d95fcf9e",
+      "path": "tests/tool/SyncMarkerRunTest.java"
+    },
+    {
+      "git_blob_sha": "72992c46b39653d6f0b68158f8c2e7919c53c8b8",
+      "path": "ml/android-sync-pilot/build.gradle"
+    },
+    {
+      "git_blob_sha": "13612c099b2b6334c9fff15f31192ad7a021fb2e",
+      "path": "ml/android-sync-pilot/settings.gradle"
+    },
+    {
+      "git_blob_sha": "95bf66ec3154d25c8dd9516f000e0552227b655d",
+      "path": "ml/android-sync-pilot/gradle.properties"
+    },
+    {
+      "git_blob_sha": "d7195bc0765b3a81a5717ca40371279435b7cef2",
+      "path": "ml/android-sync-pilot/src/main/AndroidManifest.xml"
+    },
+    {
+      "git_blob_sha": "a336c604610bbaddad2891fc738b4dfe2640e37b",
+      "path": "ml/android-sync-pilot/src/main/java/io/github/atrx07/traelyx/syncpilot/MarkerRun.java"
+    },
+    {
+      "git_blob_sha": "17c3c954dc1754c624b366a9acdc79ea1a772d05",
+      "path": "ml/android-sync-pilot/src/main/java/io/github/atrx07/traelyx/syncpilot/PilotActivity.java"
+    },
+    {
+      "git_blob_sha": "728d4df9df5daad536480793d67a6db19777fa57",
+      "path": ".github/workflows/ci.yml"
+    }
+  ],
+  "source_ci": {
+    "run_id": null,
+    "source_commit": null,
+    "status": "pending"
+  }
+}

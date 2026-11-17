@@ -9,6 +9,11 @@ Requires Python 3.12+ and its standard library only. No account, network,
 package install or mobile change is required. The importer never downloads or
 uploads data and never reads private recordings automatically.
 
+The separate [parked synchronization pilot](../docs/reference/EVENTNET_SYNC_PILOT_V1.md)
+provides a permission-free Java marker APK and `python -m tool.check_sync_pilot`
+for explicitly pinned private journals/reference observations. It does not inspect
+datasets automatically or verify physical alignment, labels or model admission.
+
 M7.6's separate optional CPU IntegrityNet comparison uses only governed generated
 native fixtures. Its manifest is `experiments/integritynet-v1.json`; it does not
 change the historical registry/imports or accept maneuver labels as integrity

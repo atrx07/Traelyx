@@ -1,0 +1,23 @@
+plugins { id 'com.android.application' version '9.0.1' }
+
+android {
+    namespace 'io.github.atrx07.traelyx.syncpilot'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'io.github.atrx07.traelyx.syncpilot'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName 'sync-pilot-v1'
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+
+tasks.register('verifyNoRuntimeDependencies') {
+    doLast {
+        if (!configurations.getByName('debugRuntimeClasspath').resolvedConfiguration.resolvedArtifacts.empty) {
+            throw new GradleException('The Java-only marker pilot must not package external runtime dependencies')
+        }
+    }
+}
+tasks.named('preBuild').configure { dependsOn 'verifyNoRuntimeDependencies' }

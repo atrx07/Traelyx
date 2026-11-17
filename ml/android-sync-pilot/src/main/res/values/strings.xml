@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Traelyx Sync Pilot</string>
+    <string name="instructions">Parked diagnostic only. A separate camera may record the marker changes. This app uses no sensors, microphone or network. Draw timestamps do not verify when light reaches the camera.</string>
+    <string name="start">Start parked markers</string>
+    <string name="stop">Stop and save</string>
+    <string name="export">Export selected private journal</string>
+    <string name="ready">Ready. No trip is started.</string>
+    <string name="idle_marker">READY</string>
+    <string name="run_label">Run %1$s</string>
+    <string name="running">Drawing marker %1$d of 64. Stop before moving.</string>
+    <string name="saved">Stopped. Private journal retained locally.</string>
+    <string name="storage_error">Journal could not be saved. Pilot stopped; preserve existing files.</string>
+    <string name="export_error">Export failed. Local journal is retained.</string>
+    <string name="exported">Private journal exported.</string>
+    <string name="empty">No stopped journal is selected.</string>
+    <string name="session_limit">Local session limit reached. Existing journals are retained.</string>
+</resources>
