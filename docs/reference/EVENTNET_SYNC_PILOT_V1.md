@@ -25,7 +25,8 @@ Build/lint using the existing SDK/Java 21 host setup:
 gradle -p ml/android-sync-pilot assembleDebug lintDebug --no-daemon
 ```
 
-The debug APK is `ml/android-sync-pilot/build/outputs/apk/debug/TraelyxSyncPilot-debug.apk`.
+The current debug APK is `sync-pilot-v1.0.1` (version code 2) at
+`ml/android-sync-pilot/build/outputs/apk/debug/TraelyxSyncPilot-debug.apk`.
 It is development tooling, not a release APK/signing acceptance. Manual APK
 installation and local export work without ADB; Android 10 compatibility is
 declared by SDK settings, with real Redmi execution still unverified.
@@ -140,6 +141,28 @@ and `model_accepted` remain false even then. This is a candidate clock diagnosti
 not an automatic dataset-admission mechanism.
 
 ## Validation and limits
+
+The [Tecno follow-up](sync-pilot-tecno-v1-result.json) verifies API34 software
+capture/lifecycle/export via ADB inspection, without an external camera. It also
+found and repaired the [inactive-pause export-selection reset](../issues/2026-11-17_sync-pilot-export-selection.md).
+Earlier `sync-pilot-v1` / Pixel evidence remains a separate historical snapshot.
+
+The repaired source adds a separate platform-only Android instrumentation APK:
+
+```text
+gradle -p ml/android-sync-pilot assembleDebug assembleDebugAndroidTest lintDebug --no-daemon
+adb -s <selected-device> install --user <active-user> -r -t ml/android-sync-pilot/build/outputs/apk/androidTest/debug/TraelyxSyncPilot-debug-androidTest.apk
+adb -s <selected-device> shell am instrument --user <active-user> -w -r io.github.atrx07.traelyx.syncpilot.test/io.github.atrx07.traelyx.syncpilot.PilotSelectionInstrumentation
+```
+
+Run only with the isolated pilot idle. The test creates two exclusive synthetic
+selection fixtures, invokes real Android pause/resume callbacks and verifies a
+nondefault selection is retained. It removes only its own files. Fixture content
+is explicitly unsupported as clock evidence if interrupted. No new library is
+required, and the test runner is absent from the main pilot APK. CI builds/lints
+the harness; its actual lifecycle execution was verified on the Tecno, not claimed
+as a headless CI device test. The full two-run file-picker cancel/retry and byte
+comparison are additionally checked on the device.
 
 Generated Java tests cover journal ordering, timestamp/cap/state rules and retained
 snapshots; Python independently parses the Java output. Host tests exercise known

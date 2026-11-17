@@ -163,9 +163,9 @@ public final class PilotActivity extends Activity {
             run.stop(reason);
             if (!save()) { failStorage(); return; }
             status.setText(R.string.saved);
+            refreshHistory();
         }
         controls(false);
-        refreshHistory();
     }
 
     @Override protected void onPause() {

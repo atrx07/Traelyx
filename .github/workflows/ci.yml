@@ -96,7 +96,7 @@ jobs:
           python -m ml.verify_mobile_apk "$apk" .dart_tool/mobile-manifest.xml
       - name: Build lint and verify isolated synchronization pilot
         run: |
-          "$TRAELYX_MOBILE_GRADLE" -p ml/android-sync-pilot assembleDebug lintDebug --no-daemon
+          "$TRAELYX_MOBILE_GRADLE" -p ml/android-sync-pilot assembleDebug assembleDebugAndroidTest lintDebug --no-daemon
           apk=ml/android-sync-pilot/build/outputs/apk/debug/TraelyxSyncPilot-debug.apk
           "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" manifest print "$apk" > .dart_tool/sync-pilot-manifest.xml
           python -m tool.verify_sync_pilot_apk "$apk" .dart_tool/sync-pilot-manifest.xml

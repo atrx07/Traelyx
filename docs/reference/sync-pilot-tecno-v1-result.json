@@ -1,0 +1,128 @@
+{
+  "apk": {
+    "apk_bytes": 20679,
+    "apk_sha256": "c4b969dc363319505d70f45dd2fbef44cde215258690f7e2ed2fb5a5e88b4561",
+    "package": "io.github.atrx07.traelyx.syncpilot",
+    "permissions": [],
+    "physical_timing_verified": false,
+    "production_recorder_modified": false,
+    "services_receivers_providers": [],
+    "version_code": 2,
+    "version_name": "sync-pilot-v1.0.1"
+  },
+  "build_and_regressions": {
+    "android_lint": "passed",
+    "automated_pause_selection_on_Tecno": "passed",
+    "debug_apk_build": "passed",
+    "failures": 0,
+    "instrumentation_apk_build": "passed",
+    "new_test_dependencies": [],
+    "python_pilot_and_archive_tests": 29,
+    "runtime_artifacts": [],
+    "source_ci": "pending_source_publication"
+  },
+  "checks": {
+    "android_pause_selection_instrumentation_pass": true,
+    "fixed_build_pause_stop_markers": 1,
+    "fixed_build_user_stop_markers": 5,
+    "fixed_export_cancel_retains_selection": true,
+    "fixed_export_retry_target_correct": true,
+    "fixed_installed_apk_hash_matches": true,
+    "fixed_local_export_byte_identical": true,
+    "fixed_pause_reopen_no_restart": true,
+    "fixed_pinned_export_reader_pass": true,
+    "instrumentation_existing_journals_unchanged": true,
+    "instrumentation_generated_fixtures_removed": true,
+    "main_recorder_service_absent_after": true,
+    "original_completed_journal_preserved_across_update": true,
+    "pause_stop_markers": 1,
+    "pause_stop_pass": true,
+    "pilot_journals_preserved_after_test_cleanup": true,
+    "prior_journals_preserved": true,
+    "prior_journals_preserved_during_fixed_regression": true,
+    "raw_journal_version_and_monotonicity_pass": true,
+    "reopen_no_auto_restart": true,
+    "reviewed_installed_apk_hash_matches": true,
+    "screen_capture_saved": true,
+    "temporary_instrumentation_package_removed": true,
+    "user_stop_markers": 6,
+    "user_stop_pass": true
+  },
+  "date": "2026-11-17",
+  "device": {
+    "api_level": 34,
+    "device_identifiers_committed": false,
+    "explicit_active_user_scope": true,
+    "main_recorder_service_absent_before_and_after": true,
+    "model_family": "TECNO_LH8n"
+  },
+  "evidence_limits": {
+    "IMU_or_GNSS_quality_accepted": false,
+    "clock_mapping_estimated": false,
+    "driving_truth_or_model_admitted": false,
+    "external_camera_used": false,
+    "independent_reference_provided": false,
+    "physical_alignment_verified": false,
+    "same_handset_boot_recorder_binding_verified": false,
+    "screen_inspection": "ADB_UI_hierarchy_and_software_screenshot",
+    "sensor_bias_measured_or_corrected": false
+  },
+  "issue": {
+    "cause": "inactive_pause_refreshed_selected_journal_to_last_captured_run",
+    "fix": "refresh_only_on_active_finalization",
+    "journal_schema_changed": false,
+    "record": "../issues/2026-11-17_sync-pilot-export-selection.md",
+    "source_loss_observed": false,
+    "unexpected_export_saved": false
+  },
+  "m7_4_complete": false,
+  "m7_5_complete": false,
+  "m8_active": false,
+  "privacy_and_compatibility": {
+    "camera_microphone_or_sensors_accessed": false,
+    "emulator_operated": false,
+    "main_app_updated_or_force_stopped": false,
+    "new_runtime_dependency_or_migration": false,
+    "old_recordings_or_accounts_accessed": false,
+    "private_journal_aliases_raw_times_hashes_and_UI_stay_ignored": true,
+    "telemetry_uploaded": false,
+    "trip_started": false
+  },
+  "review_version": "sync-pilot-tecno-v1",
+  "scope": "authorized_Tecno_parked_software_UI_and_export_check_no_external_camera",
+  "source_blob_pins": [
+    {
+      "git_blob_sha": "05a072bb42c0037e6619a005429fb455a382b195",
+      "path": "ml/android-sync-pilot/src/main/java/io/github/atrx07/traelyx/syncpilot/PilotActivity.java"
+    },
+    {
+      "git_blob_sha": "63b1b441d55bb1f0933b5449f65a9614dcf023c6",
+      "path": "ml/android-sync-pilot/build.gradle"
+    },
+    {
+      "git_blob_sha": "a602e755c38ce6f05880a9bacf84b79134c76a3c",
+      "path": "ml/android-sync-pilot/src/androidTest/AndroidManifest.xml"
+    },
+    {
+      "git_blob_sha": "a019d5571d8248d2aa0d8addc97beac36e4a08c4",
+      "path": "ml/android-sync-pilot/src/androidTest/java/io/github/atrx07/traelyx/syncpilot/PilotSelectionInstrumentation.java"
+    },
+    {
+      "git_blob_sha": "8ad6464e105b400bd0d394dd2ab28bf90859bc6f",
+      "path": ".github/workflows/ci.yml"
+    },
+    {
+      "git_blob_sha": "7be37e4a343840853cb65a53964839207165914c",
+      "path": "tool/check_sync_pilot.py"
+    },
+    {
+      "git_blob_sha": "178577ffa019800727c58da639fdb1a8e59f2cb2",
+      "path": "tool/verify_sync_pilot_apk.py"
+    }
+  ],
+  "source_ci": {
+    "run_id": null,
+    "source_commit": null,
+    "status": "pending"
+  }
+}

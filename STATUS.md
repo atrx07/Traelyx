@@ -31,6 +31,15 @@ when test isolation is needed. M7.9 used the temporary generated-data-only
 
 ## Working
 
+- M7 Tecno parked software pilot (2026-11-17): API34 capture, stop/pause/reopen,
+  retained journals and local export verified through ADB without a camera.
+  A two-run cancellation check found a pilot-only selection reset; v1.0.1 repairs
+  it, with physical picker/byte checks and a platform-only Android lifecycle
+  regression passing. All 29 affected host tests, both pilot/test APK builds,
+  lint and packaged boundary pass; new source CI awaits publication. No main-app,
+  old recording, sensor/bias, optical timing or model acceptance change. Evidence:
+  `docs/reference/sync-pilot-tecno-v1-result.json` and the linked issue record.
+
 - M7 parked sync pilot v1 (2026-11-17): separate permission-free Java marker APK,
   native boot-clock draw journals, explicit local export and exact host fit/check
   audit implemented. All 11 focused / 29 pilot+archive Python tests, generated Java

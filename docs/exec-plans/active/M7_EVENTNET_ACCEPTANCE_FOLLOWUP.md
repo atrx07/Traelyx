@@ -394,3 +394,48 @@ CI model experiments rerun; no real-source candidate is trained. The evidence-on
 closure preserves every pinned source blob and adds explicit outward rounding of
 reference PTS bounds. Persist/verify the final evidence without rerunning unchanged
 runtime suites or describing physical timing/model acceptance as achieved.
+
+## Tecno parked software pilot — 2026-11-17
+
+The maintainer connected/authorized the Tecno and approved the parked pilot after
+clarifying that any camera is external test equipment, not a Traelyx feature.
+The Tecno's Z bias does not qualify its IMU, but the separate marker app reads no
+sensors. Use only the reviewed permission-free APK and explicitly selected device.
+Do not start a trip, update/force-stop the main app, read old telemetry/accounts,
+change settings or operate the emulator. Keep private identifiers and journals
+ignored/local. External optical/capture and recorder-binding evidence remain a
+separate dependency; do not synthesize camera observations from draw timestamps.
+
+- [x] Verify physical model/API, main recorder idle evidence and reviewed APK hash;
+  preserve existing pilot state and install only the separate package if needed.
+- [x] Check visible markers, explicit stop, pause/reopen preservation and private
+  local export against retained source bytes on the Tecno.
+- [x] Run the strict journal/diagnostic reader without manufacturing independent
+  reference observations, and record measured limits plus remaining resources.
+- [ ] Validate aggregate evidence/references, update status, inspect exact diff,
+  commit/push and verify without claiming optical/model/IMU acceptance.
+
+This unit adds device evidence only. Rerun runtime/build suites only if a product
+defect requires code changes; retain the earlier fully passing source CI.
+
+The physical two-run cancel/export check exposed a selection reset in the isolated
+pilot: inactive `onPause` refreshed the selector to the last captured run rather
+than retaining the selected export. No source was overwritten or exported under
+the wrong expectation; the filename guard stopped the test. Move history refresh
+to the active-run finalization branch, retain inactive selection, and rerun the
+two-run cancellation regression plus affected build/lint/host/full-source CI.
+
+API34 device capture and pinned journal reading pass. Repaired v1.0.1 passes the
+actual two-run picker cancel/retry and byte comparison. A separate platform-only
+instrumentation APK invokes real pause/resume with a nondefault selection; it
+passes on the Tecno and removes its unsupported synthetic fixtures, retaining
+existing journals. CI now builds that test APK; no new JUnit/Robolectric/library
+dependency or main-app instrumentation is introduced. All 29 affected host tests,
+build/lint and packaged boundary pass. The original completed journal survives
+the data-preserving pilot update unchanged. Source CI awaits publication.
+
+No external reference was supplied and no optical fit was attempted. ADB screen
+inspection proves software behavior only. Main recorder service was absent at
+pre/post snapshots; no trip, camera/mic/sensor, old archive/account or emulator
+operation occurred. Record only aggregate evidence; the final persistence item
+remains open until repaired source CI is verified.

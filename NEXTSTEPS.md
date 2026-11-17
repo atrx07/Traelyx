@@ -21,6 +21,15 @@ preserve existing data. M7.9's temporary isolated AVD is a separate test device.
 
 ## P0 — Resolve model acceptance before M8
 
+The authorized Tecno now passes the parked marker software path using ADB screen/
+UI inspection, including local export and the repaired two-run cancellation case.
+See `docs/reference/sync-pilot-tecno-v1-result.json`. The pilot-only v1.0.1 repair
+has physical/host/build checks; new source CI is pending. Screen mirroring remains
+software evidence; no independent reference was supplied and no optical clock fit,
+recorder binding, sensor quality or driving-model admission follows. Capture of
+actual journeys remains deferred. Neither a camera feature nor sensor correction
+was added to Traelyx.
+
 The parked sync pilot now has implemented software tooling:
 `docs/reference/EVENTNET_SYNC_PILOT_V1.md`. Host/generated checks and authorized
 Pixel capture/lifecycle/local export smoke and all four source CI jobs 44077691270

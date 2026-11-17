@@ -76,6 +76,20 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   Do not substitute unverified metadata/compiler bytes, broaden its filter,
   drop transitive dependencies or skip tests.
 
+## Android package queries encounter another profile's access restriction
+
+- **Scope:** ADB package inspection on the Tecno/API34 with multiple Android profiles.
+- **Symptom:** Unscoped `pm list packages <package>` returns 255 with a
+  `SecurityException` concerning access to another user, despite authorized ADB.
+- **Safe fix:** Read `adb -s <serial> shell am get-current-user`, then use
+  `pm list packages --user <active-user> <package>` and `pm path --user <active-user> <package>`.
+  Scope installation/instrumentation to that same active user as appropriate.
+- **Do not:** Switch users, enumerate unrelated profiles, change permissions or
+  disable authentication to repair a package query. An absent package's `pm path`
+  exit 1 is separate from an authorization failure.
+- **Verification:** Repeated unscoped failure and successful active-user query
+  verified on 2026-11-17; no profile identifiers are recorded here.
+
 ## Windows sandbox Python temporary directories deny writes/cleanup
 
 - **Scope:** Python unittest suites using `TemporaryDirectory` in the desktop

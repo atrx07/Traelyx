@@ -107,3 +107,6 @@ it does not initiate collection, assign real groups or admit a model.
 The isolated [parked synchronization pilot](reference/EVENTNET_SYNC_PILOT_V1.md)
 implements software draw journals, local export and exact host clock checks.
 Physical presentation/reference and recorder binding remain unverified.
+Its [Tecno software follow-up](reference/sync-pilot-tecno-v1-result.json) records
+API34 device checks and the v1.0.1 export-selection repair. ADB screen inspection
+does not establish optical alignment or change the old recordings' exclusion.
