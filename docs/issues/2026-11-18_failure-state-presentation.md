@@ -1,8 +1,10 @@
 # Live failures and scrolled provider feedback were easy to miss
 
-**Status:** Reproduced in synthetic fixtures; presentation repair and affected
-regressions, full 636-test Flutter suite, analysis/builds and packaged policy pass.
-Source CI and fix commit pending.
+**Status:** Repaired in [40debce](https://github.com/atrx07/Traelyx/commit/40debcedad3fef400aa960413627eac31cf1ec83),
+with capture portability corrected in `3fab329`. The full 636-test Flutter suite,
+local analysis/builds/policy and all four
+[source CI jobs 44277975977](https://github.com/atrx07/Traelyx/actions/runs/44277975977)
+pass, including eight Linux UI captures. Physical/provider limits remain.
 
 ## Symptoms / cause
 

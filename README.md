@@ -18,7 +18,10 @@ passing for `711cb27`. See the [privacy audit](docs/reference/PRIVACY_SECURITY_A
 for residual limits. M8.4's [database rehearsal](docs/reference/DATABASE_UPGRADE_REHEARSAL_V1.md)
 is complete: atomic-upgrade repair, 23 cases and all four
 [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44267925802) pass for
-`d7d2e18`; schema remains4 and signed/device upgrade limits remain. M8.5's failure UX pass is authorized and active. See the
+`d7d2e18`; schema remains4 and signed/device upgrade limits remain. M8.5's [failure UX pass](docs/reference/FAILURE_UX_PASS_V1.md) is complete:
+GPS/save warnings, provider/key fallback and offline recovery pass all four
+[source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44277975977) for
+`3fab329`. M8.6 awaits authorization. See the
 [performance baseline](docs/reference/PERFORMANCE_BASELINE_V1.md).
 Wrap-up passes 42 affected host tests and
 all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
@@ -183,7 +186,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M8.2 |  | Qualified recorder/replay/DB/APK baseline; CPU-lease repair, limits retained | ✅ Complete | Done | 2026-11-18 |
 | M8.3 |  | Bounded privacy/security audit; backup/callback repairs and regression gates | ✅ Complete | Done | 2026-11-18 |
 | M8.4 |  | Populated DB/retry rehearsal; atomic upgrade repair, signed/device limits retained | ✅ Complete | Done | 2026-11-18 |
-| M8.5 |  | Failure UX pass | 🔵 Active | — | — |
+| M8.5 |  | GPS/save warnings, provider/key fallback and offline recovery | ✅ Complete | Done | 2026-11-18 |
 | M8.6 |  | Maintainer-controlled release keystore setup/backup | ⚪ Pending | — | — |
 | M8.7 |  | Signed APK build | ⚪ Pending | — | — |
 | M8.8 |  | Clean install test | ⚪ Pending | — | — |

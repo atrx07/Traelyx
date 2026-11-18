@@ -1,7 +1,7 @@
 {
   "contract_version": 1,
   "failure_ux_pass_version": 1,
-  "status": "source_ci_pending",
+  "status": "complete_bounded_host_failure_ux_pass",
   "date": "2026-11-18",
   "source_base_commit": "da9908fe47291ceba57f811d0f228c150d376b89",
   "scope": "synthetic host production-widget/service failure and recovery; not device, provider or sensor acceptance",
@@ -109,5 +109,20 @@
     "archive_sha256": "e56fa8e9bb4589fde964be3de451f3e5b251e4a1eafb1dc98d94add034dd5a86",
     "local_bytes_match_archive": true,
     "fonts_added_to_repository_or_app": false
+  },
+  "source_commit": "3fab32914b9d2b7916fb0ab4d2730eb712255b0f",
+  "source_ci": {
+    "run_id": 44277975977,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44277975977",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "jobs": {
+      "validate": "success",
+      "eventnet-cpu": "success",
+      "cloud-schema": "success",
+      "guardian-dispatch": "success"
+    },
+    "all_eight_linux_captures_required_and_retained": true,
+    "unchanged_standalone_benchmark_passed": true
   }
 }

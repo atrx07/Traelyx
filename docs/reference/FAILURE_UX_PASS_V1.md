@@ -1,15 +1,21 @@
 # M8.5 failure UX pass v1
 
-**Status:** Active — local validation passes; source CI pending
+**Status:** Complete — bounded synthetic failure/recovery and host UI pass
 **Date:** 2026-11-18
 **Source baseline:** `da9908f`
 
 The [aggregate result](m8-failure-ux-v1-result.json) records local checks,
-capture inventory and explicit acceptance limits. Source CI is pending.
+capture inventory and explicit acceptance limits. All four
+[source CI jobs 44277975977](https://github.com/atrx07/Traelyx/actions/runs/44277975977)
+pass for `3fab32914b9d2b7916fb0ab4d2730eb712255b0f`, including Linux captures,
+full Flutter/native suites, builds/lint and packaged privacy policy. Product
+repairs are in `40debce`; capture portability is corrected in `3fab329`.
 Initial checkpoint `40debce` CI44275674425 was cancelled after SDK font-path
 case errors stalled capture tests. The corrected helper uses exact official
 archive filenames, preloads bytes and caches only successful loading. Local
 font bytes match the pinned official SDK archive; captures/tests remain required.
+The same initial run's unrelated benchmark packageDebug failed without a nested
+cause; that unchanged target passes the fresh source run.
 
 This bounded pass exercises production widgets/services with synthetic inputs.
 No ordinary app installation, phone data access, real API key, hosted account,

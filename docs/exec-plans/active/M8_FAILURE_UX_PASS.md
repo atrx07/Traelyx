@@ -1,6 +1,6 @@
 # Execution Plan — M8.5 failure UX pass
 
-**Status:** Active
+**Status:** Complete — bounded synthetic failure/recovery and host UI pass
 **Owner:** agent/maintainer
 **Milestone:** M8.5
 **Started / last updated:** 2026-11-18
@@ -39,8 +39,8 @@ its separate scope and preserve existing app data/accounts.
 - [x] Repair confirmed misleading/missing failure guidance only.
 - [x] Verify failures and explicit recovery with regression/widget tests.
 - [x] Review narrow/large-text UI rendering and document limits.
-- [ ] Run formatting, analysis, full Flutter tests, builds/contracts and source CI.
-- [ ] Publish bounded matrix, synchronize status/roadmap, commit/push and verify.
+- [x] Run formatting, analysis, full Flutter tests, builds/contracts and source CI.
+- [x] Publish bounded matrix and synchronize status/roadmap for the completion commit.
 
 ## Acceptance / risks
 
@@ -59,16 +59,27 @@ pre-release profiling/private-reporting and distribution holds remain.
 ## Progress / completion
 
 Live headline/save/GPS presentation and scrolled settings feedback repaired.
-Corrupt-route reread and provider/summary guidance clarified. Affected114 tests
+Corrupt-route reread and provider/summary guidance clarified. Affected 114 tests
 and eight readable synthetic 390×844 / 2× captures pass; keyboard-inset feedback
 layout is covered. Final analysis, all 636 Flutter tests, ordinary debug/arm64 release builds and
-packaged privacy policy pass. Source CI remains pending; the source checkpoint
-is not substep completion.
+packaged privacy policy pass. All four
+[source CI jobs 44277975977](https://github.com/atrx07/Traelyx/actions/runs/44277975977)
+pass for `3fab32914b9d2b7916fb0ab4d2730eb712255b0f`, including full Flutter/native
+tests, generated schemas, eight Linux PNG captures, QA builds/lint, ordinary APKs
+and independent packaged privacy policy. Product repairs are in `40debce` and the
+capture portability correction is in `3fab329`.
 No device or live provider/account interaction. See FAILURE_UX_PASS_V1.md.
 Initial checkpoint `40debce` CI44275674425 exposed exact-case SDK font paths
 hidden by Windows and a cached failed-load future that stalled later captures.
 The run was cancelled to inspect logs; use exact official archive names and cache
 only successful loads. Local bytes match the immutable SDK archive. No font or
 dependency was added. Its unrelated standalone benchmark also failed packageDebug
-without a nested cause; a fresh source run must pass all jobs before closure.
-Stop after M8.5; M8.6 requires explicit authorization.
+without a nested cause; the unchanged benchmark passes the fresh source run.
+
+M8.5 is complete at this bounded scope. Schema remains 4, with no new dependency,
+permission, acquisition/scoring/consent/payload change or ordinary phone access.
+Actual device keyboard/accessibility, physical sensor/storage/OEM recovery,
+provider/key acceptance and hosted sync remain unverified. Pre-release profiling,
+private reporting, carried M6.8/M7 acceptance and distribution holds remain.
+Persist the docs-only closure to origin/main and verify clean synchronization.
+Stop after M8.5; M8.6 requires explicit authorization and has not begun.

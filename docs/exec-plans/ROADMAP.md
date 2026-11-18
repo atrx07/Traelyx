@@ -40,7 +40,9 @@ M8.2's qualified baseline is complete in
 all four source CI jobs 44244638894 passing for `711cb27`. M8.4's bounded
 [database rehearsal](active/M8_DATABASE_UPGRADE_REHEARSAL.md) is complete: atomic
 upgrade repair, 23 cases and all four source CI jobs 44267925802 pass for
-`d7d2e18`; signed/device limits remain. M8.5 is authorized and active in [the failure UX plan](active/M8_FAILURE_UX_PASS.md).
+`d7d2e18`; signed/device limits remain. M8.5's bounded [failure UX pass](active/M8_FAILURE_UX_PASS.md) is complete,
+with all four source CI jobs 44277975977 passing for `3fab329`. Device/provider
+limits remain; M8.6 awaits authorization.
 CPU/battery, physical/OEM/vehicle and deferred acceptance limits remain carried.
 M7 remains deferred acceptance, not complete.
 

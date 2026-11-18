@@ -16,8 +16,8 @@ Use the matching safe fix before inventing another workaround. If it fails, inve
   Ahem, skip captures, add an app font dependency or download fonts during tests.
 - **Verification:** Immutable official SDK fonts archive3012db47… has SHA-256
   e56fa8e9bb4589fde964be3de451f3e5b251e4a1eafb1dc98d94add034dd5a86.
-  All four local font byte hashes match the archive. Corrected source CI is
-  recorded in the M8.5 execution plan after validation.
+  All four local font byte hashes match the archive. Full corrected source CI
+  44277975977 (`3fab329`) passes all eight Linux captures and remaining jobs.
 
 ## SQLite release URL caches an HTTP error body in CI
 

@@ -48,14 +48,15 @@ non-atomic migration DDL/version publication. All23 populated/retry/refusal case
 four source CI jobs 44267925802 pass, including cross-host row-digest comparison.
 Schema remains4; no new dependency/permission or ordinary phone data/install.
 Hot-WAL, power/process-kill and signed APK upgrade testing remain unverified.
-M8.5 is authorized and active in `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`;
-live GPS/save warning and scrolled provider-feedback repairs pass local analysis,
-636 Flutter tests, builds/contracts and packaged policy. The five-area synthetic
-failure/recovery matrix includes eight reviewed large-text renders. Source CI is
-pending; no device/account/provider interaction or schema/recorder policy change.
-Initial source CI exposed a test-only SDK font filename/cached-failure issue;
-the portable correction is awaiting fresh source CI, without any new dependency.
-Distribution remains unauthorized.
+M8.5 is complete in `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`: live GPS/save
+warnings, visible provider settings feedback, corrupt-route reread and bounded
+cloud/queue guidance. Local analysis, 636 Flutter tests, builds/contracts/policy
+and all four source CI jobs 44277975977 (`3fab329`) pass, including eight Linux
+large-text captures. Product repair `40debce` and capture correction `3fab329`
+add no dependency, schema, permission, recorder/scoring or payload change.
+No device/account/provider interaction; actual keyboard/OEM/fault recovery and
+live provider acceptance remain unverified. Stop before M8.6 pending explicit
+authorization. Distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
