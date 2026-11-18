@@ -1,6 +1,6 @@
 # Execution Plan — M8.2 battery/performance baseline
 
-**Status:** Active — measurements/local checks pass; source CI and closure pending
+**Status:** Complete at the bounded baseline scope below
 **Owner:** agent/maintainer
 **Milestone:** M8.2
 **Started / last updated:** 2026-11-18
@@ -38,8 +38,8 @@ caused by missing samples cannot become an efficiency result.
 - [x] Implement versioned workloads, quantiles, battery math and regression checks.
 - [x] Execute host DB/APK, Android profile replay/DB and unplugged recorder observations.
 - [x] Confirm precision limits, measured motion continuity, exact cleanup and main preservation.
-- [ ] Complete full source CI (local and post-fix process regressions pass).
-- [ ] Synchronize final status, commit/push and verify local HEAD equals origin/main.
+- [x] Complete full source CI (local and post-fix process regressions pass).
+- [x] Synchronize final status, commit/push and verify local HEAD equals origin/main.
 
 ## Collected results / limits
 
@@ -90,8 +90,11 @@ observations. Post-completion unlocking/movement is outside the measured windows
   main preservation pass; physical radio/location/power settings preserved.
 - Actual QA-process interruption/recovery passes: seven pinned committed chunks
   retained, recovered state and fresh motion/chunks observed, finalized fixture
-  cleaned, main preservation unchanged. Source CI pending.
-  No source commit is yet claimed. CI now builds/lints profile QA, restores/checks
+  cleaned, main preservation unchanged.
+  Source checkpoint `dfc316a` is pushed and local HEAD/origin/main matched.
+  [Full source CI 44239049290](https://github.com/atrx07/Traelyx/actions/runs/44239049290)
+  passes all four jobs, including profile build/lint, package isolation, native
+  regressions and both ordinary builds. CI builds/lints profile QA, restores/checks
   ordinary identity and retains synthetic host/ordinary APK-model inventories.
 
 Frozen artifact hashes are in the public aggregate report. Source base was
@@ -119,7 +122,12 @@ coordinates, serials, sample wall timestamps or private fingerprints are publish
 
 ## Completion summary
 
-M8.2 remains active pending source CI and final persistence. No numeric efficiency
-gate is invented from one run. Long-run CPU/battery optimization, entirely
-GNSS-absent/OEM operation, mounted/vehicle/M6.8/M7 acceptance and distribution
-remain open. After closing this substep, stop for explicit M8.3 authorization.
+M8.2 is complete as a qualified baseline, with implementation `dfc316a` and all
+four source CI jobs 44239049290 passing. Completion documents/report are committed
+and pushed to main, with local HEAD/origin/main synchronization verified. No numeric
+efficiency gate is invented from one run. Long-run CPU/battery optimization,
+entirely GNSS-absent/OEM operation, mounted/vehicle/M6.8/M7 acceptance and
+distribution remain open. No new dependency, schema/scoring migration, cloud
+request or ordinary-app installation. Normal WAKE_LOCK permission accompanies
+the recorder-owned policy. Stop for explicit M8.3 authorization; no work on it
+has begun.

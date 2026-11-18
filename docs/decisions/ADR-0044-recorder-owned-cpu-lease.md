@@ -1,6 +1,6 @@
 # ADR-0044 — Recorder-owned renewable CPU lease
 
-**Status:** Accepted; bounded physical lifecycle/continuity checks pass, source CI pending
+**Status:** Accepted; bounded physical lifecycle/continuity and full source CI pass
 **Date:** 2026-11-18
 
 ## Context

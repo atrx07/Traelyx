@@ -1,7 +1,8 @@
 # Unplugged screen-off recorder gaps
 
 **Status:** Confirmed evidence-continuity defect; repair passes bounded physical
-lifecycle and locked/unplugged continuity checks. Source CI/fix commit pending.
+lifecycle and locked/unplugged continuity checks. Fix source `dfc316a`; all four
+source CI jobs 44239049290 pass. Field/OEM and energy-efficiency limits remain.
 
 ## Symptoms / evidence
 
@@ -51,8 +52,10 @@ motion gaps 10.009/14.931 ms and exact fixture cleanup/main preservation. GNSS
 was intermittent (maximum measured gap 41.999 s); continuous GNSS absence after
 repair is not established. CPU is ~41% of one core, and idle's separately requested
 observer lease did not exclude all suspend. See the qualified
-[performance baseline](../reference/PERFORMANCE_BASELINE_V1.md). Source CI and
-fix-commit reference remain pending. Preserve
+[performance baseline](../reference/PERFORMANCE_BASELINE_V1.md). Fix source is
+[`dfc316a`](https://github.com/atrx07/Traelyx/commit/dfc316a6c150f102477c1947ce80d339e012de5d);
+[full source CI 44239049290](https://github.com/atrx07/Traelyx/actions/runs/44239049290)
+passes all four jobs. Preserve
 SENSOR_UNRELIABLE evidence; do not infer calibration, vehicle truth or promotion.
 
 ## Recovery / remaining risk

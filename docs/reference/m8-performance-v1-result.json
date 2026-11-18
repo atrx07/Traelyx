@@ -3,6 +3,12 @@
   "date": "2026-11-18",
   "scope": "bounded stationary Tecno LH8n API34 baseline; not fleet, vehicle or efficiency acceptance",
   "source_base_commit": "c0cbf00",
+  "implementation_commit": "dfc316a6c150f102477c1947ce80d339e012de5d",
+  "source_ci": {
+    "run_id": 44239049290,
+    "all_four_jobs_passed": true,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44239049290"
+  },
   "source_provenance": "M8.2 implementation commit and full source CI recorded in M8_PERFORMANCE_BASELINE.md",
   "artifacts": {
     "profile_qa": {

@@ -133,8 +133,10 @@ ownership becomes an explicit recorder error, never silent reacquisition. No
 sampling/batching/frame/quality/schema change or automatic battery-optimization
 exemption accompanies the normal WAKE_LOCK permission. See
 [ADR-0044](../decisions/ADR-0044-recorder-owned-cpu-lease.md) for tradeoffs and limits.
-Physical post-repair continuity/battery acceptance is pending; this is not an
-all-OEM reliability guarantee.
+The bounded physical post-repair continuity and qualified battery baseline are in
+[M8.2](../reference/PERFORMANCE_BASELINE_V1.md). High CPU cost, coarse energy
+estimation, intermittent GNSS and idle suspend remain explicit; no all-OEM or
+energy-efficiency acceptance is claimed.
 
 Do not hold unnecessary wake locks or maximum-frequency sensors permanently without evidence.
 

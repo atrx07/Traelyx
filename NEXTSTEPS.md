@@ -8,8 +8,8 @@ The maintainer authorized M7 wrap-up followed by M8 hardening on 2026-11-17,
 superseding the earlier acceptance-before-M8 sequencing preference. The bounded
 wrap-up is complete: `docs/exec-plans/active/M7_WRAPUP_HANDOFF.md`. M8 is the
 current development milestone; M8.1 is complete at its bounded stationary scope in
-`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 was subsequently authorized
-and is in progress in `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2's qualified baseline is
+complete in `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
 Later numbered steps retain their approval gate.
 **Stop before main distribution.** M8.10 publication/release assets, store
 submission and external APK distribution are not authorized. The release hold is
@@ -21,24 +21,21 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — M8.2: finish source validation and baseline closure
+## P0 — Approval gate before M8.3
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Run three was collected: main preservation matches, but ~263-second motion gaps
-   block a battery baseline. QA evidence is privately retained and exact-cleaned.
-   Recorder CPU policy v1, its five unit tests, profile lint and a physical
-   duplicate-Start/destruction/recovery/error/Stop lease proof pass locally.
-   The corrected fourth run passes 602 seconds of locked/unplugged motion
-   continuity, exact cleanup and main preservation. Final replay/DB, native tests,
-   ordinary builds/inventory, lint and post-fix recorder/process regressions pass.
-   Complete source CI and closure. Retain high CPU (~41% one core), one-step coarse battery
-   uncertainty, delivered ~200 Hz for 100 Hz requests, intermittent GNSS and idle
-   suspend limits in `docs/reference/PERFORMANCE_BASELINE_V1.md`.
-   M8.2 remains incomplete pending CI/closure; M8.3 is not authorized.
+1. Await explicit user authorization for M8.3. M8.2's qualified baseline, recorder
+   CPU policy v1, physical lifecycle/locked-unplugged continuity/process recovery,
+   exact cleanup, main preservation and local tests/build/lint checks pass. All
+   four source CI jobs 44239049290 pass for `dfc316a`. No M8.3 work has begun.
+   Retain high CPU (~41% one core), one-step coarse battery uncertainty, delivered
+   ~200 Hz for 100 Hz requests, intermittent GNSS and idle suspend limits in
+   `docs/reference/PERFORMANCE_BASELINE_V1.md`; long-duration/efficiency and OEM
+   acceptance remain open. Ordinary installed app/data remain unchanged.
 2. Keep the distribution hold and deferred acceptance ledger visible through M8.
    Passing software/build tests never waives physical or scientific gates.
 

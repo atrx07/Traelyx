@@ -16,20 +16,21 @@ stationary matrices, process recovery, fixture cleanup and preservation checks
 pass. Local validation passes (592 Flutter, 528 app-native plus 68 dependency and
 seven operator tests, lint/build/contracts). All four source CI jobs 44168836701
 pass for `63d4826`, including QA/ordinary package isolation and both app builds.
-No production recorder behavior, schema, dependency or wake/sampling changes.
+That M8.1 matrix changed no production recorder behavior, schema or wake/sampling.
 Physical deep-suspend/OEM/vehicle and battery gates remain unverified. See
-`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 is authorized/in progress:
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 is complete at its bounded baseline scope:
 The initial unplugged run exposed ~263-second motion gaps without GPS fixes.
 Recorder CPU policy v1, unit/native tests, app/profile lint and lease lifecycle
 checks pass. The corrected 602-second locked/unplugged recording passes frozen
 motion continuity, cleanup and main preservation; CPU is ~41% of one core and
 battery change is one coarse level step. Idle suspend and intermittent GNSS are
-explicit limits. Final profile replay/DB and ordinary APK inventory pass; source
-CI and final closure are pending. M8.2 is not complete. See
+explicit limits. Final profile replay/DB and ordinary APK inventory pass. All four
+source CI jobs 44239049290 pass for implementation `dfc316a`, including QA profile
+build/lint, ordinary isolation, native tests and both builds. No schema migration,
+new dependency or main-app installation; normal WAKE_LOCK permission is added. See
 `docs/reference/PERFORMANCE_BASELINE_V1.md`.
-Resume from `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
-Later
-substeps retain normal approval gates; publication/distribution is unauthorized.
+Details: `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
+Stop before M8.3 pending explicit authorization; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may
