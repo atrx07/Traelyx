@@ -53,6 +53,8 @@ live GPS/save warning and scrolled provider-feedback repairs pass local analysis
 636 Flutter tests, builds/contracts and packaged policy. The five-area synthetic
 failure/recovery matrix includes eight reviewed large-text renders. Source CI is
 pending; no device/account/provider interaction or schema/recorder policy change.
+Initial source CI exposed a test-only SDK font filename/cached-failure issue;
+the portable correction is awaiting fresh source CI, without any new dependency.
 Distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 

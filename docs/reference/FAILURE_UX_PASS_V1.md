@@ -6,6 +6,10 @@
 
 The [aggregate result](m8-failure-ux-v1-result.json) records local checks,
 capture inventory and explicit acceptance limits. Source CI is pending.
+Initial checkpoint `40debce` CI44275674425 was cancelled after SDK font-path
+case errors stalled capture tests. The corrected helper uses exact official
+archive filenames, preloads bytes and caches only successful loading. Local
+font bytes match the pinned official SDK archive; captures/tests remain required.
 
 This bounded pass exercises production widgets/services with synthetic inputs.
 No ordinary app installation, phone data access, real API key, hosted account,

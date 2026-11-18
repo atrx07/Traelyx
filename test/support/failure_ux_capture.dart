@@ -11,7 +11,7 @@ import 'package:traelyx/core/theme/traelyx_theme.dart';
 Widget failureUxBoundary(Widget child) =>
     RepaintBoundary(key: const ValueKey('failure-ux-boundary'), child: child);
 
-Future<void>? _fonts;
+bool _fontsLoaded = false;
 
 ThemeData failureUxTheme() {
   final base = TraelyxTheme.dark;
@@ -40,7 +40,8 @@ ThemeData failureUxTheme() {
 }
 
 /// Installed SDK fonts make synthetic captures readable without app changes.
-Future<void> loadFailureUxFonts() => _fonts ??= () async {
+Future<void> loadFailureUxFonts() async {
+  if (_fontsLoaded) return;
   final config = File('.dart_tool/package_config.json');
   final packages =
       jsonDecode(await config.readAsString()) as Map<String, dynamic>;
@@ -51,27 +52,31 @@ Future<void> loadFailureUxFonts() => _fonts ??= () async {
     config.absolute.uri.resolve(flutter['rootUri'] as String).toFilePath(),
   );
   final root = packageRoot.resolve('../../bin/cache/artifacts/material_fonts/');
-  final text = FontLoader('FailureUxRoboto');
+  // Use exact archive casing; an older Windows cache can preserve old casing.
+  // Read before creating font futures so one missing file fails once, promptly.
+  final fonts = <ByteData>[];
   for (final name in [
-    'roboto-regular.ttf',
-    'roboto-medium.ttf',
-    'roboto-bold.ttf',
+    'Roboto-Regular.ttf',
+    'Roboto-Medium.ttf',
+    'Roboto-Bold.ttf',
+    'MaterialIcons-Regular.otf',
   ]) {
-    text.addFont(
-      File.fromUri(
-        root.resolve(name),
-      ).readAsBytes().then((bytes) => ByteData.sublistView(bytes)),
+    fonts.add(
+      ByteData.sublistView(
+        await File.fromUri(root.resolve(name)).readAsBytes(),
+      ),
     );
   }
+  final text = FontLoader('FailureUxRoboto');
+  for (final data in fonts.take(3)) {
+    text.addFont(Future.value(data));
+  }
   await text.load();
-  final icons = FontLoader('MaterialIcons')
-    ..addFont(
-      File.fromUri(
-        root.resolve('materialicons-regular.otf'),
-      ).readAsBytes().then((bytes) => ByteData.sublistView(bytes)),
-    );
+  final icons = FontLoader('MaterialIcons')..addFont(Future.value(fonts.last));
   await icons.load();
-}();
+  // Do not cache failed futures across test error zones: they can stall awaiters.
+  _fontsLoaded = true;
+}
 
 /// Synthetic production-widget render, never a device screenshot or golden.
 Future<void> captureFailureUx(WidgetTester tester, String name) async {

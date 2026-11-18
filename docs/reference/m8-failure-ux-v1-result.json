@@ -96,5 +96,18 @@
     "Injected valid route after retry is not damaged-file repair.",
     "No live provider/key acceptance, hosted sync, physical GPS/storage/OEM/background or signed upgrade validation.",
     "Existing pre-release profiling/private reporting, deferred acceptance and distribution holds remain."
-  ]
+  ],
+  "initial_source_checkpoint": "40debcedad3fef400aa960413627eac31cf1ec83",
+  "initial_source_ci": {
+    "run_id": 44275674425,
+    "conclusion": "cancelled",
+    "validation": "Exact-case SDK font paths failed on Linux; a cached failed future stalled later tests. Captures remain required.",
+    "benchmark": "Unchanged isolated benchmark packageDebug failed without a nested cause; fresh CI required."
+  },
+  "font_provenance": {
+    "source_url": "https://storage.googleapis.com/flutter_infra_release/flutter/fonts/3012db47f3130e62f7cc0beabff968a33cbec8d8/fonts.zip",
+    "archive_sha256": "e56fa8e9bb4589fde964be3de451f3e5b251e4a1eafb1dc98d94add034dd5a86",
+    "local_bytes_match_archive": true,
+    "fonts_added_to_repository_or_app": false
+  }
 }

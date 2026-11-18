@@ -65,4 +65,10 @@ layout is covered. Final analysis, all 636 Flutter tests, ordinary debug/arm64 r
 packaged privacy policy pass. Source CI remains pending; the source checkpoint
 is not substep completion.
 No device or live provider/account interaction. See FAILURE_UX_PASS_V1.md.
+Initial checkpoint `40debce` CI44275674425 exposed exact-case SDK font paths
+hidden by Windows and a cached failed-load future that stalled later captures.
+The run was cancelled to inspect logs; use exact official archive names and cache
+only successful loads. Local bytes match the immutable SDK archive. No font or
+dependency was added. Its unrelated standalone benchmark also failed packageDebug
+without a nested cause; a fresh source run must pass all jobs before closure.
 Stop after M8.5; M8.6 requires explicit authorization.

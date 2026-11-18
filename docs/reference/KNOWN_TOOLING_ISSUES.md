@@ -4,6 +4,21 @@ This is a lightweight, failure-triggered runbook for recurring local tooling pro
 
 Use the matching safe fix before inventing another workaround. If it fails, investigate the current evidence and revise the entry only after validating the replacement. Keep product defects, transient external failures, and one-off operator mistakes out of this file.
 
+## Flutter test font cache uses case-sensitive archive filenames
+
+- **Scope:** Host widget captures using Flutter's existing Material font cache.
+- **Symptom:** Windows tests pass with lower-case font paths, but Linux reports
+  missing roboto-regular.ttf. Caching that failed future across test error zones
+  can stall subsequent tests. CI44275674425 was cancelled to retrieve this evidence.
+- **Safe fix:** Use the exact archive names Roboto-Regular.ttf, Roboto-Medium.ttf,
+  Roboto-Bold.ttf and MaterialIcons-Regular.otf. Read all bytes before creating
+  font-loader futures; cache only successful loading. Do not silently substitute
+  Ahem, skip captures, add an app font dependency or download fonts during tests.
+- **Verification:** Immutable official SDK fonts archive3012db47… has SHA-256
+  e56fa8e9bb4589fde964be3de451f3e5b251e4a1eafb1dc98d94add034dd5a86.
+  All four local font byte hashes match the archive. Corrected source CI is
+  recorded in the M8.5 execution plan after validation.
+
 ## SQLite release URL caches an HTTP error body in CI
 
 - **Scope:** Linux and Android native hooks for pinned `sqlite3` 3.5.1 in CI.
