@@ -5,6 +5,8 @@ import 'package:traelyx/core/database/database_migrations.dart';
 
 part 'app_database.g.dart';
 
+const localDatabaseUpgradePolicyVersion = 1;
+
 @DriftDatabase(
   tables: [
     AppSettings,
@@ -35,15 +37,18 @@ class AppDatabase extends _$AppDatabase {
       if (from < 1 || from > 3 || to != 4) {
         throw StateError('Unsupported local database upgrade.');
       }
-      if (from == 1) {
-        final bootstrapCreatedAll = await migrateRecognizedDevelopmentSchemas(
-          this,
-        );
-        if (bootstrapCreatedAll) return;
-        await migrator.createTable(tripAccountLinks);
-      }
-      if (from < 3) await migrator.createTable(accountMetadataCache);
-      await migrator.createTable(tripEventCorrections);
+      await transaction(() async {
+        final bootstrapCreatedAll =
+            from == 1 && await migrateRecognizedDevelopmentSchemas(this);
+        if (!bootstrapCreatedAll) {
+          if (from == 1) await migrator.createTable(tripAccountLinks);
+          if (from < 3) await migrator.createTable(accountMetadataCache);
+          await migrator.createTable(tripEventCorrections);
+        }
+        // Drift publishes this after onUpgrade returns. Stamp it inside the same
+        // transaction as DDL so interruption before that later write is safe.
+        await customStatement('PRAGMA user_version = $to');
+      });
     },
     beforeOpen: (_) async {
       await customStatement('PRAGMA foreign_keys = ON');

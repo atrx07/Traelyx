@@ -75,6 +75,10 @@ For M8.3, use the [privacy/security audit](reference/PRIVACY_SECURITY_AUDIT_V1.m
 packaged permission/backup policy, consent-bound payloads, exports, RLS and
 Guardian access, with source/fixture/hosted limits kept separate.
 
+For M8.4, use the [database upgrade rehearsal](reference/DATABASE_UPGRADE_REHEARSAL_V1.md):
+populated file-backed schema upgrades, row/consent preservation and atomic retry,
+separate from signed APK installation tests.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

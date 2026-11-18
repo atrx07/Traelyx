@@ -106,6 +106,11 @@ The existing `.tripdebug` path remains version 1 `precise_private`. M5.9 adds a 
 
 Every migration requires upgrade tests with existing fixture DB. Never let a release migration destroy local trip history without explicit user-controlled recovery path.
 
+M8.4's [rehearsal](../reference/DATABASE_UPGRADE_REHEARSAL_V1.md) checks populated
+file-backed schemas1–4, exact historical rows and opaque sidecar preservation.
+Upgrade policy1 atomically commits DDL/user_version; it adds no new schema and
+does not silently repair an already-mixed database or replace signed upgrade QA.
+
 M7.9's additive schema4 stores up to128 local event corrections per trip, each
 bound to a source snapshot bounded to16KiB. Notes and their export permission
 survive raw-only cleanup, but cascade with whole-trip deletion; explicit local

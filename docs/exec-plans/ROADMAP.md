@@ -37,7 +37,8 @@ M8.2's qualified baseline is complete in
 [the performance plan](active/M8_PERFORMANCE_BASELINE.md); all four source CI jobs
 44239049290 pass for `dfc316a`. M8.3's bounded
 [privacy/security audit](active/M8_PRIVACY_SECURITY_AUDIT.md) is complete, with
-all four source CI jobs 44244638894 passing for `711cb27`. M8.4 awaits authorization.
+all four source CI jobs 44244638894 passing for `711cb27`. M8.4 is subsequently
+authorized and active in [the database rehearsal](active/M8_DATABASE_UPGRADE_REHEARSAL.md).
 CPU/battery, physical/OEM/vehicle and deferred acceptance limits remain carried.
 M7 remains deferred acceptance, not complete.
 

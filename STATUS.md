@@ -41,7 +41,8 @@ packaged policy pass. All four source CI jobs 44244638894 pass, including the
 17-table/nine-probe PostgreSQL audit and independent release APK policy. No schema,
 dependency, permission addition or ordinary phone install. Historical backups,
 OEM/hosted behavior remain unverified; private reporting setup is a release gate.
-Stop before M8.4 pending authorization; publication/distribution remains unauthorized.
+M8.4 database upgrade rehearsal is now authorized and active in
+`docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`; distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

@@ -141,6 +141,13 @@ Use stable UUIDs or equivalent non-sequential identifiers. Distinguish local ano
 
 ## 5. Migrations
 
+M8.4 upgrade policy1 commits the existing recognized upgrade DDL and target
+SQLite user_version together. A failed DDL cannot leave new tables labeled with
+the old version; a committed upgrade can reopen after a later framework error.
+Schema remains4, with no history/consent/scoring rewrites or implicit repair of
+already-mixed files. See [ADR-0046](../decisions/ADR-0046-atomic-local-database-upgrades.md)
+and the [file-backed rehearsal](../reference/DATABASE_UPGRADE_REHEARSAL_V1.md).
+
 Every schema change:
 
 - migration file;

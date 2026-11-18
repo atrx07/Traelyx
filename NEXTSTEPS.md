@@ -21,19 +21,21 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — Approval gate before M8.4
+## P0 — M8.4 database upgrade rehearsal
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Await explicit authorization for M8.4. M8.3 is complete in
+1. M8.4 is authorized and active in `docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`.
+   Rehearse populated file-backed upgrades, exact history/consent preservation and
+   failed-upgrade recovery without touching the ordinary phone app. M8.3 is complete in
    `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`: backup/callback repairs,
    596 Flutter/601 native/nine Python tests, lint/builds and local/CI APK policy
    pass. All four source CI jobs 44244638894 (`711cb27`) pass, including actual
-   PostgreSQL catalog/behavioral fixtures and nine negative audit probes. No M8.4
-   work has begun. OEM/hosted limits remain in PRIVACY_SECURITY_AUDIT_V1.md.
+   PostgreSQL catalog/behavioral fixtures and nine negative audit probes.
+   OEM/hosted limits remain in PRIVACY_SECURITY_AUDIT_V1.md.
    Retain high CPU (~41% one core), one-step coarse battery uncertainty, delivered
    ~200 Hz for 100 Hz requests, intermittent GNSS and idle suspend limits in
    `docs/reference/PERFORMANCE_BASELINE_V1.md`; long-duration/efficiency and OEM

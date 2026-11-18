@@ -1,0 +1,565 @@
+{
+  "contract_version": 1,
+  "rehearsal_version": 1,
+  "migration_policy_version": 1,
+  "previous_build_commit": "de3c3aff75787ce29b3ba580e589a2fe1ed846fa",
+  "target_schema_version": 4,
+  "platform": "windows",
+  "mode": "host file-backed SQLite using frozen schema writers and current production migration",
+  "expected_cases": 23,
+  "completed_cases": 23,
+  "passed": true,
+  "real_telemetry_or_credentials_used": false,
+  "network_requested": false,
+  "signed_apk_install_or_physical_power_failure_tested": false,
+  "cases": [
+    {
+      "case": "schema_1_to4_delete",
+      "source_version": 1,
+      "trip_count": 1000,
+      "journal": "delete",
+      "historical_table_digests": {
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "68eb9e6fa6851016d04d5f4f6a769b01c3f7016b084456b2acd32e815d280136"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "786deaf7b30119df4e8f88fd6c368f98b80aa23c7e7287b3d0dcc87ecb0732a3"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "2ec4797e2b335b05fb63840a81262a9b9739aefebd1c6cbe0743135dcc180591"
+    },
+    {
+      "case": "schema_2_to4_delete",
+      "source_version": 2,
+      "trip_count": 1000,
+      "journal": "delete",
+      "historical_table_digests": {
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "6cb6ca55f7ae2a03adfa667a865ca92c4bdc064112d37157eeb8c95e2dab24b9"
+    },
+    {
+      "case": "schema_3_to4_delete",
+      "source_version": 3,
+      "trip_count": 1000,
+      "journal": "delete",
+      "historical_table_digests": {
+        "account_metadata_cache": {
+          "rows": 2,
+          "sha256": "2ae3a7027ec912776d66e42512ebbc1df460399c883afb4bb86af9fd7d048aeb"
+        },
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "6b778c8ad12bb930a25166f97d42dd6cd2948e67dd66907ffc1aa0ab81ee99fe"
+    },
+    {
+      "case": "schema_4_to4_delete",
+      "source_version": 4,
+      "trip_count": 1000,
+      "journal": "delete",
+      "historical_table_digests": {
+        "account_metadata_cache": {
+          "rows": 2,
+          "sha256": "2ae3a7027ec912776d66e42512ebbc1df460399c883afb4bb86af9fd7d048aeb"
+        },
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_event_corrections": {
+          "rows": 2,
+          "sha256": "d002db53ea6ffb0058d58d3165dfde5115272e3768603585cfd084f59e27f23e"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "db352c1e33628ceff424b7d61ef3be909a19cf10d10e03e17f8f0402117c69a7"
+    },
+    {
+      "case": "failure_v1_delete_afterCallback_false",
+      "source_version": 1,
+      "journal": "delete",
+      "version_after_failure": 1,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v1_delete_afterCallback_true",
+      "source_version": 1,
+      "journal": "delete",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v2_delete_afterCallback_false",
+      "source_version": 2,
+      "journal": "delete",
+      "version_after_failure": 2,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v2_delete_afterCallback_true",
+      "source_version": 2,
+      "journal": "delete",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v3_delete_afterCallback_false",
+      "source_version": 3,
+      "journal": "delete",
+      "version_after_failure": 3,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v3_delete_afterCallback_true",
+      "source_version": 3,
+      "journal": "delete",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "schema_1_to4_wal",
+      "source_version": 1,
+      "trip_count": 1000,
+      "journal": "wal",
+      "historical_table_digests": {
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "68eb9e6fa6851016d04d5f4f6a769b01c3f7016b084456b2acd32e815d280136"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "786deaf7b30119df4e8f88fd6c368f98b80aa23c7e7287b3d0dcc87ecb0732a3"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "2ec4797e2b335b05fb63840a81262a9b9739aefebd1c6cbe0743135dcc180591"
+    },
+    {
+      "case": "schema_2_to4_wal",
+      "source_version": 2,
+      "trip_count": 1000,
+      "journal": "wal",
+      "historical_table_digests": {
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "6cb6ca55f7ae2a03adfa667a865ca92c4bdc064112d37157eeb8c95e2dab24b9"
+    },
+    {
+      "case": "schema_3_to4_wal",
+      "source_version": 3,
+      "trip_count": 1000,
+      "journal": "wal",
+      "historical_table_digests": {
+        "account_metadata_cache": {
+          "rows": 2,
+          "sha256": "2ae3a7027ec912776d66e42512ebbc1df460399c883afb4bb86af9fd7d048aeb"
+        },
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "6b778c8ad12bb930a25166f97d42dd6cd2948e67dd66907ffc1aa0ab81ee99fe"
+    },
+    {
+      "case": "schema_4_to4_wal",
+      "source_version": 4,
+      "trip_count": 1000,
+      "journal": "wal",
+      "historical_table_digests": {
+        "account_metadata_cache": {
+          "rows": 2,
+          "sha256": "2ae3a7027ec912776d66e42512ebbc1df460399c883afb4bb86af9fd7d048aeb"
+        },
+        "app_settings": {
+          "rows": 3,
+          "sha256": "2eb055c4bb208f109e1a79bd696172323266e1855e3cb29e6c1cceb15ea4fce7"
+        },
+        "driver_baselines": {
+          "rows": 3,
+          "sha256": "c0b8014a719f0a315c5dc4519980ac79a4af8960354dcfd27694d436e34f07bf"
+        },
+        "sync_queue": {
+          "rows": 250,
+          "sha256": "42d6cc6578ef9818337e24d7054cba7bf6fbf9622a64ea2d119cb2dba6133234"
+        },
+        "trip_account_links": {
+          "rows": 250,
+          "sha256": "0d0f68bd8564340437e57de9db0d5dcf843baf76b01436d104a984dfa00a985d"
+        },
+        "trip_chunks": {
+          "rows": 3000,
+          "sha256": "9b7fba784995a9a03a7980feec1bcab9a4371503036cb5d01914789c9d756ab2"
+        },
+        "trip_event_corrections": {
+          "rows": 2,
+          "sha256": "d002db53ea6ffb0058d58d3165dfde5115272e3768603585cfd084f59e27f23e"
+        },
+        "trip_events": {
+          "rows": 2000,
+          "sha256": "e27e35934d5735995e6867e9175e29a71b6919edb1c12792fc51b5f91442d4ce"
+        },
+        "trip_scores": {
+          "rows": 2000,
+          "sha256": "2ea19db6a2cea0a3df440aeaddee9548b2de41468c55964f59727e06f1da8da1"
+        },
+        "trips": {
+          "rows": 1000,
+          "sha256": "3731e6055c5c079b3d2c90954665a29e8d3cafe9470aeb9ef252344c6adea690"
+        },
+        "vehicles": {
+          "rows": 3,
+          "sha256": "124eb479076676228d5f0388cc3c198668d76db3558d9a03ac728845840d1004"
+        }
+      },
+      "all_historical_rows_exact": true,
+      "reopens": 2,
+      "opaque_sidecar_sentinels_unchanged": 9,
+      "raw_codec_validated": false,
+      "snapshot_sha256": "db352c1e33628ceff424b7d61ef3be909a19cf10d10e03e17f8f0402117c69a7"
+    },
+    {
+      "case": "failure_v1_wal_afterCallback_false",
+      "source_version": 1,
+      "journal": "wal",
+      "version_after_failure": 1,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v1_wal_afterCallback_true",
+      "source_version": 1,
+      "journal": "wal",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v2_wal_afterCallback_false",
+      "source_version": 2,
+      "journal": "wal",
+      "version_after_failure": 2,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v2_wal_afterCallback_true",
+      "source_version": 2,
+      "journal": "wal",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v3_wal_afterCallback_false",
+      "source_version": 3,
+      "journal": "wal",
+      "version_after_failure": 3,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "failure_v3_wal_afterCallback_true",
+      "source_version": 3,
+      "journal": "wal",
+      "version_after_failure": 4,
+      "atomic_image": true,
+      "retry_and_integrity_passed": true,
+      "all_historical_rows_exact": true
+    },
+    {
+      "case": "settings_only_bootstrap1_to4",
+      "settings_rows_exact": true
+    },
+    {
+      "case": "unknown_v1_shape_refused",
+      "schema_version_and_rows_unchanged": true,
+      "implicit_reset": false
+    },
+    {
+      "case": "future_version5_refused",
+      "schema_version_and_rows_unchanged": true,
+      "implicit_reset": false
+    }
+  ],
+  "status": "source_ci_pending",
+  "source_base_commit": "de3c3aff75787ce29b3ba580e589a2fe1ed846fa",
+  "source_schema_snapshots_and_table_definitions_unchanged": true,
+  "local_validation": {
+    "flutter_analysis": "passed",
+    "flutter_tests": 619,
+    "focused_rehearsal_cases": 23,
+    "repository_contracts": "passed",
+    "ordinary_builds": "debug_and_arm64_release_passed",
+    "packaged_android_privacy_policy": "passed"
+  },
+  "limitations": [
+    "Frozen-schema file writers, not an actual prior signed APK execution.",
+    "WAL fixtures were cleanly closed; no hot-WAL/power-cut or real process-kill test.",
+    "Opaque synthetic sidecar sentinels, not actual telemetry codec or route evidence.",
+    "No ordinary phone data read, installation, live accounts/providers or distribution.",
+    "Already-mixed databases remain refused pending separately reviewed recovery."
+  ]
+}

@@ -255,6 +255,24 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Verify complete database upgrade rehearsal
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('build/reports/database-upgrade-rehearsal-v1.json').read_text())
+          reference = json.loads(Path('docs/reference/m8-database-upgrade-v1-result.json').read_text())
+          assert result['passed'] and result['completed_cases'] == result['expected_cases'] == 23
+          assert result['target_schema_version'] == 4 and result['migration_policy_version'] == 1
+          expected = {case['case']: case for case in reference['cases']}
+          actual = {case['case']: case for case in result['cases']}
+          assert actual.keys() == expected.keys()
+          for name, case in actual.items():
+              if 'historical_table_digests' in case:
+                  assert case['historical_table_digests'] == expected[name]['historical_table_digests'], name
+          print('Complete rehearsal; frozen populated-table row digests match.')
+          PY
+
       - name: Test trip-debug inspector
         run: |
           python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/inspect_field_recording.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_inspect_field_recording.py tests/tool/test_sync_pilot.py
@@ -403,4 +421,5 @@ jobs:
             build/reports/host-performance-v1.json
             build/reports/apk-model-inventory-v1.json
             build/reports/privacy-security-android-v1.json
+            build/reports/database-upgrade-rehearsal-v1.json
           if-no-files-found: error
