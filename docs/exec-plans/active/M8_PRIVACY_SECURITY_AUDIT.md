@@ -45,13 +45,24 @@ certification. Never turn an unknown or carried acceptance gate into a pass.
 - Flutter analysis and all 596 tests pass. Nine Python privacy-policy mutation
   tests pass; old packaged artifact fails exactly the intended new policy gates.
 - Source review covers all matrix rows in PRIVACY_SECURITY_AUDIT_V1. New SQL
-  catalog checks cover 17 tables and eight negative probes. Local Docker engine
+  catalog checks cover 17 tables and nine negative probes. Local Docker engine
   is not running; execute SQL in isolated source CI, never hosted production.
 - Ordinary debug/release builds, all 601 native tests and app lint pass. Actual
   packaged release policy passes with 10 permissions/three exports, bound backup
   exclusions and consent defaults. Artifact SHA-256 is in the aggregate report.
   Ignored local.properties was restored byte-for-byte. Source CI pending.
   No phone/account/provider operation performed; no schema/dependency change.
+- Source checkpoint `c29bde9` is pushed; local HEAD/origin/main matched. Full
+  [source CI 44244259697](https://github.com/atrx07/Traelyx/actions/runs/44244259697)
+  is running, including actual PostgreSQL catalog/negative probes and packaged
+  policy validation. Do not mark M8.3 complete until all required jobs pass.
+- First CI's cloud-schema job correctly exposed an overbroad new audit assumption:
+  bootstrap's platform-owned rls_auto_enable event-trigger stub has no pinned
+  search path. Existing migration revokes client execution but does not define
+  that hosted helper. The audit now enforces its event-trigger identity and closed
+  client ACL, with an added negative grant probe, while keeping the empty-path
+  rule for app-owned definers. Existing fixtures/authorization tests are unchanged;
+  hosted helper internals remain unverified. Corrected source CI is required.
 
 ## Completion
 

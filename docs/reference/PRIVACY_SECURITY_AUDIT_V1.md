@@ -48,7 +48,7 @@ PostgreSQL catalog/behavioral and Edge execution remain subject to source CI.
 | Logging/diagnostics | initializeAccount debug=false; normalized provider/auth errors; DiagnosticsSnapshotCollector and DiagnosticsReport aggregate fields | Full Flutter/native regression suites. First-party production log call emits Guardian receive-stage enum only; no raw body/ID/route logging found in inspected sources |
 | Exports/deletion | MainActivity ACTION_CREATE_DOCUMENT, exact UUID native guards, precise-private warning, RedactedTripSummaryPayload, CorrectionContributionPayload | Data export UI/repository, native redaction/unknown-field/categorical-contribution and recorder-state tests; user-selected provider may independently sync saved files |
 | Optional network payloads | CompactTripSummary exact 8-field schema; ReviewedCommentaryInput categorical/approved-wording dossier; fixed HTTPS Groq endpoint, no redirects, bounded responses/cancellation | Summary owner/consent tests, provider transport/dossier/one-use review/fallback tests; offline canvas makes no tile requests; no real send performed |
-| Public/private RLS | All 17 current production tables, owner policies, invoker/definer grants, sanitized public-profile/ranking projections | Existing actual PostgreSQL cross-owner/anonymous/consent/revocation fixtures plus new catalog assertions and eight rollback-only negative probes; CI execution required |
+| Public/private RLS | All 17 current production tables, owner policies, invoker/definer grants, sanitized public-profile/ranking projections | Existing actual PostgreSQL cross-owner/anonymous/consent/revocation fixtures plus new catalog assertions and nine rollback-only negative probes; CI execution required |
 | Guardian | Server participant/revision/permission/expiry predicates; location/speed/history unsupported; separate activation/device consent, no-backup vaults, data-only push, guarded inbox and revocation | Flutter/native owner-change/revoke/receipt tests, SQL pairing/delivery/worker/receiver/revision fixtures and Edge processing-window/auth/payload tests; hosted/physical acceptance remains held |
 
 ## Ordinary Android inventory / rationale
@@ -88,9 +88,11 @@ compiled IDs and resource-shrunk ZIP paths, checks binding equality and records
 APK size/hash. It prints aggregate finding codes only. No APK extraction, network
 or user-data access is involved. CI retains its report as an artifact. PostgreSQL
 CI applies all migrations and runs supabase/tests/privacy_security_audit.sql after
-the behavioral suites: RLS, table/column anonymous grants, empty definer search
+the behavioral suites: RLS, table/column anonymous grants, empty app-owned definer search
 paths, PUBLIC execution, server-only RPCs and private Guardian table grants are
-checked. Temporary injected regressions are rolled back; no production migration.
+checked. The platform-owned rls_auto_enable event helper is ACL-checked separately;
+its minimal bootstrap stub and uninspected hosted body are not treated as an app
+RPC search-path guarantee. Temporary injected regressions are rolled back; no production migration.
 
 ## Compatibility / residual limits
 

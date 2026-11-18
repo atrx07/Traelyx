@@ -62,8 +62,9 @@
   },
   "sql_catalog": {
     "production_tables": 17,
-    "negative_probes": 8,
-    "execution": "pending_isolated_postgresql_ci"
+    "negative_probes": 9,
+    "execution": "pending_isolated_postgresql_ci",
+    "platform_helper_scope": "rls_auto_enable event-trigger identity and no-client-execution ACL; hosted body unverified"
   },
   "source_review": [
     "permission_and_component_inventory",

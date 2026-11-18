@@ -41,9 +41,17 @@ begin
 
   for item in select p.* from pg_proc p join pg_namespace n on n.oid=p.pronamespace
     where n.nspname='public' and p.prosecdef loop
-    if not exists(select 1 from unnest(item.proconfig) option
+    -- Platform-owned event helper is represented by bootstrap's minimal stub,
+    -- not an app RPC definition. Keep its client ACL closed; do not assert an
+    -- uninspected hosted implementation's search-path configuration.
+    if item.oid=to_regprocedure('public.rls_auto_enable()')::oid then
+      if item.prorettype<>'event_trigger'::regtype
+        or has_function_privilege('authenticated',item.oid,'EXECUTE') then
+        raise exception 'audit_platform_helper_exposure';
+      end if;
+    elsif not exists(select 1 from unnest(item.proconfig) option
       where option in ('search_path=""','search_path=')) then
-      raise exception 'audit_definer_search_path';
+        raise exception 'audit_definer_search_path';
     end if;
     if exists(select 1 from aclexplode(coalesce(item.proacl,acldefault('f',item.proowner))) a
       where a.grantee=0 and a.privilege_type='EXECUTE') then
@@ -76,6 +84,13 @@ end $$;
 select pg_temp.assert_privacy_catalog_v1();
 
 do $$ begin
+  begin
+    grant execute on function public.rls_auto_enable() to authenticated;
+    perform pg_temp.assert_privacy_catalog_v1();
+    raise exception 'audit_negative_probe_missed';
+  exception when raise_exception then
+    if sqlerrm<>'audit_platform_helper_exposure' then raise; end if;
+  end;
   begin
     create table public.unreviewed_private_probe(id integer);
     perform pg_temp.assert_privacy_catalog_v1();
