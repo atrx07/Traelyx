@@ -11,6 +11,43 @@ identity. See [ADR-0009](../decisions/ADR-0009-release-key-local-custody.md),
 [RELEASE_SIGNING](../technical/RELEASE_SIGNING.md) and the
 [execution plan](../exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md).
 
+## Current authorized phone workflow
+
+The maintainer has no second disk and explicitly instructed the agent to take
+over setup using the connected physical phone. That instruction satisfies
+SECURITY's exception for explicitly authorized agent generation. A private local
+Windows prompt still keeps password choice and recovery with the maintainer.
+
+The agent selects only the authorized physical TECNO, rejects emulator/network
+serials, checks boot/access and a writable dedicated folder, then opens the
+private prompt. Enter and confirm a dedicated password there and attest that a
+recovery copy survives PC loss. Never send it in chat. Passwords are masked and
+passed only through a short-lived local child environment, not command arguments
+or files; the ADB child environment explicitly excludes the password.
+
+The phone controller reuses an existing matching identity, never regenerates a
+missing configured/pinned one. New generation uses the same PKCS#12/RSA policy
+below. Private config version2 records the physical-device transport, serial and
+remote path outside Git; those device/path details never enter public evidence.
+The backup is Documents/TraelyxSigningBackup/traelyx-release-<certificate-sha256>.p12
+on the physical phone. No app installation, main-app files, account or telemetry
+is accessed. Existing phone files are never overwritten: new bytes go through
+an owned unique temporary name and a verified no-clobber move. Only the exact
+owned temporary file is eligible for cleanup.
+
+The controller pulls that phone file into an owned temporary readback directory
+outside Git, compares every byte and performs the Java private-key proof on the
+readback. The encrypted phone copy remains; the transient local readback is
+removed. A fresh receipt identifies physical_android_adb_readback, mechanical
+copy/private-key proof and separately attested password recovery. No password is
+stored with either key copy. The controller performs no cloud upload or phone
+sync configuration; third-party phone-folder sync/access is not automatically
+verified and must not be represented as such. Keep the new folder local/unsynced.
+
+The earlier independent-file CLI below remains available for maintainers who
+have a suitable backup drive. Use the phone controller for phone-transport
+configurations; the version1 file-only CLI does not migrate those configurations.
+
 ## Maintainer action
 
 Run the reviewed tool yourself in a local interactive PowerShell/terminal from
@@ -95,15 +132,23 @@ An existing public pin must match; mismatches require review, never regeneration
 python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup
 ```
 
-All19 local tests pass: Git/network/cloud path rejection, exclusive files,
+All 26 local tests pass, covering the core's 19 cases plus seven phone bridge/
+readback cases: Git/network/cloud path rejection, exclusive files,
 hard-link/different-backup refusal, existing config/pin protection, child-only
 password handling/redaction, JDK preflight, bounded unexpected failures,
 attestation/receipt hygiene and real disposable JDK private-key/backup proof,
 wrong-password rejection and debug-certificate refusal. Fixtures are temporary,
 synthetic and never production identities; no actual signing key enters CI or
 its artifacts. CI retains this test gate alongside existing app checks.
+Phone coverage includes emulator/network rejection, a password-free ADB child,
+no-clobber publication/exact temporary cleanup, unavailable-phone/no-generation,
+missing-primary/no-rotation and a real disposable JDK readback proof/corruption
+refusal. The real TECNO also passes a disposable marker copy/readback and
+no-clobber preflight; all marker files were removed. Production identity/backup
+proof remains pending the private local prompt.
 
-Actual production creation/backup remains a maintainer action. A byte/private-key
+Actual production proof is pending the authorized local workflow; password choice
+and recovery remain maintainer actions. A byte/private-key
 proof establishes current read/decrypt/sign capability; independent storage,
 access protection and unsynced custody remain separately recorded attestations.
 It does not prove future media survival, unattended disaster recovery or APK

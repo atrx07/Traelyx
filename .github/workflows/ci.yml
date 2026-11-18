@@ -294,8 +294,8 @@ jobs:
 
       - name: Test maintainer-local signing custody tooling
         run: |
-          python -m py_compile tool/release_signing_setup.py
-          python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup
+          python -m py_compile tool/release_signing_setup.py tool/release_signing_phone_setup.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup tests.tool.test_release_signing_phone_setup
 
       - name: Verify bounded recorder hardening operator
         run: |

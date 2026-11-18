@@ -29,8 +29,10 @@ jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
 1. M8.6 is authorized and active in `docs/exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md`.
-   Prepare and validate the local custody workflow; the maintainer creates and
-   controls the key and verifies independent backup storage. M8.5 is complete in
+   The maintainer explicitly authorized takeover using the connected physical
+   phone because no second disk is available. Complete the private password
+   prompt, USB copy/readback/private-key proof and public identity review. No
+   production key is verified yet; M8.7 remains held. M8.5 is complete in
    `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`: GPS/save and settings-feedback
    repairs, corrupt-route reread and bounded cloud/queue guidance. Local analysis,
    636 Flutter tests, builds/contracts/policy and all four source CI jobs
