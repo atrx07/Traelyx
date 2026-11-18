@@ -1,6 +1,6 @@
 # ADR-0046 — Atomic local database upgrades
 
-**Status:** Accepted; focused rehearsal passes, full validation/source CI pending
+**Status:** Accepted; local validation and full source CI pass for `d7d2e18`
 **Date:** 2026-11-18
 
 ## Context
@@ -33,6 +33,10 @@ pinned Drift native-executor source confirms its version-publication ordering;
 the regression intercepts real migration execution at both observed boundaries.
 
 ## Validation / consequences
+
+All four [source CI jobs 44267925802](https://github.com/atrx07/Traelyx/actions/runs/44267925802)
+pass for the fix, including the Linux/Windows populated-row digest comparison,
+full Flutter/native suites and ordinary APK builds/policy checks.
 
 The versioned rehearsal uses frozen schemas, actual file-backed DELETE/WAL modes,
 1,000-trip histories, exact historical row comparisons, schema/FK/integrity checks,

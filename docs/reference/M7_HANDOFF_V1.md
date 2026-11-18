@@ -23,8 +23,10 @@ source CI 44168836701 (`63d4826`). M8.2's qualified baseline is complete in the
 [performance plan](../exec-plans/active/M8_PERFORMANCE_BASELINE.md), with all four
 source CI jobs 44239049290 (`dfc316a`) passing. M8.3's bounded
 [privacy audit](../exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md) is complete, with
-all four source CI jobs 44244638894 (`711cb27`) passing. M8.4 is subsequently
-authorized and active in the [database rehearsal](../exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md). The
+all four source CI jobs 44244638894 (`711cb27`) passing. M8.4's bounded
+[database rehearsal](../exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md) is complete:
+atomic upgrade repair, 23 cases and all four source CI jobs 44267925802 (`d7d2e18`)
+pass; signed/device upgrade limits remain. M8.5 awaits authorization. The
 normal explicit gate between later numbered substeps remains. **Stop before main
 distribution:** M8.10 publication, release/tag/assets, store submission, public
 download links and external APK distribution are unauthorized. Prior private

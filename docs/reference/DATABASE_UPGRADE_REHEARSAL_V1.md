@@ -1,9 +1,13 @@
 # M8.4 database upgrade rehearsal v1
 
-**Status:** Active — local validation passes; source CI pending
+**Status:** Complete — bounded host rehearsal; signed/device limits retained
 **Date:** 2026-11-18
 **Previous source baseline:** de3c3af
 **Candidate target:** schema4, local database upgrade policy1
+**Source:** `d7d2e1882ab323ed51e2b70dce718aed5a470897`; all four
+[CI jobs 44267925802](https://github.com/atrx07/Traelyx/actions/runs/44267925802)
+pass on attempt2. Attempt1 stopped on an upstream SQLite asset HTTP403 before
+application checks; the unchanged checksum-verified retry passed.
 
 See the [aggregate result](m8-database-upgrade-v1-result.json) for exact case
 outcomes, row counts/digests, input snapshot hashes and platform qualification.

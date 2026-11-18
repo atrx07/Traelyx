@@ -41,8 +41,14 @@ packaged policy pass. All four source CI jobs 44244638894 pass, including the
 17-table/nine-probe PostgreSQL audit and independent release APK policy. No schema,
 dependency, permission addition or ordinary phone install. Historical backups,
 OEM/hosted behavior remain unverified; private reporting setup is a release gate.
-M8.4 database upgrade rehearsal is now authorized and active in
-`docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`; distribution remains unauthorized.
+M8.4 database upgrade rehearsal is complete in
+`docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`. Source `d7d2e18` repairs
+non-atomic migration DDL/version publication. All23 populated/retry/refusal cases,
+619 local Flutter tests, analysis/build/contracts and packaged policy pass; all
+four source CI jobs 44267925802 pass, including cross-host row-digest comparison.
+Schema remains4; no new dependency/permission or ordinary phone data/install.
+Hot-WAL, power/process-kill and signed APK upgrade testing remain unverified.
+Stop before M8.5 pending authorization; distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

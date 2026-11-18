@@ -1,6 +1,6 @@
 # Execution Plan — M8.4 database upgrade rehearsal
 
-**Status:** Active
+**Status:** Complete — bounded host database rehearsal; signed/device limits retained
 **Owner:** agent/maintainer
 **Milestone:** M8.4
 **Started / last updated:** 2026-11-18
@@ -32,8 +32,8 @@ Recorder profiling/private reporting and carried acceptance/distribution holds r
 - [x] Inspect production migrations and existing frozen-schema tests.
 - [x] Add deterministic, file-backed representative-history and rollback fixtures.
 - [x] Execute all supported paths and verify exact preservation plus usable queries.
-- [ ] Validate any repair with full affected tests, analysis/build/contracts and source CI.
-- [ ] Publish aggregate report/protocol; synchronize status/roadmap and commit/push.
+- [x] Validate any repair with full affected tests, analysis/build/contracts and source CI.
+- [x] Publish aggregate report/protocol and synchronize status/roadmap for the completion commit.
 
 Use owned temporary directories and synthetic data only. No destructive fallback,
 silent score recomputation, privacy opt-in, credential material or network access.
@@ -53,8 +53,21 @@ Reports contain only aggregate counts/digests and explicit host/device limitatio
   pass; analysis has no issues. No destructive reset. Frozen schema snapshots and
   table definitions match de3c3af exactly. Ordinary debug/arm64 release builds,
   packaged Android privacy policy, formatting and repository contracts pass.
-  Source CI is pending; the source checkpoint is not substep completion.
+  Source checkpoint `d7d2e1882ab323ed51e2b70dce718aed5a470897` passes all four
+  [source CI jobs 44267925802](https://github.com/atrx07/Traelyx/actions/runs/44267925802),
+  attempt2, including Linux rehearsal/reference row-digest comparison, generated
+  schemas, full Flutter/native tests, isolated QA builds, ordinary debug/release
+  APKs and packaged privacy policy. Attempt1 stopped before app checks on an
+  upstream SQLite asset HTTP403; unchanged checksum-verified retry passed.
 
 ## Completion
 
-Pending. Stop after M8.4; M8.5 requires explicit authorization.
+M8.4's database-component rehearsal is complete. Production schema remains4;
+no new dependency, permission, phone installation, user history access or network
+operation in the rehearsal. The source fix, ADR and incident record are linked
+from the [protocol](../../reference/DATABASE_UPGRADE_REHEARSAL_V1.md).
+Physical power/process-kill, hot-WAL and actual signed APK upgrades remain
+unverified; M8.8/M8.9 retain their separate gates. Recorder profiling, private
+reporting, M6.8/M7 acceptance and distribution holds remain.
+Persist this docs-only closure to origin/main and verify clean synchronization.
+Stop after M8.4; M8.5 requires explicit authorization and has not begun.

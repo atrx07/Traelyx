@@ -1,7 +1,9 @@
 # Interrupted local upgrade leaves schema and version out of sync
 
-**Status:** Confirmed synthetic reproduction; preventive repair and 23-case
-rehearsal pass locally. Full validation/source CI and fix commit pending.
+**Status:** Preventive repair in [d7d2e18](https://github.com/atrx07/Traelyx/commit/d7d2e1882ab323ed51e2b70dce718aed5a470897).
+The 23-case rehearsal, local validation and all four
+[source CI jobs 44267925802](https://github.com/atrx07/Traelyx/actions/runs/44267925802)
+pass. No actual user incident established; existing mixed-file recovery remains separate.
 
 ## Evidence / cause
 

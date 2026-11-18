@@ -544,7 +544,7 @@
       "implicit_reset": false
     }
   ],
-  "status": "source_ci_pending",
+  "status": "complete_bounded_host_rehearsal",
   "source_base_commit": "de3c3aff75787ce29b3ba580e589a2fe1ed846fa",
   "source_schema_snapshots_and_table_definitions_unchanged": true,
   "local_validation": {
@@ -561,5 +561,20 @@
     "Opaque synthetic sidecar sentinels, not actual telemetry codec or route evidence.",
     "No ordinary phone data read, installation, live accounts/providers or distribution.",
     "Already-mixed databases remain refused pending separately reviewed recovery."
-  ]
+  ],
+  "source_commit": "d7d2e1882ab323ed51e2b70dce718aed5a470897",
+  "source_ci": {
+    "run_id": 44267925802,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44267925802",
+    "run_attempt": 2,
+    "conclusion": "success",
+    "jobs": {
+      "validate": "success",
+      "eventnet-cpu": "success",
+      "cloud-schema": "success",
+      "guardian-dispatch": "success"
+    },
+    "linux_populated_table_digests_match_windows_reference": true,
+    "initial_attempt": "Stopped before app checks on upstream SQLite asset HTTP403; unchanged checksum-verified retry passed."
+  }
 }
