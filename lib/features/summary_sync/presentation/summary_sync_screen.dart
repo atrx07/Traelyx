@@ -108,7 +108,7 @@ class _SummarySyncScreenState extends ConsumerState<SummarySyncScreen> {
                                     final result = await ref
                                         .read(summarySyncServiceProvider)
                                         .syncPending(identity.userId);
-                                    return '${result.uploaded} synced this attempt. ${result.failed == 0 ? 'Any remaining queue can be retried here.' : 'Some uploads failed; the local queue is retained.'}';
+                                    return _attemptNotice(result);
                                   }),
                             child: const Text('Retry queued uploads'),
                           ),
@@ -169,7 +169,7 @@ class _SummarySyncScreenState extends ConsumerState<SummarySyncScreen> {
       final service = ref.read(summarySyncServiceProvider);
       await service.consent(preview);
       final result = await service.syncPending(preview.userId);
-      return '${result.uploaded} summaries synced. ${result.failed == 0 ? 'Local history is unchanged.' : 'Upload paused after a failure; retry the retained queue here.'}';
+      return _attemptNotice(result);
     });
   }
 
@@ -198,4 +198,14 @@ class _SummarySyncScreenState extends ConsumerState<SummarySyncScreen> {
       }
     }
   }
+}
+
+String _attemptNotice(SummarySyncResult result) {
+  if (result.failed > 0) {
+    return '${result.uploaded} synced this attempt. Upload could not finish. Local trips and queued summaries are retained. Check your connection and sign-in, then retry here after any delay.';
+  }
+  if (result.uploaded == 0) {
+    return 'No summaries uploaded this attempt. Any remaining queue may need a retry delay or review. Local trips are unchanged.';
+  }
+  return '${result.uploaded} synced this attempt. Local trips are unchanged. Any remaining queue needs another foreground retry.';
 }

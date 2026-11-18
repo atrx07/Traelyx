@@ -1,0 +1,100 @@
+{
+  "contract_version": 1,
+  "failure_ux_pass_version": 1,
+  "status": "source_ci_pending",
+  "date": "2026-11-18",
+  "source_base_commit": "da9908fe47291ceba57f811d0f228c150d376b89",
+  "scope": "synthetic host production-widget/service failure and recovery; not device, provider or sensor acceptance",
+  "required_areas": {
+    "low_gps": "passed_locally",
+    "corruption": "passed_locally",
+    "provider_failure": "passed_locally",
+    "invalid_key": "passed_locally",
+    "offline_cloud": "passed_locally"
+  },
+  "local_validation": {
+    "flutter_analysis": "passed",
+    "flutter_tests": 636,
+    "affected_tests": 114,
+    "ordinary_builds": "debug_and_arm64_release_passed",
+    "packaged_android_privacy_policy": "passed",
+    "repository_contracts": "passed",
+    "captures": 8,
+    "simulated_keyboard_inset_px": 300
+  },
+  "captures": [
+    {
+      "file": "live-low-gps-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "live-save-failure-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "invalid-route-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "offline-sync-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "cloud-credential-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "cloud-network-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "cloud-malformed-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    },
+    {
+      "file": "cloud-settings-key-2x.png",
+      "width": 390,
+      "height": 844,
+      "text_scale": 2,
+      "reviewed_locally": true
+    }
+  ],
+  "compatibility": {
+    "schema_version": 4,
+    "schema_changed": false,
+    "recorder_or_sensor_policy_changed": false,
+    "scoring_or_model_changed": false,
+    "new_dependency_or_permission": false,
+    "network_payload_or_consent_changed": false
+  },
+  "ordinary_device_app_or_data_changed": false,
+  "live_provider_account_or_credential_used": false,
+  "limitations": [
+    "Host-rendered synthetic fixtures, not Pixel/physical screenshots or actual Android IME/accessibility services.",
+    "Cumulative GPS quality counters do not establish current accuracy or fix freshness.",
+    "Injected valid route after retry is not damaged-file repair.",
+    "No live provider/key acceptance, hosted sync, physical GPS/storage/OEM/background or signed upgrade validation.",
+    "Existing pre-release profiling/private reporting, deferred acceptance and distribution holds remain."
+  ]
+}

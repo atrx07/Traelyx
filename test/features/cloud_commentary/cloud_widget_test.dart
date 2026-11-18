@@ -8,12 +8,14 @@ import 'package:traelyx/app/traelyx_router.dart';
 import 'package:traelyx/app/traelyx_routes.dart';
 import 'package:traelyx/core/database/app_database.dart';
 import 'package:traelyx/core/settings/drift_non_secret_settings_repository.dart';
+import 'package:traelyx/core/theme/traelyx_theme.dart';
 import 'package:traelyx/features/cloud_commentary/application/cloud_commentary_service.dart';
 import 'package:traelyx/features/cloud_commentary/domain/cloud_commentary.dart';
 import 'package:traelyx/features/cloud_commentary/presentation/cloud_commentary_screen.dart';
 import 'package:traelyx/features/cloud_commentary/presentation/cloud_replay_control.dart';
 import 'package:traelyx/features/trips/domain/procedural_commentary.dart';
 
+import '../../support/failure_ux_capture.dart';
 import 'cloud_fixture.dart';
 
 void main() {
@@ -41,11 +43,13 @@ void main() {
     WidgetTester tester,
     Widget child, {
     double scale = 1,
+    bool readableCapture = false,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [cloudCommentaryServiceProvider.overrideWithValue(service)],
         child: MaterialApp(
+          theme: readableCapture ? failureUxTheme() : TraelyxTheme.dark,
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context).copyWith(
               disableAnimations: true,
@@ -53,7 +57,7 @@ void main() {
             ),
             child: child!,
           ),
-          home: child,
+          home: failureUxBoundary(child),
         ),
       ),
     );
@@ -61,11 +65,15 @@ void main() {
   }
 
   Future<void> reveal(WidgetTester tester, Finder target) async {
-    await tester.scrollUntilVisible(
-      target,
-      180,
-      scrollable: find.byType(Scrollable).last,
-    );
+    if (target.evaluate().isEmpty) {
+      final scrollable = find.byType(AlertDialog).evaluate().isEmpty
+          ? find.byType(Scrollable).first
+          : find.byType(Scrollable).last;
+      tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(target, 180, scrollable: scrollable);
+    }
+    await tester.ensureVisible(target);
     await tester.pumpAndSettle();
   }
 
@@ -79,8 +87,10 @@ void main() {
   }
 
   Future<void> sendReviewed(WidgetTester tester) async {
+    await reveal(tester, find.byKey(const ValueKey('cloud-replay-parked')));
     await tester.tap(find.byKey(const ValueKey('cloud-replay-parked')));
     await tester.pumpAndSettle();
+    await reveal(tester, find.byKey(const ValueKey('cloud-review-request')));
     await tester.tap(find.byKey(const ValueKey('cloud-review-request')));
     await tester.pumpAndSettle();
     expect(
@@ -341,6 +351,158 @@ void main() {
       expect(tester.takeException(), null);
     },
   );
+
+  testWidgets(
+    'a rejected settings key can be replaced locally without another request',
+    (tester) async {
+      await tester.runAsync(loadFailureUxFonts);
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await setupCloud();
+      provider.failure = CloudFailure.credential;
+      await pump(
+        tester,
+        const CloudCommentaryScreen(),
+        scale: 2,
+        readableCapture: true,
+      );
+      await reveal(tester, find.byKey(const ValueKey('cloud-settings-parked')));
+      await tester.tap(find.byKey(const ValueKey('cloud-settings-parked')));
+      await tester.pumpAndSettle();
+      await reveal(tester, find.byKey(const ValueKey('cloud-refresh-models')));
+      await tester.tap(find.byKey(const ValueKey('cloud-refresh-models')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('cloud-settings-notice')).hitTestable(),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .widget<Text>(find.byKey(const ValueKey('cloud-settings-notice')))
+            .data,
+        contains('key is missing or was rejected'),
+      );
+      expect(provider.calls, 1);
+      await captureFailureUx(tester, 'cloud-settings-key-2x');
+      await reveal(tester, find.byKey(const ValueKey('cloud-key-input')));
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('cloud-key-input')))
+            .obscureText,
+        true,
+      );
+      await tester.enterText(
+        find.byKey(const ValueKey('cloud-key-input')),
+        'synthetic-replacement',
+      );
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      addTearDown(tester.view.resetViewInsets);
+      await tester.pumpAndSettle();
+      await reveal(tester, find.byKey(const ValueKey('cloud-save-key')));
+      await tester.tap(find.byKey(const ValueKey('cloud-save-key')));
+      await tester.pumpAndSettle();
+      expect(vault.value, 'synthetic-replacement');
+      expect(provider.calls, 1);
+      expect((await service.load()).configuration.enabled, false);
+      expect(find.textContaining('synthetic-replacement'), findsNothing);
+      expect(
+        find.byKey(const ValueKey('cloud-settings-notice')).hitTestable(),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .getBottomRight(
+              find.byKey(const ValueKey('cloud-settings-feedback')),
+            )
+            .dy,
+        lessThanOrEqualTo(544),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  for (final failure in [
+    CloudFailure.credential,
+    CloudFailure.network,
+    CloudFailure.timeout,
+    CloudFailure.rateLimit,
+    CloudFailure.modelUnavailable,
+    CloudFailure.malformed,
+    CloudFailure.server,
+    CloudFailure.refused,
+  ]) {
+    testWidgets(
+      '${failure.name} shows bounded guidance and explicit recovery without auto retry',
+      (tester) async {
+        await tester.runAsync(loadFailureUxFonts);
+        tester.view.physicalSize = const Size(390, 844);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        await setupCloud();
+        provider.failure = failure;
+        final plan = fixturePlan();
+        var applied = 0;
+        var builtin = 0;
+        await pump(
+          tester,
+          Scaffold(
+            body: SingleChildScrollView(
+              child: CloudReplayControl(
+                plan: plan,
+                pause: () {},
+                onApply: (_) => applied++,
+                onBuiltin: () => builtin++,
+              ),
+            ),
+          ),
+          scale: 2,
+          readableCapture: true,
+        );
+        await sendReviewed(tester);
+        final notice = find.byKey(const ValueKey('cloud-replay-notice'));
+        await reveal(tester, notice);
+        expect(
+          tester.widget<Text>(notice).data,
+          contains(cloudFailureMessage(CloudException(failure))),
+        );
+        expect(
+          tester.widget<Text>(notice).data,
+          contains('Built-in narration is available'),
+        );
+        expect(find.textContaining('fixture-placeholder'), findsNothing);
+        expect(applied, 0);
+        expect(builtin, 1);
+        expect(provider.generations, 1);
+        await tester.pump(const Duration(seconds: 60));
+        expect(provider.generations, 1);
+        if (failure == CloudFailure.credential ||
+            failure == CloudFailure.network ||
+            failure == CloudFailure.malformed) {
+          await captureFailureUx(tester, 'cloud-${failure.name}-2x');
+        }
+        // A new explicit review/send can recover; no settings, event or score rewrite.
+        provider.failure = null;
+        await reveal(
+          tester,
+          find.byKey(const ValueKey('cloud-review-request')),
+        );
+        await tester.tap(find.byKey(const ValueKey('cloud-review-request')));
+        await tester.pumpAndSettle();
+        await reveal(tester, find.byKey(const ValueKey('cloud-send-consent')));
+        await tester.tap(find.byKey(const ValueKey('cloud-send-consent')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('cloud-confirm-send')));
+        await tester.pumpAndSettle();
+        expect(provider.generations, 2);
+        expect(applied, 1);
+        expect((await service.load()).configuration.enabled, true);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 }
 
 class _Provider implements CommentaryProvider {
@@ -348,6 +510,7 @@ class _Provider implements CommentaryProvider {
   String get id => 'groq';
   int calls = 0;
   int generations = 0;
+  CloudFailure? failure;
   Completer<ProceduralCommentaryPlan>? pending;
   @override
   Future<List<CloudModel>> listModels(
@@ -355,6 +518,7 @@ class _Provider implements CommentaryProvider {
     CloudCancellation cancellation,
   ) async {
     calls++;
+    if (failure != null) throw CloudException(failure!);
     return const [CloudModel('llama-fixture', 8192)];
   }
 
@@ -367,6 +531,7 @@ class _Provider implements CommentaryProvider {
   }) async {
     calls++;
     generations++;
+    if (failure != null) throw CloudException(failure!);
     return pending?.future ??
         Future.value(
           dossier.apply({

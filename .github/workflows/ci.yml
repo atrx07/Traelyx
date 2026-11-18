@@ -273,6 +273,20 @@ jobs:
           print('Complete rehearsal; frozen populated-table row digests match.')
           PY
 
+      - name: Verify failure UX captures
+        run: |
+          python - <<'PY'
+          import struct
+          from pathlib import Path
+          names = ['live-low-gps', 'live-save-failure', 'invalid-route', 'offline-sync',
+                   'cloud-credential', 'cloud-network', 'cloud-malformed', 'cloud-settings-key']
+          for name in names:
+              png = Path(f'build/reports/failure-ux-v1/{name}-2x.png').read_bytes()
+              assert png[:8] == b'\x89PNG\r\n\x1a\n'
+              assert struct.unpack('>II', png[16:24]) == (390, 844), name
+          print('Eight synthetic production-widget captures retained; 390x844, text scale 2.')
+          PY
+
       - name: Test trip-debug inspector
         run: |
           python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/inspect_field_recording.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_inspect_field_recording.py tests/tool/test_sync_pilot.py
@@ -422,4 +436,5 @@ jobs:
             build/reports/apk-model-inventory-v1.json
             build/reports/privacy-security-android-v1.json
             build/reports/database-upgrade-rehearsal-v1.json
+            build/reports/failure-ux-v1/*.png
           if-no-files-found: error

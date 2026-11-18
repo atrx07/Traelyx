@@ -61,13 +61,39 @@ class DriveControlModel {
     }
 
     if (recorder.lifecycle.active) {
+      if (_hasStorageFailure(recorder)) {
+        return DriveControlModel(
+          mode: DrivePresentationMode.live,
+          eyebrow: 'DRIVE IN PROGRESS',
+          title: 'Local saving needs attention',
+          detail:
+              'Some evidence could not be saved or verified. Trip data may be missing. Review only when safely parked.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+          tone: DriveStatusTone.critical,
+          health: _healthItems(permissions: permissions, recorder: recorder),
+        );
+      }
+      if (!permissions.gpsProviderEnabled || _hasGpsFailure(recorder)) {
+        return DriveControlModel(
+          mode: DrivePresentationMode.live,
+          eyebrow: 'DRIVE IN PROGRESS',
+          title: 'Recording with GPS interruptions',
+          detail:
+              'GPS is off or an interruption was reported during this drive. Route and distance may be incomplete. Check reception only when safely parked.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+          tone: DriveStatusTone.caution,
+          health: _healthItems(permissions: permissions, recorder: recorder),
+        );
+      }
       if (recorder.gnss.acceptedSampleCount == 0) {
         return DriveControlModel(
           mode: DrivePresentationMode.live,
           eyebrow: 'DRIVE IN PROGRESS',
           title: 'Recording started — finding GPS',
           detail:
-              'Keep the phone exposed and remain stationary until Traelyx confirms GPS is recording.',
+              'No GPS fix has been recorded yet. Route and distance may be incomplete. Check reception only when safely parked.',
           action: DrivePrimaryAction.stopTrip,
           actionLabel: 'Stop drive',
           tone: DriveStatusTone.caution,
@@ -101,11 +127,24 @@ class DriveControlModel {
           health: _healthItems(permissions: permissions, recorder: recorder),
         );
       }
+      if (recorder.gnss.lowAccuracySampleCount > 0) {
+        return DriveControlModel(
+          mode: DrivePresentationMode.live,
+          eyebrow: 'DRIVE IN PROGRESS',
+          title: 'Recording includes limited GPS evidence',
+          detail:
+              'Low-accuracy fixes were recorded during this drive. Route and distance may be limited. Current GPS accuracy is not available here.',
+          action: DrivePrimaryAction.stopTrip,
+          actionLabel: 'Stop drive',
+          tone: DriveStatusTone.caution,
+          health: _healthItems(permissions: permissions, recorder: recorder),
+        );
+      }
       return DriveControlModel(
         mode: DrivePresentationMode.live,
         eyebrow: 'DRIVE IN PROGRESS',
         title: 'Drive recording is active',
-        detail: 'GPS and motion samples are being stored on this phone.',
+        detail: 'GPS and motion samples have been recorded on this phone.',
         action: DrivePrimaryAction.stopTrip,
         actionLabel: 'Stop drive',
         tone: DriveStatusTone.positive,
@@ -260,21 +299,13 @@ List<DriveHealthItem> _healthItems({
   required RecorderStatus recorder,
 }) {
   final active = recorder.lifecycle.active;
-  final hasGpsFailure =
-      recorder.gnss.errorCode != null ||
-      recorder.gnss.registrationFailureCount > 0 ||
-      recorder.gnss.providerDisabledCount > 0;
+  final hasGpsFailure = _hasGpsFailure(recorder);
   final hasMotionFailure =
       recorder.imu.errorCode != null ||
       recorder.imu.registrationFailureCount > 0 ||
       !recorder.imu.accelerometerAvailable ||
       !recorder.imu.gyroscopeAvailable;
-  final hasStorageFailure =
-      recorder.buffer.errorCode != null ||
-      recorder.buffer.writeFailureCount > 0 ||
-      recorder.buffer.overflowCount > 0 ||
-      recorder.buffer.corruptChunkCount > 0 ||
-      recorder.buffer.orderingViolationCount > 0;
+  final hasStorageFailure = _hasStorageFailure(recorder);
 
   final location = switch (permissions.locationState) {
     RecorderPermissionState.granted => const DriveHealthItem(
@@ -336,6 +367,15 @@ List<DriveHealthItem> _healthItems({
           label: 'GPS',
           value: 'Finding fix',
           detail: 'No accepted fix yet',
+          tone: DriveStatusTone.caution,
+        )
+      : active && recorder.gnss.lowAccuracySampleCount > 0
+      ? DriveHealthItem(
+          kind: DriveHealthKind.gps,
+          label: 'GPS',
+          value: 'Limited evidence',
+          detail:
+              '${recorder.gnss.lowAccuracySampleCount} low-accuracy ${recorder.gnss.lowAccuracySampleCount == 1 ? 'fix' : 'fixes'} recorded',
           tone: DriveStatusTone.caution,
         )
       : active
@@ -430,3 +470,15 @@ List<DriveHealthItem> _healthItems({
 
   return List.unmodifiable([location, gps, motion, storage]);
 }
+
+bool _hasGpsFailure(RecorderStatus recorder) =>
+    recorder.gnss.errorCode != null ||
+    recorder.gnss.registrationFailureCount > 0 ||
+    recorder.gnss.providerDisabledCount > 0;
+
+bool _hasStorageFailure(RecorderStatus recorder) =>
+    recorder.buffer.errorCode != null ||
+    recorder.buffer.writeFailureCount > 0 ||
+    recorder.buffer.overflowCount > 0 ||
+    recorder.buffer.corruptChunkCount > 0 ||
+    recorder.buffer.orderingViolationCount > 0;

@@ -13,6 +13,7 @@ import 'package:traelyx/features/trips/data/trip_route_repository.dart';
 import 'package:traelyx/features/trips/domain/trip_history_models.dart';
 import 'package:traelyx/features/trips/presentation/trip_result_screen.dart';
 import 'package:traelyx/features/trips/presentation/trips_screen.dart';
+import '../../../support/failure_ux_capture.dart';
 
 void main() {
   testWidgets('history renders a local-first empty state', (tester) async {
@@ -736,6 +737,54 @@ void main() {
   });
 
   testWidgets(
+    'invalid route stays hidden and an explicit reread can recover at large text',
+    (tester) async {
+      final routes = _RecoveringRouteRepository();
+      await tester.runAsync(loadFailureUxFonts);
+      await _pumpResult(
+        tester,
+        repository: _FakeRepository(history: [_trip], result: _result),
+        routeRepository: routes,
+        readableCapture: true,
+        textScale: 2,
+        disableAnimations: true,
+      );
+      await _scrollUntilHitTestable(tester, find.text('Retry route'));
+      expect(find.byKey(const ValueKey('trip-route-invalid')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('offline-route-map-canvas')),
+        findsNothing,
+      );
+      expect(
+        find.textContaining('Saved trip data has not been changed'),
+        findsOneWidget,
+      );
+      expect(routes.reads, 1);
+      await Scrollable.ensureVisible(
+        tester.element(find.byKey(const ValueKey('trip-route-invalid'))),
+        alignment: 0,
+      );
+      await tester.pumpAndSettle();
+      await captureFailureUx(tester, 'invalid-route-2x');
+      await _scrollUntilHitTestable(tester, find.text('Retry route'));
+      await tester.tap(find.text('Retry route'));
+      await tester.pumpAndSettle();
+      expect(routes.reads, 2);
+      expect(find.byKey(const ValueKey('trip-route-invalid')), findsNothing);
+      await _scrollUntilHitTestable(
+        tester,
+        find.byKey(const ValueKey('offline-route-map-canvas')),
+      );
+      expect(
+        find.byKey(const ValueKey('trip-route-available')),
+        findsOneWidget,
+      );
+      expect(_result.trip.id, 'trip-one');
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'route loading remains explicit while local decoding is pending',
     (tester) async {
       final pending = Completer<TripRouteResult>();
@@ -808,6 +857,7 @@ Future<void> _pumpResult(
   bool disableAnimations = false,
   bool accessibleNavigation = false,
   bool settle = true,
+  bool readableCapture = false,
 }) async {
   await _pump(
     tester,
@@ -817,6 +867,7 @@ Future<void> _pumpResult(
     textScale: textScale,
     disableAnimations: disableAnimations,
     accessibleNavigation: accessibleNavigation,
+    readableCapture: readableCapture,
     settle: settle,
   );
 }
@@ -830,6 +881,7 @@ Future<void> _pump(
   double textScale = 1,
   bool disableAnimations = false,
   bool accessibleNavigation = false,
+  bool readableCapture = false,
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
@@ -843,7 +895,7 @@ Future<void> _pump(
         tripRouteRepositoryProvider.overrideWithValue(routeRepository),
       ],
       child: MaterialApp(
-        theme: TraelyxTheme.dark,
+        theme: readableCapture ? failureUxTheme() : TraelyxTheme.dark,
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(
             textScaler: TextScaler.linear(textScale),
@@ -852,7 +904,7 @@ Future<void> _pump(
           ),
           child: child!,
         ),
-        home: Scaffold(body: home),
+        home: failureUxBoundary(Scaffold(body: home)),
       ),
     ),
   );
@@ -924,6 +976,13 @@ class _FakeRouteRepository implements TripRouteRepository {
     if (pending != null) return pending!.future;
     return result;
   }
+}
+
+class _RecoveringRouteRepository implements TripRouteRepository {
+  int reads = 0;
+  @override
+  Future<TripRouteResult> load(String tripId) async =>
+      ++reads == 1 ? const TripRouteResult.invalid() : _availableRoute;
 }
 
 final _trip = TripHistoryItem(

@@ -36,7 +36,7 @@ String cloudFailureMessage(Object error) {
       : CloudFailure.storage;
   return switch (failure) {
     CloudFailure.credential =>
-      'Check or replace your saved key. No credential is shown.',
+      'The key is missing or was rejected. Open Cloud settings to save or replace it.',
     CloudFailure.storage =>
       'Secure storage or local settings are unavailable. Cloud is unavailable.',
     CloudFailure.disabled =>
@@ -57,7 +57,7 @@ String cloudFailureMessage(Object error) {
     CloudFailure.server =>
       'The provider is unavailable. No automatic retry was made.',
     CloudFailure.malformed =>
-      'The response did not match the reviewed commentary contract.',
+      'The provider returned unusable wording. Try again later or use built-in narration.',
     CloudFailure.refused => 'The provider did not return usable commentary.',
     CloudFailure.unsupported =>
       'The model or request capability is unsupported. Choose another model.',

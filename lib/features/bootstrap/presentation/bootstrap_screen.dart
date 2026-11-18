@@ -423,10 +423,13 @@ class _LiveDriveView extends StatelessWidget {
                             ),
                       ),
                       const SizedBox(height: TraelyxSpacing.xs),
-                      Text(
-                        model.title,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineLarge,
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          model.title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
                       ),
                       const SizedBox(height: TraelyxSpacing.sm),
                       Text(
@@ -443,7 +446,7 @@ class _LiveDriveView extends StatelessWidget {
                         const SizedBox(height: TraelyxSpacing.lg),
                         _ActionMessage(
                           message:
-                              'Keep driving attention on the road. Traelyx will continue preserving available evidence locally.',
+                              'Keep your attention on the road. Check recording details only when safely parked. Missing evidence cannot be recreated.',
                           tone: model.tone,
                         ),
                       ],

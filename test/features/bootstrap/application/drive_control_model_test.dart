@@ -173,7 +173,8 @@ void main() {
       ),
     );
 
-    expect(model.title, 'Drive recording is active');
+    // The shared bridge fixture includes one low-accuracy GPS fix.
+    expect(model.title, 'Recording includes limited GPS evidence');
     expect(
       model.health
           .singleWhere((item) => item.kind == DriveHealthKind.motion)
@@ -232,7 +233,85 @@ void main() {
     );
     expect(storage.value, 'Needs attention');
     expect(storage.tone, DriveStatusTone.critical);
+    expect(model.title, 'Local saving needs attention');
+    expect(model.tone, DriveStatusTone.critical);
+    expect(model.action, DrivePrimaryAction.stopTrip);
   });
+
+  test(
+    'low accuracy stays cumulative and does not claim current reception',
+    () {
+      final model = DriveControlModel.from(
+        permissions: _permissions(
+          locationState: RecorderPermissionState.granted,
+        ),
+        recorder: _recorder(active: true, state: 'recording'),
+      );
+      expect(model.title, 'Recording includes limited GPS evidence');
+      expect(model.tone, DriveStatusTone.caution);
+      final gps = model.health.singleWhere(
+        (item) => item.kind == DriveHealthKind.gps,
+      );
+      expect(gps.value, 'Limited evidence');
+      expect(gps.detail, contains('1 low-accuracy fix recorded'));
+      expect(model.detail, contains('Current GPS accuracy is not available'));
+      expect(model.action, DrivePrimaryAction.stopTrip);
+    },
+  );
+
+  test('GPS switched off after fixes cannot leave a healthy live headline', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(
+        locationState: RecorderPermissionState.granted,
+        gps: false,
+      ),
+      recorder: _recorder(active: true, state: 'recording'),
+    );
+    expect(model.title, 'Recording with GPS interruptions');
+    expect(model.detail, contains('safely parked'));
+    expect(model.tone, DriveStatusTone.caution);
+    expect(model.action, DrivePrimaryAction.stopTrip);
+  });
+
+  test('reported GPS failure remains visible after earlier fixes', () {
+    final model = DriveControlModel.from(
+      permissions: _permissions(locationState: RecorderPermissionState.granted),
+      recorder: _recorder(
+        active: true,
+        state: 'recording',
+        gpsError: 'gnss_registration_failed',
+      ),
+    );
+    expect(model.title, 'Recording with GPS interruptions');
+    expect(
+      model.health.singleWhere((item) => item.kind == DriveHealthKind.gps).tone,
+      DriveStatusTone.caution,
+    );
+  });
+
+  test(
+    'a clean active snapshot remains healthy without inventing accuracy',
+    () {
+      final model = DriveControlModel.from(
+        permissions: _permissions(
+          locationState: RecorderPermissionState.granted,
+        ),
+        recorder: _recorder(
+          active: true,
+          state: 'recording',
+          lowAccuracySamples: 0,
+        ),
+      );
+      expect(model.title, 'Drive recording is active');
+      expect(model.tone, DriveStatusTone.positive);
+      expect(
+        model.health
+            .singleWhere((item) => item.kind == DriveHealthKind.gps)
+            .value,
+        'Recording',
+      );
+    },
+  );
 
   test('live local-save health pluralizes one completed chunk', () {
     final model = DriveControlModel.from(
@@ -284,6 +363,8 @@ RecorderStatus _recorder({
   bool active = false,
   String state = 'idle',
   int gnssSamples = 3,
+  int? lowAccuracySamples,
+  String? gpsError,
   int accelerometerSamples = 20,
   int gyroscopeSamples = 19,
   int unreliableSamples = 0,
@@ -302,6 +383,8 @@ RecorderStatus _recorder({
     'gnss': <Object?, Object?>{
       ...statusMap['gnss']! as Map<Object?, Object?>,
       'acceptedSampleCount': gnssSamples,
+      'lowAccuracySampleCount': ?lowAccuracySamples,
+      'errorCode': gpsError,
     },
     'imu': <Object?, Object?>{
       ...statusMap['imu']! as Map<Object?, Object?>,

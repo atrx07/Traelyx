@@ -47,7 +47,10 @@ void main() {
 
     expect(find.text('TRAELYX'), findsOneWidget);
     expect(find.byKey(const ValueKey('live-drive-view')), findsOneWidget);
-    expect(find.text('Drive recording is active'), findsOneWidget);
+    expect(
+      find.text('Recording includes limited GPS evidence'),
+      findsOneWidget,
+    );
     expect(find.text('GPS'), findsOneWidget);
     expect(find.text('MOTION'), findsOneWidget);
     expect(find.text('LOCAL SAVE'), findsOneWidget);

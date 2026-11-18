@@ -81,6 +81,13 @@ Goals:
 - minimal map if enabled;
 - show degraded recorder state prominently.
 
+M8.5 uses existing recorder health counters to elevate reported save failures
+and GPS interruptions/low-accuracy evidence into the live headline. Cumulative
+counts describe this drive, never current GPS accuracy or fix freshness. Stop
+remains available, with its existing confirmation. Troubleshooting guidance is
+for safely parked review; missing evidence is not promised recoverable. See the
+[failure UX matrix](../reference/FAILURE_UX_PASS_V1.md).
+
 Potential content:
 
 - current speed;
@@ -296,6 +303,11 @@ cloud section starts collapsed and requires parked confirmation, exact dossier
 review and Send once. Display only provider-selected reviewed tone lines; retain
 the built-in narrator on failure. Leaving the app resets parked state and cancels
 pending requests. See `../reference/CLOUD_COMMENTARY_V1.md`.
+
+M8.5 keeps settings action feedback visible outside the scrollable form, with
+bounded large-text scrolling and live-region semantics. Missing/rejected-key
+guidance points to local replacement; replacement still disables cloud permission
+and makes no request. Unusable provider responses retain built-in narration.
 
 ### M7.11 local model controls
 

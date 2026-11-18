@@ -48,7 +48,12 @@ non-atomic migration DDL/version publication. All23 populated/retry/refusal case
 four source CI jobs 44267925802 pass, including cross-host row-digest comparison.
 Schema remains4; no new dependency/permission or ordinary phone data/install.
 Hot-WAL, power/process-kill and signed APK upgrade testing remain unverified.
-Stop before M8.5 pending authorization; distribution remains unauthorized.
+M8.5 is authorized and active in `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`;
+live GPS/save warning and scrolled provider-feedback repairs pass local analysis,
+636 Flutter tests, builds/contracts and packaged policy. The five-area synthetic
+failure/recovery matrix includes eight reviewed large-text renders. Source CI is
+pending; no device/account/provider interaction or schema/recorder policy change.
+Distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

@@ -613,12 +613,17 @@ class _TripRouteSection extends ConsumerWidget {
               detail:
                   'This drive does not contain enough verified GNSS points for a route.',
             ),
-            TripRouteState.invalid => const _RouteStatePanel(
-              key: ValueKey('trip-route-invalid'),
+            TripRouteState.invalid => _RouteStatePanel(
+              key: const ValueKey('trip-route-invalid'),
               icon: Icons.gpp_maybe_outlined,
               title: 'Route could not be verified',
               detail:
-                  'Local route evidence is incomplete or contradictory, so no partial path is shown.',
+                  'Local route evidence is incomplete or contradictory, so no partial path is shown. Saved trip data has not been changed. Retrying reads the same local evidence again.',
+              action: TextButton.icon(
+                onPressed: () => ref.invalidate(tripRouteProvider(tripId)),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry route'),
+              ),
             ),
           },
         ),

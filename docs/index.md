@@ -79,6 +79,10 @@ For M8.4, use the [database upgrade rehearsal](reference/DATABASE_UPGRADE_REHEAR
 populated file-backed schema upgrades, row/consent preservation and atomic retry,
 separate from signed APK installation tests.
 
+For M8.5, use the [failure UX matrix](reference/FAILURE_UX_PASS_V1.md):
+GPS/storage warnings, corrupt-route reread, provider/key fallback and retained
+offline queues, with synthetic host-rendering limits.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

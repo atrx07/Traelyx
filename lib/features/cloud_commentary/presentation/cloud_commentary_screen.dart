@@ -105,6 +105,35 @@ class _CloudCommentaryScreenState extends ConsumerState<CloudCommentaryScreen>
     final setup = _setup;
     return Scaffold(
       appBar: AppBar(title: const Text('Commentary engine')),
+      bottomNavigationBar: _notice == null
+          ? null
+          : Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: SafeArea(
+                top: false,
+                child: ConstrainedBox(
+                  key: const ValueKey('cloud-settings-feedback'),
+                  constraints: BoxConstraints(
+                    maxHeight:
+                        (MediaQuery.sizeOf(context).height -
+                            MediaQuery.viewInsetsOf(context).bottom) *
+                        .35,
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        _notice!,
+                        key: const ValueKey('cloud-settings-notice'),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -139,17 +168,6 @@ class _CloudCommentaryScreenState extends ConsumerState<CloudCommentaryScreen>
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Text('Cloud action in progress…'),
-                  ),
-                if (_notice != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Semantics(
-                      liveRegion: true,
-                      child: Text(
-                        _notice!,
-                        key: const ValueKey('cloud-settings-notice'),
-                      ),
-                    ),
                   ),
                 if (setup == null)
                   TextButton(

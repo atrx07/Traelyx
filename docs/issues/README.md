@@ -19,6 +19,7 @@ Local host/build/tool failures belong in
 
 | Date | Issue / symptoms | Status |
 |---|---|---|
+| 2026-11-18 | [Failure-state presentation](2026-11-18_failure-state-presentation.md): live headline could stay healthy despite GPS/save problems; scrolled settings feedback could be missed | Presentation repair, 636 Flutter tests and local checks pass; source CI pending |
 | 2026-11-18 | [Interrupted database upgrade](2026-11-18_interrupted-database-upgrade.md): additive tables and old version could remain after failure, blocking reopen | Preventive repair in `d7d2e18`; 23-case rehearsal and full CI 44267925802 pass; existing mixed-file recovery remains separate |
 | 2026-11-18 | [Android backup eligibility](2026-11-18_android-backup-eligibility.md): credential-only exclusions left private database eligible for OS backup | Repaired in `c29bde9`; local/CI packaged policy and full CI 44244638894 pass; actual past upload/OEM behavior unverified |
 | 2026-11-18 | [Unplugged screen-off recorder gaps](2026-11-18_screen-off-recorder-suspend.md): active service had ~263-second motion gaps without GPS fixes | Repaired in `dfc316a`; bounded lifecycle/continuity and full CI 44239049290 pass; field/efficiency limits retained |

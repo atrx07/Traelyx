@@ -21,20 +21,22 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — Approval gate before M8.5
+## P0 — M8.5 failure UX pass
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Await explicit authorization for M8.5. M8.4 is complete in
+1. M8.5 is authorized and active in `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`.
+   Review low GPS, corruption, provider/key failures and offline cloud recovery.
+   M8.4 is complete in
    `docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`: atomic DDL/version
    repair `d7d2e18`, 23 populated/retry/refusal cases, 619 local Flutter tests,
    analysis/build/contracts and packaged policy pass. All four source CI jobs
    44267925802 pass, including Linux/Windows row-digest comparison. Schema stays4;
    existing mixed-file recovery, hot-WAL/power loss and signed APK upgrades remain
-   outside this host rehearsal. No M8.5 work has begun. M8.3 is complete in
+   outside this host rehearsal. No M8.6 work is authorized. M8.3 is complete in
    `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`: backup/callback repairs,
    596 Flutter/601 native/nine Python tests, lint/builds and local/CI APK policy
    pass. All four source CI jobs 44244638894 (`711cb27`) pass, including actual

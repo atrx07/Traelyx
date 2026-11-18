@@ -13,6 +13,7 @@ import 'package:traelyx/features/bootstrap/presentation/bootstrap_screen.dart';
 
 import '../../../core/platform/recorder_bridge_test.dart'
     show permissionStatusMap, statusMap;
+import '../../../support/failure_ux_capture.dart';
 
 void main() {
   testWidgets('checking Drive never requests a permission automatically', (
@@ -145,7 +146,10 @@ void main() {
       commands: commands,
     );
 
-    expect(find.text('Drive recording is active'), findsOneWidget);
+    expect(
+      find.text('Recording includes limited GPS evidence'),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('live-drive-view')), findsOneWidget);
     expect(find.text('End drive'), findsOneWidget);
     expect(find.text('GPS'), findsOneWidget);
@@ -194,6 +198,63 @@ void main() {
       isNull,
     );
   });
+
+  for (final savingFailure in [false, true]) {
+    testWidgets(
+      'live ${savingFailure ? 'saving failure' : 'limited GPS'} remains usable at large text',
+      (tester) async {
+        final status = _recorderStatus(
+          active: true,
+          state: 'recording',
+          writeFailures: savingFailure ? 1 : 0,
+        );
+        final commands = _FakeRecorderCommands(status);
+        await tester.runAsync(loadFailureUxFonts);
+        await _pumpDrive(
+          tester,
+          recorderStatus: status,
+          commands: commands,
+          textScale: 2,
+          disableAnimations: true,
+          readableCapture: true,
+        );
+        expect(
+          find.text(
+            savingFailure
+                ? 'Local saving needs attention'
+                : 'Recording includes limited GPS evidence',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Drive recording is active'), findsNothing);
+        expect(
+          find.byKey(const ValueKey('drive-end-action')).hitTestable(),
+          findsOneWidget,
+        );
+        expect(commands.calls, isEmpty);
+        await captureFailureUx(
+          tester,
+          savingFailure ? 'live-save-failure-2x' : 'live-low-gps-2x',
+        );
+        await tester.tap(find.byKey(const ValueKey('drive-end-action')));
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('end-drive-confirm-dialog')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const ValueKey('continue-recording-action')).hitTestable(),
+          findsOneWidget,
+        );
+        await tester.tap(
+          find.byKey(const ValueKey('continue-recording-action')),
+        );
+        await tester.pumpAndSettle();
+        expect(commands.calls, isEmpty);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   testWidgets(
     'confirmation closes while a slow finalization is still pending',
@@ -417,6 +478,7 @@ Future<void> _pumpDrive(
   Future<BootstrapReadiness> Function()? readinessFuture,
   double textScale = 1,
   bool disableAnimations = false,
+  bool readableCapture = false,
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
@@ -469,7 +531,7 @@ Future<void> _pumpDrive(
         ),
       ],
       child: MaterialApp(
-        theme: TraelyxTheme.dark,
+        theme: readableCapture ? failureUxTheme() : TraelyxTheme.dark,
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(
             textScaler: TextScaler.linear(textScale),
@@ -477,7 +539,7 @@ Future<void> _pumpDrive(
           ),
           child: child!,
         ),
-        home: const Scaffold(body: BootstrapScreen()),
+        home: failureUxBoundary(const Scaffold(body: BootstrapScreen())),
       ),
     ),
   );
@@ -566,6 +628,7 @@ RecorderStatus _recorderStatus({
   bool active = false,
   String state = 'idle',
   int unreliableSamples = 0,
+  int writeFailures = 0,
 }) {
   return RecorderStatus.fromMap(<Object?, Object?>{
     ...statusMap,
@@ -579,6 +642,10 @@ RecorderStatus _recorderStatus({
     'imu': <Object?, Object?>{
       ...statusMap['imu']! as Map<Object?, Object?>,
       'unreliableAccuracySampleCount': unreliableSamples,
+    },
+    'buffer': <Object?, Object?>{
+      ...statusMap['buffer']! as Map<Object?, Object?>,
+      'writeFailureCount': writeFailures,
     },
   });
 }
