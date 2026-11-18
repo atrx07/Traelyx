@@ -1,7 +1,8 @@
 # Private database eligible for implicit Android backup
 
 **Status:** Confirmed configuration gap; source repair and negative regressions
-and packaged validation pass; source CI/fix commit pending.
+and local/CI packaged validation pass. Repair `c29bde9`; full source CI 44244638894
+passes for `711cb27` (audit scope correction/additional negative coverage).
 
 ## Evidence / cause
 
@@ -27,7 +28,10 @@ wrong resource bindings, added permissions/exports and lost signature protection
 The old packaged artifact fails the new policy as expected. The new ordinary
 release-validation APK passes actual bound-resource checks with unchanged
 permission/component inventories. All 596 Flutter/601 native/nine Python policy
-tests and app lint/builds pass. Source CI/fix commit remain pending.
+tests and app lint/builds pass. Repair source is
+[`c29bde9`](https://github.com/atrx07/Traelyx/commit/c29bde9062791d9b07e4e39667f983c0dcfcd6a2).
+All four [source CI jobs 44244638894](https://github.com/atrx07/Traelyx/actions/runs/44244638894)
+pass for `711cb27`, including the independently built ordinary release policy.
 
 ## Compatibility / remaining risk
 

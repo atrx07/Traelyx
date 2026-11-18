@@ -1,7 +1,7 @@
 # M8.3 privacy/security audit v1
 
 **Date:** 2026-11-18
-**Status:** Active — source/local/package checks pass; source CI pending
+**Status:** Complete at the bounded scope below
 **Source base:** `f138d2e`
 
 This is a bounded source, packaged-policy and synthetic authorization audit of
@@ -14,7 +14,11 @@ See the [aggregate report](m8-privacy-security-v1-result.json) for APK hash and
 executed check totals: 596 Flutter tests, 601 native tests, nine Python privacy
 tests, analysis, app lint and both ordinary builds pass. Packaged policy passes
 with the unchanged 10 permissions/three exports and all backup domains excluded.
-PostgreSQL catalog/behavioral and Edge execution remain subject to source CI.
+All four [source CI jobs 44244638894](https://github.com/atrx07/Traelyx/actions/runs/44244638894)
+pass for `711cb27`, including PostgreSQL catalog/behavioral fixtures, Guardian
+Edge tests and an independent packaged-policy check on the Linux release APK.
+Source fixes are `c29bde9`; `711cb27` documents/corrects platform-helper audit scope
+without changing existing authorization fixtures or app-owned search-path gates.
 
 ## Findings / disposition
 
@@ -48,7 +52,7 @@ PostgreSQL catalog/behavioral and Edge execution remain subject to source CI.
 | Logging/diagnostics | initializeAccount debug=false; normalized provider/auth errors; DiagnosticsSnapshotCollector and DiagnosticsReport aggregate fields | Full Flutter/native regression suites. First-party production log call emits Guardian receive-stage enum only; no raw body/ID/route logging found in inspected sources |
 | Exports/deletion | MainActivity ACTION_CREATE_DOCUMENT, exact UUID native guards, precise-private warning, RedactedTripSummaryPayload, CorrectionContributionPayload | Data export UI/repository, native redaction/unknown-field/categorical-contribution and recorder-state tests; user-selected provider may independently sync saved files |
 | Optional network payloads | CompactTripSummary exact 8-field schema; ReviewedCommentaryInput categorical/approved-wording dossier; fixed HTTPS Groq endpoint, no redirects, bounded responses/cancellation | Summary owner/consent tests, provider transport/dossier/one-use review/fallback tests; offline canvas makes no tile requests; no real send performed |
-| Public/private RLS | All 17 current production tables, owner policies, invoker/definer grants, sanitized public-profile/ranking projections | Existing actual PostgreSQL cross-owner/anonymous/consent/revocation fixtures plus new catalog assertions and nine rollback-only negative probes; CI execution required |
+| Public/private RLS | All 17 current production tables, owner policies, invoker/definer grants, sanitized public-profile/ranking projections | Existing actual PostgreSQL cross-owner/anonymous/consent/revocation fixtures plus new catalog assertions and all nine rollback-only negative probes pass in isolated CI |
 | Guardian | Server participant/revision/permission/expiry predicates; location/speed/history unsupported; separate activation/device consent, no-backup vaults, data-only push, guarded inbox and revocation | Flutter/native owner-change/revoke/receipt tests, SQL pairing/delivery/worker/receiver/revision fixtures and Edge processing-window/auth/payload tests; hosted/physical acceptance remains held |
 
 ## Ordinary Android inventory / rationale

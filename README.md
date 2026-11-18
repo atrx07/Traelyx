@@ -12,7 +12,10 @@ four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44168836701
 for `63d4826`. M8.1 and M8.2's qualified recorder/replay/DB/APK baseline are complete.
 All four [M8.2 source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44239049290)
 pass for `dfc316a`; CPU/battery, GNSS and idle-control limits remain explicit.
-M8.3 privacy/security audit is authorized and active. See the
+M8.3's bounded privacy/security audit is complete: backup eligibility and auth
+callback boundaries repaired, with all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44244638894)
+passing for `711cb27`. See the [privacy audit](docs/reference/PRIVACY_SECURITY_AUDIT_V1.md)
+for residual limits; M8.4 awaits authorization. See the
 [performance baseline](docs/reference/PERFORMANCE_BASELINE_V1.md).
 Wrap-up passes 42 affected host tests and
 all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
@@ -175,7 +178,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M8 | Hardening & Public Release | Hardening activated; main distribution held | 🔵 Active | ~1–1.5 weeks plus carried acceptance | 2026-11-17 (activation only) |
 | M8.1 |  | Bounded Pixel/Tecno matrix complete; physical/OEM limits retained | ✅ Complete | Done | 2026-11-18 |
 | M8.2 |  | Qualified recorder/replay/DB/APK baseline; CPU-lease repair, limits retained | ✅ Complete | Done | 2026-11-18 |
-| M8.3 |  | Privacy/security audit | 🔵 Active | — | — |
+| M8.3 |  | Bounded privacy/security audit; backup/callback repairs and regression gates | ✅ Complete | Done | 2026-11-18 |
 | M8.4 |  | Database upgrade rehearsal | ⚪ Pending | — | — |
 | M8.5 |  | Failure UX pass | ⚪ Pending | — | — |
 | M8.6 |  | Maintainer-controlled release keystore setup/backup | ⚪ Pending | — | — |

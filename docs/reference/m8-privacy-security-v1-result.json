@@ -2,7 +2,7 @@
   "contract_version": 1,
   "date": "2026-11-18",
   "milestone": "M8.3",
-  "status": "source_ci_pending",
+  "status": "complete_bounded_audit",
   "source_base_commit": "f138d2e",
   "scope": "bounded source, ordinary packaged Android policy and synthetic authorization audit",
   "packaged_android_policy": {
@@ -63,7 +63,7 @@
   "sql_catalog": {
     "production_tables": 17,
     "negative_probes": 9,
-    "execution": "pending_isolated_postgresql_ci",
+    "execution": "passed_isolated_postgresql_ci",
     "platform_helper_scope": "rls_auto_enable event-trigger identity and no-client-execution ACL; hosted body unverified"
   },
   "source_review": [
@@ -86,5 +86,37 @@
     "User-selected export providers and clipboard copies remain outside later revocation control.",
     "Known-pattern scanning and reviewed boundaries are not exhaustive history/CVE/penetration-test certification.",
     "M6.8/M7, recorder efficiency, private security-reporting and distribution gates remain held."
-  ]
+  ],
+  "implementation_commit": "c29bde9062791d9b07e4e39667f983c0dcfcd6a2",
+  "audit_scope_commit": "711cb27fe08c89d8e00480faa19bec708eb78224",
+  "source_ci": {
+    "run_id": 44244638894,
+    "commit": "711cb27fe08c89d8e00480faa19bec708eb78224",
+    "all_four_jobs_passed": true,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44244638894"
+  },
+  "ci_packaged_android_policy": {
+    "contract_version": 1,
+    "policy_version": 1,
+    "scope": "decoded ordinary release manifest and packaged backup XML; not an OEM backup execution",
+    "passed": true,
+    "findings": [],
+    "permission_count": 10,
+    "exported_component_count": 3,
+    "backup_domains_reviewed": [
+      "database",
+      "device_database",
+      "device_file",
+      "device_root",
+      "device_sharedpref",
+      "external",
+      "file",
+      "root",
+      "sharedpref"
+    ],
+    "user_data_read": false,
+    "network_requested": false,
+    "apk_sha256": "5c95c19dbfddeb9403edbae43ca18e95ba52205b4684c569884c3988ab46ad01",
+    "apk_bytes": 65400738
+  }
 }

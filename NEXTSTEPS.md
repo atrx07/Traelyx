@@ -21,25 +21,29 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — M8.3 privacy/security audit
+## P0 — Approval gate before M8.4
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. M8.3 is authorized and active in `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`.
-   Audit permissions/backups, logs/exports, provider payloads, RLS and Guardian
-   access; fix confirmed defects and retain test/hosted limits. M8.2's qualified baseline, recorder
-   CPU policy v1, physical lifecycle/locked-unplugged continuity/process recovery,
-   exact cleanup, main preservation and local tests/build/lint checks pass. All
-   four source CI jobs 44239049290 pass for `dfc316a`.
+1. Await explicit authorization for M8.4. M8.3 is complete in
+   `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`: backup/callback repairs,
+   596 Flutter/601 native/nine Python tests, lint/builds and local/CI APK policy
+   pass. All four source CI jobs 44244638894 (`711cb27`) pass, including actual
+   PostgreSQL catalog/behavioral fixtures and nine negative audit probes. No M8.4
+   work has begun. OEM/hosted limits remain in PRIVACY_SECURITY_AUDIT_V1.md.
    Retain high CPU (~41% one core), one-step coarse battery uncertainty, delivered
    ~200 Hz for 100 Hz requests, intermittent GNSS and idle suspend limits in
    `docs/reference/PERFORMANCE_BASELINE_V1.md`; long-duration/efficiency and OEM
    acceptance remain open. Ordinary installed app/data remain unchanged.
 2. Keep the distribution hold and deferred acceptance ledger visible through M8.
    Passing software/build tests never waives physical or scientific gates.
+3. Confirm a private vulnerability-reporting channel before publication; SECURITY.md
+   still needs the maintainer-specific contact/workflow. Packaged backup/transfer
+   exclusions must be reviewed for the actual release artifact. No hosted settings
+   or contact details were changed by the audit.
 
 ## Pre-release recorder profiling follow-up
 

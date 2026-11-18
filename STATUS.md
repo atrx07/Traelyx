@@ -32,11 +32,16 @@ new dependency or main-app installation; normal WAKE_LOCK permission is added. S
 Details: `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
 Recorder CPU profiling and longer unplugged battery/continuity validation are
 deferred pre-release requirements in NEXTSTEPS and the release checklist.
-M8.3 privacy/security audit is now authorized and active in
-`docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`; publication/distribution is unauthorized.
-M8.3 source repairs private-database backup eligibility and rejects noncanonical
-auth callback authorities. Local 596 Flutter/601 native/nine Python audit tests,
-analysis/lint/builds and actual packaged policy pass; source CI remains pending.
+M8.3 privacy/security audit is complete in
+`docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`. Source `c29bde9` repairs
+private-database backup eligibility and rejects noncanonical auth callback
+authorities; `711cb27` corrects platform-helper audit scope/adds negative coverage.
+Local 596 Flutter/601 native/nine Python audit tests, analysis/lint/builds and
+packaged policy pass. All four source CI jobs 44244638894 pass, including the
+17-table/nine-probe PostgreSQL audit and independent release APK policy. No schema,
+dependency, permission addition or ordinary phone install. Historical backups,
+OEM/hosted behavior remain unverified; private reporting setup is a release gate.
+Stop before M8.4 pending authorization; publication/distribution remains unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

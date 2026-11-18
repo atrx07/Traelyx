@@ -1,6 +1,6 @@
 # ADR-0045 — Explicit local-data backup policy
 
-**Status:** Accepted; packaged validation passes, source CI pending
+**Status:** Accepted; local/CI packaged validation and full source CI pass
 **Date:** 2026-11-18
 
 ## Context / decision
