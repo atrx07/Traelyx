@@ -6,6 +6,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Production APKs are signed afterwards by the maintainer-local apksigner tool.
+// No keystore path or password enters Gradle or its persistent daemon.
+val unsignedProductionApk = providers.gradleProperty("traelyxUnsignedProductionApk").orNull.let {
+    require(it == null || it in listOf("true", "false")) {
+        "traelyxUnsignedProductionApk must be true or false"
+    }
+    it == "true"
+}
+
 // Opt-in recorder QA uses separate app storage/UID; ordinary builds are unchanged.
 val recorderHardening = providers.gradleProperty("traelyxRecorderHardening").orNull == "true"
 val recorderPerformanceProfile =
@@ -17,6 +26,9 @@ if (recorderHardening) {
     require(providers.gradleProperty("traelyxFirebaseEnabled").orNull == "false") {
         "Recorder hardening requires Firebase disabled"
     }
+}
+require(!unsignedProductionApk || !recorderHardening) {
+    "Production APK preparation cannot use the recorder QA package"
 }
 
 // Client configuration stays in ignored local state; generated resources stay under build/.
@@ -123,9 +135,8 @@ android {
             }
         }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // Ordinary/CI builds remain explicitly development-signed validation.
+            signingConfig = if (unsignedProductionApk) null else signingConfigs.getByName("debug")
         }
     }
 }

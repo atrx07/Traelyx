@@ -38,3 +38,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - [ADR-0044: Recorder-owned CPU lease](ADR-0044-recorder-owned-cpu-lease.md) — bounded renewable CPU ownership during explicit acquisition; battery/physical acceptance required.
 - [ADR-0045: Explicit local-data backup policy](ADR-0045-explicit-local-data-backup-policy.md) — exclude implicit Android backup/device transfer; user-directed exports remain separate.
 - [ADR-0046: Atomic local database upgrades](ADR-0046-atomic-local-database-upgrades.md) — schema DDL and user_version commit together; old results/consent remain unchanged.
+- [ADR-0047: Local post-build APK signing](ADR-0047-local-post-build-apk-signing.md) — unsigned opt-in plus short-lived local signer; passwords never enter Gradle.

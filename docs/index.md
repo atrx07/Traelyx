@@ -87,6 +87,10 @@ For M8.6, use the [release key custody workflow](reference/RELEASE_KEYSTORE_CUST
 maintainer-local creation, private-key/backup proof and sanitized public identity
 evidence. No production key material or passwords enter the repository or CI.
 
+For M8.7, use the [local signed APK workflow](reference/SIGNED_APK_BUILD_V1.md):
+unsigned ABI splits, separate local signing, pinned verification and checksums.
+Installation and publication remain separately authorized gates.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

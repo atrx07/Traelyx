@@ -37,7 +37,10 @@ installed JDK. Passwords stay out of files/arguments/chat; key and backup stay
 outside Git. Independent, unsynced storage is separately attested. Only public
 certificate metadata may be pinned after actual verification. M8.6 creates no
 production APK or Gradle production-signing wiring; those remain gated at M8.7.
-Current release-validation builds still use Android's debug signing identity.
+Normal release-validation builds still use Android's debug signing identity.
+M8.7 adds an explicit unsigned-release opt-in and a separate local SDK signer;
+see [the signed APK workflow](../reference/SIGNED_APK_BUILD_V1.md) and
+[ADR-0047](../decisions/ADR-0047-local-post-build-apk-signing.md).
 For this M8.6 session, the maintainer explicitly authorized agent-orchestrated
 setup with a physical-phone backup. The local masked password prompt preserves
 maintainer control of password/recovery; direct USB readback/private-key proof is

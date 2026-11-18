@@ -44,7 +44,8 @@ upgrade repair, 23 cases and all four source CI jobs 44267925802 pass for
 with all four source CI jobs 44277975977 passing for `3fab329`. Device/provider
 limits remain. M8.6 [key custody/backup](active/M8_RELEASE_KEYSTORE_CUSTODY.md) is
 complete, with actual local/phone proofs, public identity pin and all four source
-CI jobs 44335799328 (`0d3243f`) passing. M8.7 awaits authorization.
+CI jobs 44335799328 (`0d3243f`) passing. M8.7 is authorized and active in
+[the signed APK plan](active/M8_SIGNED_APK_BUILD.md); M8.8 remains held.
 CPU/battery, physical/OEM/vehicle and deferred acceptance limits remain carried.
 M7 remains deferred acceptance, not complete.
 

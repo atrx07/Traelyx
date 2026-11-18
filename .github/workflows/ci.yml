@@ -294,8 +294,8 @@ jobs:
 
       - name: Test maintainer-local signing custody tooling
         run: |
-          python -m py_compile tool/release_signing_setup.py tool/release_signing_phone_setup.py
-          python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup tests.tool.test_release_signing_phone_setup
+          python -m py_compile tool/release_signing_setup.py tool/release_signing_phone_setup.py tool/release_apk.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup tests.tool.test_release_signing_phone_setup tests.tool.test_release_apk
 
       - name: Verify bounded recorder hardening operator
         run: |
@@ -427,6 +427,9 @@ jobs:
         run: |
           aapt2s=("$ANDROID_HOME"/build-tools/*/aapt2)
           python tool/audit_android_privacy.py --apk build/app/outputs/flutter-apk/app-release.apk --apkanalyzer "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" --aapt2 "${aapt2s[-1]}" --output build/reports/privacy-security-android-v1.json
+
+      - name: Verify unsigned production split preparation without production credentials
+        run: python -m tool.release_apk build --output-dir build/release/ci-unsigned
 
       - name: Upload APK and size report
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
