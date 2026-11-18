@@ -1,6 +1,6 @@
 # M8.6 maintainer-local release key custody v1
 
-**Status:** Active — tooling locally validated; production identity/backup not yet verified
+**Status:** Complete — authorized local identity and physical-phone backup verified
 **Date:** 2026-11-18
 **Source baseline:** `3e35532`
 
@@ -144,13 +144,21 @@ Phone coverage includes emulator/network rejection, a password-free ADB child,
 no-clobber publication/exact temporary cleanup, unavailable-phone/no-generation,
 missing-primary/no-rotation and a real disposable JDK readback proof/corruption
 refusal. The real TECNO also passes a disposable marker copy/readback and
-no-clobber preflight; all marker files were removed. Production identity/backup
-proof remains pending the private local prompt.
+no-clobber preflight; all marker files were removed. Actual production generation,
+byte-for-byte phone readback and private-key proof subsequently passed after the
+maintainer's private password/recovery input. The sanitized receipt matches all
+four tool/probe source hashes. Public identity is pinned in
+[release-signing-identity-v1.json](release-signing-identity-v1.json); no keystore,
+backup, password, local config or device serial is committed. All four
+[source CI jobs 44335799328](https://github.com/atrx07/Traelyx/actions/runs/44335799328)
+pass for `0d3243f`, including all 26 custody tests and existing app gates. See the
+[aggregate result](m8-release-keystore-v1-result.json). No production key enters CI.
 
-Actual production proof is pending the authorized local workflow; password choice
-and recovery remain maintainer actions. A byte/private-key
-proof establishes current read/decrypt/sign capability; independent storage,
-access protection and unsynced custody remain separately recorded attestations.
+Production identity/backup proof is complete through the authorized local
+workflow; password choice and recovery remain maintainer actions. A byte/private-key
+proof establishes current read/decrypt/sign capability on the separate physical
+phone. Password recovery is maintainer-attested; phone-folder sync/access and
+media encryption are not automatically verified.
 It does not prove future media survival, unattended disaster recovery or APK
 signature/install compatibility. No runtime dependency/schema/permission change.
 

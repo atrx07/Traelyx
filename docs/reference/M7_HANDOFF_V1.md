@@ -28,8 +28,9 @@ all four source CI jobs 44244638894 (`711cb27`) passing. M8.4's bounded
 atomic upgrade repair, 23 cases and all four source CI jobs 44267925802 (`d7d2e18`)
 pass; signed/device upgrade limits remain. M8.5's bounded [failure UX pass](../exec-plans/active/M8_FAILURE_UX_PASS.md)
 is complete, with all four source CI jobs 44277975977 (`3fab329`) passing.
-Device/provider limits remain; M8.6 is authorized and active in the
-[keystore custody plan](../exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md). The
+Device/provider limits remain. M8.6 [key custody/backup](../exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md)
+is complete, with local/physical-phone proofs, public identity pin and all four
+source CI jobs 44335799328 (`0d3243f`) passing. M8.7 awaits authorization. The
 normal explicit gate between later numbered substeps remains. **Stop before main
 distribution:** M8.10 publication, release/tag/assets, store submission, public
 download links and external APK distribution are unauthorized. Prior private

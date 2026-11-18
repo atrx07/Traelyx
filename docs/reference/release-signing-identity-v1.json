@@ -1,0 +1,14 @@
+{
+  "contract_version": 1,
+  "signing_identity_version": 1,
+  "application_id": "io.github.atrx07.traelyx",
+  "certificate_sha256": "1ef3917fb6e7dc1df41b58c0cf7ec1b96ab98149d583063296955377d7aae51a",
+  "key_algorithm": "RSA",
+  "key_bits": 4096,
+  "not_before_utc": "2026-11-18T15:34:02Z",
+  "not_after_utc": "2054-04-05T15:34:02Z",
+  "store_type": "PKCS12",
+  "alias": "traelyx-release",
+  "custody_policy": "maintainer_local_v1",
+  "private_key_material_in_repository": false
+}

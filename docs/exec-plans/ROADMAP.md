@@ -42,8 +42,9 @@ all four source CI jobs 44244638894 passing for `711cb27`. M8.4's bounded
 upgrade repair, 23 cases and all four source CI jobs 44267925802 pass for
 `d7d2e18`; signed/device limits remain. M8.5's bounded [failure UX pass](active/M8_FAILURE_UX_PASS.md) is complete,
 with all four source CI jobs 44277975977 passing for `3fab329`. Device/provider
-limits remain; M8.6 is authorized and active in
-[the keystore custody plan](active/M8_RELEASE_KEYSTORE_CUSTODY.md).
+limits remain. M8.6 [key custody/backup](active/M8_RELEASE_KEYSTORE_CUSTODY.md) is
+complete, with actual local/phone proofs, public identity pin and all four source
+CI jobs 44335799328 (`0d3243f`) passing. M8.7 awaits authorization.
 CPU/battery, physical/OEM/vehicle and deferred acceptance limits remain carried.
 M7 remains deferred acceptance, not complete.
 
