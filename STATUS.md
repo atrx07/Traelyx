@@ -62,10 +62,15 @@ private password/recovery input. Only public certificate metadata is pinned;
 private key/password remain outside Git. All 26 local custody tests/contracts and
 four source CI jobs 44335799328 (`0d3243f`) pass. Password recovery is separately
 maintainer-attested; phone-folder sync/access and future media survival remain
-unverified. No ordinary app/data replacement. M8.7 is now authorized and active in
-`docs/exec-plans/active/M8_SIGNED_APK_BUILD.md`: unsigned ABI split preparation and
-local post-build signing; actual production signature checks remain pending.
-M8.8 installation and distribution remain held.
+unverified. No ordinary app/data replacement. M8.7 is complete in
+`docs/exec-plans/active/M8_SIGNED_APK_BUILD.md`: three clean-source local ABI APKs
+pass pinned certificate/v2/v3 verification, checksums, payload equality, alignment
+and all three packaged privacy audits after owner-only password entry. All 40
+local custody/APK tests, analysis/syntax/contracts and all four source CI jobs
+44343328446 (`6409795`) pass. Public evidence records artifact/config/tool hashes;
+private material remains outside Git. No install/upload or runtime/schema change.
+Physical ABI/16KiB runtime, install/upgrade and provider acceptance remain untested.
+Stop before M8.8 pending explicit authorization; distribution remains held.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

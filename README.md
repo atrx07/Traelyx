@@ -25,7 +25,10 @@ GPS/save warnings, provider/key fallback and offline recovery pass all four
 local production identity and physical-phone readback/private-key proof pass,
 with all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44335799328)
 for `0d3243f`. Only public certificate metadata is committed. M8.7's
-[signed APK build](docs/exec-plans/active/M8_SIGNED_APK_BUILD.md) is authorized and active. See the
+[signed APK build](docs/reference/SIGNED_APK_BUILD_V1.md) is complete: three local
+ABI candidates pass pinned signatures/checksums/privacy, with all four
+[source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44343328446) for
+`6409795`. M8.8 awaits authorization; no install or production APK distribution. See the
 [performance baseline](docs/reference/PERFORMANCE_BASELINE_V1.md).
 Wrap-up passes 42 affected host tests and
 all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
@@ -192,7 +195,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M8.4 |  | Populated DB/retry rehearsal; atomic upgrade repair, signed/device limits retained | ✅ Complete | Done | 2026-11-18 |
 | M8.5 |  | GPS/save warnings, provider/key fallback and offline recovery | ✅ Complete | Done | 2026-11-18 |
 | M8.6 |  | Maintainer-authorized local identity and verified physical-phone backup | ✅ Complete | Done | 2026-11-18 |
-| M8.7 |  | Signed APK build | 🔵 Active | — | — |
+| M8.7 |  | Three local ABI APKs; pinned signatures, checksums and packaged privacy | ✅ Complete | Done | 2026-11-18 |
 | M8.8 |  | Clean install test | ⚪ Pending | — | — |
 | M8.9 |  | Upgrade install test | ⚪ Pending | — | — |
 | M8.10 |  | GitHub Release / main distribution explicitly held | ⏸ Deferred | New authorization required | — |

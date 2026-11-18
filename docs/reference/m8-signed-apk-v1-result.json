@@ -1,0 +1,318 @@
+{
+  "contract_version": 1,
+  "source_commit": "6409795ed8414393ac1d48123c8f160ac3f08339",
+  "verified_at_utc": "2026-11-18T16:20:36.355899+00:00",
+  "artifacts": [
+    {
+      "filename": "traelyx-v0.1.0-armeabi-v7a.apk",
+      "unsigned_sha256": "91a33e8dd894d40abc094438af7d8b3817979cbb4029c2f497685311ee776511",
+      "contract_version": 1,
+      "apk_bytes": 20902880,
+      "apk_sha256": "cbd444535183afa556465a025a28d7e065c5b17c9942a5ef76bc243c98e1cf09",
+      "native_abis": [
+        "armeabi-v7a"
+      ],
+      "flutter_runnable_abis": [
+        "armeabi-v7a"
+      ],
+      "bundled_model_file_count": 0,
+      "bundled_model_uncompressed_bytes": 0,
+      "bundled_model_compressed_bytes": 0,
+      "model_activation_or_quality_admitted": false,
+      "abi": "armeabi-v7a",
+      "application_id": "io.github.atrx07.traelyx",
+      "version_code": 1001,
+      "version_name": "0.1.0",
+      "min_sdk": 24,
+      "target_sdk": 36,
+      "zip_alignment_16k_checked": true,
+      "certificate_sha256": "1ef3917fb6e7dc1df41b58c0cf7ec1b96ab98149d583063296955377d7aae51a",
+      "signer_count": 1,
+      "v2_verified": true,
+      "v3_verified": true
+    },
+    {
+      "filename": "traelyx-v0.1.0-arm64-v8a.apk",
+      "unsigned_sha256": "fb34da8d1361a630f613840542fdad88ac3b4625c26ef6d5806c6b78a9d6ec7c",
+      "contract_version": 1,
+      "apk_bytes": 23364566,
+      "apk_sha256": "3387ddae9072ad995af9d7682b99e9db53e2e4ddc1098028583b2310525ef5e5",
+      "native_abis": [
+        "arm64-v8a"
+      ],
+      "flutter_runnable_abis": [
+        "arm64-v8a"
+      ],
+      "bundled_model_file_count": 0,
+      "bundled_model_uncompressed_bytes": 0,
+      "bundled_model_compressed_bytes": 0,
+      "model_activation_or_quality_admitted": false,
+      "abi": "arm64-v8a",
+      "application_id": "io.github.atrx07.traelyx",
+      "version_code": 2001,
+      "version_name": "0.1.0",
+      "min_sdk": 24,
+      "target_sdk": 36,
+      "zip_alignment_16k_checked": true,
+      "certificate_sha256": "1ef3917fb6e7dc1df41b58c0cf7ec1b96ab98149d583063296955377d7aae51a",
+      "signer_count": 1,
+      "v2_verified": true,
+      "v3_verified": true
+    },
+    {
+      "filename": "traelyx-v0.1.0-x86_64.apk",
+      "unsigned_sha256": "46ad89af4937e60ad58f1c07db0ff12fc8fb392976abbee4f25211d46f6ba349",
+      "contract_version": 1,
+      "apk_bytes": 24798151,
+      "apk_sha256": "6f3e61b7071495378247673cd7ad4e3a13b44b4553310fbe96d1b984b57f349e",
+      "native_abis": [
+        "x86_64"
+      ],
+      "flutter_runnable_abis": [
+        "x86_64"
+      ],
+      "bundled_model_file_count": 0,
+      "bundled_model_uncompressed_bytes": 0,
+      "bundled_model_compressed_bytes": 0,
+      "model_activation_or_quality_admitted": false,
+      "abi": "x86_64",
+      "application_id": "io.github.atrx07.traelyx",
+      "version_code": 4001,
+      "version_name": "0.1.0",
+      "min_sdk": 24,
+      "target_sdk": 36,
+      "zip_alignment_16k_checked": true,
+      "certificate_sha256": "1ef3917fb6e7dc1df41b58c0cf7ec1b96ab98149d583063296955377d7aae51a",
+      "signer_count": 1,
+      "v2_verified": true,
+      "v3_verified": true
+    }
+  ],
+  "production_signed": true,
+  "installed": false,
+  "published": false,
+  "password_stored": false,
+  "key_copied": false,
+  "signing_tool_sha256": "101a27fd9b72960c29e279a2718bb2d534f906c0d6890420e14689e10a3e6004",
+  "apksigner_jar_sha256": "2defad215d7ff52968a409cde528cdaef7918b115e276b8e3378ca7a178e4180",
+  "status": "complete_local_signed_candidates_distribution_held",
+  "source_base_commit": "c7023fe22eea7eb70ed5700c1b27a897326537c7",
+  "source_ci": {
+    "run_id": 44343328446,
+    "url": "https://github.com/atrx07/Traelyx/actions/runs/44343328446",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "jobs": {
+      "validate": "success",
+      "eventnet-cpu": "success",
+      "cloud-schema": "success",
+      "guardian-dispatch": "success"
+    }
+  },
+  "local_validation": {
+    "custody_and_apk_tests": 40,
+    "python_syntax": "passed",
+    "powershell_prompt_parser": "passed",
+    "static_analysis": "passed",
+    "repository_contracts": "passed",
+    "unsigned_three_abi_app_build": "passed",
+    "clean_source_operator_build": "passed",
+    "gradle_production_qa_combination_refusal": "passed",
+    "independent_production_sdk_verification": "passed",
+    "sha256sums_match": "passed",
+    "all_original_zip_payload_entries_unchanged": true,
+    "added_zip_entries": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/TRAELYX-.RSA",
+      "META-INF/TRAELYX-.SF"
+    ]
+  },
+  "android_sdk_build_tools": "37.0.0",
+  "public_identity_file": "release-signing-identity-v1.json",
+  "artifact_directory": "build/release/m8.7-6409795/signed",
+  "checksum_file": "build/release/m8.7-6409795/signed/SHA256SUMS.txt",
+  "local_public_client_configuration": [
+    {
+      "configuration": "auth-config.local.json",
+      "present": true,
+      "public_client_only": true,
+      "sha256": "138bb4e5b69352698334a4696c984f6b33ba83d2a5e0e8bc33fa5f05cb932881",
+      "values_exported": false
+    },
+    {
+      "configuration": ".dart_tool/firebase/google-services.json",
+      "present": true,
+      "public_client_only": true,
+      "sha256": "1b1e929c397a6face18f3fe7da4b13a7bef8cee2fcd4d7a8d8a4c1980f02edcc",
+      "values_exported": false
+    }
+  ],
+  "packaged_privacy_audits": [
+    {
+      "abi": "armeabi-v7a",
+      "contract_version": 1,
+      "policy_version": 1,
+      "scope": "decoded ordinary release manifest and packaged backup XML; not an OEM backup execution",
+      "passed": true,
+      "findings": [],
+      "permission_count": 10,
+      "exported_component_count": 3,
+      "backup_domains_reviewed": [
+        "database",
+        "device_database",
+        "device_file",
+        "device_root",
+        "device_sharedpref",
+        "external",
+        "file",
+        "root",
+        "sharedpref"
+      ],
+      "user_data_read": false,
+      "network_requested": false,
+      "apk_sha256": "cbd444535183afa556465a025a28d7e065c5b17c9942a5ef76bc243c98e1cf09",
+      "apk_bytes": 20902880
+    },
+    {
+      "abi": "arm64-v8a",
+      "contract_version": 1,
+      "policy_version": 1,
+      "scope": "decoded ordinary release manifest and packaged backup XML; not an OEM backup execution",
+      "passed": true,
+      "findings": [],
+      "permission_count": 10,
+      "exported_component_count": 3,
+      "backup_domains_reviewed": [
+        "database",
+        "device_database",
+        "device_file",
+        "device_root",
+        "device_sharedpref",
+        "external",
+        "file",
+        "root",
+        "sharedpref"
+      ],
+      "user_data_read": false,
+      "network_requested": false,
+      "apk_sha256": "3387ddae9072ad995af9d7682b99e9db53e2e4ddc1098028583b2310525ef5e5",
+      "apk_bytes": 23364566
+    },
+    {
+      "abi": "x86_64",
+      "contract_version": 1,
+      "policy_version": 1,
+      "scope": "decoded ordinary release manifest and packaged backup XML; not an OEM backup execution",
+      "passed": true,
+      "findings": [],
+      "permission_count": 10,
+      "exported_component_count": 3,
+      "backup_domains_reviewed": [
+        "database",
+        "device_database",
+        "device_file",
+        "device_root",
+        "device_sharedpref",
+        "external",
+        "file",
+        "root",
+        "sharedpref"
+      ],
+      "user_data_read": false,
+      "network_requested": false,
+      "apk_sha256": "6f3e61b7071495378247673cd7ad4e3a13b44b4553310fbe96d1b984b57f349e",
+      "apk_bytes": 24798151
+    }
+  ],
+  "supplemental_unsigned_elf_layout": {
+    "contract_version": 1,
+    "method": "ELF64 little-endian program-header LOAD and GNU_RELRO checks",
+    "actual_16k_runtime_tested": false,
+    "results": [
+      {
+        "abi": "arm64-v8a",
+        "libraries": [
+          {
+            "library": "libapp.so",
+            "load_min_alignment": 65536,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libdartjni.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libdatastore_shared_counter.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libflutter.so",
+            "load_min_alignment": 65536,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libsqlite3.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "abi": "x86_64",
+        "libraries": [
+          {
+            "library": "libapp.so",
+            "load_min_alignment": 65536,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libdartjni.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libdatastore_shared_counter.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libflutter.so",
+            "load_min_alignment": 65536,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          },
+          {
+            "library": "libsqlite3.so",
+            "load_min_alignment": 16384,
+            "load_segments_16k_aligned": true,
+            "relro_16k_layout_checked": true
+          }
+        ],
+        "passed": true
+      }
+    ]
+  },
+  "elf_results_apply_to_signed_payload": "all original ZIP entry bytes compared equal after signing",
+  "production_apks_uploaded": false,
+  "private_key_or_password_committed": false,
+  "new_runtime_dependency_permission_or_schema": false,
+  "bit_for_bit_reproducible_build_claimed": false,
+  "m8_8_started": false,
+  "limitations": [
+    "No clean install, upgrade install, actual 16 KiB runtime, ARMv7 physical compatibility or signing-dependent provider acceptance tested in M8.7.",
+    "Local client config hashes are recorded; CI intentionally uses no production signing credentials or local client values.",
+    "Password recovery is maintainer-attested; phone-folder sync/access, media encryption and future media survival remain unverified.",
+    "Distribution, private security reporting, recorder CPU/battery review and carried M6.8/M7 acceptance gates remain held."
+  ]
+}

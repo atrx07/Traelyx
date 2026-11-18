@@ -1,6 +1,6 @@
 # Execution Plan — M8.7 signed APK build
 
-**Status:** Active
+**Status:** Complete — local production-signed candidates verified; distribution held
 **Owner:** agent/maintainer
 **Milestone:** M8.7
 **Started / last updated:** 2026-11-18
@@ -41,15 +41,15 @@ Distribution, private reporting, profiling and M6.8/M7 acceptance holds remain.
 
 - [x] Prepare unsigned opt-in, local signing/verification and private prompt.
 - [x] Test fail-closed identity/ABI/version/source/no-clobber/secret boundaries.
-- [ ] Validate source, app gates, affected unsigned/development builds and source CI.
-- [ ] Compile from clean pinned source and prepare immutable input hashes.
-- [ ] Owner enters existing password privately; sign and verify actual APKs.
-- [ ] Audit packaged privacy, record checksums/size/provenance and limitations.
-- [ ] Synchronize records, commit/push and verify clean main; stop before M8.8.
+- [x] Validate source, app gates, affected unsigned/development builds and source CI.
+- [x] Compile from clean pinned source and prepare immutable input hashes.
+- [x] Owner enters existing password privately; sign and verify actual APKs.
+- [x] Audit packaged privacy, record checksums/size/provenance and limitations.
+- [x] Synchronize records for completion commit; verify pushed main before reporting.
 
 ## Completion
 
-Local checkpoint: all40 custody/APK tests pass, including disposable real SDK
+Local checkpoint: all 40 custody/APK tests pass, including disposable real SDK
 three-ABI signing, v2/v3 proof and no-overwrite. Python syntax, PowerShell prompt
 parser, repository contracts and static analysis pass. Actual unsigned app splits
 compile and pass package/version/one-runnable-ABI/alignment checks (SDK24–36).
@@ -59,5 +59,30 @@ Custody fixture keys use normal temporary storage outside Git, as policy require
 The operator invokes compilation itself and brackets it with clean-source checks
 to prevent arbitrary stale APKs from being attributed to a newer source commit.
 
-Pending actual production signing and verification. No installation or publication
-is authorized by this substep. No key generation/replacement is needed or allowed.
+Source checkpoint `6409795ed8414393ac1d48123c8f160ac3f08339` passes all four
+[CI jobs 44343328446](https://github.com/atrx07/Traelyx/actions/runs/44343328446),
+including full app/native gates, existing development builds/privacy policy and
+the new real unsigned-build preparation. The clean-source local operator build
+passes; Gradle also rejects the production/QA combination. Its generated failure
+report was moved to ignored local evidence, leaving source clean before signing.
+
+The owner entered the existing password only in the local masked form. Three
+actual APKs pass pinned certificate/single-signer v2/v3 verification, package,
+version, ABI, ZIP alignment, exact checksums and independent packaged privacy
+audits. All original ZIP payload entries remain byte-identical after signing;
+only expected META-INF signing metadata is added. A supplemental comparison first
+assumed no added ZIP entries; reviewing the standard signing metadata corrected
+that assumption without relaxing original-payload equality. No APK repair/re-sign
+or key replacement was needed. The owner closed the form; helper exit0 observed.
+
+Supplemental ELF64 LOAD/GNU_RELRO layout checks pass for arm64/x86_64 payloads;
+these are static checks, not an actual 16 KiB runtime test. Sanitized evidence and
+exact artifact/tool/configuration hashes are in
+`docs/reference/m8-signed-apk-v1-result.json`. Artifacts and SHA256SUMS remain
+under ignored `build/release/m8.7-6409795/signed/` on the maintainer's PC.
+
+M8.7 is complete. No installation, upload/publication, dependency/permission/schema,
+recorder/scoring change, model promotion or key generation/copy/replacement.
+No physical ABI, clean/upgrade install or signing-dependent provider acceptance
+is claimed; distribution/profiling/private-reporting and M6.8/M7 holds remain.
+Persist the docs/evidence closure, verify synchronized main and stop before M8.8.

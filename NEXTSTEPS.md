@@ -21,23 +21,27 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — M8.7 signed APK build
+## P0 — Approval gate before M8.8
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Complete authorized M8.7 in `docs/exec-plans/active/M8_SIGNED_APK_BUILD.md`:
-   ABI splits, pinned local signing, manifest/alignment/signature checks and
-   checksums. Actual production signing and source CI remain pending. Stop before
-   M8.8 installation. M8.6 is complete in
+1. Await explicit authorization for M8.8. M8.7 is complete in
+   `docs/exec-plans/active/M8_SIGNED_APK_BUILD.md`: three clean-source local ABI
+   APKs pass pinned v2/v3 signatures, checksums, payload/alignment checks and all
+   three packaged privacy audits. All 40 local custody/APK tests and four source
+   CI jobs 44343328446 (`6409795`) pass. Artifacts remain local in
+   `build/release/m8.7-6409795/signed/`; no install or production APK upload.
+   Physical ABI/16KiB runtime and signing-dependent provider acceptance remain
+   untested. Stop before M8.8 installation. M8.6 is complete in
    `docs/exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md`: authorized local identity,
    actual TECNO byte readback/private-key proof and public certificate pin. All
    26 local custody tests/contracts and four source CI jobs 44335799328 (`0d3243f`)
    pass. Private keys/passwords stay outside Git; password recovery is attested
-   and phone-folder sync/access remains unverified. No production APK has been
-   built or ordinary app replaced. M8.5 is complete in
+   and phone-folder sync/access remains unverified. No ordinary app replaced.
+   M8.5 is complete in
    `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`: GPS/save and settings-feedback
    repairs, corrupt-route reread and bounded cloud/queue guidance. Local analysis,
    636 Flutter tests, builds/contracts/policy and all four source CI jobs

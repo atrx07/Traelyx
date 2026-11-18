@@ -1,6 +1,6 @@
 # M8.7 local signed APK workflow v1
 
-**Status:** Active — local tooling/unsigned checks pass; source CI and production proof pending
+**Status:** Complete — local production-signed candidates verified; distribution held
 **Date:** 2026-11-18
 
 Read for trusted local release signing, ABI packaging or checksum verification.
@@ -79,10 +79,32 @@ signing/verification across three synthetic ABI packages with no-clobber checks.
 Dummy fixture native bytes are not executable runtime evidence. CI also builds
 unsigned app splits and verifies their preparation without production credentials.
 
-All40 local custody/APK tests, static analysis, Python/PowerShell syntax and
-repository checks pass. Actual unsigned app splits compile with SDK24 minimum,
-SDK36 target and exactly one runnable ABI each. Source CI, clean-source operator
-build and actual production signature/privacy evidence remain pending.
+All 40 local custody/APK tests, static analysis, Python/PowerShell syntax and
+repository checks pass. All four [source CI jobs 44343328446](https://github.com/atrx07/Traelyx/actions/runs/44343328446)
+pass for `6409795ed8414393ac1d48123c8f160ac3f08339`, including existing app/native
+gates, development builds/privacy policy and unsigned app split preparation.
+
+The clean-source local build, owner-only masked password entry and all three
+actual production signature/checksum/privacy audits pass. Minimum SDK24, target
+SDK36, one pinned signer, v2/v3 signatures and one runnable ABI match each APK.
+All original ZIP payload entries remain byte-identical; only expected META-INF
+signing metadata is added. No password fields were inspected; the owner closed
+the form and helper exit0 was observed. See [sanitized evidence](m8-signed-apk-v1-result.json).
+
+| ABI | Signed bytes | MiB |
+|---|---:|---:|
+| arm64-v8a | 23,364,566 | 22.28 |
+| armeabi-v7a | 20,902,880 | 19.93 |
+| x86_64 | 24,798,151 | 23.65 |
+
+Artifacts/SHA256SUMS remain local in `build/release/m8.7-6409795/signed/`.
+Configuration/tool/source and artifact hashes are recorded; identical future
+build bytes are not claimed. Supplemental ELF64 program-header checks pass for
+LOAD alignment and GNU_RELRO layout in arm64/x86_64 native libraries, following
+[Android's 16KiB guidance](https://developer.android.com/guide/practices/page-sizes).
+Original-payload equality makes those unsigned-input layout results applicable to
+the signed payloads. Actual 16 KiB runtime behavior remains untested.
+
 No install/upgrade, signing-dependent
 provider configuration, physical compatibility or release publication is implied.
 M8.8/M8.9 and distribution retain their explicit gates. Existing debug-signed app
