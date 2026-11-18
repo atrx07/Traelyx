@@ -30,6 +30,8 @@ build/lint, ordinary isolation, native tests and both builds. No schema migratio
 new dependency or main-app installation; normal WAKE_LOCK permission is added. See
 `docs/reference/PERFORMANCE_BASELINE_V1.md`.
 Details: `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
+Recorder CPU profiling and longer unplugged battery/continuity validation are
+deferred pre-release requirements in NEXTSTEPS and the release checklist.
 Stop before M8.3 pending explicit authorization; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 

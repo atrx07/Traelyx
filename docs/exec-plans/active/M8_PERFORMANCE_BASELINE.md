@@ -131,3 +131,13 @@ distribution remain open. No new dependency, schema/scoring migration, cloud
 request or ordinary-app installation. Normal WAKE_LOCK permission accompanies
 the recorder-owned policy. Stop for explicit M8.3 authorization; no work on it
 has begun.
+
+## Deferred optimization decision — 2026-11-18
+
+Following the maintainer's sequencing discussion, keep M8.2 complete as a
+baseline and defer recorder profiling to a required pre-release follow-up.
+NEXTSTEPS and release-checklist.yaml require CPU/delivered-rate investigation,
+longer unplugged battery/thermal/continuity measurement, and a recorded measured
+optimization or efficiency-acceptance rationale. Preserve CPU ownership, sample
+continuity and quality semantics. No optimization is implemented by this decision;
+M8.3 remains the next approval-gated substep and distribution remains held.

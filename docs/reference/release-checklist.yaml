@@ -41,6 +41,9 @@ checks:
     - apk_size_report
     - bundled_model_size_report
     - critical_regression_review
+    - recorder_cpu_profile_and_delivered_sensor_rate_review
+    - sustained_unplugged_recorder_battery_thermal_and_continuity_recheck
+    - recorder_optimization_or_efficiency_acceptance_rationale_recorded
   publish:
     - sha256_checksums
     - release_notes

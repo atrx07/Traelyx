@@ -39,6 +39,19 @@ jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 2. Keep the distribution hold and deferred acceptance ledger visible through M8.
    Passing software/build tests never waives physical or scientific gates.
 
+## Pre-release recorder profiling follow-up
+
+Defer profiling during the remaining hardening work; complete it before release.
+Profile the native recorder's ~41% one-core CPU baseline, separate monitor overhead,
+and investigate delivered ~200 Hz motion against 100 Hz requests before choosing
+an optimization. Measure a longer unplugged battery/thermal interval with motion
+continuity verified. Preserve recorder-owned CPU wakefulness and quality flags;
+do not obtain lower drain by losing evidence. Record the measured optimization
+or acceptance rationale and rerun affected continuity/lifecycle checks before
+lifting the release hold. See `docs/reference/PERFORMANCE_BASELINE_V1.md` and the
+performance gates in `docs/reference/release-checklist.yaml`. This follow-up does
+not reopen M8.2's completed baseline or activate a new numbered roadmap substep.
+
 ## Deferred M7 acceptance / future ordinary trip
 
 Follow `docs/reference/M7_FUTURE_ROUTINE_TRIP_V1.md` when the maintainer is ready.
