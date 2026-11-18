@@ -1,0 +1,314 @@
+{
+  "contract_version": 1,
+  "date": "2026-11-18",
+  "scope": "bounded stationary Tecno LH8n API34 baseline; not fleet, vehicle or efficiency acceptance",
+  "source_base_commit": "c0cbf00",
+  "source_provenance": "M8.2 implementation commit and full source CI recorded in M8_PERFORMANCE_BASELINE.md",
+  "artifacts": {
+    "profile_qa": {
+      "bytes": 36190209,
+      "sha256": "65a3dcbce7906acc992caad5da294d4174cf37c6583dd04b76a9c7070c7e14d1"
+    },
+    "profile_qa_test": {
+      "bytes": 84864,
+      "sha256": "8222eded5a9d29d0be2c977a9915a2f1bf553b6122649c516b31647a65319912"
+    },
+    "ordinary_arm64_release_validation": {
+      "bytes": 23375571,
+      "sha256": "7ec42194ac04f6a8790c968977d38f84619397f74a1b4a7dd480f1ba390de709"
+    }
+  },
+  "recorder_power_policy_version": 1,
+  "recorder": {
+    "duration_ms": 602481,
+    "uptime_ms": 602481,
+    "cpu_ms": 247950,
+    "screen_on_samples": 0,
+    "screen_off_verified": true,
+    "persisted_bytes_added": 2987255,
+    "chunks_added": 945,
+    "gnss_samples_added": 485,
+    "accelerometer_samples_added": 120611,
+    "gyroscope_samples_added": 120610
+  },
+  "recorder_summary": {
+    "duration_seconds": 602.481,
+    "cpu_percent_one_core": 41.15482479945425,
+    "pss_kib": {
+      "count": 60,
+      "p50": 83120,
+      "p95": 94106,
+      "p99": 94988,
+      "max": 94988
+    },
+    "screen_off_verified": true,
+    "temperature_c_min": 32,
+    "temperature_c_max": 33,
+    "observed_level_drop_percentage_points": 1,
+    "observed_level_drop_percentage_points_per_hour": 5.9752921668899095,
+    "one_level_step_percentage_points_per_hour": 5.9752921668899095,
+    "zero_rounded_change_is_not_zero_consumption": false,
+    "charge_counter_drop_microah": 50000,
+    "charge_counter_estimated_ma": 298.7646083444955,
+    "charge_counter_resolution_and_calibration_validated": false,
+    "measurement_scope": "instrumented native-only profile QA process; includes monitor overhead",
+    "raw_mib_per_hour_committed_interval": 17.022820856096953,
+    "gnss_samples_in_interval": 485,
+    "accelerometer_effective_hz": 200.1905454279886,
+    "gyroscope_effective_hz": 200.1888856246089,
+    "uptime_seconds": 602.481,
+    "reported_suspend_seconds": 0.0
+  },
+  "recording_window_quality": {
+    "duration_seconds": 602.48764219,
+    "minimum_observed_to_configured_rate": 0.9,
+    "maximum_motion_gap_budget_ms": 1000,
+    "gnss_samples": 488,
+    "gnss_effective_hz": 0.809975119532999,
+    "gnss_max_gap_ms": 41999,
+    "accelerometer_samples": 120884,
+    "accelerometer_effective_hz": 200.64145973284232,
+    "accelerometer_max_gap_ms": 10.009063,
+    "accelerometer_configured_period_micros": 10000,
+    "accelerometer_observed_to_configured_rate": 2.006414597328423,
+    "gyroscope_samples": 120883,
+    "gyroscope_effective_hz": 200.63979994776133,
+    "gyroscope_max_gap_ms": 14.931303,
+    "gyroscope_configured_period_micros": 10000,
+    "gyroscope_observed_to_configured_rate": 2.0063979994776133
+  },
+  "whole_trip_quality": {
+    "catalog_bytes": 3173342,
+    "duration_to_last_sample_ms": 657162.967597,
+    "gnss_max_gap_ms": 55243.819096,
+    "accelerometer_max_gap_ms": 86.946793,
+    "gyroscope_max_gap_ms": 166.579387,
+    "imu_dropout_flags": 0,
+    "imu_unreliable_samples": 126370,
+    "imu_rejected_samples": 0,
+    "imu_clock_discontinuities": 0
+  },
+  "idle_control": {
+    "duration_ms": 184446,
+    "uptime_ms": 160988,
+    "cpu_ms": 409,
+    "screen_on_samples": 0,
+    "screen_off_verified": true
+  },
+  "idle_summary": {
+    "duration_seconds": 184.446,
+    "cpu_percent_one_core": 0.22174511781225942,
+    "pss_kib": {
+      "count": 16,
+      "p50": 87970,
+      "p95": 88463,
+      "p99": 88463,
+      "max": 88463
+    },
+    "screen_off_verified": true,
+    "temperature_c_min": 32,
+    "temperature_c_max": 32,
+    "observed_level_drop_percentage_points": 0,
+    "observed_level_drop_percentage_points_per_hour": 0,
+    "one_level_step_percentage_points_per_hour": 19.51790768029667,
+    "zero_rounded_change_is_not_zero_consumption": true,
+    "charge_counter_drop_microah": 0,
+    "charge_counter_estimated_ma": null,
+    "charge_counter_resolution_and_calibration_validated": false,
+    "measurement_scope": "instrumented native-only profile QA process; includes monitor overhead",
+    "uptime_seconds": 160.988,
+    "reported_suspend_seconds": 23.458
+  },
+  "database": {
+    "schema_version": 4,
+    "seed_ms": 546.812,
+    "database_allocated_bytes": 4427776,
+    "event_count": 12000,
+    "detail_3600_chunks": {
+      "p95_ms": 40.373,
+      "count": 20,
+      "p99_ms": 40.453,
+      "p50_ms": 40.246,
+      "max_ms": 40.453
+    },
+    "workload_version": 1,
+    "trip_count": 1000,
+    "score_count": 1000,
+    "selected_trip_chunk_count": 3600,
+    "warmup_queries_per_operation": 3,
+    "raw_telemetry_present": false,
+    "history_1000_trips": {
+      "p95_ms": 11.433,
+      "count": 20,
+      "p99_ms": 14.721,
+      "p50_ms": 8.558,
+      "max_ms": 14.721
+    }
+  },
+  "replay": {
+    "full_result_screen_measured": false,
+    "total_span": {
+      "p95_ms": 11.605,
+      "count": 3489,
+      "p99_ms": 16.231,
+      "p50_ms": 9.947,
+      "max_ms": 26.559
+    },
+    "route_points": 1000,
+    "route_segments": 2,
+    "build": {
+      "p95_ms": 5.033,
+      "count": 3489,
+      "p99_ms": 11.215,
+      "p50_ms": 4.234,
+      "max_ms": 21.012
+    },
+    "event_count": 50,
+    "warmup_seconds": 3,
+    "raster": {
+      "p95_ms": 5.281,
+      "count": 3489,
+      "p99_ms": 6.711,
+      "p50_ms": 4.173,
+      "max_ms": 9.923
+    },
+    "workload": "production offline map, evidence timeline and normal-speed replay clock",
+    "build_over_60fps_budget": 14,
+    "sample_window_seconds": 30,
+    "raster_over_60fps_budget": 0
+  },
+  "replay_process_rss_bytes_at_end": 289443840,
+  "display_refresh_rate_hz_at_end": 120.00001,
+  "apk_inventory": {
+    "contract_version": 1,
+    "apk_bytes": 23375571,
+    "apk_sha256": "7ec42194ac04f6a8790c968977d38f84619397f74a1b4a7dd480f1ba390de709",
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "flutter_runnable_abis": [
+      "arm64-v8a"
+    ],
+    "bundled_model_file_count": 0,
+    "bundled_model_uncompressed_bytes": 0,
+    "bundled_model_compressed_bytes": 0,
+    "model_activation_or_quality_admitted": false
+  },
+  "fixture_cleanup": true,
+  "main_recorder_guardian_preferences_preserved": true,
+  "screen_timeout_ms_unchanged": 1800000,
+  "new_dependencies": false,
+  "cloud_requests": false,
+  "schema_migration": false,
+  "production_inference_enabled": false,
+  "limitations": [
+    "Ten-minute stationary recording and three-minute post-recording idle; one physical device, one final run.",
+    "Battery level and charge counter moved by one coarse step; hourly extrapolation is not a calibrated long-run drain prediction.",
+    "No observer CPU lease during recording; monitor overhead remains included in CPU/PSS/storage observations.",
+    "Idle observer requested a separate bounded CPU lease, but elapsed minus uptime shows 23.458 seconds of suspend; it is not a verified continuously-awake or deep-suspend idle control.",
+    "Do not subtract idle from recording to attribute energy cost.",
+    "Motion was delivered near 200 Hz despite 100 Hz requests; requested rates are hardware hints, with no sampling change.",
+    "GNSS was intermittent with a 41.999-second measured gap; continuous GNSS absence after repair is not established.",
+    "SENSOR_UNRELIABLE samples remain explicit; continuity does not establish calibration, mounted frames or scoring truth.",
+    "Replay measures production renderers and clock, not the full result screen; 120 Hz display and short run do not prove sustained 60 fps.",
+    "Native classifiers remain disabled and local neural narration unavailable; prior rejected-model latency is historical only.",
+    "Main installed app was not updated; source repair validated in isolated QA only. Distribution and deferred M6.8/M7 acceptance remain held."
+  ],
+  "post_fix_regression": {
+    "matrix": {
+      "contractVersion": 1,
+      "api": 34,
+      "phase": "matrix",
+      "rows": [
+        {
+          "case": "duplicate_start",
+          "status": "passed"
+        },
+        {
+          "case": "activity_recreation",
+          "status": "passed",
+          "verifiedChunks": 4,
+          "observedMillis": 4064
+        },
+        {
+          "case": "background",
+          "status": "passed",
+          "verifiedChunks": 8,
+          "observedMillis": 8065
+        },
+        {
+          "case": "screen_off",
+          "status": "passed",
+          "verifiedChunks": 10,
+          "observedMillis": 10147
+        },
+        {
+          "case": "provider_network_power_faults",
+          "status": "not_run_physical_settings_preserved"
+        },
+        {
+          "case": "service_recreation",
+          "status": "passed",
+          "verifiedChunks": 2,
+          "observedMillis": 5185
+        },
+        {
+          "case": "finalization",
+          "status": "passed"
+        },
+        {
+          "case": "cleanup",
+          "status": "passed"
+        }
+      ],
+      "passed": true,
+      "mainRecorderGuardianPreferencesPreserved": true
+    },
+    "prepare": {
+      "contractVersion": 1,
+      "api": 34,
+      "phase": "prepare",
+      "rows": [
+        {
+          "case": "prepare_committed_prefix",
+          "status": "passed",
+          "verifiedChunks": 5,
+          "observedMillis": 5066
+        },
+        {
+          "case": "process_checkpoint",
+          "status": "passed",
+          "verifiedChunks": 7
+        }
+      ],
+      "passed": true,
+      "mainRecorderGuardianPreferencesPreserved": true
+    },
+    "resume": {
+      "contractVersion": 1,
+      "api": 34,
+      "phase": "resume",
+      "rows": [
+        {
+          "case": "process_recovery",
+          "status": "passed",
+          "verifiedChunks": 2,
+          "observedMillis": 5088
+        },
+        {
+          "case": "prefix_and_finalization",
+          "status": "passed",
+          "verifiedChunks": 7
+        },
+        {
+          "case": "cleanup",
+          "status": "passed"
+        }
+      ],
+      "passed": true,
+      "mainRecorderGuardianPreferencesPreserved": true
+    }
+  }
+}

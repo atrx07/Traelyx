@@ -33,7 +33,9 @@ The bounded wrap-up is validated by all four source CI jobs 44090880412
 (`1bb6bdf`); M8 is now the active development milestone. M8.1's bounded stationary
 matrix is complete; local checks and all four source CI jobs 44168836701
 (`63d4826`) pass. See [the Android hardening plan](active/M8_ANDROID_HARDENING.md).
-M8.2 awaits explicit authorization; physical/OEM/vehicle limits remain carried.
+M8.2 was subsequently authorized and is in progress in
+[the performance plan](active/M8_PERFORMANCE_BASELINE.md); qualified measurements
+and local checks pass, source CI/closure pending. Physical/OEM/vehicle limits remain carried.
 M7 remains deferred acceptance, not complete.
 
 ---

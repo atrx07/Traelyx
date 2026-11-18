@@ -264,6 +264,7 @@ class RecorderHardeningInstrumentation : Instrumentation() {
     }
 
     private fun checkActive(id: String) {
+        check(RecorderService.queryCpuLeaseHeld()) { "buffer_unhealthy" }
         check(RecorderService.queryState(app).let { it.isActive && it.tripId == id && it.errorCode == null }) { "lifecycle_inactive" }
         check(RecorderService.queryTelemetryHealth().let {
             it.state == TelemetryBufferState.ACTIVE && it.errorCode == null && it.overflowCount == 0L &&
@@ -296,6 +297,7 @@ class RecorderHardeningInstrumentation : Instrumentation() {
         RecorderService.requestStop(app)
         await("idle_after_stop") { RecorderService.queryState(app).lifecycleState == RecorderLifecycleState.IDLE }
         check(RecorderService.queryTelemetryHealth().state == TelemetryBufferState.STOPPED)
+        check(!RecorderService.queryCpuLeaseHeld())
         check(RecorderService.queryGnssHealth().state == GnssAcquisitionState.STOPPED)
         check(RecorderService.queryImuHealth().state == ImuAcquisitionState.STOPPED)
         check(finalizations.loadAll().let { it.invalidRecordCount == 0 && it.records.single().tripId == id })

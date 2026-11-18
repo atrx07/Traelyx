@@ -19,6 +19,7 @@ Local host/build/tool failures belong in
 
 | Date | Issue / symptoms | Status |
 |---|---|---|
+| 2026-11-18 | [Unplugged screen-off recorder gaps](2026-11-18_screen-off-recorder-suspend.md): active service had ~263-second motion gaps without GPS fixes | CPU-lease repair passes bounded lifecycle/locked-unplugged continuity; source CI pending |
 | 2026-11-17 | [Isolated sync-pilot export selection](2026-11-17_sync-pilot-export-selection.md): cancelling the picker changed the selected retained run | Repaired in `68d91d6`; API34 manual/instrumentation and full source CI 44085930694 pass; main trip export unaffected |
 | 2026-11-09 | [Auth refresh identity-stream errors](2026-11-09_auth-refresh-identity-stream.md): retryable SDK diagnostics escaped into ownership listeners; terminal refresh loss got connection advice | Repaired in `dc82ed1`; 432 Flutter tests, full CI 42601051068 and inactive Tecno/Pixel preservation checks pass; hosted natural expiry remains unverified |
 | 2026-10-17 | [Guardian cleanup identity loss](2026-10-17_guardian-cleanup-identity-loss.md): destructive outbox failure could erase the only exact server-cleanup ID | Repaired in `6e4b50d`; local, physical synthetic and full CI checks pass; physical fault injection unverified |

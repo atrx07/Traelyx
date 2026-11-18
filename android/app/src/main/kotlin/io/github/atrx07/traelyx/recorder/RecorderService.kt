@@ -26,7 +26,8 @@ import java.util.UUID
  * Native foreground lifecycle owner for an active trip.
  *
  * M2.4 durably buffers native GPS, accelerometer, and gyroscope evidence in
- * app-private versioned chunks. It holds no wake lock and never sends raw
+ * app-private versioned chunks. Power policy v1 leases CPU wakefulness only during
+ * explicit recording/flush; it never sends raw
  * telemetry through logs, Flutter, diagnostics, or the network.
  */
 class RecorderService : Service() {
@@ -38,24 +39,41 @@ class RecorderService : Service() {
     private var telemetryRecorder: TelemetryChunkRecorder? = null
     @Volatile private var guardianRecording: GuardianRecorderHandle? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+    private lateinit var cpuLease: RecorderCpuLease
+    private val renewCpuLease = object : Runnable {
+        override fun run() {
+            if (!cpuLease.renew()) {
+                handleTelemetryFatalError("recorder_cpu_lease_lost")
+                return
+            }
+            mainHandler.postDelayed(this, RECORDER_CPU_RENEWAL_MILLIS)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
         serviceCreated = true
         coordinator = coordinator(applicationContext)
         finalizationStore = AtomicRecorderFinalizationStore(applicationContext)
+        cpuLease = RecorderCpuLease(AndroidRecorderCpuLock(applicationContext), SystemClock::elapsedRealtime)
+        currentCpuLease = cpuLease
         ensureNotificationChannel()
     }
 
     override fun onDestroy() {
-        if (
-            !stopAcquisition() &&
-            coordinator.query().lifecycleState != RecorderLifecycleState.ERROR
-        ) {
-            coordinator.markError("chunk_flush_failed")
+        try {
+            if (
+                !stopAcquisition() &&
+                coordinator.query().lifecycleState != RecorderLifecycleState.ERROR
+            ) {
+                coordinator.markError("chunk_flush_failed")
+            }
+        } finally {
+            releaseCpuLease()
+            if (currentCpuLease === cpuLease) currentCpuLease = null
+            serviceCreated = false
+            super.onDestroy()
         }
-        serviceCreated = false
-        super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -90,6 +108,10 @@ class RecorderService : Service() {
         }
         if (!promote(snapshot)) {
             stopSelf(startId)
+            return START_NOT_STICKY
+        }
+        if (!acquireCpuLease()) {
+            stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
         val outcome = coordinator.markRecording(tripId)
@@ -129,6 +151,10 @@ class RecorderService : Service() {
         }
         if (!promote(outcome.snapshot)) {
             stopSelf(startId)
+            return START_NOT_STICKY
+        }
+        if (!acquireCpuLease()) {
+            stopForegroundAndSelf(startId)
             return START_NOT_STICKY
         }
         if (!startTelemetryRecorder(outcome.snapshot)) {
@@ -333,10 +359,32 @@ class RecorderService : Service() {
     }
 
     private fun stopAcquisition(): Boolean {
-        stopGuardianRecording()
-        stopImuAcquisition()
-        stopGnssAcquisition()
-        return stopTelemetryRecorder()
+        var flushed = false
+        var released = false
+        try {
+            stopGuardianRecording()
+            stopImuAcquisition()
+            stopGnssAcquisition()
+            flushed = stopTelemetryRecorder()
+        } finally {
+            released = releaseCpuLease()
+        }
+        return flushed && released
+    }
+
+    private fun acquireCpuLease(): Boolean {
+        if (!cpuLease.start()) {
+            coordinator.markError("recorder_cpu_lease_failed")
+            return false
+        }
+        mainHandler.removeCallbacks(renewCpuLease)
+        mainHandler.postDelayed(renewCpuLease, RECORDER_CPU_RENEWAL_MILLIS)
+        return true
+    }
+
+    private fun releaseCpuLease(): Boolean {
+        mainHandler.removeCallbacks(renewCpuLease)
+        return !::cpuLease.isInitialized || cpuLease.release()
     }
 
     private fun startGuardianRecording() {
@@ -461,6 +509,7 @@ class RecorderService : Service() {
     }
 
     private fun stopForegroundAndSelf(startId: Int) {
+        releaseCpuLease()
         if (promotedToForeground) {
             stopForeground(STOP_FOREGROUND_REMOVE)
             promotedToForeground = false
@@ -478,6 +527,9 @@ class RecorderService : Service() {
 
         @Volatile
         private var serviceCreated = false
+        @Volatile private var currentCpuLease: RecorderCpuLease? = null
+
+        internal fun queryCpuLeaseHeld(): Boolean = currentCpuLease?.isHeld() ?: false
 
         @Volatile
         private var latestGnssHealth = GnssHealthSnapshot.idle()

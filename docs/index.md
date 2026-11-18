@@ -67,6 +67,10 @@ For M8.1 recorder hardening, use the bounded
 [Android torture matrix](reference/ANDROID_TORTURE_MATRIX_V1.md): separate QA
 package, exact fixture ownership, aggregate results and explicit physical limits.
 
+For M8.2 measurements, use the [performance baseline](reference/PERFORMANCE_BASELINE_V1.md)
+and its aggregate report: profile replay/DB, locked unplugged recorder, coarse
+battery observations, CPU/storage cost and APK/model inventory.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

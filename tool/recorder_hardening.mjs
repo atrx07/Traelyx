@@ -1,12 +1,11 @@
 import { execFile as execFileCallback } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { mainPreservationFingerprint } from './android_qa_preservation.mjs';
 import { promisify } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { writeFile } from 'node:fs/promises';
 
 const execFile = promisify(execFileCallback);
 export const qaPackage = 'io.github.atrx07.traelyx.hardening';
-const mainPackage = 'io.github.atrx07.traelyx';
 const runner = `${qaPackage}.test/io.github.atrx07.traelyx.recorder.RecorderHardeningInstrumentation`;
 const phases = new Set(['matrix', 'prepare', 'resume', 'cleanup']);
 
@@ -55,24 +54,7 @@ export async function run(options, command = execFile) {
     throw new Error('wrong_physical_model');
   }
 
-  // Reads only main-package directory metadata and hashes. Raw output never leaves this process.
-  const preserved = async () => {
-    const directories = ['no_backup/recorder', 'no_backup/guardian', 'shared_prefs'];
-    const hashes = [];
-    for (const directory of directories) {
-      let listing;
-      try { listing = await adb(['shell', 'run-as', mainPackage, 'ls', directory]); }
-      catch (error) {
-        if (String(error.stderr).includes('No such file or directory')) { hashes.push('absent'); continue; }
-        throw new Error('main_preservation_unreadable');
-      }
-      if (directory === 'no_backup/recorder' && /active_trip_v1\.bin/.test(listing)) throw new Error('main_recorder_not_idle');
-      const data = await adb(['shell', 'run-as', mainPackage, 'find', directory, '-type', 'f',
-        '-exec', 'sha256sum', '{}', '+'], 60_000);
-      hashes.push(createHash('sha256').update(data.split(/\r?\n/).filter(Boolean).sort().join('\n')).digest('hex'));
-    }
-    return hashes;
-  };
+  const preserved = () => mainPreservationFingerprint(adb);
   const before = await preserved();
   const powerState = await adb(['shell', 'dumpsys', 'power']);
   const interactive = /mWakefulness=Awake\b/.test(powerState);

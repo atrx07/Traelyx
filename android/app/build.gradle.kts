@@ -8,6 +8,11 @@ plugins {
 
 // Opt-in recorder QA uses separate app storage/UID; ordinary builds are unchanged.
 val recorderHardening = providers.gradleProperty("traelyxRecorderHardening").orNull == "true"
+val recorderPerformanceProfile =
+    providers.gradleProperty("traelyxRecorderHardeningProfile").orNull == "true"
+require(!recorderPerformanceProfile || recorderHardening) {
+    "Recorder profile QA requires the isolated hardening package"
+}
 if (recorderHardening) {
     require(providers.gradleProperty("traelyxFirebaseEnabled").orNull == "false") {
         "Recorder hardening requires Firebase disabled"
@@ -66,6 +71,13 @@ android {
             manifest.srcFile("src/hardening/AndroidManifest.xml")
             java.srcDir("src/hardening/kotlin")
         }
+        if (recorderPerformanceProfile) {
+            sourceSets.getByName("profile") {
+                manifest.srcFile("src/performance/AndroidManifest.xml")
+                java.srcDirs("src/hardening/kotlin", "src/performance/kotlin")
+            }
+            testBuildType = "profile"
+        }
     }
     buildFeatures { resValues = true }
     namespace = "io.github.atrx07.traelyx"
@@ -86,7 +98,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        testInstrumentationRunner = if (recorderHardening) {
+        testInstrumentationRunner = if (recorderPerformanceProfile) {
+            "io.github.atrx07.traelyx.recorder.RecorderPerformanceInstrumentation"
+        } else if (recorderHardening) {
             "io.github.atrx07.traelyx.recorder.RecorderHardeningInstrumentation"
         } else {
             "io.github.atrx07.traelyx.recorder.RecorderLifecycleInstrumentation"
@@ -100,6 +114,13 @@ android {
     buildTypes {
         debug {
             if (recorderHardening) applicationIdSuffix = ".hardening"
+        }
+        getByName("profile") {
+            if (recorderPerformanceProfile) {
+                applicationIdSuffix = ".hardening"
+                // QA report extraction only; Dart remains profile/AOT, no main-app access.
+                isDebuggable = true
+            }
         }
         release {
             // TODO: Add your own signing config for the release build.

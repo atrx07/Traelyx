@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application android:label="Traelyx performance QA" tools:replace="android:label">
+        <activity android:name="io.github.atrx07.traelyx.MainActivity" android:enabled="false" />
+        <activity android:name="io.github.atrx07.traelyx.recorder.RecorderHardeningActivity"
+            android:exported="false" />
+        <activity android:name="io.github.atrx07.traelyx.recorder.ReplayPerformanceActivity"
+            android:exported="false" android:hardwareAccelerated="true"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" />
+        <activity android:name="io.github.atrx07.traelyx.recorder.PerformanceControlActivity"
+            android:exported="true" android:permission="android.permission.DUMP" />
+        <service android:name="io.github.atrx07.traelyx.recorder.PerformanceControlService"
+            android:exported="false" android:foregroundServiceType="location" />
+    </application>
+</manifest>

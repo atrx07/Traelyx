@@ -18,7 +18,17 @@ seven operator tests, lint/build/contracts). All four source CI jobs 44168836701
 pass for `63d4826`, including QA/ordinary package isolation and both app builds.
 No production recorder behavior, schema, dependency or wake/sampling changes.
 Physical deep-suspend/OEM/vehicle and battery gates remain unverified. See
-`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 awaits authorization; later
+`docs/exec-plans/active/M8_ANDROID_HARDENING.md`. M8.2 is authorized/in progress:
+The initial unplugged run exposed ~263-second motion gaps without GPS fixes.
+Recorder CPU policy v1, unit/native tests, app/profile lint and lease lifecycle
+checks pass. The corrected 602-second locked/unplugged recording passes frozen
+motion continuity, cleanup and main preservation; CPU is ~41% of one core and
+battery change is one coarse level step. Idle suspend and intermittent GNSS are
+explicit limits. Final profile replay/DB and ordinary APK inventory pass; source
+CI and final closure are pending. M8.2 is not complete. See
+`docs/reference/PERFORMANCE_BASELINE_V1.md`.
+Resume from `docs/exec-plans/active/M8_PERFORMANCE_BASELINE.md`.
+Later
 substeps retain normal approval gates; publication/distribution is unauthorized.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 

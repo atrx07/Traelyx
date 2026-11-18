@@ -260,7 +260,9 @@ jobs:
           python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_inspect_field_recording tests.tool.test_sync_pilot
 
       - name: Verify bounded recorder hardening operator
-        run: node --test tests/tool/test_recorder_hardening.mjs
+        run: |
+          node --test tests/tool/test_recorder_hardening.mjs tests/tool/test_performance_math.mjs
+          python -W error::ResourceWarning -m unittest tests.tool.test_inventory_apk
 
       - name: Validate offline ML dataset registry and imports
         run: |
@@ -330,6 +332,14 @@ jobs:
           test "$("$analyzer" manifest application-id build/app/outputs/apk/debug/app-debug.apk)" = io.github.atrx07.traelyx.hardening
           test "$("$analyzer" manifest application-id build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk)" = io.github.atrx07.traelyx.hardening.test
 
+      - name: Compile isolated profile performance probe
+        run: |
+          flutter build apk --profile --target tool/performance_probe.dart --target-platform android-arm64 --android-project-arg=traelyxRecorderHardening=true --android-project-arg=traelyxRecorderHardeningProfile=true --android-project-arg=traelyxFirebaseEnabled=false
+          cd android
+          ./gradlew -PtraelyxRecorderHardening=true -PtraelyxRecorderHardeningProfile=true -PtraelyxFirebaseEnabled=false -Ptarget=tool/performance_probe.dart :app:assembleProfileAndroidTest :app:lintProfile
+          analyzer="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
+          test "$("$analyzer" manifest application-id ../build/app/outputs/flutter-apk/app-profile.apk)" = io.github.atrx07.traelyx.hardening
+
       - name: Build debug APK
         run: flutter build apk --debug
 
@@ -338,7 +348,7 @@ jobs:
           analyzer="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
           test "$("$analyzer" manifest application-id build/app/outputs/flutter-apk/app-debug.apk)" = io.github.atrx07.traelyx
           "$analyzer" manifest print build/app/outputs/flutter-apk/app-debug.apk > .dart_tool/ordinary-debug-manifest.xml
-          if grep -q RecorderHardeningActivity .dart_tool/ordinary-debug-manifest.xml; then exit 1; fi
+          if grep -Eq 'RecorderHardeningActivity|PerformanceControl|ReplayPerformanceActivity' .dart_tool/ordinary-debug-manifest.xml; then exit 1; fi
 
       - name: Test native Kotlin
         working-directory: android
@@ -370,7 +380,9 @@ jobs:
         run: flutter build apk --release
 
       - name: Report APK size
-        run: dart run tool/report_apk_size.dart
+        run: |
+          dart run tool/report_apk_size.dart
+          python tool/inventory_apk.py build/app/outputs/flutter-apk/app-release.apk --output build/reports/apk-model-inventory-v1.json
 
       - name: Upload APK and size report
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -381,4 +393,6 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/reports/apk-size.json
             build/reports/integritynet-generated-comparison.json
+            build/reports/host-performance-v1.json
+            build/reports/apk-model-inventory-v1.json
           if-no-files-found: error

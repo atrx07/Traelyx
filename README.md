@@ -9,8 +9,9 @@ on 2026-11-17. M7.4/M7.5 and M6.8 acceptance remain open/deferred, production se
 inference stays disabled, and **main distribution is held**. M8.1's bounded
 Pixel/Tecno matrices, process recovery and local validation pass, along with all
 four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44168836701)
-for `63d4826`. M8.1 is complete; M8.2 awaits authorization. See the
-[Android torture matrix](docs/exec-plans/active/M8_ANDROID_HARDENING.md).
+for `63d4826`. M8.1 is complete; M8.2's qualified recorder/replay/DB/APK baselines
+are collected, with source CI and final closure pending. See the
+[performance baseline](docs/reference/PERFORMANCE_BASELINE_V1.md).
 Wrap-up passes 42 affected host tests and
 all four [source CI jobs](https://github.com/atrx07/Traelyx/actions/runs/44090880412) for
 `1bb6bdf`. See the [current handoff ledger](docs/reference/M7_HANDOFF_V1.md)
@@ -171,7 +172,7 @@ Roadmap status is a human-readable mirror of the authoritative [roadmap](docs/ex
 | M7 | ML & Advanced Commentary | Engineering wrapped; M7.4/M7.5 acceptance deferred; unaccepted inference disabled | ⏸ Deferred | Data/resource dependent | 2026-11-17 (partial) |
 | M8 | Hardening & Public Release | Hardening activated; main distribution held | 🔵 Active | ~1–1.5 weeks plus carried acceptance | 2026-11-17 (activation only) |
 | M8.1 |  | Bounded Pixel/Tecno matrix complete; physical/OEM limits retained | ✅ Complete | Done | 2026-11-18 |
-| M8.2 |  | Battery/performance baseline | ⚪ Pending | — | — |
+| M8.2 |  | Battery/performance baseline; qualified phone results collected, source CI pending | 🔵 Active | — | — |
 | M8.3 |  | Privacy/security audit | ⚪ Pending | — | — |
 | M8.4 |  | Database upgrade rehearsal | ⚪ Pending | — | — |
 | M8.5 |  | Failure UX pass | ⚪ Pending | — | — |

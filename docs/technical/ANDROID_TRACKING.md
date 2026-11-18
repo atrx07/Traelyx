@@ -119,6 +119,23 @@ Do not request contacts, SMS, microphone, camera, etc. without feature need.
 
 ## 7. Battery
 
+### M8.2 CPU power policy v1
+
+The historical M2 no-wake-lock baseline did not ensure non-wake-up sensor delivery
+under unplugged CPU suspend. The M8.2 [incident](../issues/2026-11-18_screen-off-recorder-suspend.md)
+records physical multi-minute gaps. Power policy v1 now owns a partial CPU wake
+lock after foreground promotion, before acquisition, through explicit recording
+and final flush, including GNSS loss. It releases on Stop/start failure/fatal
+failure/destruction; Android clears process ownership on death.
+
+The SDK lease timeout is 120 seconds with 30-second renewals. Expired/lost/failed
+ownership becomes an explicit recorder error, never silent reacquisition. No
+sampling/batching/frame/quality/schema change or automatic battery-optimization
+exemption accompanies the normal WAKE_LOCK permission. See
+[ADR-0044](../decisions/ADR-0044-recorder-owned-cpu-lease.md) for tradeoffs and limits.
+Physical post-repair continuity/battery acceptance is pending; this is not an
+all-OEM reliability guarantee.
+
 Do not hold unnecessary wake locks or maximum-frequency sensors permanently without evidence.
 
 Measure:

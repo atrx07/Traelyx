@@ -19,7 +19,8 @@ local neural narrator remains unavailable and the built-in narrator remains.
 The bounded wrap-up passes all four source CI jobs 44090880412 for `1bb6bdf`.
 M8 is activated for hardening; M8.1's bounded stationary matrix is complete in the
 [Android hardening plan](../exec-plans/active/M8_ANDROID_HARDENING.md), with full
-source CI 44168836701 (`63d4826`). M8.2 awaits explicit authorization. The
+source CI 44168836701 (`63d4826`). M8.2 was subsequently authorized and is in
+progress in the [performance plan](../exec-plans/active/M8_PERFORMANCE_BASELINE.md). The
 normal explicit gate between later numbered substeps remains. **Stop before main
 distribution:** M8.10 publication, release/tag/assets, store submission, public
 download links and external APK distribution are unauthorized. Prior private

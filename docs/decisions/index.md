@@ -35,3 +35,4 @@ Read only ADRs relevant to the decision being modified/revisited.
 - `ADR-0038-generated-integrity-comparison.md`
 
 - [ADR-0043: Local narrator admission and artifact boundary](ADR-0043-local-narrator-admission-and-artifact-boundary.md) — functional local architecture; optional runtime/model activation gated.
+- [ADR-0044: Recorder-owned CPU lease](ADR-0044-recorder-owned-cpu-lease.md) — bounded renewable CPU ownership during explicit acquisition; battery/physical acceptance required.
