@@ -33,6 +33,7 @@ checks:
     - database_migration_test
     - representative_trip_history_preserved
   privacy_security:
+    - private_security_reporting_channel_confirmed
     - permission_diff_review
     - rls_review_if_cloud_changed
     - provider_payload_review_if_commentary_changed

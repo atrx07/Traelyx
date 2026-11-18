@@ -1,0 +1,89 @@
+{
+  "contract_version": 1,
+  "date": "2026-11-18",
+  "milestone": "M8.3",
+  "status": "source_ci_pending",
+  "source_base_commit": "f138d2e",
+  "scope": "bounded source, ordinary packaged Android policy and synthetic authorization audit",
+  "packaged_android_policy": {
+    "contract_version": 1,
+    "policy_version": 1,
+    "scope": "decoded ordinary release manifest and packaged backup XML; not an OEM backup execution",
+    "passed": true,
+    "findings": [],
+    "permission_count": 10,
+    "exported_component_count": 3,
+    "backup_domains_reviewed": [
+      "database",
+      "device_database",
+      "device_file",
+      "device_root",
+      "device_sharedpref",
+      "external",
+      "file",
+      "root",
+      "sharedpref"
+    ],
+    "user_data_read": false,
+    "network_requested": false,
+    "apk_sha256": "422b7fa3712ced0ce6d9b99dcccdd4d8133ab676869844a9e76539d7b385faf5",
+    "apk_bytes": 23376023
+  },
+  "findings": [
+    {
+      "code": "private_database_backup_eligibility",
+      "disposition": "source_repaired; actual historical backup transmission not established"
+    },
+    {
+      "code": "noncanonical_auth_callback_authority",
+      "disposition": "userinfo and explicit ports rejected; SDK PKCE unchanged; no takeover demonstrated"
+    },
+    {
+      "code": "explicit_cleartext_policy",
+      "disposition": "defense made explicit; no plaintext request demonstrated"
+    },
+    {
+      "code": "private_security_reporting_channel",
+      "disposition": "required pre-release maintainer confirmation; no external setting changed"
+    }
+  ],
+  "local_validation": {
+    "flutter_analysis": "passed",
+    "flutter_tests": 596,
+    "native_tests": 601,
+    "native_failures_errors_skips": 0,
+    "android_privacy_python_tests": 9,
+    "app_lint": "passed",
+    "ordinary_debug_build": "passed",
+    "ordinary_arm64_release_build": "passed",
+    "old_packaged_policy_negative_probe": "expected_failure",
+    "callback_before_fix_probe": "expected_failure",
+    "repository_contracts_secret_patterns": "passed"
+  },
+  "sql_catalog": {
+    "production_tables": 17,
+    "negative_probes": 8,
+    "execution": "pending_isolated_postgresql_ci"
+  },
+  "source_review": [
+    "permission_and_component_inventory",
+    "credential_storage_and_os_backup",
+    "logs_and_aggregate_diagnostics",
+    "precise_redacted_and_correction_exports",
+    "optional_summary_commentary_and_map_payloads",
+    "private_public_rls_and_guardian_access"
+  ],
+  "data_schema_migration": false,
+  "new_dependency": false,
+  "new_permission": false,
+  "live_account_or_provider_operation": false,
+  "ordinary_phone_app_installed": false,
+  "limitations": [
+    "No real backup/restore or OEM device-transfer test; older OS backup copies not recalled.",
+    "No hosted state/deployment audit, real provider send, live Guardian or natural-expiry claim.",
+    "Private storage is not new database encryption or compromised-device protection.",
+    "User-selected export providers and clipboard copies remain outside later revocation control.",
+    "Known-pattern scanning and reviewed boundaries are not exhaustive history/CVE/penetration-test certification.",
+    "M6.8/M7, recorder efficiency, private security-reporting and distribution gates remain held."
+  ]
+}

@@ -26,4 +26,21 @@ void main() {
       isFalse,
     );
   });
+  test(
+    'rejects callback authorities with user information or explicit ports',
+    () {
+      for (final authority in [
+        'person@auth-callback',
+        'auth-callback:443',
+        'person@auth-callback:443',
+      ]) {
+        expect(
+          isAccountCallback(
+            Uri.parse('io.github.atrx07.traelyx://$authority/?code=opaque'),
+          ),
+          isFalse,
+        );
+      }
+    },
+  );
 }

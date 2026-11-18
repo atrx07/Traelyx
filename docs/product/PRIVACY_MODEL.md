@@ -22,6 +22,13 @@ Without account:
 
 The app should not create a shadow cloud identity merely because the user opened it.
 
+M8.3 policy v1 disables implicit Android cloud backup and device transfer for app
+data. Local history is device-bound unless the user explicitly exports it. Export
+files are not a promised in-app restore mechanism, and chosen document providers
+may sync files independently. This policy cannot remove older OS backup copies.
+See [ADR-0045](../decisions/ADR-0045-explicit-local-data-backup-policy.md) for
+compatibility and unverified OEM/cross-platform transfer limits.
+
 ## 3. Cloud account mode
 
 Account may unlock:

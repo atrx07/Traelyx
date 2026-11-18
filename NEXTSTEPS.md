@@ -21,17 +21,19 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — Approval gate before M8.3
+## P0 — M8.3 privacy/security audit
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Await explicit user authorization for M8.3. M8.2's qualified baseline, recorder
+1. M8.3 is authorized and active in `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`.
+   Audit permissions/backups, logs/exports, provider payloads, RLS and Guardian
+   access; fix confirmed defects and retain test/hosted limits. M8.2's qualified baseline, recorder
    CPU policy v1, physical lifecycle/locked-unplugged continuity/process recovery,
    exact cleanup, main preservation and local tests/build/lint checks pass. All
-   four source CI jobs 44239049290 pass for `dfc316a`. No M8.3 work has begun.
+   four source CI jobs 44239049290 pass for `dfc316a`.
    Retain high CPU (~41% one core), one-step coarse battery uncertainty, delivered
    ~200 Hz for 100 Hz requests, intermittent GNSS and idle suspend limits in
    `docs/reference/PERFORMANCE_BASELINE_V1.md`; long-duration/efficiency and OEM

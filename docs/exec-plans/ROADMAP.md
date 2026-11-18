@@ -35,7 +35,8 @@ matrix is complete; local checks and all four source CI jobs 44168836701
 (`63d4826`) pass. See [the Android hardening plan](active/M8_ANDROID_HARDENING.md).
 M8.2's qualified baseline is complete in
 [the performance plan](active/M8_PERFORMANCE_BASELINE.md); all four source CI jobs
-44239049290 pass for `dfc316a`. M8.3 awaits explicit authorization.
+44239049290 pass for `dfc316a`. M8.3 is subsequently authorized and active in
+[the privacy/security audit](active/M8_PRIVACY_SECURITY_AUDIT.md).
 CPU/battery, physical/OEM/vehicle and deferred acceptance limits remain carried.
 M7 remains deferred acceptance, not complete.
 

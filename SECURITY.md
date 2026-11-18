@@ -44,6 +44,8 @@ The release private key is controlled by the maintainer. It must not be generate
 - Leaderboards use derived/sanitized ranking records and must not require public raw trips.
 - Guardian access is explicit, permission-scoped, revocable, and audited.
 - Cloud commentary must receive sanitized event dossiers by default, not exact coordinates or full raw streams.
+- Implicit Android backup and device transfer are disabled by policy v1; precise
+  private exports remain user-directed. See `docs/decisions/ADR-0045-explicit-local-data-backup-policy.md`.
 
 ## Dependency security
 

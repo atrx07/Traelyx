@@ -180,6 +180,7 @@ jobs:
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_receiver_controls.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_driver_revisions.sql
           psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/guardian_two_account_fixture.sql
+          psql -h localhost -U postgres -d traelyx_test -v ON_ERROR_STOP=1 -f supabase/tests/privacy_security_audit.sql
           node --test tests/tool/test_guardian_push_probe.mjs
           node --test tests/tool/test_guardian_duplicate_phone.mjs
 
@@ -263,6 +264,7 @@ jobs:
         run: |
           node --test tests/tool/test_recorder_hardening.mjs tests/tool/test_performance_math.mjs
           python -W error::ResourceWarning -m unittest tests.tool.test_inventory_apk
+          python -W error::ResourceWarning -m unittest tests.tool.test_android_privacy
 
       - name: Validate offline ML dataset registry and imports
         run: |
@@ -384,6 +386,11 @@ jobs:
           dart run tool/report_apk_size.dart
           python tool/inventory_apk.py build/app/outputs/flutter-apk/app-release.apk --output build/reports/apk-model-inventory-v1.json
 
+      - name: Audit packaged Android privacy policy
+        run: |
+          aapt2s=("$ANDROID_HOME"/build-tools/*/aapt2)
+          python tool/audit_android_privacy.py --apk build/app/outputs/flutter-apk/app-release.apk --apkanalyzer "$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer" --aapt2 "${aapt2s[-1]}" --output build/reports/privacy-security-android-v1.json
+
       - name: Upload APK and size report
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
@@ -395,4 +402,5 @@ jobs:
             build/reports/integritynet-generated-comparison.json
             build/reports/host-performance-v1.json
             build/reports/apk-model-inventory-v1.json
+            build/reports/privacy-security-android-v1.json
           if-no-files-found: error

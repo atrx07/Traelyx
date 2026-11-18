@@ -71,6 +71,10 @@ For M8.2 measurements, use the [performance baseline](reference/PERFORMANCE_BASE
 and its aggregate report: profile replay/DB, locked unplugged recorder, coarse
 battery observations, CPU/storage cost and APK/model inventory.
 
+For M8.3, use the [privacy/security audit](reference/PRIVACY_SECURITY_AUDIT_V1.md):
+packaged permission/backup policy, consent-bound payloads, exports, RLS and
+Guardian access, with source/fixture/hosted limits kept separate.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

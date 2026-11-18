@@ -21,7 +21,8 @@ M8 is activated for hardening; M8.1's bounded stationary matrix is complete in t
 [Android hardening plan](../exec-plans/active/M8_ANDROID_HARDENING.md), with full
 source CI 44168836701 (`63d4826`). M8.2's qualified baseline is complete in the
 [performance plan](../exec-plans/active/M8_PERFORMANCE_BASELINE.md), with all four
-source CI jobs 44239049290 (`dfc316a`) passing. M8.3 awaits explicit authorization. The
+source CI jobs 44239049290 (`dfc316a`) passing. M8.3 is subsequently authorized and
+active in the [privacy audit](../exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md). The
 normal explicit gate between later numbered substeps remains. **Stop before main
 distribution:** M8.10 publication, release/tag/assets, store submission, public
 download links and external APK distribution are unauthorized. Prior private

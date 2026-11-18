@@ -118,7 +118,9 @@ MVP:
 The first implemented method is email magic-link sign-in or signup through
 Supabase Auth. A dedicated Android callback URI completes the link and opens
 Account after warm or cold launch; ordinary launches still open Drive. Session
-JSON and PKCE verifiers use encrypted platform storage. Without build-time
+JSON and PKCE verifiers use encrypted platform storage. The callback authority
+rejects user information and explicit ports; the SDK still validates the auth
+response and PKCE verifier. Without build-time
 provider configuration or working secure storage, Account remains unavailable
 while local driving features continue. User-initiated link sending is the
 first cloud identity action. Signing in does not migrate or upload local
