@@ -21,28 +21,30 @@ disabled. The local neural narrator remains unavailable. M6.8 active-driver,
 recovery, performance, vehicle and OEM acceptance carries forward; no live
 Guardian operation is authorized by this handoff.
 
-## P0 — Approval gate before M8.6
+## P0 — M8.6 maintainer-controlled keystore setup/backup
 
 Pinned exported-file quality intake and the future routine-trip procedure pass
 42 affected host tests, module smoke, repository checks and all four source CI
 jobs 44090880412 (`1bb6bdf`). See `docs/reference/M7_HANDOFF_V1.md` and
 `m7-wrapup-v1-result.json`.
 
-1. Await explicit authorization for M8.6. M8.5 is complete in
+1. M8.6 is authorized and active in `docs/exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md`.
+   Prepare and validate the local custody workflow; the maintainer creates and
+   controls the key and verifies independent backup storage. M8.5 is complete in
    `docs/exec-plans/active/M8_FAILURE_UX_PASS.md`: GPS/save and settings-feedback
    repairs, corrupt-route reread and bounded cloud/queue guidance. Local analysis,
    636 Flutter tests, builds/contracts/policy and all four source CI jobs
    44277975977 (`3fab329`) pass, including eight Linux large-text captures.
    Actual device/OEM/keyboard, provider acceptance and hosted sync remain
-   unverified; no ordinary app/data or recorder/scoring/schema change. No M8.6
-   work has begun.
+   unverified; no ordinary app/data or recorder/scoring/schema change. No M8.7
+   work is authorized.
    M8.4 is complete in
    `docs/exec-plans/active/M8_DATABASE_UPGRADE_REHEARSAL.md`: atomic DDL/version
    repair `d7d2e18`, 23 populated/retry/refusal cases, 619 local Flutter tests,
    analysis/build/contracts and packaged policy pass. All four source CI jobs
    44267925802 pass, including Linux/Windows row-digest comparison. Schema stays4;
    existing mixed-file recovery, hot-WAL/power loss and signed APK upgrades remain
-   outside this host rehearsal. No M8.6 work is authorized. M8.3 is complete in
+   outside this host rehearsal. M8.7 remains unauthorized. M8.3 is complete in
    `docs/exec-plans/active/M8_PRIVACY_SECURITY_AUDIT.md`: backup/callback repairs,
    596 Flutter/601 native/nine Python tests, lint/builds and local/CI APK policy
    pass. All four source CI jobs 44244638894 (`711cb27`) pass, including actual

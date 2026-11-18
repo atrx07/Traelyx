@@ -292,6 +292,11 @@ jobs:
           python -m compileall -q tool/inspect_tripdebug.py tool/inspect_ml_recordings.py tool/inspect_field_recording.py tool/check_sync_pilot.py tool/verify_sync_pilot_apk.py tests/tool/test_inspect_ml_recordings.py tests/tool/test_inspect_field_recording.py tests/tool/test_sync_pilot.py
           python -W error::ResourceWarning -m unittest tests.tool.test_inspect_tripdebug tests.tool.test_inspect_ml_recordings tests.tool.test_inspect_field_recording tests.tool.test_sync_pilot
 
+      - name: Test maintainer-local signing custody tooling
+        run: |
+          python -m py_compile tool/release_signing_setup.py
+          python -W error::ResourceWarning -m unittest tests.tool.test_release_signing_setup
+
       - name: Verify bounded recorder hardening operator
         run: |
           node --test tests/tool/test_recorder_hardening.mjs tests/tool/test_performance_math.mjs

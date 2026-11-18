@@ -55,8 +55,9 @@ and all four source CI jobs 44277975977 (`3fab329`) pass, including eight Linux
 large-text captures. Product repair `40debce` and capture correction `3fab329`
 add no dependency, schema, permission, recorder/scoring or payload change.
 No device/account/provider interaction; actual keyboard/OEM/fault recovery and
-live provider acceptance remain unverified. Stop before M8.6 pending explicit
-authorization. Distribution remains unauthorized.
+live provider acceptance remain unverified. M8.6 is authorized and active in
+`docs/exec-plans/active/M8_RELEASE_KEYSTORE_CUSTODY.md`; maintainer-local key
+creation/backup is required and M8.7 remains unauthorized. Distribution is held.
 See `docs/reference/M7_HANDOFF_V1.md` and `M7_WRAPUP_HANDOFF.md` in active plans.
 
 Maintainer-authorized sequencing exception (2026-11-11): M7.1 and subsequently M7.2 development may

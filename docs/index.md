@@ -83,6 +83,10 @@ For M8.5, use the [failure UX matrix](reference/FAILURE_UX_PASS_V1.md):
 GPS/storage warnings, corrupt-route reread, provider/key fallback and retained
 offline queues, with synthetic host-rendering limits.
 
+For M8.6, use the [release key custody workflow](reference/RELEASE_KEYSTORE_CUSTODY_V1.md):
+maintainer-local creation, private-key/backup proof and sanitized public identity
+evidence. No production key material or passwords enter the repository or CI.
+
 For Android emulator/ADB operation and interrupted Pixel QA sessions, see
 [the M6.8 emulator workflow](reference/ANDROID_EMULATOR_WORKFLOW.md). Read it only
 when that tooling or device setup is relevant.

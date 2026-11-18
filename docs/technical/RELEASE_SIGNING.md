@@ -31,6 +31,14 @@ Android accepts future APKs as updates only when they retain both this applicati
 
 Losing the key can force users to uninstall/reinstall rather than seamlessly upgrade. Therefore maintain secure backups.
 
+M8.6's [custody workflow](../reference/RELEASE_KEYSTORE_CUSTODY_V1.md) provides a
+maintainer-run interactive setup and primary/backup private-key proof using the
+installed JDK. Passwords stay out of files/arguments/chat; key and backup stay
+outside Git. Independent, unsynced storage is separately attested. Only public
+certificate metadata may be pinned after actual verification. M8.6 creates no
+production APK or Gradle production-signing wiring; those remain gated at M8.7.
+Current release-validation builds still use Android's debug signing identity.
+
 ## 3. Secret files
 
 Example local-only files:
